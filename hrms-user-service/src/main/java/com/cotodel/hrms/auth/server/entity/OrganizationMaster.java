@@ -35,7 +35,7 @@ import lombok.NoArgsConstructor;
 @SequenceGenerator(name="organization_seq" , sequenceName="organization_seq", allocationSize=1)
 public class OrganizationMaster implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8729415195374956628L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="organization_seq")

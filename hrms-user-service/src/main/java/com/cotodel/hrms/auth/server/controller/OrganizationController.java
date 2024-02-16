@@ -46,7 +46,7 @@ public class OrganizationController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/Organization",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
-	    public ResponseEntity<Object> getOrganizationList(@Valid @RequestBody UserRequest userReq) {
+	    public ResponseEntity<Object> getOrganizationList() {
 	    	logger.info("inside token generation");
 	    	List<OrganizationMaster> organizationMasters=null;
 	    	try {
