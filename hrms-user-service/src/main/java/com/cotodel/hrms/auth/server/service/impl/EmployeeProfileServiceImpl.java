@@ -42,6 +42,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		SignUpEntity signUpEntity=new SignUpEntity();
 		signUpEntity.setOrgType(user.getOrganization_type());
 		signUpDao.saveUserDetails(signUpEntity);
+		
 		EmployerEntity employer=new EmployerEntity();
 		employer.setSignup(signUpEntity);
 		employer.setOrgType(user.getOrganization_type());
