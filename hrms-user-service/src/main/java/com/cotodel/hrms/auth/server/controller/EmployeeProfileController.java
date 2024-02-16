@@ -47,6 +47,8 @@ public class EmployeeProfileController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveProfileDetails(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest empolyeeProfileRequest) {
 	    	logger.info("inside token generation");
+	    	
+	    	
 	    	SignUpEntity userEntity=null;
 	    	String authToken = "";
 	    	String response="";
