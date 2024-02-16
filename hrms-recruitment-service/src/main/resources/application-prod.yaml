@@ -1,0 +1,20 @@
+tenants:
+  db-sources:
+    HRMS1:
+      jdbcUrl : jdbc:postgresql://localhost:5432/hrms
+      driverClassName : org.postgresql.Driver
+      username : postgres
+      password : root
+      schema : hrms1
+    HRMS2:
+      jdbcUrl : jdbc:postgresql://localhost:5432/hrms
+      driverClassName : org.postgresql.Driver
+      username : postgres
+      password : root
+      schema : hrms2
+    MASTER:
+       jdbcUrl : jdbc:postgresql://localhost:5432/hrms
+       driverClassName : org.postgresql.Driver
+       username : postgres
+       password : root
+       schema : hrms_mst    
