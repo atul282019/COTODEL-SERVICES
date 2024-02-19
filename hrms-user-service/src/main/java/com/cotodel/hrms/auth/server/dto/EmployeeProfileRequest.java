@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeProfileRequest {
-	
+	private String gstn_no;
 	private String organization_type;
     private String pan;
     private String brand_name;

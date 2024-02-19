@@ -32,6 +32,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	@Override
 	public SignUpEntity saveProfileDetails(EmployeeProfileRequest user) {
 		UserEntity userDetails= new UserEntity();
+		EmployerDao employerDao=null;
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
 		//CopyUtility.copyProperties(userDetails, user);
 		//CopyUtility.copyProperties(user,userDetails);
@@ -46,7 +47,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		EmployerEntity employer=new EmployerEntity();
 		employer.setSignup(signUpEntity);
 		employer.setOrgType(user.getOrganization_type());
-		employerDao.saveDetails(employer);
+		employerDao=employerDao.saveDetails(employer);
 		
 		return signUpEntity;
 	}
