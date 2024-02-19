@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class EmployeeProfileResponse {
 	
 	 private boolean status;
+	 private String message;
 	  EmployeeProfileRequest data;
 	  private String txnId;
 	  private String timestamp;

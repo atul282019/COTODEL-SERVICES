@@ -9,10 +9,12 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dao.EmployeeDao;
 import com.cotodel.hrms.auth.server.dao.EmployerDao;
 import com.cotodel.hrms.auth.server.dao.OrganizationDao;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
+import com.cotodel.hrms.auth.server.entity.EmployeeEntity;
 import com.cotodel.hrms.auth.server.entity.EmployerEntity;
 import com.cotodel.hrms.auth.server.entity.SignUpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
@@ -28,11 +30,15 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	@Autowired
 	SignUpDao  signUpDao;
 	
+	@Autowired
+	EmployeeDao  employeeDao;
+	
 	@Transactional
 	@Override
 	public SignUpEntity saveProfileDetails(EmployeeProfileRequest user) {
 		UserEntity userDetails= new UserEntity();
-		EmployerDao employerDao=null;
+		EmployerEntity employerEntity=null;
+		
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
 		//CopyUtility.copyProperties(userDetails, user);
 		Date date = new Date();
@@ -46,7 +52,13 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		EmployerEntity employer=new EmployerEntity();
 		employer.setSignup(signUpEntity);
 		employer.setOrgType(user.getOrganizationType());
-		employerDao=employerDao.saveDetails(employer);
+		employerEntity=employerDao.saveDetails(employer);
+		
+		//
+		EmployeeEntity employee=new EmployeeEntity();
+		//employer.setSignup(signUpEntity);
+		//employer.setOrgType(user.getOrganizationType());
+		employee=employeeDao.saveDetails(employee);
 		
 		return signUpEntity;
 	}

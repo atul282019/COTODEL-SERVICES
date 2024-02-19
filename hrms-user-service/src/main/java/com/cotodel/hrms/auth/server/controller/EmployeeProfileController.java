@@ -18,6 +18,7 @@ import com.cotodel.hrms.auth.server.entity.SignUpEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
+import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,14 +58,14 @@ public class EmployeeProfileController {
 				SetDatabaseTenent.setDataSource(companyId);
 				userEntity=employeeProfileService.saveProfileDetails(empolyeeProfileRequest);
 	    		
-	    		return ResponseEntity.ok(new EmployeeProfileResponse(true,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    		return ResponseEntity.ok(new EmployeeProfileResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	    	 
 	    	}catch (Exception e) {
 				
 	    		e.printStackTrace();
 			}
 	        
-	        return ResponseEntity.ok(new EmployeeProfileResponse(false,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	        return ResponseEntity.ok(new EmployeeProfileResponse(false,MessageConstant.PROFILE_FAILED,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	          
 	        
 	    }
