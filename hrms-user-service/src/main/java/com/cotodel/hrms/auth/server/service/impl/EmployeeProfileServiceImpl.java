@@ -40,12 +40,12 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		userDetails.setCreated_date(localDate);
 		
 		SignUpEntity signUpEntity=new SignUpEntity();
-		signUpEntity.setOrgType(user.getOrganization_type());
+		signUpEntity.setOrgType(user.getOrganizationType());
 		signUpDao.saveUserDetails(signUpEntity);
 		
 		EmployerEntity employer=new EmployerEntity();
 		employer.setSignup(signUpEntity);
-		employer.setOrgType(user.getOrganization_type());
+		employer.setOrgType(user.getOrganizationType());
 		employerDao=employerDao.saveDetails(employer);
 		
 		return signUpEntity;
