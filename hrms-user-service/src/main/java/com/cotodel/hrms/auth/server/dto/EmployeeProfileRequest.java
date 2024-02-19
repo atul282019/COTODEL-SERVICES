@@ -16,7 +16,7 @@ public class EmployeeProfileRequest {
     private String companyName;
     private String officeAddress;
     private String addressLine;
-    private String pincode;
+    private String pinCode;
     private String stateCode;
     private String payrollEnabledFlag;
     private String paidDate;
