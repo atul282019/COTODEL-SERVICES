@@ -35,7 +35,6 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		EmployerDao employerDao=null;
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
 		//CopyUtility.copyProperties(userDetails, user);
-		//CopyUtility.copyProperties(user,userDetails);
 		Date date = new Date();
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		userDetails.setCreated_date(localDate);

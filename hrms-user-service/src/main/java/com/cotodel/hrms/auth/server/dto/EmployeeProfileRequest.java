@@ -8,20 +8,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeProfileRequest {
-	private String gstn_no;
-	private String organization_type;
+	private String gstnNo;
+	private String organizationType;
     private String pan;
-    private String brand_name;
-    private String pan_details;
-    private String company_name;
-    private String office_address;
-    private String address_line;
+    private String brandName;
+    private String panDetails;
+    private String companyName;
+    private String officeAddress;
+    private String addressLine;
     private String pincode;
-    private String state_code;
-    private String payroll_enabled_flag;
-    private String paid_date;
-    private String run_payroll_flag;
-    private String salary_advances_flag;
+    private String stateCode;
+    private String payrollEnabledFlag;
+    private String paidDate;
+    private String runPayrollFlag;
+    private String salaryAdvancesFlag;
      
      
 }
