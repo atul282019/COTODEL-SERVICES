@@ -71,6 +71,7 @@ public class UserSignUpController {
 	    	}catch (Exception e) {
 				
 	    		e.printStackTrace();
+	    		logger.error("error in saveUserDetails====="+e);
 			}
 	        
 	        return ResponseEntity.ok(new UserSignUpResponse(false,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));

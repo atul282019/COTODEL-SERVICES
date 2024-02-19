@@ -62,7 +62,7 @@ public class RolesController {
 	    	 
 	    	}catch (Exception e) {
 				
-	    		// TODO: handle exception
+	    		logger.error("error in Roles====="+e);
 			}
 	        
 	        return ResponseEntity

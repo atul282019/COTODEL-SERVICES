@@ -93,6 +93,7 @@ public class MobileEmailVerifyController {
 	    	}catch (Exception e) {
 				
 	    		// TODO: handle exception
+	    		logger.error("error in getOtp====="+e);
 			}
 	        
 	    	return ResponseEntity.ok(new UserOtpResponse(false,MessageConstant.OTP_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
@@ -146,6 +147,7 @@ public class MobileEmailVerifyController {
 	    	}catch (Exception e) {
 				
 	    		// TODO: handle exception
+	    		logger.error("error in verifyOtp====="+e);
 			}
 	        
 	    	return ResponseEntity.ok(new UserOtpVerifyResponse(false,MessageConstant.RESPONSE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
@@ -202,10 +204,6 @@ public class MobileEmailVerifyController {
 	        
 	    }
 
-	
-
-
-
 	 
 	 @Operation(summary = "This API will provide the User Emial Verify Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -234,16 +232,13 @@ public class MobileEmailVerifyController {
 	    	 
 	    	}catch (Exception e) {
 				
-	    		// TODO: handle exception
+	    		logger.error("error in verifyLink====="+e);
 			}
 	        
 	    	return ResponseEntity.ok(new UserVerifyResponse(false,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	          
 	        
 	    }
-
-	
-
 
 	
 

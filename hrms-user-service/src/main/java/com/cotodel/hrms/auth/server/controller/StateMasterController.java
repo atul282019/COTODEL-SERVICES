@@ -57,7 +57,7 @@ public class StateMasterController {
 		    		 return ResponseEntity.ok(new StateResponse(true,stateMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 		    	 
 			} catch (Exception e) {
-				// TODO: handle exception
+				logger.error("error in state-list====="+e);
 			}
 	    	
 	    	

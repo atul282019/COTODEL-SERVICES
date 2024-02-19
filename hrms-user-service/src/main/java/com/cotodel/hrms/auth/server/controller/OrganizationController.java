@@ -60,7 +60,8 @@ public class OrganizationController {
 	    	 
 	    	}catch (Exception e) {
 				
-	    		// TODO: handle exception
+	    		logger.error("error in organization====="+e);
+	    		
 			}
 	        
 	    	return ResponseEntity.ok(new OrganizaionResponse(false,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
