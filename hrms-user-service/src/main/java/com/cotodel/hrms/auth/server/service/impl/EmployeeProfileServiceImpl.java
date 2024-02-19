@@ -21,6 +21,7 @@ import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
+import com.cotodel.hrms.auth.server.util.MessageConstant;
 @Repository
 public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	
@@ -35,9 +36,12 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	
 	@Transactional
 	@Override
-	public SignUpEntity saveProfileDetails(EmployeeProfileRequest user) {
+	public String saveProfileDetails(EmployeeProfileRequest user) {
 		UserEntity userDetails= new UserEntity();
 		EmployerEntity employerEntity=null;
+		String response="";
+		try {
+			
 		
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
 		//CopyUtility.copyProperties(userDetails, user);
@@ -59,8 +63,12 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		//employer.setSignup(signUpEntity);
 		//employer.setOrgType(user.getOrganizationType());
 		employee=employeeDao.saveDetails(employee);
-		
-		return signUpEntity;
+		response=MessageConstant.RESPONSE_SUCCESS;
+		} catch (Exception e) {
+			// TODO: handle exception
+			response=MessageConstant.RESPONSE_FAILED;
+		}
+		return response;
 	}
 
 }

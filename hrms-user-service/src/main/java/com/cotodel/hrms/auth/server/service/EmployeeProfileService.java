@@ -5,6 +5,6 @@ import com.cotodel.hrms.auth.server.entity.SignUpEntity;
 
 public interface EmployeeProfileService {
 	
-	public SignUpEntity saveProfileDetails(EmployeeProfileRequest user);
+	public String  saveProfileDetails(EmployeeProfileRequest user);
 	
 }

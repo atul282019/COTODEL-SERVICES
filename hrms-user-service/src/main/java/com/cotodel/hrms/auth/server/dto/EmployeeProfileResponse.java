@@ -14,5 +14,4 @@ public class EmployeeProfileResponse {
 	  EmployeeProfileRequest data;
 	  private String txnId;
 	  private String timestamp;
-	  private String authToken;
 }

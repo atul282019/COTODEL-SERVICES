@@ -47,8 +47,7 @@ public class EmployeeProfileController {
 	    @RequestMapping(value = "/get/saveProfileDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveProfileDetails(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest empolyeeProfileRequest) {
-	    	logger.info("inside token generation");
-	    	
+	    logger.info("inside token generation");	    	
 	    	
 	    	SignUpEntity userEntity=null;
 	    	String authToken = "";
@@ -56,18 +55,19 @@ public class EmployeeProfileController {
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
-				userEntity=employeeProfileService.saveProfileDetails(empolyeeProfileRequest);
-	    		
-	    		return ResponseEntity.ok(new EmployeeProfileResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
-	    	 
-	    	}catch (Exception e) {
-				
+				response=employeeProfileService.saveProfileDetails(empolyeeProfileRequest);
+	    		if(response.equalsIgnoreCase(MessageConstant.PROFILE_SUCCESS)) {
+	    			return ResponseEntity.ok(new EmployeeProfileResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new EmployeeProfileResponse(true,MessageConstant.PROFILE_FAILED,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
 	    		e.printStackTrace();
+	    		logger.error("error in saveProfileDetails====="+e);
+	    		response=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new EmployeeProfileResponse(false,MessageConstant.PROFILE_FAILED,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
-	          
-	        
+	        return ResponseEntity.ok(new EmployeeProfileResponse(false,response,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 		
 }
