@@ -64,7 +64,7 @@ private static final Logger logger = LoggerFactory.getLogger(LoginUserController
     	 
     	}catch (Exception e) {
 			
-    		// TODO: handle exception
+    		logger.error("error in loginUser====="+e);
 		}
         
         return ResponseEntity

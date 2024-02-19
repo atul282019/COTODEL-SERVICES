@@ -48,7 +48,7 @@ public class StateMasterController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/state-list",produces = {"application/json"}, consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getState() {
-	    	logger.info("inside token generation");
+	    	logger.info("inside get state-list");
 	    	List<StateMaster>  stateMasters=null;
 	    	try {
 	    		stateMasters=stateMasterService.getByStateList();
@@ -60,8 +60,6 @@ public class StateMasterController {
 				logger.error("error in state-list====="+e);
 			}
 	    	
-	    	
-	        
 	    	 return ResponseEntity.ok(new StateResponse(false,stateMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	          
 	        

@@ -59,7 +59,7 @@ public class MobileEmailVerifyController {
 	    @RequestMapping(value = "/getOtp",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> sendOtp(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside token generation");
+	    	logger.info("inside  getOtp......");
 	    	List<RoleMaster> roleMaster=null;
 	    	String response="";
 	    	UserEntity userEntity=null;
@@ -114,7 +114,7 @@ public class MobileEmailVerifyController {
 	    @RequestMapping(value = "/verifyOtp",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> verifyOtp(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside token generation");
+	    	logger.info("inside token verifyOtp");
 	    	List<RoleMaster> roleMaster=null;
 	    	String response="";
 	    	UserEntity userEntity=null;
@@ -168,7 +168,7 @@ public class MobileEmailVerifyController {
 	    method = RequestMethod.GET)
 	    public ResponseEntity<Object> sendLinkToEmail(HttpServletRequest request, @PathVariable("token") String token
 				,@PathVariable("emailbyt") String emailbyt,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside token generation");
+	    	logger.info("inside  sendEmailVerifyLink...");
 	    	List<RoleMaster> roleMaster=null;
 	    	UserEntity userForm = new UserEntity();
 	    	try {    		
@@ -215,7 +215,7 @@ public class MobileEmailVerifyController {
 	    @RequestMapping(value = "/verifyLink",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> verifyLinkFromEmail(@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside token generation");
+	    	logger.info("inside verifyLink..");
 	    	List<RoleMaster> roleMaster=null;
 	    	String response="";
 	    	try {

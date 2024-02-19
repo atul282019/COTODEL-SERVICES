@@ -47,7 +47,7 @@ public class EmployeeProfileController {
 	    @RequestMapping(value = "/get/saveProfileDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveProfileDetails(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest empolyeeProfileRequest) {
-	    logger.info("inside token generation");	    	
+	    logger.info("inside saveProfileDetails");	    	
 	    	
 	    	SignUpEntity userEntity=null;
 	    	String authToken = "";
