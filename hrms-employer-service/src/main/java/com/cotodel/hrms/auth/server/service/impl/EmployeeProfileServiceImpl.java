@@ -1,0 +1,132 @@
+package com.cotodel.hrms.auth.server.service.impl;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.cotodel.hrms.auth.server.dao.EmployeeDao;
+import com.cotodel.hrms.auth.server.dao.EmployerDao;
+import com.cotodel.hrms.auth.server.dao.SignUpDao;
+import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
+import com.cotodel.hrms.auth.server.model.EmployeeEntity;
+import com.cotodel.hrms.auth.server.model.EmployerEntity;
+import com.cotodel.hrms.auth.server.model.SignUpEntity;
+import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
+import com.cotodel.hrms.auth.server.util.MessageConstant;
+@Transactional
+@Repository
+public class EmployeeProfileServiceImpl implements EmployeeProfileService{
+	
+	@Autowired
+	EmployerDao  employerDao;
+	
+	@Autowired
+	SignUpDao  signUpDao;
+	
+	@Autowired
+	EmployeeDao  employeeDao;
+	
+	
+	@Override
+	public EmployeeProfileRequest saveProfileDetails(EmployeeProfileRequest user) {
+		EmployerEntity employerEntity=null;
+		String response="";
+		try {
+			response=MessageConstant.RESPONSE_FAILED;
+			user.setResponse(response);
+		//Date date = new Date();
+		//LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		
+		SignUpEntity signUpEntity=new SignUpEntity();
+		signUpEntity.setOrgType(user.getOrganizationType());
+		signUpDao.saveUserDetails(signUpEntity);
+		user.setSignupId(signUpEntity.getSignupId());
+		EmployerEntity employer=new EmployerEntity();
+		employer.setSignup(signUpEntity);		
+		employer=getEmployerDeails(employer,user);
+		employerEntity=employerDao.saveDetails(employer);
+		user.setEmployerId(employerEntity.getEmployerId());
+		//
+		EmployeeEntity employee=new EmployeeEntity();
+		employee.setEmployer(employer);
+		employee.setPan(user.getPan());
+		
+		employee=employeeDao.saveDetails(employee);
+		user.setEmployeeId(employee.getEmployeeId());
+
+		response=MessageConstant.RESPONSE_SUCCESS;
+		user.setResponse(response);
+		} catch (Exception e) {
+			response=MessageConstant.RESPONSE_FAILED;
+			user.setResponse(response);
+		}
+		return user;
+	}
+
+	@Override
+	public EmployeeProfileRequest updateProfileDetails(EmployeeProfileRequest user) {
+		EmployerEntity employerEntity=null;
+		String response="";
+		try {
+			response=MessageConstant.RESPONSE_FAILED;
+			user.setResponse(response);
+		//Date date = new Date();
+		//LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		
+		SignUpEntity signUpEntity=signUpDao.getUser(user.getSignupId());
+		signUpEntity.setOrgType(user.getOrganizationType());
+		signUpDao.saveUserDetails(signUpEntity);
+		user.setSignupId(signUpEntity.getSignupId());
+		EmployerEntity employer=employerDao.getUser(user.getEmployerId());
+		
+		employer.setRunPayrollFlag(user.isRunPayrollFlag());
+		employer.setSalaryAdvancesFlag(user.isSalaryAdvancesFlag());
+		
+		employerEntity=employerDao.saveDetails(employer);
+		user.setEmployerId(employerEntity.getEmployerId());
+		//
+		EmployeeEntity employee=employeeDao.getUser(user.getEmployeeId());
+		employee.setEmployer(employer);
+		employee.setPan(user.getPan());
+		
+		employee=employeeDao.saveDetails(employee);
+		user.setEmployeeId(employee.getEmployeeId());
+
+		response=MessageConstant.RESPONSE_SUCCESS;
+		user.setResponse(response);
+		} catch (Exception e) {
+			response=MessageConstant.RESPONSE_FAILED;
+			user.setResponse(response);
+		}
+		return user;
+	}
+	public EmployerEntity getEmployerDeails(EmployerEntity employer,EmployeeProfileRequest user) {
+		employer.setOrgType(user.getOrganizationType());
+		employer.setGstin(user.getGstnNo());
+		employer.setPan(user.getPan());
+		employer.setPanDetails(user.getPanDetails());
+		employer.setCompanyName(user.getCompanyName());
+		employer.setOfficeAddress(user.getOfficeAddress());
+		employer.setAddressLine(user.getAddressLine());
+		employer.setPinCode(user.getPinCode());
+		employer.setStateCode(user.getStateCode());
+		employer.setPayrollEnabledFlag(user.isPayrollEnabledFlag());
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println(user.getPaidDate());
+		Date date=null;
+		try {
+			date=formatter.parse(user.getPaidDate());
+		} catch (Exception e) {
+			
+		}
+		employer.setPaidDate(date);
+		employer.setRunPayrollFlag(user.isRunPayrollFlag());
+		employer.setSalaryAdvancesFlag(user.isSalaryAdvancesFlag());       
+	return employer;
+}
+}

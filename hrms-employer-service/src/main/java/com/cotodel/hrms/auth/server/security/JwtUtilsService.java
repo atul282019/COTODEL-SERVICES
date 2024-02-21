@@ -61,7 +61,7 @@ public class JwtUtilsService {
 				ResponseEntity<TokenAuthResponse> responseEntity = new RestTemplate()
 						.exchange(tokenAuthUrl,HttpMethod.POST,requestEntity,TokenAuthResponse.class);
 
-				if(responseEntity.getBody().isVerifyStatus())
+				if(responseEntity.getBody().isStatus())
 					return true;
 			}else {
 				return false; 

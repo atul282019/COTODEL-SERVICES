@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.model.EmployeeEntity;
 @Repository
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity,Long>{
+	
+	EmployeeEntity findByEmployeeId(Long employeeId);
 }

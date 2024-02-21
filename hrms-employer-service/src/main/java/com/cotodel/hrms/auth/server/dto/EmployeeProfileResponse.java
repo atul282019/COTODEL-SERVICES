@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenAuthResponse {
+public class EmployeeProfileResponse {
 	
-	  private boolean status;
+	 private boolean status;
+	 private String message;
+	  EmployeeProfileRequest data;
 	  private String txnId;
 	  private String timestamp;
 }

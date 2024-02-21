@@ -1,14 +1,12 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,11 +37,7 @@ public class EmployerEntity implements Serializable{
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="employer_seq")
 	@Column(name="employer_id")
 	private Long employerId;
-	
-//	@OneToOne(mappedBy = "employer")
-//	@Column(name="signup_id")
-//    private SignUpEntity signUpEntity;
-	
+		
 	@OneToOne
     @JoinColumn(name = "signup_id")
     private SignUpEntity signup;
@@ -102,5 +97,41 @@ public class EmployerEntity implements Serializable{
 	
 	@Column(name="ip_details")
 	private String ipDetails;
-		
+	//Extra field add but 
+	
+	@Column(name="brand_name")
+	private String brandName;
+	
+	@Column(name="pan_details")
+	private String panDetails;
+	
+	@Column(name="company_name")
+	private String companyName;
+	
+	@Column(name="office_address")
+	private String officeAddress;
+	
+	@Column(name="address_line")
+	private String addressLine;
+	
+	@Column(name="pin_code")
+	private String pinCode;
+	
+	@Column(name="state_code")
+	private String stateCode;
+   
+	@Column(name="payroll_enabled_flag")
+	private boolean payrollEnabledFlag;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@Column(name="paid_date")
+	private Date paidDate;
+    
+	@Column(name="run_payroll_flag")
+	private boolean runPayrollFlag;
+    
+	@Column(name="salary_advances_flag")
+	private boolean salaryAdvancesFlag;
+    
+	
 }
