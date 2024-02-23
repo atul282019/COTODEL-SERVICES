@@ -49,7 +49,6 @@ public class EmployeeController {
 	    logger.info("inside saveDetails");	    	
 	    	
 	    
-	    
 	    	String message = "";
 	    	EmployeeRequest response=null;
 	    	try {	    		
