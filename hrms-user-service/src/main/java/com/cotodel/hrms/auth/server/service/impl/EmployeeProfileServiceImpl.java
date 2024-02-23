@@ -5,13 +5,10 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.cotodel.hrms.auth.server.dao.EmployeeDao;
 import com.cotodel.hrms.auth.server.dao.EmployerDao;
-import com.cotodel.hrms.auth.server.dao.OrganizationDao;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
 import com.cotodel.hrms.auth.server.entity.EmployeeEntity;
@@ -20,8 +17,8 @@ import com.cotodel.hrms.auth.server.entity.SignUpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
-import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+@Transactional
 @Repository
 public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	
@@ -34,7 +31,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	@Autowired
 	EmployeeDao  employeeDao;
 	
-	@Transactional
+	
 	@Override
 	public String saveProfileDetails(EmployeeProfileRequest user) {
 		UserEntity userDetails= new UserEntity();
@@ -43,7 +40,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		try {
 			
 		
-		UserEmpEntity userEmpEntity= new UserEmpEntity();
+		//UserEmpEntity userEmpEntity= new UserEmpEntity();
 		//CopyUtility.copyProperties(userDetails, user);
 		Date date = new Date();
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -57,7 +54,6 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		employer.setSignup(signUpEntity);
 		employer.setOrgType(user.getOrganizationType());
 		employerEntity=employerDao.saveDetails(employer);
-		
 		//
 		EmployeeEntity employee=new EmployeeEntity();
 		//employer.setSignup(signUpEntity);
