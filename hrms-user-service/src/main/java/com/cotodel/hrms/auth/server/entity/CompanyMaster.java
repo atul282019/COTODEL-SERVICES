@@ -25,23 +25,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="state_mst")
+@Table(name="company_mst")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="state_mst_seq" , sequenceName="state_mst_seq", allocationSize=1)
-public class StateMaster implements Serializable{
+@SequenceGenerator(name="company_mst_seq" , sequenceName="company_mst_seq", allocationSize=1)
+public class CompanyMaster implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="state_mst_seq")
-	private Long id;
 	
-	private int state_code;
-	private String state_name;
-	private int status;
-	private LocalDate created_date;
-	private LocalDate  updated_date;
-	private String district_code;
-	private String district_name;	 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="company_mst_seq")
+	private Long id;
+	@Id
+	private String code;
+	private String industry;
+	private String sector;
+	private String headquarters;
+	private String founded;
+	private String notes;
+	private String name;
 
 }
