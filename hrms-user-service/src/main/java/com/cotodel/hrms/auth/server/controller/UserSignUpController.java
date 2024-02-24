@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.UserService;
+import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,29 +55,29 @@ public class UserSignUpController {
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
+	    	List<UserEntity> userDetails=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				responseToken=userService.userExist(userReq.getMobile(), userReq.getEmail());
+				if(!responseToken.equalsIgnoreCase("")) {
+					return ResponseEntity.ok(new UserSignUpResponse(false,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+				}else {
 	    	    userEntity=	userService.saveUserDetails(userReq);
 	    		
-	    	 if(userEntity!=null) {	    
+	    	    if(userEntity!=null) {	    
 	    		 userService.sendEmailToEmployee(userReq);
-//	    		 responseToken = userService.getToken(companyId);
-//					//String authToken = "";
-//					if (!ObjectUtils.isEmpty(responseToken)) {
-//						JSONObject getTokenRes = new JSONObject(responseToken);
-//						authToken = getTokenRes.getString("access_token");
-//					}
-	    		 return ResponseEntity.ok(new UserSignUpResponse(true,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
-	    	 }
-	    	 
+
+	    		 return ResponseEntity.ok(new UserSignUpResponse(true,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    }
+			}
 	    	}catch (Exception e) {
 				
 	    		e.printStackTrace();
 	    		logger.error("error in saveUserDetails====="+e);
 			}
 	        
-	        return ResponseEntity.ok(new UserSignUpResponse(false,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	        return ResponseEntity.ok(new UserSignUpResponse(false,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	          
 	        
 	    }

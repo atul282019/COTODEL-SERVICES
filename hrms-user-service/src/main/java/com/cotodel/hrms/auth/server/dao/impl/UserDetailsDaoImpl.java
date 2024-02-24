@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -55,4 +57,11 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		return userRepository.getByUser(userName);
 	}
 
+	@Override
+	public List<UserEntity> getUser(String mobile, String email) {
+		// TODO Auto-generated method stub
+		return userRepository.findByMobileAndEmailAndStatus(mobile, email, mobile);
+	}
+
+	
 }

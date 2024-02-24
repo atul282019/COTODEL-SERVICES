@@ -193,7 +193,7 @@ public class MobileEmailVerifyController {
 				userForm.setEmail(mobileno);
 				userForm.setMobile(mobileno);
 				//model.addAttribute("userform",userForm);
-				return ResponseEntity.ok(new UserSignUpResponse(true,userForm,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),""));
+				return ResponseEntity.ok(new UserSignUpResponse(true,"",userForm,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),""));
 	    		
 //	    	 if(roleMaster!=null)
 //	    		 return ResponseEntity
@@ -205,7 +205,7 @@ public class MobileEmailVerifyController {
 	    		// TODO: handle exception
 			}
 	        
-	    	return ResponseEntity.ok(new UserSignUpResponse(false,userForm,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),""));
+	    	return ResponseEntity.ok(new UserSignUpResponse(false,"",userForm,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),""));
 	          
 	        
 	    }

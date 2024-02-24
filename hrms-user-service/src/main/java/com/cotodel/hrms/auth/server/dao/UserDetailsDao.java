@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dao;
 
+import java.util.List;
+
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 
@@ -14,7 +16,7 @@ public interface UserDetailsDao {
 	
 	public UserEntity getByUserName(String userName);
 	
-	
+	List<UserEntity> getUser(String mobile, String email);
 	
 
 }

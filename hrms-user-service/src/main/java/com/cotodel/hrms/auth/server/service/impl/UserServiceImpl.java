@@ -3,6 +3,7 @@ package com.cotodel.hrms.auth.server.service.impl;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Session;
@@ -48,6 +49,9 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public UserEntity saveUserDetails(UserRequest user) {
 		// TODO Auto-generated method stub
+		
+		
+		
 		UserEntity userDetails= new UserEntity();
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
 		//CopyUtility.copyProperties(userDetails, user);
@@ -218,6 +222,15 @@ public class UserServiceImpl implements UserService {
 		data.put("templateid", applicationConstantConfig.templateVerifyId);
 		logger.info("Verify SMS OTP Request JSON========"+data.toString());
 		return data.toString();
+	}
+
+	@Override
+	public String userExist(String mobile, String email) {
+		List<UserEntity> userDetail = userDetailsDao.getUser(mobile,email);
+		if(userDetail!=null && userDetail.size()>0) {
+			return MessageConstant.USER_EXIST;
+		}
+		return "";
 	}
 
 }

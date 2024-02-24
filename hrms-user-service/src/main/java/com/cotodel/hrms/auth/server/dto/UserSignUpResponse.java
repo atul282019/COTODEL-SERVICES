@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserSignUpResponse {
 	
 	  private boolean status;
+	  private String message;
 	  UserEntity userEntity;
 	  private String txnId;
 	  private String timestamp;

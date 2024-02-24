@@ -19,4 +19,6 @@ public interface UserService {
 	String verifyEmailUpdate(String email);
 	String sendSmsOtp(String authToken,String mobile);
 	String verifySmsOtp(String authToken,String mobile, String pwd);
+	
+	String userExist(String mobile,String email);
 }
