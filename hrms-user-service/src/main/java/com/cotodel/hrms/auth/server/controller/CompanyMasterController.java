@@ -11,12 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.CompanyResponse;
-import com.cotodel.hrms.auth.server.dto.StateResponse;
 import com.cotodel.hrms.auth.server.entity.CompanyMaster;
-import com.cotodel.hrms.auth.server.entity.StateMaster;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.service.CompanyMasterService;
-import com.cotodel.hrms.auth.server.service.StateMasterService;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
 import io.swagger.v3.oas.annotations.Operation;
