@@ -5,25 +5,17 @@
  */
 package com.cotodel.hrms.auth.server.service.impl;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.cotodel.hrms.auth.server.dao.CompanyMasterDao;
-import com.cotodel.hrms.auth.server.dao.StateMasterDao;
 import com.cotodel.hrms.auth.server.dto.CompanyRequest;
 import com.cotodel.hrms.auth.server.entity.CompanyMaster;
-import com.cotodel.hrms.auth.server.entity.EmployeeEntity;
 import com.cotodel.hrms.auth.server.entity.EmployerEntity;
-import com.cotodel.hrms.auth.server.entity.SignUpEntity;
-import com.cotodel.hrms.auth.server.entity.StateMaster;
-import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.service.CompanyMasterService;
-import com.cotodel.hrms.auth.server.service.StateMasterService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 
@@ -31,7 +23,7 @@ import com.cotodel.hrms.auth.server.util.MessageConstant;
  * 
  */
 
-@Service
+@Repository
 public class CompanyMasterServiceImpl implements CompanyMasterService {
 
 	@Autowired
