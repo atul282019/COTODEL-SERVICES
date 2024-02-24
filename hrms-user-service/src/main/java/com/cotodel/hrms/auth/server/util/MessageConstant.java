@@ -14,5 +14,6 @@ public class MessageConstant {
 	public static final String USER_EMAIL_VERIFIED = "User verified with this email!!";
 	public static final String USER_EMAIL_NOT_VERIFIED = "User not verified with this email!!";
 	public static final String USER_EXIST = "User Already exist with this email or mobile number !!";
-	
+	public static final boolean TRUE = true;
+	public static final boolean FALSE = false;
 }

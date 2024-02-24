@@ -2,18 +2,25 @@ package com.cotodel.hrms.auth.server.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.CompanyRequest;
 import com.cotodel.hrms.auth.server.dto.CompanyResponse;
+import com.cotodel.hrms.auth.server.dto.CompanySaveResponse;
 import com.cotodel.hrms.auth.server.entity.CompanyMaster;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.service.CompanyMasterService;
+import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +49,7 @@ public class CompanyMasterController {
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/company-list",produces = {"application/json"}, consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getState() {
+	    public ResponseEntity<Object> getCompanyList() {
 	    	logger.info("inside get state-list");
 	    	List<CompanyMaster>  companyMasters=null;
 	    	try {
@@ -56,6 +63,35 @@ public class CompanyMasterController {
 			}
 	    	
 	    	 return ResponseEntity.ok(new CompanyResponse(false,companyMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	          
+	        
+	    }
+	 
+	 @Operation(summary = "This API will provide the Authentication token", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/company",produces = {"application/json"}, consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> saveCompany(HttpServletRequest request,@Valid @RequestBody CompanyRequest companyRequest) {
+	    	logger.info("inside get state-list");
+	    	String response="";
+	    	try {
+	    		response=companyMasterService.saveCompanyDetails(companyRequest);
+	    		if(response.equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new CompanySaveResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new CompanySaveResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	
+		    	 
+			} catch (Exception e) {
+				logger.error("error in state-list====="+e);
+			}
+	    	
+	    	 	return ResponseEntity.ok(new CompanySaveResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	          
 	        
 	    }

@@ -5,8 +5,10 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.cotodel.hrms.auth.server.dao.EmployeeDao;
 import com.cotodel.hrms.auth.server.dao.EmployerDao;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
@@ -14,7 +16,6 @@ import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
 import com.cotodel.hrms.auth.server.entity.EmployeeEntity;
 import com.cotodel.hrms.auth.server.entity.EmployerEntity;
 import com.cotodel.hrms.auth.server.entity.SignUpEntity;
-import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;

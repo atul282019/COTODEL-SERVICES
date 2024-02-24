@@ -15,4 +15,5 @@ import com.cotodel.hrms.auth.server.entity.CompanyMaster;
 public interface CompanyMasterDao {
 	
 	public List<CompanyMaster> getByCompanyList();
+	public CompanyMaster saveCompanyDetails(CompanyMaster company);
 }

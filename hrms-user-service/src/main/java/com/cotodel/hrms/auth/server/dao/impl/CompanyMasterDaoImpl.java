@@ -29,6 +29,12 @@ public class CompanyMasterDaoImpl implements CompanyMasterDao {
 		return companyMasterRepository.getByCompanyList();
 	}
 
+	@Override
+	public CompanyMaster saveCompanyDetails(CompanyMaster company) {
+		// TODO Auto-generated method stub
+		return companyMasterRepository.saveAndFlush(company);
+	}
+
 
 	
 }
