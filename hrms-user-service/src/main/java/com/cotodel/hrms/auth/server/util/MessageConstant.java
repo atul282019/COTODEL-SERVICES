@@ -10,4 +10,9 @@ public class MessageConstant {
 	public static final String OTP_FAILED = "Otp Failed.";
 	public static final String PROFILE_SUCCESS = "Data Saved Successfully.";
 	public static final String PROFILE_FAILED = "Data Not Saved Successfully.";
+	public static final String USER_EMAIL_ALREADY_VERIFIED = "User Already verified with this email!!";
+	public static final String USER_EMAIL_VERIFIED = "User verified with this email!!";
+	public static final String USER_EMAIL_NOT_VERIFIED = "User not verified with this email!!";
+	public static final String USER_EXIST = "User Already exist with this email or mobile number !!";
+	
 }

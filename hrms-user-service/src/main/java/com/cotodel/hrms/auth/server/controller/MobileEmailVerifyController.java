@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dto.UserOtpResponse;
 import com.cotodel.hrms.auth.server.dto.UserOtpVerifyResponse;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
@@ -45,6 +46,9 @@ public class MobileEmailVerifyController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	UserDetailsDao userDetailsDao;
 	
 	private static final Logger logger = LoggerFactory.getLogger(MobileEmailVerifyController.class);
     
@@ -220,28 +224,30 @@ public class MobileEmailVerifyController {
 	    	logger.info("inside verifyLink..");
 	    	List<RoleMaster> roleMaster=null;
 	    	String response="";
+	    	UserEntity userDetails= null;
 	    	try {
 	    		
 	    		// write code here
+	    		userDetails = userDetailsDao.checkUserEmail(userReq.getEmail());
+	    		if(userDetails!=null && userDetails.getStatus()==1) {
+	    			return ResponseEntity.ok(new UserVerifyResponse(false,MessageConstant.USER_EMAIL_ALREADY_VERIFIED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
 	    		response = userService.verifyEmailUpdate(userReq.getEmail());
 	    		
 	    		if (response.equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new UserVerifyResponse(true,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new UserVerifyResponse(true,MessageConstant.USER_EMAIL_VERIFIED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new UserVerifyResponse(false,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new UserVerifyResponse(false,MessageConstant.USER_EMAIL_NOT_VERIFIED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
-	    		
+	    		}
 	    	 
 	    	}catch (Exception e) {
 				
 	    		logger.error("error in verifyLink====="+e);
 			}
 	        
-	    	return ResponseEntity.ok(new UserVerifyResponse(false,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	          
+	    	return ResponseEntity.ok(new UserVerifyResponse(false,MessageConstant.USER_EMAIL_NOT_VERIFIED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	        
 	    }
-
-	
 
 }

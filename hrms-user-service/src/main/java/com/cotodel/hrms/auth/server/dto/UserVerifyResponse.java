@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class UserVerifyResponse {
 	
 	  private boolean status;
+	  private String message;
 	  private String txnId;
 	  private String timestamp;
 }
