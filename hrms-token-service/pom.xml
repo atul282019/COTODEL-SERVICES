@@ -11,10 +11,11 @@
 	<groupId>com.cotodel.hrms</groupId>
 	<artifactId>hrms-token-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>hrms-token-service</name>
 	<description>Hrms Authentication server</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
 		<spring-cloud.version>2021.0.8</spring-cloud.version>
 	</properties>
 <!--  Profiles -->	
