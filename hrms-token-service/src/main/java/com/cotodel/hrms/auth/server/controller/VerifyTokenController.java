@@ -38,7 +38,6 @@ public class VerifyTokenController {
     
     @Autowired
     JwtUtilsService jwtUtilsService;
-
     
     
     @Operation(summary = "This API will verify the access token", security = {

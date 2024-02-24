@@ -37,6 +37,7 @@
 			<attribute name="m2e-apt" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
@@ -44,6 +45,8 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+=======
+>>>>>>> 89ca386682e0f1777424cb2786cc1e4eb38d8c1f
 	<classpathentry kind="src" output="target/test-classes" path="target/generated-test-sources/test-annotations">
 		<attributes>
 			<attribute name="optional" value="true"/>
