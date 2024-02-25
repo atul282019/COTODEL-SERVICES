@@ -57,9 +57,9 @@ public class EmployeeProfileController {
 				SetDatabaseTenent.setDataSource(companyId);
 				response=employeeProfileService.saveProfileDetails(empolyeeProfileRequest);
 	    		if(response.equalsIgnoreCase(MessageConstant.PROFILE_SUCCESS)) {
-	    			return ResponseEntity.ok(new EmployeeProfileResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeProfileResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new EmployeeProfileResponse(false,MessageConstant.PROFILE_FAILED,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeProfileResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
@@ -67,7 +67,7 @@ public class EmployeeProfileController {
 	    		response=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new EmployeeProfileResponse(false,response,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new EmployeeProfileResponse(MessageConstant.FALSE,response,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 		
 }
