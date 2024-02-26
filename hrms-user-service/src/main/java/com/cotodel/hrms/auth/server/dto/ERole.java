@@ -5,6 +5,8 @@ public enum ERole {
   EMPLOYER,
   ADMIN,
   APPROVER,
-  SUPERADMIN
-  
+  SUPERADMIN,
+  HR_MANAGER,
+  MANAGER,
+  EX_EMPLOYEE
 }

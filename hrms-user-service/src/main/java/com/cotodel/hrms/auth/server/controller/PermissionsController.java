@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.PermissionsMasterResponse;
 import com.cotodel.hrms.auth.server.dto.RoleMasterResponse;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
-import com.cotodel.hrms.auth.server.entity.RoleMaster;
+import com.cotodel.hrms.auth.server.entity.PermissionsMaster;
 import com.cotodel.hrms.auth.server.exception.ApiError;
-import com.cotodel.hrms.auth.server.service.RolesMasterService;
+import com.cotodel.hrms.auth.server.service.PermissionsMasterService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -30,15 +31,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/Api")
-public class RolesController {
+public class PermissionsController {
 
 	
 
 	
-	private static final Logger logger = LoggerFactory.getLogger(RolesController.class);
+	private static final Logger logger = LoggerFactory.getLogger(PermissionsController.class);
     
 	@Autowired
-	RolesMasterService rolesMasterService;
+	PermissionsMasterService permissionsMasterService;
 	
 	 @Operation(summary = "This API will provide the User Roles Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -47,16 +48,16 @@ public class RolesController {
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/Roles",produces = {"application/json"}, consumes = {"application/json","application/text"},
+	    @RequestMapping(value = "/get/Permissions",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveUserDetails(@Valid @RequestBody UserRequest userReq) {
 	    	logger.info("inside get Roles");
-	    	List<RoleMaster> roleMaster=null;
+	    	List<PermissionsMaster> permissionsMasters=null;
 	    	try {
 	    		
-	    		roleMaster=	rolesMasterService.getRolesMaster(userReq.getEmployerid());
-	    		 if(roleMaster!=null && roleMaster.size()>0 )
-		    		 return ResponseEntity.ok(new RoleMasterResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,roleMaster,TransactionManager.getCurrentTimeStamp()));
+	    		permissionsMasters=	permissionsMasterService.getPermissionsMaster(userReq.getEmployerid());
+	    		 if(permissionsMasters!=null && permissionsMasters.size()>0 )
+		    		 return ResponseEntity.ok(new PermissionsMasterResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,permissionsMasters,TransactionManager.getCurrentTimeStamp()));
 		    	 
 	    	 
 	    	}catch (Exception e) {
@@ -64,7 +65,7 @@ public class RolesController {
 	    		logger.error("error in Roles====="+e);
 			}
 	        
-	    	return ResponseEntity.ok(new RoleMasterResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,roleMaster,TransactionManager.getCurrentTimeStamp()));
+	    	return ResponseEntity.ok(new PermissionsMasterResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,permissionsMasters,TransactionManager.getCurrentTimeStamp()));
 	        
 	    }
 
