@@ -7,11 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeePayrollResponse {
+public class EmployeeGetRequest {
 	
-	 private boolean status;
-	 private String message;
-	 EmployeePayrollRequest data;
-	 private String txnId;
-	 private String timestamp;
-}
+	private Long employeeId;	}

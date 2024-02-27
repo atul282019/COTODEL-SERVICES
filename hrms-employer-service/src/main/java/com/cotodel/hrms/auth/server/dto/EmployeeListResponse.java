@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeePayrollResponse {
+public class EmployeeListResponse {
 	
 	 private boolean status;
 	 private String message;
-	 EmployeePayrollRequest data;
-	 private String txnId;
-	 private String timestamp;
+	  List<Employee> data;
+	  private String txnId;
+	  private String timestamp;
 }

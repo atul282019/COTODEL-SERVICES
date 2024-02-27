@@ -95,17 +95,7 @@ public class SignUpEntity implements Serializable{
 	 @OneToOne(mappedBy = "signup", cascade = CascadeType.ALL)
 	 private EmployerEntity employer;
 
-	@Override
-	public String toString() {
-		return "SignUpEntity [signupId=" + signupId + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", dateOfBirth=" + dateOfBirth + ", gender=" + gender + ", contactNumber=" + contactNumber
-				+ ", email=" + email + ", address=" + address + ", orgType=" + orgType + ", orgName=" + orgName
-				+ ", mobile=" + mobile + ", creationDate=" + creationDate + ", vstatusEmail=" + vstatusEmail
-				+ ", vstatusMobile=" + vstatusMobile + ", vstatusEmailDate=" + vstatusEmailDate + ", vstatusMobileDate="
-				+ vstatusMobileDate + ", username=" + username + ", pwd=" + pwd + ", status=" + status + ", intextra="
-				+ intextra + ", extra1=" + extra1 + ", extra2=" + extra2 + ", extra3=" + extra3 + ", intextra1="
-				+ intextra1 + ", freetext=" + freetext + ", remarks=" + remarks + ", employer=" + employer + "]";
-	}
+	
 	
 	
 }

@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +25,12 @@ public class EmployeeDaoImpl implements EmployeeDao{
 	public EmployeeEntity getUser(Long employeeId) {
 		// TODO Auto-generated method stub
 		return employeeRepository.findByEmployeeId(employeeId);
+	}
+
+	@Override
+	public List<EmployeeEntity> getEmployee() {
+		// TODO Auto-generated method stub
+		return employeeRepository.getByEmployeeList();
 	}
 	
 
