@@ -121,17 +121,17 @@ public class EmployerEntity implements Serializable{
 	private String stateCode;
    
 	@Column(name="payroll_enabled_flag")
-	private boolean payrollEnabledFlag;
+	private boolean payrollEnabledFlag=false;
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@Column(name="paid_date")
 	private Date paidDate;
     
 	@Column(name="run_payroll_flag")
-	private boolean runPayrollFlag;
+	private boolean runPayrollFlag=false;
     
 	@Column(name="salary_advances_flag")
-	private boolean salaryAdvancesFlag;
+	private boolean salaryAdvancesFlag=false;
     
 	
 }
