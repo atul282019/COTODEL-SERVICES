@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -32,8 +34,11 @@ public class Hours implements Serializable{
 	@Column(name="id")
 	private Long id;
 	
-	private String project;
-	private Long hour;
+	private String projectA;
+	private String projectB;
 	
+//	@OneToOne
+//    @JoinColumn(name = "timesheet_id",referencedColumnName ="id")
+//    private Timesheet timesheet;
 	
 }

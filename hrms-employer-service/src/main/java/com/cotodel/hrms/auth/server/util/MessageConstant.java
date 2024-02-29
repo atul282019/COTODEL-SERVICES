@@ -10,4 +10,6 @@ public class MessageConstant {
 	public static final String OTP_FAILED = "Otp Failed.";
 	public static final String PROFILE_SUCCESS = "Data Saved Successfully.";
 	public static final String PROFILE_FAILED = "Data Not Saved Successfully.";
+	public static final boolean TRUE = true;
+	public static final boolean FALSE = false;
 }

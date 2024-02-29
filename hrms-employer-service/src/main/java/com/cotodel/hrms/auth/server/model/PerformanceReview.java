@@ -1,10 +1,11 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,15 +36,21 @@ public class PerformanceReview implements Serializable{
 	@Column(name="id")
 	private Long id;
 
-	@OneToOne
-    @JoinColumn(name = "employee_id")
-    private EmployeeEntity employee;
+//	@OneToOne
+//    @JoinColumn(name = "company_employee_id")
+//    private CompanyEmployeeEntity employee;
+	
+	
+	@Column(name = "company_employee_id")
+    private Long employeeId;
 	
 	@Column(name="review_date")
-	private Date reviewDate;
+	private LocalDate reviewDate;
 	
 	private String comments;
 	
-	
-	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ratings_id",referencedColumnName ="id")
+	Ratings ratings;
+		
 }

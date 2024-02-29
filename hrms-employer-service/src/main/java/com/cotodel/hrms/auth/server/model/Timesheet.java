@@ -1,17 +1,17 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -35,19 +35,24 @@ public class Timesheet implements Serializable{
 	@Column(name="id")
 	private Long id;
 
-	@OneToOne
-    @JoinColumn(name = "employee_id")
-    private EmployeeEntity employee;
+//	@OneToOne
+//    @JoinColumn(name = "company_employee_id",referencedColumnName ="id")
+//    private CompanyEmployeeEntity employee;
+	
+	@Column(name = "company_employee_id")
+	private Long employeeId;
 	
 	@Column(name="start_date")
-	private Date startDate;
+	private LocalDate startDate;
 	
 	@Column(name="end_date")
-	private Date endDate;
+	private LocalDate endDate;
 	
 	private String comments;
-//	@OneToMany
-//    @JoinColumn(name = "id")
-//	private Hours hours;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hours_id",referencedColumnName ="id")
+	private Hours hours;
+	
 	
 }

@@ -20,15 +20,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="ratings")
+@Table(name="skills")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="ratings_seq" , sequenceName="ratings_seq", allocationSize=1)
+@SequenceGenerator(name="skills_seq" , sequenceName="skills_seq", allocationSize=1)
 public class Skills implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ratings_seq")	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="skills_seq")	
 	@Column(name="id")
 	private Long id;
 	
