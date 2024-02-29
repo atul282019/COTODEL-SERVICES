@@ -21,8 +21,4 @@ public class RolePermissionsDaoImpl implements RolePermissionsDao{
 		return rolePermissionsMasterRepository.getByRolePermissionsList(employerId);
 	}
 
-	
-	
-	
-
 }
