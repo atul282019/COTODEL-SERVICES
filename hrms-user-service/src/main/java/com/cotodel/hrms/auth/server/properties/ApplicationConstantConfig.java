@@ -28,4 +28,22 @@ public class ApplicationConstantConfig {
 	@Value("${otp.templateid.verify.token}")
 	public String templateVerifyId;
 	
+	@Value("${otp.channel.sender.token}")
+	public String channelSenderToken;
+	
+	@Value("${otp.expiry.sender.token}")
+	public int expirySenderToken;
+	
+	@Value("${otp.length.sender.token}")
+	public int otpLengthSenderToken;
+	
+	@Value("${otp.less.sender.url}")
+	public String otpLessSenderUrl;
+	
+	@Value("${otp.less.sender.client.id}")
+	public String otpLessSenderClientId;
+	
+	@Value("${otp.less.sender.client.secret}")
+	public String otpLessSenderClientSecret;
+	
 }

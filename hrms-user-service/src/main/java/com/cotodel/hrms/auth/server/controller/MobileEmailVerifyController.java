@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
+import com.cotodel.hrms.auth.server.dto.UserNewOtpResponse;
 import com.cotodel.hrms.auth.server.dto.UserOtpResponse;
 import com.cotodel.hrms.auth.server.dto.UserOtpVerifyResponse;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
@@ -249,5 +250,60 @@ public class MobileEmailVerifyController {
 	    	return ResponseEntity.ok(new UserVerifyResponse(false,MessageConstant.USER_EMAIL_NOT_VERIFIED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	        
 	    }
+
+	 @Operation(summary = "This API will provide the User Mobile Verify Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/getOtpNew",produces = {"application/json"}, consumes = {"application/json","application/text"},
+	    method = RequestMethod.POST)
+	    public ResponseEntity<Object> getOtpNew(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
+	    	logger.info("inside  getOtpNew......");
+	    	//List<RoleMaster> roleMaster=null;
+	    	String response="";
+	    	UserEntity userEntity=null;
+	    	try {
+	    		// write code here
+	    		String authToken=request.getHeader("Authorization");
+	    		userEntity=userService.checkUserMobile(userReq.getMobile());
+	    		if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    			response=userService.sendSmsOtpNew(userReq.getMobile());
+	    			String orderId="";
+	    			//response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";
+	    			if(!ObjectUtils.isEmpty(response)) {
+
+						JSONObject demoRes= new JSONObject(response);
+						
+						if(demoRes.has("orderId")) {
+							orderId=demoRes.isNull("orderId")?"": demoRes.getString("orderId");
+							return ResponseEntity.ok(new UserNewOtpResponse(true,MessageConstant.OTP_SENT,orderId,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+							
+						}else {
+							orderId=demoRes.isNull("message")?"": demoRes.getString("message");
+							return ResponseEntity.ok(new UserNewOtpResponse(false,MessageConstant.OTP_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+						}
+
+					}else {
+						return ResponseEntity.ok(new UserNewOtpResponse(false,MessageConstant.OTP_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+					}
+	    		}
+	    		
+	    		
+	    	 
+	    	}catch (Exception e) {
+				
+	    		// TODO: handle exception
+	    		logger.error("error in getOtp====="+e);
+			}
+	        
+	    	return ResponseEntity.ok(new UserOtpResponse(false,MessageConstant.OTP_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	          
+	        
+	    }
+
+	
 
 }

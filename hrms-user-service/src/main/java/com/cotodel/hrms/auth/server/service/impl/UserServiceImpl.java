@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
 import javax.mail.Session;
 import javax.transaction.Transactional;
@@ -233,4 +234,27 @@ public class UserServiceImpl implements UserService {
 		return "";
 	}
 
+	@Override
+	public String sendSmsOtpNew(String mobile) {
+		// TODO Auto-generated method stub
+		return  CommonUtility.userSmsRequest("",applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpRequest(mobile),applicationConstantConfig.otpLessSenderUrl);
+	}
+	
+	public  String smsOtpRequest(String mobile){
+		JSONObject data= new JSONObject();
+		data.put("phoneNumber", "+91"+mobile);
+		data.put("orderId", randomNumber());
+		data.put("hash", "");
+		data.put("otpLength", applicationConstantConfig.otpLengthSenderToken);
+		data.put("channel", applicationConstantConfig.channelSenderToken);
+		data.put("expiry", applicationConstantConfig.expirySenderToken);
+		logger.info("send SMS OTP Request"+data);
+		return data.toString();
+	}		
+	
+	public  int randomNumber(){
+	Random random = new Random();
+	int randomNumber = random.nextInt(900) + 100;
+	return randomNumber;
+	}
 }

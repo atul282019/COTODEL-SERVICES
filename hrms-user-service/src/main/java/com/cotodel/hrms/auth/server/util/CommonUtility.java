@@ -46,6 +46,35 @@ public class CommonUtility {
 		}		
 	}
 	
+	public static String userSmsRequest(String sAccessToken,String clientid,String secretid,String requestJson,String url){
+		String returnStr=null;
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		try{
+			logger.info(" Request URL---"+url);
+			logger.info(" Request Json---"+requestJson);
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("clientId", clientid);
+			headers.set("clientSecret", secretid);
+			//headers.set
+			  if(sAccessToken!=null && !sAccessToken.isEmpty()) {
+			  headers.setBearerAuth(sAccessToken); }
+			 
+
+			HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
+
+			returnStr = restTemplate.postForObject(url, entity, String.class);
+			logger.info(" response Json---"+returnStr);
+			return returnStr;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}finally {
+			restTemplate=null;headers=null;	
+		}		
+	}
+
 	public static String getTokenRequest(String sAccessToken,String requestJson,String companyId,String url){
 		String returnStr=null;
 		RestTemplate restTemplate = new RestTemplate();
