@@ -55,7 +55,6 @@ public class UserSignUpController {
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
-	    	List<UserEntity> userDetails=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);

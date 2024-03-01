@@ -56,11 +56,7 @@ public class CommonUtility {
 
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.set("clientId", clientid);
-			headers.set("clientSecret", secretid);
-			//headers.set
-//			  if(sAccessToken!=null && !sAccessToken.isEmpty()) {
-//			  headers.setBearerAuth(sAccessToken); }
-			 
+			headers.set("clientSecret", secretid);	 
 
 			HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
 

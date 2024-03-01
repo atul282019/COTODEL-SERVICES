@@ -275,8 +275,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String resendSmsOtp(String mobile, String orderId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsResendOtpRequest(mobile,orderId),applicationConstantConfig.otpLessResenderUrl);
 	}
 	
+	public  String smsResendOtpRequest(String mobile,String orderId){
+		JSONObject data= new JSONObject();
+		data.put("phoneNumber", "+91"+mobile);
+		data.put("orderId", orderId);
+		data.put("hash", "");
+		data.put("otpLength", applicationConstantConfig.otpLengthSenderToken);
+		data.put("channel", applicationConstantConfig.channelSenderToken);
+		data.put("expiry", applicationConstantConfig.expirySenderToken);
+		logger.info("resend send SMS OTP Request"+data);
+		return data.toString();
+	}	
 }

@@ -356,7 +356,7 @@ public class MobileEmailVerifyController {
 	    		logger.error("error in verifyOtp====="+e);
 			}
 	        
-	    	return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
+	    	return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
 	          
 	        
 	    }
@@ -405,10 +405,10 @@ public class MobileEmailVerifyController {
 	    	}catch (Exception e) {
 				
 	    		// TODO: handle exception
-	    		logger.error("error in getOtp====="+e);
+	    		logger.error("error in resend getOtp====="+e);
 			}
 	        
-	    	return ResponseEntity.ok(new UserOtpResponse(false,MessageConstant.OTP_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    	return ResponseEntity.ok(new UserOtpResponse(false,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	          
 	        
 	    }
