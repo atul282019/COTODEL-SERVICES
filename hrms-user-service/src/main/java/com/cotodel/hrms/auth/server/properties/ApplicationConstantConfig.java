@@ -46,4 +46,8 @@ public class ApplicationConstantConfig {
 	@Value("${otp.less.sender.client.secret}")
 	public String otpLessSenderClientSecret;
 	
+	@Value("${otp.less.verify.url}")
+	public String otpLessVerifyUrl;
+	
+	
 }

@@ -237,7 +237,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String sendSmsOtpNew(String mobile) {
 		// TODO Auto-generated method stub
-		return  CommonUtility.userSmsRequest("",applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpRequest(mobile),applicationConstantConfig.otpLessSenderUrl);
+		return  CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpRequest(mobile),applicationConstantConfig.otpLessSenderUrl);
 	}
 	
 	public  String smsOtpRequest(String mobile){
@@ -253,8 +253,30 @@ public class UserServiceImpl implements UserService {
 	}		
 	
 	public  int randomNumber(){
-	Random random = new Random();
-	int randomNumber = random.nextInt(900) + 100;
-	return randomNumber;
+		Random random = new Random();
+		int randomNumber = random.nextInt(900) + 100;
+		return randomNumber;
 	}
+
+	@Override
+	public String verifySmsOtpNew(String oderID, String mobile, String otp) {
+		// TODO Auto-generated method stub
+		return  CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpVerifyRequest(oderID,mobile,otp),applicationConstantConfig.otpLessVerifyUrl);
+	}
+	
+	public  String smsOtpVerifyRequest(String orderId,String mobile,String otp){
+		JSONObject data= new JSONObject();
+		data.put("phoneNumber", "+91"+mobile);
+		data.put("orderId", orderId);
+		data.put("otp", otp);
+		logger.info("verify SMS OTP Request"+data);
+		return data.toString();
+	}
+
+	@Override
+	public String resendSmsOtp(String mobile, String orderId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

@@ -304,6 +304,114 @@ public class MobileEmailVerifyController {
 	        
 	    }
 
-	
+	 @Operation(summary = "This API will provide the User Mobile Verify Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/verifyOtpNew",produces = {"application/json"}, consumes = {"application/json","application/text"},
+	    method = RequestMethod.POST)
+	    public ResponseEntity<Object> verifyOtpNew(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
+	    	logger.info("inside token verifyOtp");
+	    	String response="";
+	    	String message="";
+	    	UserEntity userEntity=null;
+	    	boolean isValid=false;
+	    	try {
+	    		
+	    		// write code here
+	    		String authToken=request.getHeader("Authorization");
+	    		userEntity=userService.checkUserMobile(userReq.getMobile());
+	    		if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    			response=userService.verifySmsOtpNew(userReq.getOrderId(),userReq.getMobile(),userReq.getOtp());
+	    			//response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";	
+	    			if(!ObjectUtils.isEmpty(response)) {
+
+						JSONObject demoRes= new JSONObject(response);
+						if(demoRes.has("isOTPVerified")) {
+							isValid=demoRes.isNull("isOTPVerified")?false: demoRes.getBoolean("isOTPVerified");
+							if(isValid) {
+								return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
+							}else {
+								message=demoRes.has("reason")?demoRes.getString("reason"):demoRes.getString("reason");
+								return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
+							}
+						}else {
+								message=demoRes.isNull("message")?"": demoRes.getString("message");
+								return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
+						}
+
+					}else {
+						return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
+					}
+	    		}
+	    		
+	    	 
+	    	 
+	    	}catch (Exception e) {
+				
+	    		// TODO: handle exception
+	    		logger.error("error in verifyOtp====="+e);
+			}
+	        
+	    	return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
+	          
+	        
+	    }
+
+	 @Operation(summary = "This API will provide the User Mobile Verify Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/getOtpResend",produces = {"application/json"}, consumes = {"application/json","application/text"},
+	    method = RequestMethod.POST)
+	    public ResponseEntity<Object> getOtpResend(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
+	    	logger.info("inside  getOtpNew......");
+	    	//List<RoleMaster> roleMaster=null;
+	    	String response="";
+	    	UserEntity userEntity=null;
+	    	try {
+	    		// write code here
+	    		String authToken=request.getHeader("Authorization");
+	    		userEntity=userService.checkUserMobile(userReq.getMobile());
+	    		if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    			response=userService.resendSmsOtp(userReq.getMobile(),userReq.getOrderId());
+	    			String orderId="";
+	    			if(!ObjectUtils.isEmpty(response)) {
+
+						JSONObject demoRes= new JSONObject(response);
+						
+						if(demoRes.has("orderId")) {
+							orderId=demoRes.isNull("orderId")?"": demoRes.getString("orderId");
+							return ResponseEntity.ok(new UserNewOtpResponse(true,MessageConstant.OTP_SENT,orderId,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+							
+						}else {
+							orderId=demoRes.isNull("message")?"": demoRes.getString("message");
+							return ResponseEntity.ok(new UserNewOtpResponse(false,MessageConstant.OTP_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+						}
+
+					}else {
+						return ResponseEntity.ok(new UserNewOtpResponse(false,MessageConstant.OTP_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+					}
+	    		}
+	    		
+	    		
+	    	 
+	    	}catch (Exception e) {
+				
+	    		// TODO: handle exception
+	    		logger.error("error in getOtp====="+e);
+			}
+	        
+	    	return ResponseEntity.ok(new UserOtpResponse(false,MessageConstant.OTP_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	          
+	        
+	    }
+
 
 }

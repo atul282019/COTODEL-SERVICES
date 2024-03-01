@@ -46,7 +46,7 @@ public class CommonUtility {
 		}		
 	}
 	
-	public static String userSmsRequest(String sAccessToken,String clientid,String secretid,String requestJson,String url){
+	public static String userSmsRequest(String clientid,String secretid,String requestJson,String url){
 		String returnStr=null;
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
@@ -58,8 +58,8 @@ public class CommonUtility {
 			headers.set("clientId", clientid);
 			headers.set("clientSecret", secretid);
 			//headers.set
-			  if(sAccessToken!=null && !sAccessToken.isEmpty()) {
-			  headers.setBearerAuth(sAccessToken); }
+//			  if(sAccessToken!=null && !sAccessToken.isEmpty()) {
+//			  headers.setBearerAuth(sAccessToken); }
 			 
 
 			HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
@@ -69,7 +69,8 @@ public class CommonUtility {
 			return returnStr;
 		}catch(Exception e){
 			e.printStackTrace();
-			return null;
+			
+			return e.getMessage();
 		}finally {
 			restTemplate=null;headers=null;	
 		}		

@@ -21,4 +21,6 @@ public interface UserService {
 	String verifySmsOtp(String authToken,String mobile, String pwd);	
 	String userExist(String mobile,String email);
 	String sendSmsOtpNew(String mobile);
+	String verifySmsOtpNew(String oderID,String mobile, String otp);
+	String resendSmsOtp(String mobile,String orderId);
 }

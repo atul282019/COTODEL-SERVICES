@@ -25,7 +25,7 @@ public class UserRequest {
     private String pwd ;
     private int employerid ;
     private int role_id ;
-    
+    private String orderId;
     private String otp;
     private String txnId;
     
