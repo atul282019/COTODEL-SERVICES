@@ -12,4 +12,5 @@ public interface EmployeeService {
 	public EmployeeRequest  getEmployeeDetails(Long	 empid);
 	
 	public List<Employee>  getEmployeeDetailsList();
+	
 }
