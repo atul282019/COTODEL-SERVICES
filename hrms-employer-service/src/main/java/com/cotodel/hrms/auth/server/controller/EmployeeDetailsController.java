@@ -20,11 +20,13 @@ import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeFamilyGetDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeGetDetailsResponse;
+import com.cotodel.hrms.auth.server.dto.QualificationGetResponse;
 import com.cotodel.hrms.auth.server.dto.QualificationRequest;
 import com.cotodel.hrms.auth.server.dto.QualificationResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.EmployeeDetailsEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeFamilyDetailEntity;
+import com.cotodel.hrms.auth.server.model.QualificationEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.EmployeeDetailsService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -216,4 +218,38 @@ public class EmployeeDetailsController {
 	        return ResponseEntity.ok(new QualificationResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/getQualification",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> getQualification(HttpServletRequest request,@Valid @RequestBody QualificationRequest qualificationRequest) {
+	    logger.info("inside getQualification.....");	    	
+	    	
+	    
+	    	String message = "";
+	    	List<QualificationEntity> response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=employeeDetailsService.getQualificationList(qualificationRequest.getEmployeeId());
+	    		if(response!=null && response.size()>0) {
+	    			return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in getQualification====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+
 }

@@ -108,9 +108,9 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 	}
 
 	@Override
-	public List<QualificationRequest> getQualificationList(Long empid) {
+	public List<QualificationEntity> getQualificationList(Long empid) {
 		
-		return null;
+		return qualificationDao.getQualification(empid);
 	}
 		
 

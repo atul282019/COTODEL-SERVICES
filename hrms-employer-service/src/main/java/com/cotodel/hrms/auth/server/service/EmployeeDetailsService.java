@@ -7,6 +7,7 @@ import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.QualificationRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeDetailsEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeFamilyDetailEntity;
+import com.cotodel.hrms.auth.server.model.QualificationEntity;
 
 public interface EmployeeDetailsService {
 	
@@ -15,5 +16,5 @@ public interface EmployeeDetailsService {
 	public EmployeeFamilyDetailsRequest  saveEmpFamilyDetails(EmployeeFamilyDetailsRequest request);
 	public List<EmployeeFamilyDetailEntity>  getEmpFamilyDetailsList(Long empid);
 	public QualificationRequest  saveQualification(QualificationRequest request);
-	public List<QualificationRequest>  getQualificationList(Long empid);
+	public List<QualificationEntity>  getQualificationList(Long empid);
 }

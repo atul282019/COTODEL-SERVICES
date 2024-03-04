@@ -15,14 +15,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QualificationRequest {
 	
-	private Long employeeId;	
-	private String name;
-	private LocalDate dob;	
-	private String relation;
-	private String nominee;
-	private String insuranceNo;
-	private String mobile;
-	private String email;
+	private Long employeeId;
+	private LocalDate fromDate;	
+	private LocalDate toDate;
+	private String education;
+	private String institutes;
+	private String referenceType;
 	private String remarks;
 	private String response;
 	
