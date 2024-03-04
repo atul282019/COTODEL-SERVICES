@@ -81,9 +81,9 @@ public class EmployeeDetailsController {
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/empDetails",produces = {"application/json"}, 
+	    @RequestMapping(value = "/get/empAllDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getEmpDetailsList(HttpServletRequest request,@Valid @RequestBody EmployeeDetailsRequest empolyeeRequest) {
+	    public ResponseEntity<Object> getEmpAllDetails(HttpServletRequest request,@Valid @RequestBody EmployeeDetailsRequest empolyeeRequest) {
 	    logger.info("inside empDetails.....");	    	
 	    	
 	    
