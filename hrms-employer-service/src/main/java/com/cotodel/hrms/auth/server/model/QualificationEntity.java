@@ -31,7 +31,9 @@ public class QualificationEntity implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="qualification_seq")	
 	@Column(name="id")
-	private Long id;	
+	private Long id;
+	@Column(name="employee_id")
+	private Long employeeId;
 	@Column(name="from_date")
 	private LocalDate fromDate;	
 	@Column(name="to_date")
