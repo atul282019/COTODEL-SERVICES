@@ -70,7 +70,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/add/empDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveEmpDetails(HttpServletRequest request,@Valid @RequestBody EmployeeDetailsRequest empolyeeRequest) {
-	    logger.info("inside saveDetails");	    	
+	    logger.info("inside empDetails");	    	
 	    	
 	    
 	    	String message = "";
@@ -88,7 +88,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in empDetails====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -104,7 +104,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/empAllDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getEmpAllDetails(HttpServletRequest request,@Valid @RequestBody EmployeeDetailsRequest empolyeeRequest) {
-	    logger.info("inside empDetails.....");	    	
+	    logger.info("inside empAllDetails.....");	    	
 	    	
 	    
 	    	String message = "";
@@ -121,7 +121,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in empAllDetails====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -138,7 +138,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/add/empFamilyDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveEmpFamilyDetails(HttpServletRequest request,@Valid @RequestBody EmployeeFamilyDetailsRequest empolyeeRequest) {
-	    logger.info("inside saveDetails");	    	
+	    logger.info("inside empFamilyDetails");	    	
 	    	
 	    
 	    	String message = "";
@@ -156,7 +156,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in empFamilyDetails====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -172,7 +172,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/empFamilyAllDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getEmpFamilyAllDetails(HttpServletRequest request,@Valid @RequestBody EmployeeFamilyDetailsRequest empolyeeRequest) {
-	    logger.info("inside empDetails.....");	    	
+	    logger.info("inside empFamilyAllDetails.....");	    	
 	    	
 	    
 	    	String message = "";
@@ -189,7 +189,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in empFamilyAllDetails====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -223,7 +223,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in saveQualification====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -273,7 +273,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/add/saveExperience",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveExperience(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
-	    logger.info("inside saveQualification...");	    	
+	    logger.info("inside saveExperience...");	    	
 	    
 	    	String message = "";
 	    	ExperienceRequest response=null;
@@ -290,7 +290,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in saveExperience====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -307,7 +307,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/getExperience",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getExperience(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
-	    logger.info("inside getQualification.....");	    	
+	    logger.info("inside getExperience.....");	    	
 	    	
 	    
 	    	String message = "";
@@ -324,7 +324,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in getQualification====="+e);
+	    		logger.error("error in getExperience====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -340,7 +340,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/add/saveCertificate",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveCertificate(HttpServletRequest request,@Valid @RequestBody CertificateRequest certificateRequest) {
-	    logger.info("inside saveQualification...");	    	
+	    logger.info("inside saveCertificate...");	    	
 	    
 	    	String message = "";
 	    	CertificateRequest response=null;
@@ -357,7 +357,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in saveCertificate====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -374,7 +374,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/getCertificate",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getCertificate(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
-	    logger.info("inside getQualification.....");	    	
+	    logger.info("inside getCertificate.....");	    	
 	    	
 	    
 	    	String message = "";
@@ -391,7 +391,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in getQualification====="+e);
+	    		logger.error("error in getCertificate====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -424,7 +424,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in saveProject====="+e);
 	    		message=e.getMessage();
 			}
 	        
@@ -458,7 +458,7 @@ public class EmployeeDetailsController {
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
-	    		logger.error("error in getQualification====="+e);
+	    		logger.error("error in getProject====="+e);
 	    		message=e.getMessage();
 			}
 	        
