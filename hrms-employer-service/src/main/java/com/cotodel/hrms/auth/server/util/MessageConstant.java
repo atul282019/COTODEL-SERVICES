@@ -12,4 +12,5 @@ public class MessageConstant {
 	public static final String PROFILE_FAILED = "Data Not Saved Successfully.";
 	public static final boolean TRUE = true;
 	public static final boolean FALSE = false;
+	public static final String DATA_NOT_FOUND = "No Data Found .";
 }
