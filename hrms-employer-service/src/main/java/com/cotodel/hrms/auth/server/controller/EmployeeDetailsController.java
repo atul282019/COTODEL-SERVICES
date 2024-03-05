@@ -373,7 +373,7 @@ public class EmployeeDetailsController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/getCertificate",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getCertificate(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
+	    public ResponseEntity<Object> getCertificate(HttpServletRequest request,@Valid @RequestBody CertificateRequest certificateRequest) {
 	    logger.info("inside getCertificate.....");	    	
 	    	
 	    
@@ -383,7 +383,7 @@ public class EmployeeDetailsController {
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=employeeDetailsService.getCertificateList(experienceRequest.getEmployeeId());
+				response=employeeDetailsService.getCertificateList(certificateRequest.getEmployeeId());
 	    		if(response!=null && response.size()>0) {
 	    			return ResponseEntity.ok(new CertificateGetResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
