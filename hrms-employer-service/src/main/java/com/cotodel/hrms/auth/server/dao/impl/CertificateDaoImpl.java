@@ -27,9 +27,4 @@ public class CertificateDaoImpl implements CertificateDao{
 	}
 
 
-	
-	
-	
-	
-
 }
