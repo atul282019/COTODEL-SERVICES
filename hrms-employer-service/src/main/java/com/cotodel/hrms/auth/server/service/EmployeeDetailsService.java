@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsRequest;
+import com.cotodel.hrms.auth.server.dto.ExperienceRequest;
 import com.cotodel.hrms.auth.server.dto.QualificationRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeDetailsEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeFamilyDetailEntity;
+import com.cotodel.hrms.auth.server.model.ExperienceEntity;
 import com.cotodel.hrms.auth.server.model.QualificationEntity;
 
 public interface EmployeeDetailsService {
@@ -17,4 +19,6 @@ public interface EmployeeDetailsService {
 	public List<EmployeeFamilyDetailEntity>  getEmpFamilyDetailsList(Long empid);
 	public QualificationRequest  saveQualification(QualificationRequest request);
 	public List<QualificationEntity>  getQualificationList(Long empid);
+	public ExperienceRequest  saveExperience(ExperienceRequest request);
+	public List<ExperienceEntity>  getExperienceList(Long empid);
 }
