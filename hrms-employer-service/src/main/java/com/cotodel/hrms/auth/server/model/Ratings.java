@@ -30,8 +30,7 @@ public class Ratings implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ratings_seq")	
 	@Column(name="id")
-	private Long id;
-	
+	private Long id;	
 	private String communication;
 	private String teamwork;
 	private String technicalSkills;
