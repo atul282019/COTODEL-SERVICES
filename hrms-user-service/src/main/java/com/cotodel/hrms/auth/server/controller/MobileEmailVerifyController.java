@@ -72,7 +72,8 @@ public class MobileEmailVerifyController {
 	    		// write code here
 	    		String authToken=request.getHeader("Authorization");
 	    		userEntity=userService.checkUserMobile(userReq.getMobile());
-	    		if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    		if(userEntity!=null) {
+	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
 	    			//response=userService.sendSmsOtp(authToken,userReq.getMobile());
 	    			response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";
 	    			if(!ObjectUtils.isEmpty(response)) {
@@ -130,7 +131,8 @@ public class MobileEmailVerifyController {
 	    		// write code here
 	    		String authToken=request.getHeader("Authorization");
 	    		userEntity=userService.checkUserMobile(userReq.getMobile());
-	    		if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    		if(userEntity!=null) {
+	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
 	    			response=userService.verifySmsOtp(authToken,userReq.getMobile(),userReq.getOtp());
 	    			response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";
 	    			
@@ -269,7 +271,8 @@ public class MobileEmailVerifyController {
 	    		// write code here
 	    		String authToken=request.getHeader("Authorization");
 	    		userEntity=userService.checkUserMobile(userReq.getMobile());
-	    		if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    		if(userEntity!=null) {
+	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
 	    			response=userService.sendSmsOtpNew(userReq.getMobile());
 	    			String orderId="";
 	    			//response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";
@@ -324,7 +327,8 @@ public class MobileEmailVerifyController {
 	    		// write code here
 	    		String authToken=request.getHeader("Authorization");
 	    		userEntity=userService.checkUserMobile(userReq.getMobile());
-	    		if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    		if(userEntity!=null) {
+	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
 	    			response=userService.verifySmsOtpNew(userReq.getOrderId(),userReq.getMobile(),userReq.getOtp());
 	    			//response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";	
 	    			if(!ObjectUtils.isEmpty(response)) {
@@ -379,7 +383,8 @@ public class MobileEmailVerifyController {
 	    		// write code here
 	    		String authToken=request.getHeader("Authorization");
 	    		userEntity=userService.checkUserMobile(userReq.getMobile());
-	    		if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    		if(userEntity!=null) {
+	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
 	    			response=userService.resendSmsOtp(userReq.getMobile(),userReq.getOrderId());
 	    			String orderId="";
 	    			if(!ObjectUtils.isEmpty(response)) {
