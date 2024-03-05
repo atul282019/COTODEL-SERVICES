@@ -9,16 +9,19 @@ import com.cotodel.hrms.auth.server.dao.CertificateDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeDetailsDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeFamilyDetailsDao;
 import com.cotodel.hrms.auth.server.dao.ExperienceDao;
+import com.cotodel.hrms.auth.server.dao.ProjectDao;
 import com.cotodel.hrms.auth.server.dao.QualificationDao;
 import com.cotodel.hrms.auth.server.dto.CertificateRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ExperienceRequest;
+import com.cotodel.hrms.auth.server.dto.ProjectRequest;
 import com.cotodel.hrms.auth.server.dto.QualificationRequest;
 import com.cotodel.hrms.auth.server.model.CertificateEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeDetailsEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeFamilyDetailEntity;
 import com.cotodel.hrms.auth.server.model.ExperienceEntity;
+import com.cotodel.hrms.auth.server.model.ProjectEntity;
 import com.cotodel.hrms.auth.server.model.QualificationEntity;
 import com.cotodel.hrms.auth.server.service.EmployeeDetailsService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
@@ -42,6 +45,8 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 	
 	@Autowired
 	CertificateDao  certificateDao;
+	@Autowired
+	ProjectDao  projectDao;
 	
 	@Override
 	public EmployeeDetailsRequest saveEmpDetails(EmployeeDetailsRequest request) {
@@ -173,6 +178,32 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 	public List<CertificateEntity> getCertificateList(Long empid) {		
 		return certificateDao.getCertificate(empid);
 	}
+
+	@Override
+	public ProjectRequest saveProject(ProjectRequest request) {
+		String response="";
+		try {
+			response=MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);		
+			ProjectEntity projectEntity=new ProjectEntity();
+			CopyUtility.copyProperties(request,projectEntity);
+			projectEntity=projectDao.saveDetails(projectEntity);
+			response=MessageConstant.RESPONSE_SUCCESS;
+			request.setResponse(response);
+		} catch (Exception e) {
+			response=MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+		}
+
+		return request;
+	}
+
+	@Override
+	public List<ProjectEntity> getProjectList(Long empid) {
+		// TODO Auto-generated method stub
+		return projectDao.getProject(empid);
+	}
 		
 
+	
 }
