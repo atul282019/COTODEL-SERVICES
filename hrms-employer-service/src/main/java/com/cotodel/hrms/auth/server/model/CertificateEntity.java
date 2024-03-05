@@ -39,6 +39,8 @@ public class CertificateEntity implements Serializable{
 	private String institutes;
 	@Column(name="doc_type")
 	private String docType;
+	@Column(name="doc_no")
+	private String docNo;
 	@Column(name="doc_date")
 	private LocalDate docDate;	
 	private String remarks;

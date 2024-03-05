@@ -12,15 +12,12 @@ import lombok.NoArgsConstructor;
 public class CertificateRequest {
 	
 	private Long employeeId;	
-	private String designation;
-	private String company;	
-	private LocalDate fromDate;	
-	private LocalDate toDate;
-	private String noOfYear;
-	private String country;
-	private String referenceEmail;
-	private String referenceMobile;	
-	private String remarks;	
+	private String docName;
+	private String institutes;
+	private String docType;
+	private LocalDate docDate;
+	private String docNo;
+	private String remarks;		
 	private String response;
 	
 	}
