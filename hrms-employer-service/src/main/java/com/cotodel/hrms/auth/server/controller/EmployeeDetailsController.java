@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.CertificateGetResponse;
+import com.cotodel.hrms.auth.server.dto.CertificateRequest;
+import com.cotodel.hrms.auth.server.dto.CertificateResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsRequest;
@@ -27,6 +30,7 @@ import com.cotodel.hrms.auth.server.dto.QualificationGetResponse;
 import com.cotodel.hrms.auth.server.dto.QualificationRequest;
 import com.cotodel.hrms.auth.server.dto.QualificationResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
+import com.cotodel.hrms.auth.server.model.CertificateEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeDetailsEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeFamilyDetailEntity;
 import com.cotodel.hrms.auth.server.model.ExperienceEntity;
@@ -321,6 +325,73 @@ public class EmployeeDetailsController {
 			}
 	        
 	        return ResponseEntity.ok(new ExperienceGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/saveCertificate",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> saveCertificate(HttpServletRequest request,@Valid @RequestBody CertificateRequest certificateRequest) {
+	    logger.info("inside saveQualification...");	    	
+	    
+	    	String message = "";
+	    	CertificateRequest response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=employeeDetailsService.saveCertificate(certificateRequest);
+				
+	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new CertificateResponse(true,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new CertificateResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in saveProfileDetails====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new CertificateResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/getCertificate",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> getCertificate(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
+	    logger.info("inside getQualification.....");	    	
+	    	
+	    
+	    	String message = "";
+	    	List<CertificateEntity> response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=employeeDetailsService.getCertificateList(experienceRequest.getEmployeeId());
+	    		if(response!=null && response.size()>0) {
+	    			return ResponseEntity.ok(new CertificateGetResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new CertificateGetResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in getQualification====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new CertificateGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 
 	 
