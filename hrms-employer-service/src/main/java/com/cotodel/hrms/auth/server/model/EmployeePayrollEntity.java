@@ -35,9 +35,10 @@ public class EmployeePayrollEntity  implements Serializable{
 	@Column(name="id")
 	private Long id;
 
-	@OneToOne
-    @JoinColumn(name = "employer_id")
-    private EmployerEntity employer;
+	@Column(name = "employer_id")
+    private Long employerId;
+	@Column(name = "employee_id")
+    private Long employeeId;
 	@Column(name="salary_component_basic")
 	private String salaryComponentBasic;
 	@Column(name="per_ctc_basic")

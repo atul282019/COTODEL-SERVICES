@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmployeePayrollRequest {
 	
-    private EmployerEntity employer;
+    private Long employerId;
+    private Long employeeId;
 	private String salaryComponentBasic;
     private String perCtcBasic;
     private String perBasic ;
