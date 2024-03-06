@@ -21,15 +21,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="experience")
+@Table(name="employee_experience")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="experience_seq" , sequenceName="experience_seq", allocationSize=1)
+@SequenceGenerator(name="employee_experience_seq" , sequenceName="employee_experience_seq", allocationSize=1)
 public class ExperienceEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="experience_seq")	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="employee_experience_seq")	
 	@Column(name="id")
 	private Long id;
 	@Column(name="employee_id")

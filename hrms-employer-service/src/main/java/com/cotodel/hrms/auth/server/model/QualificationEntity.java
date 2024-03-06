@@ -21,15 +21,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="qualification")
+@Table(name="employee_qualification")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="qualification_seq" , sequenceName="qualification_seq", allocationSize=1)
+@SequenceGenerator(name="employee_qualification_seq" , sequenceName="employee_qualification_seq", allocationSize=1)
 public class QualificationEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="qualification_seq")	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="employee_qualification_seq")	
 	@Column(name="id")
 	private Long id;
 	@Column(name="employee_id")

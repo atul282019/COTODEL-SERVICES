@@ -21,15 +21,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="project")
+@Table(name="employee_project")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="project_seq" , sequenceName="project_seq", allocationSize=1)
+@SequenceGenerator(name="employee_project_seq" , sequenceName="employee_project_seq", allocationSize=1)
 public class ProjectEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="project_seq")	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="employee_project_seq")	
 	@Column(name="id")
 	private Long id;
 	@Column(name="employee_id")
