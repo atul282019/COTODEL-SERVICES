@@ -50,7 +50,6 @@ public class StateMasterController {
 	    public ResponseEntity<Object> getState() {
 	    	logger.info("inside get state-list");
 	    	List<StateMaster>  stateMasters=null;
-	    	List<StateMaster>  stateMasters1=null;
 	    	try {
 	    		
 	    		stateMasters=stateMasterService.getByStateList();
@@ -61,7 +60,7 @@ public class StateMasterController {
 	            System.out.println("mapIdCustomer Names: " + mapIdCustomer);
 	            List<StateMaster> targetList = new ArrayList<>(mapIdCustomer.values());
 	            System.out.println("targetList Names: " + targetList);
-	    		 if(stateMasters1!=null && stateMasters1.size()>0 )
+	    		 if(targetList!=null && targetList.size()>0 )
 		    		 return ResponseEntity.ok(new StateResponse(true,targetList,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 		    	 
 			} catch (Exception e) {
