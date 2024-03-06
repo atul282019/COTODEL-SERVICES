@@ -57,10 +57,12 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 			request.setResponse(response);		
 			EmployeeDetailsEntity employee=new EmployeeDetailsEntity();
 			CopyUtility.copyProperties(request,employee);
-			employee.setDocfile(request.getDocfile().getBytes());
-			employee.setSigfile(request.getSigfile().getBytes());
+			if(request.getDocfile()!=null)
+				employee.setDocfile(request.getDocfile().getBytes());
+			if(request.getSigfile()!=null)
+				employee.setSigfile(request.getSigfile().getBytes());
 			employee=employeeDetailsDao.saveDetails(employee);
-			//user.setEmployeeId(employee.getEmployeeId());
+			
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
 			request.setId(employee.getEmpId());
