@@ -1,6 +1,12 @@
 package com.cotodel.hrms.auth.server.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +28,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
 /**
  * @author vinay
  */
@@ -34,7 +39,7 @@ public class StateMasterController {
 	@Autowired
 	StateMasterService stateMasterService;
 	
-	 @Operation(summary = "This API will provide the Authentication token", security = {
+	@Operation(summary = "This API will provide the Authentication token", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {
 	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
@@ -45,11 +50,19 @@ public class StateMasterController {
 	    public ResponseEntity<Object> getState() {
 	    	logger.info("inside get state-list");
 	    	List<StateMaster>  stateMasters=null;
+	    	List<StateMaster>  stateMasters1=null;
 	    	try {
+	    		
 	    		stateMasters=stateMasterService.getByStateList();
 	    		
-	    		 if(stateMasters!=null && stateMasters.size()>0 )
-		    		 return ResponseEntity.ok(new StateResponse(true,stateMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		
+	            Map<Integer, StateMaster> mapIdCustomer = stateMasters.stream()
+	    				.collect(Collectors.toMap(StateMaster::getState_code, c -> c, (c1, c2) -> c1));
+	            System.out.println("mapIdCustomer Names: " + mapIdCustomer);
+	            List<StateMaster> targetList = new ArrayList<>(mapIdCustomer.values());
+	            System.out.println("targetList Names: " + targetList);
+	    		 if(stateMasters1!=null && stateMasters1.size()>0 )
+		    		 return ResponseEntity.ok(new StateResponse(true,targetList,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 		    	 
 			} catch (Exception e) {
 				logger.error("error in state-list====="+e);
