@@ -1,7 +1,5 @@
 package com.cotodel.hrms.auth.server.dto;
 
-import com.cotodel.hrms.auth.server.model.EmployerEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

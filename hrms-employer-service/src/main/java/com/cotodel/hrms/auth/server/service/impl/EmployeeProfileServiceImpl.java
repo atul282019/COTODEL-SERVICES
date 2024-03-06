@@ -10,13 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeDao;
+import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
 import com.cotodel.hrms.auth.server.dao.EmployerDao;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeEntity;
+import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
 import com.cotodel.hrms.auth.server.model.EmployerEntity;
 import com.cotodel.hrms.auth.server.model.SignUpEntity;
 import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
+import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 @Transactional
 @Repository
@@ -31,7 +34,43 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	@Autowired
 	EmployeeDao  employeeDao;
 	
+	@Autowired
+	EmployeeProfileDao  emplProfileDao;
 	
+	
+//	@Override
+//	public EmployeeProfileRequest saveProfileDetails(EmployeeProfileRequest user) {
+//		EmployerEntity employerEntity=null;
+//		String response="";
+//		try {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			user.setResponse(response);
+//		
+//		SignUpEntity signUpEntity=new SignUpEntity();
+//		signUpEntity.setOrgType(user.getOrganizationType());
+//		signUpDao.saveUserDetails(signUpEntity);
+//		user.setSignupId(signUpEntity.getSignupId());
+//		EmployerEntity employer=new EmployerEntity();
+//		employer.setSignup(signUpEntity);		
+//		employer=getEmployerDeails(employer,user);
+//		employerEntity=employerDao.saveDetails(employer);
+//		user.setEmployerId(employerEntity.getEmployerId());
+//		//
+//		EmployeeEntity employee=new EmployeeEntity();
+//		employee.setEmployer(employer);
+//		employee.setPan(user.getPan());
+//		
+//		employee=employeeDao.saveDetails(employee);
+//		user.setEmployeeId(employee.getEmployeeId());
+//
+//		response=MessageConstant.RESPONSE_SUCCESS;
+//		user.setResponse(response);
+//		} catch (Exception e) {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			user.setResponse(response);
+//		}
+//		return user;
+//	}
 	@Override
 	public EmployeeProfileRequest saveProfileDetails(EmployeeProfileRequest user) {
 		EmployerEntity employerEntity=null;
@@ -40,22 +79,28 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 			response=MessageConstant.RESPONSE_FAILED;
 			user.setResponse(response);
 		
-		SignUpEntity signUpEntity=new SignUpEntity();
-		signUpEntity.setOrgType(user.getOrganizationType());
-		signUpDao.saveUserDetails(signUpEntity);
-		user.setSignupId(signUpEntity.getSignupId());
-		EmployerEntity employer=new EmployerEntity();
-		employer.setSignup(signUpEntity);		
-		employer=getEmployerDeails(employer,user);
-		employerEntity=employerDao.saveDetails(employer);
-		user.setEmployerId(employerEntity.getEmployerId());
-		//
-		EmployeeEntity employee=new EmployeeEntity();
-		employee.setEmployer(employer);
-		employee.setPan(user.getPan());
+		EmployeeProfileEntity employeeProfileEntity=new EmployeeProfileEntity();
+		CopyUtility.copyProperties(user,employeeProfileEntity);
+		employeeProfileEntity=emplProfileDao.saveDetails(employeeProfileEntity);
 		
-		employee=employeeDao.saveDetails(employee);
-		user.setEmployeeId(employee.getEmployeeId());
+//		SignUpEntity signUpEntity=new SignUpEntity();
+//		signUpEntity.setOrgType(user.getOrganizationType());
+//		signUpDao.saveUserDetails(signUpEntity);
+//		user.setSignupId(signUpEntity.getSignupId());
+//		EmployerEntity employer=new EmployerEntity();
+//		employer.setSignup(signUpEntity);		
+//		employer=getEmployerDeails(employer,user);
+//		employerEntity=employerDao.saveDetails(employer);
+//		user.setEmployerId(employerEntity.getEmployerId());
+//		//
+//		EmployeeEntity employee=new EmployeeEntity();
+//		employee.setEmployer(employer);
+//		employee.setPan(user.getPan());
+//		
+//		employee=employeeDao.saveDetails(employee);
+		
+		user.setEmployeeId(employeeProfileEntity.getId());
+		
 
 		response=MessageConstant.RESPONSE_SUCCESS;
 		user.setResponse(response);
