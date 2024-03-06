@@ -3,6 +3,7 @@ package com.cotodel.hrms.auth.server.service.impl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -172,4 +173,11 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		employer.setSalaryAdvancesFlag(user.isSalaryAdvancesFlag());       
 	return employer;
 }
+
+	@Override
+	public List<EmployeeProfileEntity> getEmpProfileList(Long empid) {
+		// TODO Auto-generated method stub
+		return emplProfileDao.getEmployeeDetails(empid);
+	}
+	
 }
