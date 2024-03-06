@@ -254,7 +254,7 @@ public class UserServiceImpl implements UserService {
 	
 	public  int randomNumber(){
 		Random random = new Random();
-		int randomNumber = random.nextInt(900) + 100;
+		int randomNumber = random.nextInt(90000) + 10000;
 		return randomNumber;
 	}
 
