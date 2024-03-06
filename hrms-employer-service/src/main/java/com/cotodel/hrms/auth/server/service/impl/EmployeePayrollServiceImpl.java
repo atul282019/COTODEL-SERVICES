@@ -27,7 +27,6 @@ public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 			request.setResponse(response);		
 			EmployeePayrollEntity employee=new EmployeePayrollEntity();
 			CopyUtility.copyProperties(request,employee);
-			//employee.setEmployer(request.getEmployer());
 		
 			employee=employeePayrollDao.saveDetails(employee);
 			response=MessageConstant.RESPONSE_SUCCESS;
