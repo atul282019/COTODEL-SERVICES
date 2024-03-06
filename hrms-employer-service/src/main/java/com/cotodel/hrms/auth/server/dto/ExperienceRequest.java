@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExperienceRequest {
-	
+	private Long employerId;
 	private Long employeeId;
 	private String designation;
 	private String company;	

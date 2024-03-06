@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectRequest {
-	
+	private Long employerId;
 	private Long employeeId;
 	private String region;
 	private String projectName;

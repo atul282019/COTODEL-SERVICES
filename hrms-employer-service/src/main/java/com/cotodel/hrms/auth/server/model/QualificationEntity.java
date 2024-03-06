@@ -34,6 +34,8 @@ public class QualificationEntity implements Serializable{
 	private Long id;
 	@Column(name="employee_id")
 	private Long employeeId;
+	@Column(name="employer_id")
+	private Long employerId;
 	@Column(name="from_date")
 	private LocalDate fromDate;	
 	@Column(name="to_date")

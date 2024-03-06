@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QualificationRequest {
-	
+	private Long employerId;
 	private Long employeeId;
 	private LocalDate fromDate;	
 	private LocalDate toDate;

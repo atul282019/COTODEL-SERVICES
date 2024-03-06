@@ -34,7 +34,9 @@ public class EmployeeFamilyDetailEntity implements Serializable{
 	@Column(name="id")
 	private Long id;	
 	@Column(name="employee_id")
-	private Long employeeId;	
+	private Long employeeId;
+	@Column(name="employer_id")
+	private Long employerId;
 	private String name;	
 	@Column(name="dob")
 	private LocalDate dob;	

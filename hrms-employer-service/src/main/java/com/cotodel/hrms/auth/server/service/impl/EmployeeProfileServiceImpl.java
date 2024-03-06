@@ -39,8 +39,6 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
 			user.setResponse(response);
-		//Date date = new Date();
-		//LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		
 		SignUpEntity signUpEntity=new SignUpEntity();
 		signUpEntity.setOrgType(user.getOrganizationType());

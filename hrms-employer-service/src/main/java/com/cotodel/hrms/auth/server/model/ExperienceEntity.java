@@ -34,6 +34,8 @@ public class ExperienceEntity implements Serializable{
 	private Long id;
 	@Column(name="employee_id")
 	private Long employeeId;
+	@Column(name="employer_id")
+	private Long employerId;
 	private String designation;
 	private String company;	
 	@Column(name="from_date")

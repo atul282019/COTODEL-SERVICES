@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeFamilyDetailsRequest {
-	
+	private Long employerId;
 	private Long employeeId;	
 	private String name;
 	private LocalDate dob;	
