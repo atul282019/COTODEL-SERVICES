@@ -78,9 +78,8 @@ public class EmployeeProfileEntity implements Serializable{
 	@Column(name="payroll_enabled_flag")
 	private boolean payrollEnabledFlag=false;
 	
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@Column(name="paid_date")
-	private Date paidDate;
+	private LocalDate paidDate;
     
 	@Column(name="run_payroll_flag")
 	private boolean runPayrollFlag=false;
