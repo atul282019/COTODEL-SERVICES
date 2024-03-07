@@ -114,6 +114,8 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 			request.setResponse(response);		
 			QualificationEntity employee=new QualificationEntity();
 			CopyUtility.copyProperties(request,employee);
+			if(request.getDocfile()!=null)
+				employee.setDocfile(request.getDocfile().getBytes());
 			employee=qualificationDao.saveDetails(employee);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
@@ -165,6 +167,8 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 			request.setResponse(response);		
 			CertificateEntity certificateEntity=new CertificateEntity();
 			CopyUtility.copyProperties(request,certificateEntity);
+			if(request.getDocfile()!=null)
+				certificateEntity.setDocfile(request.getDocfile().getBytes());
 			certificateEntity=certificateDao.saveDetails(certificateEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);

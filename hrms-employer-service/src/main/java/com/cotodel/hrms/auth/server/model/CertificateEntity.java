@@ -10,8 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,4 +49,8 @@ public class CertificateEntity implements Serializable{
 	@Column(name="doc_date")
 	private LocalDate docDate;	
 	private String remarks;
+	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
+	@Column(name="doc_file")
+	private  byte[] docfile;
 }
