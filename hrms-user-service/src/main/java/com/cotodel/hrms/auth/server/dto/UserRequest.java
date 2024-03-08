@@ -28,5 +28,5 @@ public class UserRequest {
     private String orderId;
     private String otp;
     private String txnId;
-    
+    private int status ;
 }

@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
 		Date date = new Date();
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		userDetails.setCreated_date(localDate);
+		userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
 		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
 		userEmpEntity.setUser_id(UserEntity1.getId());
 		userEmpEntity.setStatus(UserEntity1.getStatus());
@@ -289,5 +290,28 @@ public class UserServiceImpl implements UserService {
 		data.put("expiry", applicationConstantConfig.expirySenderToken);
 		logger.info("resend send SMS OTP Request"+data);
 		return data.toString();
+	}
+
+	@Override
+	public UserEntity saveUsers(UserRequest user) {
+		
+		UserEntity userDetails= new UserEntity();
+		UserEmpEntity userEmpEntity= new UserEmpEntity();
+		CopyUtility.copyProperties(user,userDetails);
+		Date date = new Date();
+		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		userDetails.setCreated_date(localDate);
+		userDetails.setRole_id(MessageConstant.USER_ROLE);
+		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
+		userEmpEntity.setUser_id(UserEntity1.getId());
+		userEmpEntity.setStatus(UserEntity1.getStatus());
+		
+		userEmpEntity.setCreated_date(localDate);
+		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+				
+		return UserEntity1;
+
 	}	
+	
+	
 }

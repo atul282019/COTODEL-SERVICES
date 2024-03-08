@@ -16,4 +16,6 @@ public class MessageConstant {
 	public static final String USER_EXIST = "User Already exist with this email or mobile number !!";
 	public static final boolean TRUE = true;
 	public static final boolean FALSE = false;
+	public static final Integer SIGN_UP_ROLE =1;
+	public static final Integer USER_ROLE =2;
 }

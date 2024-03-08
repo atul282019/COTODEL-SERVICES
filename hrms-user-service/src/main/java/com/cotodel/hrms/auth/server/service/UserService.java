@@ -23,4 +23,5 @@ public interface UserService {
 	String sendSmsOtpNew(String mobile);
 	String verifySmsOtpNew(String oderID,String mobile, String otp);
 	String resendSmsOtp(String mobile,String orderId);
+	public UserEntity saveUsers(UserRequest user);
 }
