@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -7,8 +8,19 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.transaction.Transactional;
+import javax.xml.bind.DatatypeConverter;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -16,8 +28,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.cotodel.hrms.auth.server.controller.MobileEmailVerifyController;
+import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
+import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
@@ -26,15 +39,6 @@ import com.cotodel.hrms.auth.server.service.UserService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
-import com.cotodel.hrms.auth.server.util.TransactionManager;
-
-import java.nio.charset.StandardCharsets;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.xml.bind.DatatypeConverter;
 
 @Repository
 public class UserServiceImpl implements UserService {
@@ -42,6 +46,9 @@ public class UserServiceImpl implements UserService {
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	@Autowired
 	UserDetailsDao userDetailsDao;
+	
+	@Autowired
+	SignUpDao signUpDao;
 	
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
@@ -311,6 +318,12 @@ public class UserServiceImpl implements UserService {
 				
 		return UserEntity1;
 
+	}
+
+	@Override
+	public List<UserDto> getUsersList(int employerid) {
+		// TODO Auto-generated method stub
+		return signUpDao.getUser(employerid);
 	}	
 	
 	

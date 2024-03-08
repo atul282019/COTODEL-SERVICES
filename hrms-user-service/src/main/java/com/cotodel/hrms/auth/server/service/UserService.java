@@ -1,5 +1,8 @@
 package com.cotodel.hrms.auth.server.service;
 
+import java.util.List;
+
+import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
@@ -24,4 +27,6 @@ public interface UserService {
 	String verifySmsOtpNew(String oderID,String mobile, String otp);
 	String resendSmsOtp(String mobile,String orderId);
 	public UserEntity saveUsers(UserRequest user);
+	public List<UserDto> getUsersList(int  employerid);
+	
 }
