@@ -2,8 +2,6 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDate;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +19,6 @@ public class CertificateRequest {
 	private String docNo;
 	private String remarks;		
 	private String response;
-	private  MultipartFile docfile;	
+	private  String docfile;
+	private  String docFileName;
 	}

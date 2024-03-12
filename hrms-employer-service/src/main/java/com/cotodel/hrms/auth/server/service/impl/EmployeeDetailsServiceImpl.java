@@ -116,7 +116,7 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 			QualificationEntity employee=new QualificationEntity();
 			CopyUtility.copyProperties(request,employee);
 			if(request.getDocfile()!=null)
-				employee.setDocfile(request.getDocfile().getBytes());
+				employee.setDocfile(Base64.getDecoder().decode(request.getDocfile()));
 			employee=qualificationDao.saveDetails(employee);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
@@ -143,6 +143,8 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 			request.setResponse(response);		
 			ExperienceEntity employee=new ExperienceEntity();
 			CopyUtility.copyProperties(request,employee);
+			if(request.getDocfile()!=null)
+				employee.setDocfile(Base64.getDecoder().decode(request.getDocfile()));
 			employee=experienceDao.saveDetails(employee);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
@@ -168,8 +170,8 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 			request.setResponse(response);		
 			CertificateEntity certificateEntity=new CertificateEntity();
 			CopyUtility.copyProperties(request,certificateEntity);
-			if(request.getDocfile()!=null)
-				certificateEntity.setDocfile(request.getDocfile().getBytes());
+			if(request.getDocfile()!=null)				
+				certificateEntity.setDocfile(Base64.getDecoder().decode(request.getDocfile()));
 			certificateEntity=certificateDao.saveDetails(certificateEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);

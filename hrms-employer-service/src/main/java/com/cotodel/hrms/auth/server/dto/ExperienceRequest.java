@@ -24,6 +24,8 @@ public class ExperienceRequest {
 	private String country;
 	private String referenceEmail;
 	private String referenceMobile;	
+	private  String docfile;
+	private  String docFileName;
 	private String remarks;
 	private String response;
 	

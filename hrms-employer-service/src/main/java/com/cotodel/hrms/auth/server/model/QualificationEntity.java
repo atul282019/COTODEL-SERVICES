@@ -51,5 +51,8 @@ public class QualificationEntity implements Serializable{
 	@Lob
 	@Type(type="org.hibernate.type.BinaryType")
 	@Column(name="doc_file")
-	private  byte[] docfile;
+	private  byte[] docfile;	
+	
+	@Column(name="doc_file_name")
+	private  String docFileName;
 }

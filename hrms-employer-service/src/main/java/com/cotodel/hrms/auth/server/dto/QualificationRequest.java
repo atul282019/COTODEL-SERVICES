@@ -23,5 +23,7 @@ public class QualificationRequest {
 	private String referenceType;
 	private String remarks;
 	private String response;
-	private  MultipartFile docfile;	
+	//private  MultipartFile docfile;
+	private  String docfile;
+	private  String docFileName;
 	}

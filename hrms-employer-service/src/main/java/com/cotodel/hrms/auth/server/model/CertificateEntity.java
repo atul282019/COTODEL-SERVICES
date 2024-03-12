@@ -53,4 +53,7 @@ public class CertificateEntity implements Serializable{
 	@Type(type="org.hibernate.type.BinaryType")
 	@Column(name="doc_file")
 	private  byte[] docfile;
+	
+	@Column(name="doc_file_name")
+	private  String docFileName;
 }
