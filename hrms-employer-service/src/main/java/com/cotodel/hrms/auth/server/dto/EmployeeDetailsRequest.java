@@ -33,8 +33,12 @@ public class EmployeeDetailsRequest {
 	private String bankName;	
 	private String remarks;	
 	private String briefDescription;	
-	private  MultipartFile docfile;	
-	private  MultipartFile sigfile;	
+//	private  MultipartFile docfile;	
+//	private  MultipartFile sigfile;
+	private  String docfile;
+	private  String docFileName;
+	private  String sigfile;
+	private  String sigFileName;
 	private String serviceStatus;
 	private String employeeType;	
 	private String category;	

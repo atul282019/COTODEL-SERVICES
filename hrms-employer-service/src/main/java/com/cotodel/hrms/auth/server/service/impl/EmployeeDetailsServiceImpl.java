@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +59,9 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 			EmployeeDetailsEntity employee=new EmployeeDetailsEntity();
 			CopyUtility.copyProperties(request,employee);
 			if(request.getDocfile()!=null)
-				employee.setDocfile(request.getDocfile().getBytes());
+				employee.setDocfile(Base64.getDecoder().decode(request.getDocfile()));
 			if(request.getSigfile()!=null)
-				employee.setSigfile(request.getSigfile().getBytes());
+				employee.setSigfile(Base64.getDecoder().decode(request.getSigfile()));
 			employee=employeeDetailsDao.saveDetails(employee);
 			
 			response=MessageConstant.RESPONSE_SUCCESS;

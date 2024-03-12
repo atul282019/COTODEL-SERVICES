@@ -95,10 +95,16 @@ public class EmployeeDetailsEntity implements Serializable{
 	@Column(name="doc_file")
 	private  byte[] docfile;
 	
+	@Column(name="doc_file_name")
+	private String docFileName;
+	
 	@Lob
 	@Type(type="org.hibernate.type.BinaryType")
 	@Column(name="sig_file")
 	private  byte[] sigfile;
+	
+	@Column(name="sig_file_name")
+	private  String sigFileName;
 	
 	@Column(name="service_status")
 	private String serviceStatus;

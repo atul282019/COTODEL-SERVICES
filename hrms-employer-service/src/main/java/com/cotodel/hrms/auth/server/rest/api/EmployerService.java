@@ -27,9 +27,10 @@ public class EmployerService {
 	public DbMaster getEmployerDb() {
 		
 		HttpHeaders header= new HttpHeaders();
+//		header.add("Content-Type", "multipart/form-data");
+//		header.add("Accept", "multipart/form-data");
 		header.add("Content-Type", "application/json");
 		header.add("Accept", "application/json");
-		
 		HttpEntity requestEntity= new HttpEntity<String>(header);
 		
 		

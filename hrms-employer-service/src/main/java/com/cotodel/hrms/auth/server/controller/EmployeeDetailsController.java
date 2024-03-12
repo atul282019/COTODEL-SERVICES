@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,8 +68,7 @@ public class EmployeeDetailsController {
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/add/empDetails",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    @RequestMapping(value = "/add/empDetails",produces = {"application/json"},consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveEmpDetails(HttpServletRequest request,@Valid @RequestBody EmployeeDetailsRequest empolyeeRequest) {
 	    logger.info("inside empDetails");	    	
 	    	
@@ -465,6 +465,5 @@ public class EmployeeDetailsController {
 	        return ResponseEntity.ok(new ProjectGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 
-
-	 
+	 	 
 }
