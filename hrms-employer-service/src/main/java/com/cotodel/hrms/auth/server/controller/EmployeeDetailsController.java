@@ -82,9 +82,9 @@ public class EmployeeDetailsController {
 				response=employeeDetailsService.saveEmpDetails(empolyeeRequest);
 				
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new EmployeeDetailsResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new EmployeeDetailsResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeDetailsResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
@@ -92,7 +92,7 @@ public class EmployeeDetailsController {
 	    		message=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new EmployeeDetailsResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new EmployeeDetailsResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -115,9 +115,9 @@ public class EmployeeDetailsController {
 				
 				response=employeeDetailsService.getEmpDetailsList(empolyeeRequest.getEmployerId());
 	    		if(response!=null && response.size()>0) {
-	    			return ResponseEntity.ok(new EmployeeGetDetailsResponse(true,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new EmployeeGetDetailsResponse(false,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
@@ -125,7 +125,7 @@ public class EmployeeDetailsController {
 	    		message=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new EmployeeGetDetailsResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -150,9 +150,9 @@ public class EmployeeDetailsController {
 				response=employeeDetailsService.saveEmpFamilyDetails(empolyeeRequest);
 				
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
@@ -160,7 +160,7 @@ public class EmployeeDetailsController {
 	    		message=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -217,9 +217,9 @@ public class EmployeeDetailsController {
 				response=employeeDetailsService.saveQualification(qualificationRequest);
 				
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new QualificationResponse(true,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new QualificationResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new QualificationResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new QualificationResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
@@ -227,7 +227,7 @@ public class EmployeeDetailsController {
 	    		message=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new QualificationResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new QualificationResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -284,9 +284,9 @@ public class EmployeeDetailsController {
 				response=employeeDetailsService.saveExperience(experienceRequest);
 				
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new ExperienceResponse(true,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ExperienceResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new ExperienceResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ExperienceResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
@@ -294,7 +294,7 @@ public class EmployeeDetailsController {
 	    		message=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new ExperienceResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new ExperienceResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -351,9 +351,9 @@ public class EmployeeDetailsController {
 				response=employeeDetailsService.saveCertificate(certificateRequest);
 				
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new CertificateResponse(true,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new CertificateResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new CertificateResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new CertificateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
@@ -361,7 +361,7 @@ public class EmployeeDetailsController {
 	    		message=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new CertificateResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new CertificateResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -418,9 +418,9 @@ public class EmployeeDetailsController {
 				response=employeeDetailsService.saveProject(projectRequest);
 				
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new ProjectResponse(true,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ProjectResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new ProjectResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ProjectResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
@@ -428,7 +428,7 @@ public class EmployeeDetailsController {
 	    		message=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new ProjectResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new ProjectResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
