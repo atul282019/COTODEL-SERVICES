@@ -7,4 +7,5 @@ import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
 public interface EmployeeProfileDao {
 	public EmployeeProfileEntity saveDetails(EmployeeProfileEntity employeeProfileEntity);
 	public List<EmployeeProfileEntity> getEmployeeDetails(Long emplrid);
+	public EmployeeProfileEntity getEmplDetails(Long id,Long employerid);
 }

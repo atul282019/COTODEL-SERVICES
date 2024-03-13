@@ -82,6 +82,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		
 		EmployeeProfileEntity employeeProfileEntity=new EmployeeProfileEntity();
 		CopyUtility.copyProperties(user,employeeProfileEntity);
+		employeeProfileEntity.setProfileComplete(2);
 		employeeProfileEntity=emplProfileDao.saveDetails(employeeProfileEntity);
 		
 //		SignUpEntity signUpEntity=new SignUpEntity();
@@ -119,6 +120,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
 			user.setResponse(response);
+			
 		//Date date = new Date();
 		//LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		
@@ -178,6 +180,12 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	public List<EmployeeProfileEntity> getEmpProfileList(Long empid) {
 		// TODO Auto-generated method stub
 		return emplProfileDao.getEmployeeDetails(empid);
+	}
+
+	@Override
+	public EmployeeProfileEntity getEmpProfile(Long empid, Long employerid) {
+		// TODO Auto-generated method stub
+		return emplProfileDao.getEmplDetails(empid, employerid);
 	}
 	
 }

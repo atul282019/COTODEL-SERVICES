@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.EmployeePayrollDao;
+import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
 import com.cotodel.hrms.auth.server.dto.EmployeePayrollRequest;
 import com.cotodel.hrms.auth.server.model.EmployeePayrollEntity;
+import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
 import com.cotodel.hrms.auth.server.model.EmployerEntity;
 import com.cotodel.hrms.auth.server.service.EmployeePayrollService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
@@ -16,7 +18,9 @@ public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 	@Autowired
 	EmployeePayrollDao  employeePayrollDao;	
 	
-
+	@Autowired
+	EmployeeProfileDao  employeeProfileDao;	
+	
 	@Override
 	public EmployeePayrollRequest saveEmployeePayrollDetails(EmployeePayrollRequest request) {
 		
@@ -29,6 +33,13 @@ public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 			CopyUtility.copyProperties(request,employee);
 		
 			employee=employeePayrollDao.saveDetails(employee);
+			
+			//
+			EmployeeProfileEntity employeeProfileEntity=new EmployeeProfileEntity();
+			employeeProfileEntity=employeeProfileDao.getEmplDetails(request.getEmployeeId(), request.getEmployerId());
+			employeeProfileEntity.setProfileComplete(3);
+			employeeProfileDao.saveDetails(employeeProfileEntity);
+			//
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
 		} catch (Exception e) {

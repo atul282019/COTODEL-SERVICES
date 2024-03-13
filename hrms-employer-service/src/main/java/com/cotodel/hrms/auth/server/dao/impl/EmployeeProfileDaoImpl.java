@@ -25,6 +25,12 @@ public class EmployeeProfileDaoImpl implements EmployeeProfileDao{
 		// TODO Auto-generated method stub
 		return employeeProfileRepository.findByEmployerId(emplrid);
 	}
+
+	@Override
+	public EmployeeProfileEntity getEmplDetails(Long id, Long employerid) {
+		// TODO Auto-generated method stub
+		return employeeProfileRepository.findEmployeeId(id, employerid);
+	}
 	
 	
 	

@@ -86,6 +86,8 @@ public class EmployeeProfileEntity implements Serializable{
     
 	@Column(name="salary_advances_flag")
 	private boolean salaryAdvancesFlag=false;
-
+	
+	@Column(name="profile_complete")
+	private int profileComplete;
 }
 
