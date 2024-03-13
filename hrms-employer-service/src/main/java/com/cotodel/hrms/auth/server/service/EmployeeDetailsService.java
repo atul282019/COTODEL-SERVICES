@@ -22,7 +22,7 @@ public interface EmployeeDetailsService {
 	public EmployeeFamilyDetailsRequest  saveEmpFamilyDetails(EmployeeFamilyDetailsRequest request);
 	public List<EmployeeFamilyDetailEntity>  getEmpFamilyDetailsList(Long empid);
 	public QualificationRequest  saveQualification(QualificationRequest request);
-	public List<QualificationEntity>  getQualificationList(Long empid);
+	public List<QualificationEntity>  getQualificationList(Long empid,Long employerid);
 	public ExperienceRequest  saveExperience(ExperienceRequest request);
 	public List<ExperienceEntity>  getExperienceList(Long empid);
 	public CertificateRequest  saveCertificate(CertificateRequest request);

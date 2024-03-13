@@ -6,5 +6,5 @@ import com.cotodel.hrms.auth.server.model.QualificationEntity;
 
 public interface QualificationDao {
 	public QualificationEntity saveDetails(QualificationEntity qualificationEntity);
-	public List<QualificationEntity> getQualification(Long emplrid);
+	public List<QualificationEntity> getQualification(Long emplrid,Long employerid);
 }

@@ -248,7 +248,7 @@ public class EmployeeDetailsController {
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=employeeDetailsService.getQualificationList(qualificationRequest.getEmployeeId());
+				response=employeeDetailsService.getQualificationList(qualificationRequest.getEmployeeId(),qualificationRequest.getEmployerId());
 	    		if(response!=null && response.size()>0) {
 	    			return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {

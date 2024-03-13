@@ -23,9 +23,9 @@ public class QualificationDaoImpl implements QualificationDao{
 
 
 	@Override
-	public List<QualificationEntity> getQualification(Long emplrid) {
+	public List<QualificationEntity> getQualification(Long emplrid,Long employerid) {
 		// TODO Auto-generated method stub
-		return qualificationRepository.findByQualificationId(emplrid);
+		return qualificationRepository.findByQualificationId(emplrid,employerid);
 	}
 
 	

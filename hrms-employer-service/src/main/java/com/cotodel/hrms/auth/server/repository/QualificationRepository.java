@@ -10,6 +10,6 @@ import com.cotodel.hrms.auth.server.model.QualificationEntity;
 @Repository
 public interface QualificationRepository extends JpaRepository<QualificationEntity,Long>{
 	
-	@Query("select s  from QualificationEntity s where s.employeeId = ?1")
-	public List<QualificationEntity> findByQualificationId(Long emplid);
+	@Query("select s  from QualificationEntity s where s.employeeId = ?1 and s.employerId = ?2 ")
+	public List<QualificationEntity> findByQualificationId(Long emplid,Long employerid);
 }
