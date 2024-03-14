@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,10 +42,12 @@ public class UserEntity implements Serializable{
     private String dateofbirth ;
     private String  gender;
     private String contact_number;
+    @Column(unique=true)
     private String email ;
     private String address ;
     private String org_type;
     private String  org_name;
+    @Column(unique=true)
     private String  mobile ;
     private LocalDate  created_date ;
     private int  email_verify_status;
