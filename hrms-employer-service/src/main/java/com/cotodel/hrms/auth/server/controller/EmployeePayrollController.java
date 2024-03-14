@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.EmployeePayrollRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeePayrollResponse;
-import com.cotodel.hrms.auth.server.dto.EmployeeRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeeResponse;
+import com.cotodel.hrms.auth.server.dto.EmployeePayrollTaxRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeePayrollTaxResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.EmployeePayrollService;
-import com.cotodel.hrms.auth.server.service.EmployeeService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -48,7 +47,7 @@ public class EmployeePayrollController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/save/payrollDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> saveProfileDetails(HttpServletRequest request,@Valid @RequestBody EmployeePayrollRequest empolyeeRequest) {
+	    public ResponseEntity<Object> payrollDetails(HttpServletRequest request,@Valid @RequestBody EmployeePayrollRequest empolyeeRequest) {
 	    logger.info("inside saveDetails");	    	
 	    	
 	    	String message = "";
@@ -70,5 +69,36 @@ public class EmployeePayrollController {
 	        
 	        return ResponseEntity.ok(new EmployeePayrollResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
-
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/savePayrollTaxDetails",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> savePayrollTaxDetails(HttpServletRequest request,@Valid @RequestBody EmployeePayrollTaxRequest empolyeeRequest) {
+	    logger.info("inside saveDetails");	    	
+	    	
+	    	String message = "";
+	    	EmployeePayrollTaxRequest response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				response=employeePayrollService.saveEmployeePayrollTaxDetails(empolyeeRequest);
+	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new EmployeePayrollTaxResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new EmployeePayrollTaxResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in saveProfileDetails====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new EmployeePayrollTaxResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
 }
