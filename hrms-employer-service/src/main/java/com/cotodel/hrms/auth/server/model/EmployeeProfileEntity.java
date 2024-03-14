@@ -51,7 +51,7 @@ public class EmployeeProfileEntity implements Serializable{
 	
 	@Column(name="org_type")
 	private String orgType;
-	
+	@Column(unique=true)
 	private String pan;
 	
 	@Column(name="brand_name")
