@@ -158,7 +158,7 @@ public class EmployeeProfileController {
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=employeeProfileService.getEmpProfile(employeeProfileRequest.getEmployeeId(),employeeProfileRequest.getEmployerId());
+				response=employeeProfileService.getEmpProfile(employeeProfileRequest.getEmployerId());
 	    		if(response!=null) {
 	    			return ResponseEntity.ok(new EmployeeCompleteResponse(true,MessageConstant.RESPONSE_SUCCESS,response.getProfileComplete(),TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {

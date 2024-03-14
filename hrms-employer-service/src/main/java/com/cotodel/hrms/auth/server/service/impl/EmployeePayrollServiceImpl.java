@@ -36,7 +36,7 @@ public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 			
 			//
 			EmployeeProfileEntity employeeProfileEntity=new EmployeeProfileEntity();
-			employeeProfileEntity=employeeProfileDao.getEmplDetails(request.getEmployeeId(), request.getEmployerId());
+			employeeProfileEntity=employeeProfileDao.getEmplDetails(request.getEmployerId());
 			employeeProfileEntity.setProfileComplete(3);
 			employeeProfileDao.saveDetails(employeeProfileEntity);
 			//

@@ -27,9 +27,9 @@ public class EmployeeProfileDaoImpl implements EmployeeProfileDao{
 	}
 
 	@Override
-	public EmployeeProfileEntity getEmplDetails(Long id, Long employerid) {
+	public EmployeeProfileEntity getEmplDetails(Long employerid) {
 		// TODO Auto-generated method stub
-		return employeeProfileRepository.findEmployeeId(id, employerid);
+		return employeeProfileRepository.findEmployeeId(employerid);
 	}
 	
 	

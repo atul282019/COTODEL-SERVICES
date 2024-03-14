@@ -11,5 +11,5 @@ public interface EmployeeProfileService {
 	public EmployeeProfileRequest  updateProfileDetails(EmployeeProfileRequest request);
 	
 	public List<EmployeeProfileEntity>  getEmpProfileList(Long empid);
-	public EmployeeProfileEntity  getEmpProfile(Long empid,Long employerid);
+	public EmployeeProfileEntity  getEmpProfile(Long employerid);
 }

@@ -183,9 +183,9 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	}
 
 	@Override
-	public EmployeeProfileEntity getEmpProfile(Long empid, Long employerid) {
+	public EmployeeProfileEntity getEmpProfile( Long employerid) {
 		// TODO Auto-generated method stub
-		return emplProfileDao.getEmplDetails(empid, employerid);
+		return emplProfileDao.getEmplDetails( employerid);
 	}
 	
 }
