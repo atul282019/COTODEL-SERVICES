@@ -51,7 +51,7 @@ public class EmployeeIncentiveController {
 	    @RequestMapping(value = "/save/incentiveDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveIncentiveDetails(HttpServletRequest request,@Valid @RequestBody EmployeeIncentiveRequest employeeIncentiveRequest) {
-	    logger.info("inside saveSalaryDetails");	    	
+	    logger.info("inside saveincentiveDetails");	    	
 	    	
 	    	SignUpEntity userEntity=null;
 	    	String message = "";
@@ -83,7 +83,7 @@ public class EmployeeIncentiveController {
 	    @RequestMapping(value = "/get/getEmployeeIncentive",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getEmployeeIncentive(HttpServletRequest request,@Valid @RequestBody EmployeeIncentiveRequest employeeinRequest) {
-	    logger.info("inside getEmployeeSalary.....");	    	
+	    logger.info("inside getEmployeeIncentive.....");	    	
 	    	
 	    
 	    	String message = "";
