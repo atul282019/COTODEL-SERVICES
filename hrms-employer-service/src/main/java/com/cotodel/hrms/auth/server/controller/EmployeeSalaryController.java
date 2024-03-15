@@ -48,7 +48,7 @@ public class EmployeeSalaryController {
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/saveSalaryDetails",produces = {"application/json"}, 
+	    @RequestMapping(value = "/save/salaryDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveSalaryDetails(HttpServletRequest request,@Valid @RequestBody EmployeeSalaryRequest empolyeeSalaryRequest) {
 	    logger.info("inside saveSalaryDetails");	    	
