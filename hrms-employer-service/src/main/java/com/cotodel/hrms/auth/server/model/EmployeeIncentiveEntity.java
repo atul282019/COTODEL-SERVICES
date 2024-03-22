@@ -32,12 +32,14 @@ public class EmployeeIncentiveEntity  implements Serializable{
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="employee_incentive_seq")
-	@Column(name="id")
+	@GeneratedValue(strategy=GenerationType.IDENTITY, generator="employee_incentive_seq")
+    @Column(name="id",columnDefinition = "bigint DEFAULT nextval('employee_incentive_seq'::regclass)")
+	//@Column()
 	private Long id;
 
 	@Column(name = "employer_id")
     private Long employerId;
+	
 	@Column(name = "employee_id")
     private Long employeeId;
 	
