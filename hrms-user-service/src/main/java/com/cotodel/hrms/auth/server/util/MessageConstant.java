@@ -18,4 +18,5 @@ public class MessageConstant {
 	public static final boolean FALSE = false;
 	public static final Integer SIGN_UP_ROLE =1;
 	public static final Integer USER_ROLE =2;
+	public static final Integer STATUS =1;
 }

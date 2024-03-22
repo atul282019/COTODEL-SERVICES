@@ -27,6 +27,7 @@ public interface UserService {
 	String verifySmsOtpNew(String oderID,String mobile, String otp);
 	String resendSmsOtp(String mobile,String orderId);
 	public UserEntity saveUsers(UserRequest user);
+	public UserEntity updateUsers(UserRequest user);
 	public List<UserDto> getUsersList(int  employerid);
 	
 }

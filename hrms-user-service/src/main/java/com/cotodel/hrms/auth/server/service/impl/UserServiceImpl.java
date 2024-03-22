@@ -324,6 +324,26 @@ public class UserServiceImpl implements UserService {
 	public List<UserDto> getUsersList(int employerid) {
 		// TODO Auto-generated method stub
 		return signUpDao.getUser(employerid);
+	}
+
+	@Override
+	public UserEntity updateUsers(UserRequest user) {
+		// TODO Auto-generated method stub
+		UserEmpEntity userEmpEntity= new UserEmpEntity();
+		UserEntity userDetails=userDetailsDao.checkUserMobile(user.getMobile());
+		userDetails.setStatus(MessageConstant.STATUS);
+		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
+		
+		Date date = new Date();
+		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		userEmpEntity.setUser_id(UserEntity1.getId());
+		userEmpEntity.setStatus(UserEntity1.getStatus());
+		
+		userEmpEntity.setCreated_date(localDate);
+		userEmpEntity.setUpdated_date(localDate);
+		userEmpEntity.setUpdated_by(""+UserEntity1.getEmployerid());
+		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		return UserEntity1;
 	}	
 	
 	
