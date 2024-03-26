@@ -132,7 +132,6 @@ public class UserServiceImpl implements UserService {
 					msg.setHeader("Content-Type", "text/plain; charset=UTF-8");
 					msg.setFrom(new InternetAddress(req.getEmail(), false));
 					msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(req.getEmail()));
-					//msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse("fakhrudeen.mca@gmail.com"));
 					msg.setSubject("User Registration Request Verification");
 					msg.setContent("Verify Sigin", "text/html");
 					msg.setSentDate(new Date());
@@ -345,6 +344,6 @@ public class UserServiceImpl implements UserService {
 		userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		return UserEntity1;
 	}	
-	
+
 	
 }
