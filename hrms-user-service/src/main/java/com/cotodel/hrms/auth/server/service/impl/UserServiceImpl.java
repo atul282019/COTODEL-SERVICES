@@ -303,6 +303,7 @@ public class UserServiceImpl implements UserService {
 		
 		UserEntity userDetails= new UserEntity();
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
+		userDetails=userDetailsDao.checkUserMobile(user.getMobile());
 		CopyUtility.copyProperties(user,userDetails);
 		Date date = new Date();
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -314,7 +315,7 @@ public class UserServiceImpl implements UserService {
 		
 		userEmpEntity.setCreated_date(localDate);
 		userDetailsDao.saveUserEmpEntity(userEmpEntity);
-				
+		
 		return UserEntity1;
 
 	}
@@ -343,7 +344,32 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setUpdated_by(""+UserEntity1.getEmployerid());
 		userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		return UserEntity1;
+	}
+
+	@Override
+	public UserEntity saveUsersBulk(UserRequest user) {
+		
+		UserEntity userDetails= new UserEntity();
+		UserEmpEntity userEmpEntity= new UserEmpEntity();
+		userDetails=userDetailsDao.checkUserMobile(user.getMobile());
+		CopyUtility.copyProperties(user,userDetails);
+		Date date = new Date();
+		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		userDetails.setCreated_date(localDate);
+		userDetails.setRole_id(MessageConstant.USER_ROLE);
+		
+		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
+//		userEmpEntity.setUser_id(UserEntity1.getId());
+//		userEmpEntity.setStatus(UserEntity1.getStatus());
+//		
+//		userEmpEntity.setCreated_date(localDate);
+//		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		if(user.isEmailStatus()) {
+			CommonUtility.sendEmail(user);
+		}
+		return UserEntity1;
 	}	
 
+	
 	
 }

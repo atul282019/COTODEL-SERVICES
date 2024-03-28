@@ -29,5 +29,5 @@ public interface UserService {
 	public UserEntity saveUsers(UserRequest user);
 	public UserEntity updateUsers(UserRequest user);
 	public List<UserDto> getUsersList(int  employerid);
-	
+	public UserEntity saveUsersBulk(UserRequest user);
 }
