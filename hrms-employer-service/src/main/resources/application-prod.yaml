@@ -17,4 +17,4 @@ tenants:
        driverClassName : org.postgresql.Driver
        username : postgres
        password : root
-       schema : hrms_mst    
+       schema : hrms1
