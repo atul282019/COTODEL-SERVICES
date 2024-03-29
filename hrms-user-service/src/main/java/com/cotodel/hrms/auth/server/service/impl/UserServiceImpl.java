@@ -303,7 +303,8 @@ public class UserServiceImpl implements UserService {
 		
 		UserEntity userDetails= new UserEntity();
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
-		userDetails=userDetailsDao.checkUserMobile(user.getMobile());
+			
+		//userDetails=userDetailsDao.checkUserMobile(user.getMobile());
 		CopyUtility.copyProperties(user,userDetails);
 		Date date = new Date();
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -314,7 +315,7 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setStatus(UserEntity1.getStatus());
 		
 		userEmpEntity.setCreated_date(localDate);
-		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
 		return UserEntity1;
 
