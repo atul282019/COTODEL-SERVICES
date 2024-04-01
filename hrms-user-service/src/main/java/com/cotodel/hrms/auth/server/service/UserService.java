@@ -30,4 +30,5 @@ public interface UserService {
 	public UserEntity updateUsers(UserRequest user);
 	public List<UserDto> getUsersList(int  employerid);
 	public UserEntity saveUsersBulk(UserRequest user);
+	public UserEntity confirmUsersBulk(UserRequest user);
 }
