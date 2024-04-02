@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.util;
 
+import com.google.gson.Gson;
+
 public class MessageConstant {
 	
 
@@ -13,4 +15,5 @@ public class MessageConstant {
 	public static final boolean TRUE = true;
 	public static final boolean FALSE = false;
 	public static final String DATA_NOT_FOUND = "No Data Found .";
+	public static final Gson gson = new Gson();
 }

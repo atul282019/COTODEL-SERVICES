@@ -13,4 +13,7 @@ public class ApplicationConstantConfig {
 	@Value("${user.service.add.url}")
 	public String userServiceAddUrl;
 	
+	@Value("${auth.token.get.url}")
+	public String getTokenUrl;	
+	
 }

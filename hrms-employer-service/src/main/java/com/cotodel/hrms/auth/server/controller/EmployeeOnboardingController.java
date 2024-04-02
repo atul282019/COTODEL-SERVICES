@@ -53,16 +53,18 @@ public class EmployeeOnboardingController {
 	    logger.info("inside saveEmplOnboarding");    	
 	    
 	    	String message = "";
+	    	String message1 = "";
 	    	EmployeeOnboardingRequest response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				response=employeeOnboardingService.saveEmployeeDetails(employeeOnboardingRequest);
+				message1=response.getResponse()==null?MessageConstant.PROFILE_FAILED:response.getResponse();
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 	    			return ResponseEntity.ok(new EmployeeOnboardingResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new EmployeeOnboardingResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeOnboardingResponse(MessageConstant.FALSE,message1,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
