@@ -16,4 +16,8 @@ public class ApplicationConstantConfig {
 	@Value("${auth.token.get.url}")
 	public String getTokenUrl;	
 	
+	@Value("${user.service.add.bulk.url}")
+	public String userServiceAddBulkUrl;
+	
+	
 }

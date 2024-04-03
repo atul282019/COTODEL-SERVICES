@@ -27,6 +27,8 @@ public class EmployeeOnboardingRequest {
 	private String managerName;
 	private String ctc;
 	private String location;
-	private String residentOfIndia;	
+	private String residentOfIndia;
+	private boolean updateStatus ;
+    private boolean emailStatus ;
 	private String response;
 }

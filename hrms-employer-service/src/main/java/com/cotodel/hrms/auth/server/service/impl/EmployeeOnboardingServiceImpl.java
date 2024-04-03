@@ -87,4 +87,58 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		}
 		return employeeOnboading;
 	}
+
+
+	@Override
+	public EmployeeOnboardingRequest saveBulkEmployeeDetails(EmployeeOnboardingRequest request) {
+		String response="";
+		String response1="";
+		String tokenvalue="";
+		TokenGeneration token=new TokenGeneration();
+		UserRequest userRequest=new UserRequest();
+		try {
+			tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			userRequest.setUsername(request.getName());
+			userRequest.setMobile(request.getMobile());
+			userRequest.setEmail(request.getEmail());
+			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
+			userRequest.setUpdateStatus(request.isUpdateStatus());
+			userRequest.setUpdateStatus(request.isEmailStatus());
+			
+			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+					applicationConstantConfig.userServiceAddBulkUrl);
+			if (!ObjectUtils.isEmpty(response1)) {
+				JSONObject demoRes = new JSONObject(response1);
+				boolean status = demoRes.getBoolean("status");
+				if (status) {
+					Long id=0l;
+					if (demoRes.has("userEntity")) {
+						JSONObject userEntity = demoRes.getJSONObject("userEntity");
+						id=userEntity.getLong("id");
+						
+					}
+					response = MessageConstant.RESPONSE_FAILED;
+					request.setResponse(response);
+					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
+					CopyUtility.copyProperties(request, employeeOnboarding);
+					employeeOnboarding.setUserDetailsId(id);
+					employeeOnboarding.setMode(2l);
+					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
+					response = MessageConstant.RESPONSE_SUCCESS;
+					request.setResponse(response);
+				} else if (!status) {
+					response = demoRes.getString("message");
+					request.setResponse(response);
+				}
+
+			}
+		} catch (Exception e) {
+			response = MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+		}
+		return request;
+
+	}
+	
+	
 }

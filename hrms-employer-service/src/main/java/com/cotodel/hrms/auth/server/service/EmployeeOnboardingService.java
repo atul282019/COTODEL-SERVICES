@@ -9,7 +9,7 @@ public interface EmployeeOnboardingService {
 	
 	public EmployeeOnboardingRequest  saveEmployeeDetails(EmployeeOnboardingRequest	 request);
 	
-	
+	public EmployeeOnboardingRequest  saveBulkEmployeeDetails(EmployeeOnboardingRequest	 request);
 	public List<EmployeeOnboardingEntity>  getEmployeeDetailsList(Long employerid);
 	
 }
