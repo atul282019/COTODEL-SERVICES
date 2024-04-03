@@ -56,6 +56,12 @@ public class EmployeeOnboardingEntity  implements Serializable{
 	private String managerName;
 	@Column(name="ctc")
 	private String ctc;
+	@Column(name="status")
+	private int status;
+	@Column(name="user_details_id")
+	private Long userDetailsId;
+	@Column(name="mode")
+	private Long mode;
 	@Column(name="location")
 	private String location;
 	@Column(name="resident_of_india")

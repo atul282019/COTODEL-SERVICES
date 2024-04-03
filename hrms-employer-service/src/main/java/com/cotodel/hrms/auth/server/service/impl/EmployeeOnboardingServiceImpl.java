@@ -45,11 +45,20 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
 				if (status) {
-
+					Long id=0l;
+					if (demoRes.has("userEntity")) {
+						JSONObject userEntity = demoRes.getJSONObject("userEntity");
+						id=userEntity.getLong("id");
+						
+					}
+					//String user = demoRes.getString("userEntity");
+					//JSONObject refData=pendJosnIdRes.getJSONArray("data").getJSONObject(0);
 					response = MessageConstant.RESPONSE_FAILED;
 					request.setResponse(response);
 					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
 					CopyUtility.copyProperties(request, employeeOnboarding);
+					employeeOnboarding.setUserDetailsId(id);
+					employeeOnboarding.setMode(1l);
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					response = MessageConstant.RESPONSE_SUCCESS;
 					request.setResponse(response);
