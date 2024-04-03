@@ -1,7 +1,10 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeOnboardingFailDao;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingFailEntity;
@@ -21,4 +24,14 @@ public class EmployeeOnboardingFailDaoImpl implements EmployeeOnboardingFailDao{
 		
 	}
 
+
+
+	@Override
+	@Transactional
+	public List<EmployeeOnboardingFailEntity> getBulkFailList(Long employerId) {
+		
+		return employeeOnboardingFailRepository.findByOnboardingFailList(employerId);
+	}
+
+	
 }

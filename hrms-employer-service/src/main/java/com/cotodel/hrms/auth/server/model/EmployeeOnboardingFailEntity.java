@@ -1,16 +1,18 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -38,8 +40,8 @@ public class EmployeeOnboardingFailEntity  implements Serializable{
 	private Long id;	
 	@Column(name="employer_id")
 	private Long employerId;
-	@Column(name="fail_value")
-	private String failValue;
+	@Lob
+	private byte[] failValue;
 	@Column(name="status")
 	private Long status;
 	@CreationTimestamp

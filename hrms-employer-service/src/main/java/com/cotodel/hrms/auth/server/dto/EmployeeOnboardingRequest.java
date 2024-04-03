@@ -1,11 +1,7 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
-
-import javax.persistence.Column;
-
-import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeOnboardingRequest {
+public class EmployeeOnboardingRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	private Long employerId;
 	private String empOrCont;
