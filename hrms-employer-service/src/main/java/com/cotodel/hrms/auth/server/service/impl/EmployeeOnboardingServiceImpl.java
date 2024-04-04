@@ -139,6 +139,65 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		return request;
 
 	}
+
+
+	@Override
+	public List<EmployeeOnboardingRequest> confirmBulkEmployeeDetails(List<EmployeeOnboardingRequest> request) {
+		String response="";
+		String response1="";
+		String tokenvalue="";
+		
+		TokenGeneration token=new TokenGeneration();
+		UserRequest userRequest=new UserRequest();
+		try {
+			tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			for (EmployeeOnboardingRequest employeeOnboardingRequest : request) {
+				
+			
+			userRequest.setUsername(employeeOnboardingRequest.getName());
+			userRequest.setMobile(employeeOnboardingRequest.getMobile());
+			userRequest.setEmail(employeeOnboardingRequest.getEmail());
+			userRequest.setEmployerid(employeeOnboardingRequest.getEmployerId()==null?0:employeeOnboardingRequest.getEmployerId().intValue());
+			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+					applicationConstantConfig.userServiceUpdateBulkUrl);
+			if (!ObjectUtils.isEmpty(response1)) {
+				JSONObject demoRes = new JSONObject(response1);
+				boolean status = demoRes.getBoolean("status");
+				if (status) {
+					Long id=0l;
+					if (demoRes.has("userEntity")) {
+						JSONObject userEntity = demoRes.getJSONObject("userEntity");
+						id=userEntity.getLong("id");
+						
+					}
+					//String user = demoRes.getString("userEntity");
+					//JSONObject refData=pendJosnIdRes.getJSONArray("data").getJSONObject(0);
+					response = MessageConstant.RESPONSE_FAILED;
+					employeeOnboardingRequest.setResponse(response);
+					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
+					employeeOnboarding=employeeOnboardingDao.getEmployeeOnboarding(employeeOnboardingRequest.getId());
+					//CopyUtility.copyProperties(request, employeeOnboarding);
+					//employeeOnboarding.setUserDetailsId(id);
+					//employeeOnboarding.setMode(1l);
+					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
+					response = MessageConstant.RESPONSE_SUCCESS;
+					employeeOnboardingRequest.setResponse(response);
+				} else if (!status) {
+					response = demoRes.getString("message");
+					employeeOnboardingRequest.setResponse(response);
+				}
+
+			}
+			}
+			
+		} catch (Exception e) {
+			response = MessageConstant.RESPONSE_FAILED;
+			//employeeOnboardingRequest.setResponse(response);
+		}
+		
+		return request;
+
+	}
 	
 	
 }

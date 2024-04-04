@@ -24,4 +24,11 @@ public class EmployeeOnboardingDaoImpl implements EmployeeOnboardingDao{
 		return employeeOnboardingRepository.findByOnboardingList(employerId);
 	}
 
+	@Override
+	public EmployeeOnboardingEntity getEmployeeOnboarding(Long id) {
+		// TODO Auto-generated method stub
+		return employeeOnboardingRepository.findByOnboardingId(id);
+	}
+
+	
 }

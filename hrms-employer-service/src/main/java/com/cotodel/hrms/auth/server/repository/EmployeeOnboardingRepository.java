@@ -1,6 +1,7 @@
 package com.cotodel.hrms.auth.server.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,5 +12,8 @@ public interface EmployeeOnboardingRepository extends JpaRepository<EmployeeOnbo
 	
 	
 	@Query("select s  from EmployeeOnboardingEntity s where s.employerId = ?1")
-	  public List<EmployeeOnboardingEntity> findByOnboardingList(Long emplid);
+	public List<EmployeeOnboardingEntity> findByOnboardingList(Long emplid);
+	
+	@Query("select s  from EmployeeOnboardingEntity s where s.id = ?1")
+	public EmployeeOnboardingEntity findByOnboardingId(Long id);
 }
