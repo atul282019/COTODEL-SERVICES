@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -198,6 +199,60 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		return request;
 
 	}
-	
-	
+
+
+	@Override
+	public List<EmployeeOnboardingRequest> tryBulkEmployeeDetails(List<EmployeeOnboardingRequest> request) {
+		
+		String response="";
+		String response1="";
+		String tokenvalue="";
+		TokenGeneration token=new TokenGeneration();
+		UserRequest userRequest=new UserRequest();
+		List<EmployeeOnboardingRequest> emList=new ArrayList<EmployeeOnboardingRequest>();
+		for (EmployeeOnboardingRequest employeeOnboardingRequest : request) {
+		try {
+			tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			
+			userRequest.setUsername(employeeOnboardingRequest.getName());
+			userRequest.setMobile(employeeOnboardingRequest.getMobile());
+			userRequest.setEmail(employeeOnboardingRequest.getEmail());
+			userRequest.setEmployerid(employeeOnboardingRequest.getEmployerId()==null?0:employeeOnboardingRequest.getEmployerId().intValue());
+			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+					applicationConstantConfig.userServiceAddUrl);
+			if (!ObjectUtils.isEmpty(response1)) {
+				JSONObject demoRes = new JSONObject(response1);
+				boolean status = demoRes.getBoolean("status");
+				if (status) {
+					Long id=0l;
+					if (demoRes.has("userEntity")) {
+						JSONObject userEntity = demoRes.getJSONObject("userEntity");
+						id=userEntity.getLong("id");
+						
+					}
+					response = MessageConstant.RESPONSE_FAILED;
+					employeeOnboardingRequest.setResponse(response);
+					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
+					CopyUtility.copyProperties(request, employeeOnboarding);
+					employeeOnboarding.setUserDetailsId(id);
+					employeeOnboarding.setMode(1l);
+					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
+					response = MessageConstant.RESPONSE_SUCCESS;
+					employeeOnboardingRequest.setResponse(response);
+				} else if (!status) {
+					response = demoRes.getString("message");
+					employeeOnboardingRequest.setResponse(response);
+				}
+
+			}
+		
+		} catch (Exception e) {
+			response = MessageConstant.RESPONSE_FAILED;
+			employeeOnboardingRequest.setResponse(response);
+		}
+		emList.add(employeeOnboardingRequest);
+		}
+		return emList;
+
+	}
 }
