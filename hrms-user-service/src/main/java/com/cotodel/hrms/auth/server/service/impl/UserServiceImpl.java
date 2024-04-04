@@ -352,22 +352,38 @@ public class UserServiceImpl implements UserService {
 		
 		UserEntity userDetails= new UserEntity();
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
-		userDetails=userDetailsDao.checkUserMobile(user.getMobile());
-		CopyUtility.copyProperties(user,userDetails);
-		Date date = new Date();
-		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		userDetails.setCreated_date(localDate);
-		userDetails.setRole_id(MessageConstant.USER_ROLE);
-		
-		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
-//		userEmpEntity.setUser_id(UserEntity1.getId());
-//		userEmpEntity.setStatus(UserEntity1.getStatus());
-//		
-//		userEmpEntity.setCreated_date(localDate);
-//		userDetailsDao.saveUserEmpEntity(userEmpEntity);
-		if(user.isEmailStatus()) {
-			CommonUtility.sendEmail(user);
+		UserEntity UserEntity1=null;
+		try {
+			if(user.isUpdateStatus()) {
+			userDetails=userDetailsDao.checkUserMobile(user.getMobile());
+			if(userDetails!=null)
+				CopyUtility.copyProperties(user,userDetails);
+				else {
+					userDetails= new UserEntity();
+				CopyUtility.copyProperties(user,userDetails);	
+				}
+			}else {
+				CopyUtility.copyProperties(user,userDetails);	
+			}
+			//CopyUtility.copyProperties(user,userDetails);
+			Date date = new Date();
+			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			userDetails.setCreated_date(localDate);
+			userDetails.setRole_id(MessageConstant.USER_ROLE);
+			
+			UserEntity1=userDetailsDao.saveUserDetails(userDetails);
+//			userEmpEntity.setUser_id(UserEntity1.getId());
+//			userEmpEntity.setStatus(UserEntity1.getStatus());
+//			
+//			userEmpEntity.setCreated_date(localDate);
+//			userDetailsDao.saveUserEmpEntity(userEmpEntity);
+			if(user.isEmailStatus()) {
+				CommonUtility.sendEmail(user);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
+		
 		return UserEntity1;
 	}
 

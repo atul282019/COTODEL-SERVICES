@@ -241,7 +241,7 @@ public class UserSignUpController {
 	    @RequestMapping(value = "/add/saveUsersBulk",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveUsersBulk(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside get saveUserDetails");
+	    	logger.info("inside get saveUsersBulk");
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
