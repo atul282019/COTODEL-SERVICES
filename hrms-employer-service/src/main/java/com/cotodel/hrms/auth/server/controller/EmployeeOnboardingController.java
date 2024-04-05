@@ -155,7 +155,7 @@ public class EmployeeOnboardingController {
 	    @RequestMapping(value = "/add/confirmBulkEmplOnboarding",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> confirmBulkEmplOnboarding(HttpServletRequest request,@Valid @RequestBody List<EmployeeOnboardingRequest> employeeOnboardingRequest) {
-	    logger.info("inside saveBulkEmplOnboarding");    	
+	    logger.info("inside confirmBulkEmplOnboarding");    	
 	    
 	    	String message = "";
 	    	String message1 = "";
