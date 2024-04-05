@@ -146,8 +146,13 @@ public class UserSignUpController {
 				}else {
 	    	    userEntity=	userService.saveUsers(userReq);
 	    		
-	    	    if(userEntity!=null) {	    
-	    		 userService.sendEmailToEmployee(userReq);
+	    	    if(userEntity!=null) {
+	    	    	try {
+	    	    		userService.sendEmailToEmployee(userReq);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+	    		 
 
 	    		 return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	    	    }
@@ -300,6 +305,43 @@ public class UserSignUpController {
 	    	    	return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	    	    }
 
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in saveUserDetails====="+e);
+			}
+	        
+	        return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	          
+	        
+	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/saveUsersWithOutMail",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> saveUsersWithOutMail(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
+	    	logger.info("inside get saveUsersWithOutMail");
+	    	UserEntity userEntity=null;
+	    	String responseToken="";
+	    	String authToken = "";
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				responseToken=userService.userExist(userReq.getMobile(), userReq.getEmail());
+				if(!responseToken.equalsIgnoreCase("")) {
+					return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+				}else {
+	    	    userEntity=	userService.saveUsers(userReq);
+	    		
+	    	    if(userEntity!=null) {
+	    	    	return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    }
+			}
 	    	}catch (Exception e) {
 				
 	    		e.printStackTrace();
