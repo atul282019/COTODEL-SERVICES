@@ -255,4 +255,18 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		return emList;
 
 	}
+
+
+	@Override
+	public EmployeeOnboardingEntity getEmployeeDetailsById(Long id) {
+		EmployeeOnboardingEntity employeeOnboading=new EmployeeOnboardingEntity();
+		try {
+			employeeOnboading=employeeOnboardingDao.getEmployeeOnboarding(id);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return employeeOnboading;
+		
+	}
+	
 }
