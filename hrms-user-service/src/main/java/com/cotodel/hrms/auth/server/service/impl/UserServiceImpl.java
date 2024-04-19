@@ -343,7 +343,7 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setCreated_date(localDate);
 		userEmpEntity.setUpdated_date(localDate);
 		userEmpEntity.setUpdated_by(""+UserEntity1.getEmployerid());
-		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		return UserEntity1;
 	}
 
@@ -407,6 +407,14 @@ public class UserServiceImpl implements UserService {
 		
 		return UserEntity1;
 
+	}
+
+	@Override
+	public UserEntity userExistNew(String mobile, String email) {
+		// TODO Auto-generated method stub
+		UserEntity userDetail = userDetailsDao.getUserNew(mobile,email);		
+			return userDetail;
+		
 	}	
 
 	

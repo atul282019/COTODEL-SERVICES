@@ -31,4 +31,5 @@ public interface UserService {
 	public List<UserDto> getUsersList(int  employerid);
 	public UserEntity saveUsersBulk(UserRequest user);
 	public UserEntity confirmUsersBulk(UserRequest user);
+	UserEntity userExistNew(String mobile,String email);
 }
