@@ -3,12 +3,15 @@ package com.cotodel.hrms.auth.server.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeOnboardingDao;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
@@ -173,13 +176,15 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 					}
 					//String user = demoRes.getString("userEntity");
 					//JSONObject refData=pendJosnIdRes.getJSONArray("data").getJSONObject(0);
+					
 					response = MessageConstant.RESPONSE_FAILED;
 					employeeOnboardingRequest.setResponse(response);
 					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
-					employeeOnboarding=employeeOnboardingDao.getEmployeeOnboarding(employeeOnboardingRequest.getId());
+					employeeOnboarding=employeeOnboardingDao.getEmployeeOnboarding(employeeOnboardingRequest.getMobile());
 					//CopyUtility.copyProperties(request, employeeOnboarding);
 					//employeeOnboarding.setUserDetailsId(id);
 					//employeeOnboarding.setMode(1l);
+					employeeOnboarding.setStatus(1);
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					response = MessageConstant.RESPONSE_SUCCESS;
 					employeeOnboardingRequest.setResponse(response);
@@ -261,12 +266,76 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 	public EmployeeOnboardingEntity getEmployeeDetailsById(Long id) {
 		EmployeeOnboardingEntity employeeOnboading=new EmployeeOnboardingEntity();
 		try {
-			employeeOnboading=employeeOnboardingDao.getEmployeeOnboarding(id);
+			employeeOnboading=employeeOnboardingDao.getEmployeeOnboardingId(id);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return employeeOnboading;
 		
+	}
+
+
+	@Override
+	public EmployeeOnboardingNewRequest saveEmployeeDetailsNew(EmployeeOnboardingNewRequest request) {
+		
+		String response="";
+		String response1="";
+		String tokenvalue="";
+		TokenGeneration token=new TokenGeneration();
+		UserRequest userRequest=new UserRequest();
+		try {
+			tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			userRequest.setUsername(request.getName());
+			userRequest.setMobile(request.getMobile());
+			userRequest.setEmail(request.getEmail());
+			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
+			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+					applicationConstantConfig.userServiceAddNewUrl);
+			if (!ObjectUtils.isEmpty(response1)) {
+				JSONObject demoRes = new JSONObject(response1);
+				boolean status = demoRes.getBoolean("status");
+				if (status || !status) {
+					Long id=0l;
+					if (demoRes.has("userEntity")) {
+						JSONObject userEntity = demoRes.getJSONObject("userEntity");
+						id=userEntity.getLong("id");
+						
+					}
+					//String user = demoRes.getString("userEntity");
+					//JSONObject refData=pendJosnIdRes.getJSONArray("data").getJSONObject(0);
+					response = MessageConstant.RESPONSE_FAILED;
+					request.setResponse(response);
+					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
+					employeeOnboarding=employeeOnboardingDao.getEmployeeOnboarding(request.getMobile());
+					if(employeeOnboarding!=null) {
+						employeeOnboarding.setProofOfIdentity(request.getProofOfIdentity());
+						employeeOnboarding.setPan(request.getPan());
+						employeeOnboarding.setBankAccountNumber(request.getBankAccountNumber());
+						employeeOnboarding.setIfscCode(request.getIfscCode());
+						employeeOnboarding.setBeneficiaryName(request.getBeneficiaryName());
+					}else {
+						employeeOnboarding = new EmployeeOnboardingEntity();
+						CopyUtility.copyProperties(request, employeeOnboarding);
+					}
+					
+					employeeOnboarding.setUserDetailsId(id);
+					employeeOnboarding.setMode(1l);
+					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
+					response = MessageConstant.RESPONSE_SUCCESS;
+					request.setResponse(response);
+					request.setId(employeeOnboarding.getId());
+				} else if (!status) {
+					response = demoRes.getString("message");
+					request.setResponse(response);
+				}
+
+			}
+		} catch (Exception e) {
+			response = MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+		}
+		return request;
+
 	}
 	
 }

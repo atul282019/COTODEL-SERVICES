@@ -69,5 +69,14 @@ public class EmployeeOnboardingEntity  implements Serializable{
 	@CreationTimestamp
 	@Column(name="creation_date")
 	private Date creationDate;
-
+	@Column(name="proof_of_identity")
+	private String proofOfIdentity;
+	@Column(name="pan")
+	private String pan;
+	@Column(name="bank_account_number")
+    private String bankAccountNumber;
+	@Column(name="ifsc_code")
+    private String ifscCode;
+	@Column(name="beneficiary_name")
+    private String beneficiaryName;
 }

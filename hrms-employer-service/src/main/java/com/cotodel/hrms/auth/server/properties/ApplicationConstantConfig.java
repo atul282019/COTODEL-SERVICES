@@ -22,5 +22,7 @@ public class ApplicationConstantConfig {
 	@Value("${user.service.update.bulk.url}")
 	public String userServiceUpdateBulkUrl;
 	
+	@Value("${user.service.add.new.url}")
+	public String userServiceAddNewUrl;
 	
 }

@@ -6,6 +6,7 @@ import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 
 public interface EmployeeOnboardingDao {
 	public EmployeeOnboardingEntity saveDetails(EmployeeOnboardingEntity employeeEntity);
-	public EmployeeOnboardingEntity getEmployeeOnboarding(Long id);
+	public EmployeeOnboardingEntity getEmployeeOnboarding(String mobile);
+	public EmployeeOnboardingEntity getEmployeeOnboardingId(Long id);
 	public List<EmployeeOnboardingEntity> getEmployeeOnboardingList(Long employerId);
 }
