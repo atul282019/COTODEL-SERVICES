@@ -163,7 +163,7 @@ public class CommonUtility {
 							+ "    <p style=\"font-size: 16px;\">Please know that your efforts have not gone unnoticed, and I am genuinely thrilled for you. This is just the beginning of many great things to come, and I am confident that you will continue to excel in all your future endeavors.</p>\r\n"
 							+ "    <p style=\"font-size: 16px;\">Once again, congratulations on this well-deserved achievement! Wishing you continued success and happiness.</p>\r\n"
 							+ "    <p style=\"font-size: 16px;\">Warm regards,</p>\r\n"
-							+ "    <p style=\"font-size: 16px;\">Fakhruddeen</p>\r\n"
+							+ "    <p style=\"font-size: 16px;\">Team Cotodel</p>\r\n"
 							+ "  </div>";
 					MimeBodyPart messageBodyPart = new MimeBodyPart();
 					// String password =generatePassword(8);
