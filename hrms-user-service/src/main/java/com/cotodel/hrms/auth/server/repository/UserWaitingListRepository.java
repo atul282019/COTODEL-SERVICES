@@ -1,0 +1,15 @@
+package com.cotodel.hrms.auth.server.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.cotodel.hrms.auth.server.entity.UserWaitingListEntity;
+
+@Repository
+public interface UserWaitingListRepository extends JpaRepository<UserWaitingListEntity, Long> {
+	
+	@Query("select s  from UserWaitingListEntity s where s.email = ?1")
+	public UserWaitingListEntity getByUser(String userEmail);
+} 
+
