@@ -31,6 +31,12 @@ public class UserWaitingListDaoImpl implements UserWaitingListDao {
 		// TODO Auto-generated method stub
 		return userWaitingListRepository.getByUser(email);
 	}
+
+	@Override
+	public List<UserWaitingListEntity> getUserList() {
+		// TODO Auto-generated method stub
+		return userWaitingListRepository.getByUserList();
+	}
 	
 	
 }

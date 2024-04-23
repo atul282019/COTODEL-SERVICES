@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.UserGetWaitingListResponse;
 import com.cotodel.hrms.auth.server.dto.UserWaitingListResponse;
 import com.cotodel.hrms.auth.server.entity.UserWaitingListEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
@@ -49,6 +52,7 @@ public class WaitingListController {
     	logger.info("inside get saveWaitingListUsers");
     	UserWaitingListEntity userEntity=null;
     	String authToken = "";
+    	String message=MessageConstant.RESPONSE_FAILED;
     	try {	    		
     		String companyId = request.getHeader("companyId");
 			SetDatabaseTenent.setDataSource(companyId);
@@ -64,10 +68,11 @@ public class WaitingListController {
     	}catch (Exception e) {
 			
     		e.printStackTrace();
-    		logger.error("error in saveWaitingListUsers====="+e);
+    		logger.error("error in saveWaitingListUsers====="+e.getMessage());
+    		message=e.getMessage();
 		}
         
-        return ResponseEntity.ok(new UserWaitingListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+        return ResponseEntity.ok(new UserWaitingListResponse(MessageConstant.FALSE,message,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
           
         
     }
@@ -81,15 +86,24 @@ public class WaitingListController {
     @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
     @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
     @RequestMapping(value = "/get/waitingListUser",produces = {"application/json"}, consumes = {"application/json"},method = RequestMethod.POST)
-    public ResponseEntity<Object>  waitingListUser(HttpServletRequest request,@RequestBody UserWaitingListEntity userWaitingListEntity) {
+    public ResponseEntity<Object>   waitingListUser(HttpServletRequest request,@RequestBody UserWaitingListEntity userWaitingListEntity) {
         
     	String companyId=request.getHeader("companyId");
     	SetDatabaseTenent.setDataSource(companyId);
-    
-    	UserWaitingListEntity user=	userWaitingService.checkUserEmail(userWaitingListEntity.getEmail());
+    	List<UserWaitingListEntity> list=null;
+    try {
+    	list=	userWaitingService.checkUserList();
+    	if(list!=null && list.size()>0) {
+			return ResponseEntity.ok(new UserGetWaitingListResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+		}else {
+			return ResponseEntity.ok(new UserGetWaitingListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
+	   
+	}
+	} catch (Exception e) {
+		e.printStackTrace();
+	}   	 
+    return ResponseEntity.ok(new UserGetWaitingListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	
     	
-    	return ResponseEntity
-                .ok(user);
     }
 
 

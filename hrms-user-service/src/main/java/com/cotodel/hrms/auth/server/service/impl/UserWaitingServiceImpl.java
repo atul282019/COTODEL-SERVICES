@@ -3,6 +3,7 @@ package com.cotodel.hrms.auth.server.service.impl;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -30,7 +31,13 @@ public class UserWaitingServiceImpl implements UserWaitingService {
 		Date date = new Date();
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		user.setCreated_date(localDate);
-		UserWaitingListEntity UserEntity1=userWaitingListDao.saveUserDetails(user);
+		UserWaitingListEntity UserEntity1=null;
+		try {
+			UserEntity1=userWaitingListDao.saveUserDetails(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 				
 		return UserEntity1;
 	}
@@ -40,6 +47,13 @@ public class UserWaitingServiceImpl implements UserWaitingService {
 	public UserWaitingListEntity checkUserEmail(String userEmail) {
 		// TODO Auto-generated method stub
 		return userWaitingListDao.getUser(userEmail);
+	}
+
+
+	@Override
+	public List<UserWaitingListEntity> checkUserList() {
+		// TODO Auto-generated method stub
+		return userWaitingListDao.getUserList();
 	}
 
 	
