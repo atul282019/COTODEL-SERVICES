@@ -48,7 +48,7 @@ public class EmployeePayrollController {
 	    @RequestMapping(value = "/save/payrollDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> payrollDetails(HttpServletRequest request,@Valid @RequestBody EmployeePayrollRequest empolyeeRequest) {
-	    logger.info("inside saveDetails");	    	
+	    logger.info("inside payrollDetails");	    	
 	    	
 	    	String message = "";
 	    	EmployeePayrollRequest response=null;
@@ -101,4 +101,36 @@ public class EmployeePayrollController {
 	        
 	        return ResponseEntity.ok(new EmployeePayrollTaxResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/save/payrollDetailsNew",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> payrollDetailsNew(HttpServletRequest request,@Valid @RequestBody EmployeePayrollRequest empolyeeRequest) {
+	    logger.info("inside payrollDetailsNew");	    	
+	    	
+	    	String message = "";
+	    	EmployeePayrollRequest response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				response=employeePayrollService.saveEmployeePayrollDetailsNew(empolyeeRequest);
+	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new EmployeePayrollResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new EmployeePayrollResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in saveProfileDetails====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new EmployeePayrollResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	
 }

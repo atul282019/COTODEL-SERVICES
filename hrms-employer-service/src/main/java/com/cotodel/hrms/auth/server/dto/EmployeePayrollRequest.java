@@ -1,5 +1,8 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import java.util.List;
+
+import com.cotodel.hrms.auth.server.model.EmployeePayrollNewEntity;
 import com.cotodel.hrms.auth.server.model.EmployerEntity;
 
 import lombok.AllArgsConstructor;
@@ -31,4 +34,5 @@ public class EmployeePayrollRequest {
     private String taxableLta;
     private Integer status; 
     private String response;
+    List<EmployeePayrollNewEntity> list;
 	}

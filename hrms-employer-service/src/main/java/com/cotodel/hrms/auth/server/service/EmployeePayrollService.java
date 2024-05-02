@@ -7,4 +7,5 @@ public interface EmployeePayrollService {
 	
 	public EmployeePayrollRequest  saveEmployeePayrollDetails(EmployeePayrollRequest request);
 	public EmployeePayrollTaxRequest  saveEmployeePayrollTaxDetails(EmployeePayrollTaxRequest request);
+	public EmployeePayrollRequest  saveEmployeePayrollDetailsNew(EmployeePayrollRequest request);
 }

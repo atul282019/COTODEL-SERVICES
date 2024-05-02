@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.EmployeePayrollDao;
+import com.cotodel.hrms.auth.server.dao.EmployeePayrollNewDao;
 import com.cotodel.hrms.auth.server.dao.EmployeePayrollTaxDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
 import com.cotodel.hrms.auth.server.dto.EmployeePayrollRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeePayrollTaxRequest;
 import com.cotodel.hrms.auth.server.model.EmployeePayrollEntity;
+import com.cotodel.hrms.auth.server.model.EmployeePayrollNewEntity;
 import com.cotodel.hrms.auth.server.model.EmployeePayrollTaxEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
 import com.cotodel.hrms.auth.server.model.EmployerEntity;
@@ -20,6 +22,9 @@ public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 
 	@Autowired
 	EmployeePayrollDao  employeePayrollDao;	
+	
+	@Autowired
+	EmployeePayrollNewDao  employeePayrollNewDao;	
 	
 	@Autowired
 	EmployeeProfileDao  employeeProfileDao;	
@@ -70,6 +75,36 @@ public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 			
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
+		} catch (Exception e) {
+			response=MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+		}
+		return request;
+
+	}
+
+	@Override
+	public EmployeePayrollRequest saveEmployeePayrollDetailsNew(EmployeePayrollRequest request) {
+		EmployerEntity employerEntity=null;
+		String response="";
+		try {
+			response=MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);		
+			EmployeePayrollNewEntity employee=new EmployeePayrollNewEntity();
+			//CopyUtility.copyProperties(request,employee);
+			if(request.getList()!=null) {
+				for (EmployeePayrollNewEntity employeePayrollNewEntity : request.getList()) {
+					employee = employeePayrollNewDao.saveDetails(employeePayrollNewEntity);
+				}
+				
+				EmployeeProfileEntity employeeProfileEntity = new EmployeeProfileEntity();
+				employeeProfileEntity = employeeProfileDao.getEmplDetails(employee.getEmployerId());
+				employeeProfileEntity.setProfileComplete(3);
+				employeeProfileDao.saveDetails(employeeProfileEntity);
+				
+				response = MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			}
 		} catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);
