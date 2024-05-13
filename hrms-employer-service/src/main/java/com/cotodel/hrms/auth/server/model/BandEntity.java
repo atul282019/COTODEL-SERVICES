@@ -35,8 +35,8 @@ public class BandEntity implements Serializable{
 	@Column(name="id")
 	private Long id;
 	
-	@OneToOne
-    @JoinColumn(name = "band_id")
-    private EmployeeBandEntity band;
+	
+	@Column(name = "band_id")
+    private String bandId;
 	
 }
