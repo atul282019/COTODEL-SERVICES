@@ -106,6 +106,7 @@ public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 				request.setResponse(response);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);
 		}
