@@ -14,7 +14,8 @@ public class ExpenseCategoryBandRequest {
 	private String bandFlag;	
 	private String bandId;	
 	private String bandPerDay;	
-	private String bandPerMonth;	
+	private String bandPerMonth;
+	private String dayToExpiry;	
 	private long status;
 	private String response;
 	

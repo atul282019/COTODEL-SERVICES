@@ -1,5 +1,8 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +74,26 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 		
 		try {
 			employeeBandEntity=employeeBandDao.getEmployeeBandDetails(bandid);
+			
+			response=MessageConstant.RESPONSE_SUCCESS;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			response=MessageConstant.RESPONSE_FAILED;
+			//companyEmployeeRequest.setResponse(response);
+		}
+		return employeeBandEntity;
+	}
+
+
+	@Override
+	public List<EmployeeBandEntity> getEmployeeBandList() {
+		List<EmployeeBandEntity> employeeBandEntity=new ArrayList<EmployeeBandEntity>();
+		
+		String response=MessageConstant.RESPONSE_FAILED;
+		
+		try {
+			employeeBandEntity=employeeBandDao.getEmployeeBandList();
 			
 			response=MessageConstant.RESPONSE_SUCCESS;
 			

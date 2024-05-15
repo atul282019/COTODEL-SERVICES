@@ -16,5 +16,7 @@ public interface EmployeeBandRepository extends JpaRepository<EmployeeBandEntity
 	@Query("select s  from EmployeeBandEntity s where s.bandId = ?1 ")
 	public EmployeeBandEntity findByEmployeeBandId(String bandid);
 	
+	@Query("select s  from EmployeeBandEntity s where s.status ='1' ")
+	public List<EmployeeBandEntity> findByEmployeeBandList();
 	
 }

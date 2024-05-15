@@ -51,6 +51,9 @@ public class ExpenseCategoryBandEntity implements Serializable{
 	@Column(name="band_per_month")
 	private String bandPerMonth;
 	
+	@Column(name="day_to_expiry")
+	private String dayToExpiry;
+	
 	@Column(name="status")
 	private long status;	
 	
