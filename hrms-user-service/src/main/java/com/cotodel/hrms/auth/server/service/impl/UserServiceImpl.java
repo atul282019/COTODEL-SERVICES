@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setStatus(UserEntity1.getStatus());
 		
 		userEmpEntity.setCreated_date(localDate);
-		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
 		
 		return UserEntity1;
