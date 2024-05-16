@@ -87,5 +87,8 @@ public class EmployeeEntity implements Serializable{
 	private boolean status;
 	
 	private String intextra1;
-	
+	 
+	@ManyToOne
+	@JoinColumn(name = "supervisor_id")
+	private EmployeeEntity supervisor;
 }
