@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -60,9 +61,11 @@ public class UserEntity implements Serializable{
     private int employerid ;
     private int role_id ;
     
-    @OneToMany
-   	@JoinTable(name = "h_user_emp", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<UserEmpEntity> userEmpEntity ;
+//    @OneToMany
+//   	@JoinTable(name = "h_user_emp", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user"))
+//    private List<UserEmpEntity> userEmpEntity ;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserEmpEntity> userEmpEntity;
    // @OneToMany
 //    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="user")
 //    private List<UserEmpEntity> userEmpEntity ;
