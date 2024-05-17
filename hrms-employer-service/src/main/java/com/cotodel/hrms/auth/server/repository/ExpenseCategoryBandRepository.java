@@ -12,5 +12,8 @@ public interface ExpenseCategoryBandRepository extends JpaRepository<ExpenseCate
 	@Query("select s  from ExpenseCategoryBandEntity s where s.bandId = ?1 ")
 	public ExpenseCategoryBandEntity findByEmployeeBandId(String bandid);
 	
+	@Query("select s  from ExpenseCategoryBandEntity s")
+	public ExpenseCategoryBandEntity findByEmployeeBandId();
+	
 	
 }

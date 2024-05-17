@@ -1,13 +1,18 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.BandDao;
+import com.cotodel.hrms.auth.server.dao.CategoryEmpBandDao;
 import com.cotodel.hrms.auth.server.dao.ExpenseCategoryBandDao;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandRequest;
+import com.cotodel.hrms.auth.server.model.CategoryEmployeeBandEntity;
 import com.cotodel.hrms.auth.server.model.ExpenseCategoryBandEntity;
 import com.cotodel.hrms.auth.server.service.ExpenseCategoryBandService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
@@ -17,6 +22,9 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 
 	@Autowired
 	ExpenseCategoryBandDao  expenseCategoryBandDao;
+	
+	@Autowired
+	CategoryEmpBandDao  categoryEmpBandDao;
 	
 	@Autowired
 	BandDao  bandDao;
@@ -33,7 +41,21 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			CopyUtility.copyProperties(request,employeeBandEntity);			
 
 			employeeBandEntity=expenseCategoryBandDao.saveDetails(employeeBandEntity);
-			response=MessageConstant.RESPONSE_SUCCESS;
+			List<CategoryEmployeeBandEntity> list1=new ArrayList<CategoryEmployeeBandEntity>();
+			List<CategoryEmployeeBandEntity> list2=new ArrayList<CategoryEmployeeBandEntity>();
+			if(employeeBandEntity!=null) {
+				List<CategoryEmployeeBandEntity> list=request.getList();
+				for(CategoryEmployeeBandEntity categoryEmployeeBandEntity:list) {
+					categoryEmployeeBandEntity.setExpenseCategoryId(employeeBandEntity.getId());
+					list1.add(categoryEmployeeBandEntity);
+				}
+				
+				list2=categoryEmpBandDao.saveDetails(list1);
+				
+				response=MessageConstant.RESPONSE_SUCCESS;
+			}
+			
+			
 			request.setResponse(response);	
 			
 		} catch (Exception e) {
@@ -64,5 +86,13 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 		}
 		return employeeBandEntity;
 	}
+
+
+	@Override
+	public ExpenseCategoryBandRequest getCompEmployeeBandDetails() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	
 }

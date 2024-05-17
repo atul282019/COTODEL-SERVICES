@@ -7,4 +7,5 @@ public interface ExpenseCategoryBandService {
 	
 	public ExpenseCategoryBandRequest  saveExpenseCategoryBandDetails(ExpenseCategoryBandRequest request);
 	public ExpenseCategoryBandEntity  getCompEmployeeBandDetails(String bandid);
+	public ExpenseCategoryBandRequest  getCompEmployeeBandDetails();
 }
