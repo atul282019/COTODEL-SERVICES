@@ -47,9 +47,8 @@ public class ExpenseCategoryMasterController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseCategoryMaster(HttpServletRequest request) {
 		 
-	    logger.info("inside expenseCategoryBandService");	    	
-	    	
-	    
+	    logger.info("inside expenseCategoryMasterService");	    	
+	    		    
 	    	String message = "";
 	    	List<ExpenseCategoryMasterEntity> response=null;
 	    	try {	    		
