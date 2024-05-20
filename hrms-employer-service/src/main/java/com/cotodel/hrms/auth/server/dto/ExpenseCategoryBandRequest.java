@@ -19,7 +19,8 @@ public class ExpenseCategoryBandRequest {
 	private String bandId;	
 	private String bandPerDay;	
 	private String bandPerMonth;
-	private String dayToExpiry;	
+	private String dayToExpiry;
+	private long employerId;
 	private long status;
 	private String response;
 	private List<CategoryEmployeeBandEntity> list;

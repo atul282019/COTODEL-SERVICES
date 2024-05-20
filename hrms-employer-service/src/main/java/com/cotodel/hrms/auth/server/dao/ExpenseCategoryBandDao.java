@@ -5,4 +5,6 @@ import com.cotodel.hrms.auth.server.model.ExpenseCategoryBandEntity;
 public interface ExpenseCategoryBandDao {
 	public ExpenseCategoryBandEntity saveDetails(ExpenseCategoryBandEntity expenseCategoryBandEntity);
 	public ExpenseCategoryBandEntity getEmployeeBandDetails(String bandId);
+	public ExpenseCategoryBandEntity findByEmployeeBandId();
+	
 }

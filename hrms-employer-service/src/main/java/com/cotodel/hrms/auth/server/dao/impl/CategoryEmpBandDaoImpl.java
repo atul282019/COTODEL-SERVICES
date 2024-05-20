@@ -27,6 +27,14 @@ public class CategoryEmpBandDaoImpl implements CategoryEmpBandDao{
 		// TODO Auto-generated method stub
 		return categoryEmpBandRepository.saveAllAndFlush(expenseCategoryBandEntity);
 	}
+
+
+
+	@Override
+	public List<CategoryEmployeeBandEntity> getDetails(long categoryId) {
+		// TODO Auto-generated method stub
+		return categoryEmpBandRepository.findByCategoryId(categoryId);
+	}
 	
 
 }
