@@ -1,21 +1,17 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -62,6 +58,9 @@ public class ExpenseCategoryBandEntity implements Serializable{
 	
 	@Column(name="expense_code")
 	private String expenseCode;
+	
+	@Column(name="expense_limit")
+	private String expenseLimit;
 	
 	@Column(name="status")
 	private long status;

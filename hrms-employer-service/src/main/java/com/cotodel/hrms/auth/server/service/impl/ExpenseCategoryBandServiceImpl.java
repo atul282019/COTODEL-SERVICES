@@ -138,6 +138,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 				expenseCategoryBandRequest.setEmployerId(employeeBandEntity.getEmployerId());
 				expenseCategoryBandRequest.setExpenseCategory(employeeBandEntity.getExpenseCategory());
 				expenseCategoryBandRequest.setExpenseCode(employeeBandEntity.getExpenseCode());
+				expenseCategoryBandRequest.setExpenseLimit(employeeBandEntity.getExpenseLimit());
 				categoryEmployeeBandEntity=categoryEmpBandDao.getDetails(employeeBandEntity.getId());
 				expenseCategoryBandRequest.setList(categoryEmployeeBandEntity);
 				

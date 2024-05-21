@@ -22,6 +22,7 @@ public class ExpenseCategoryBandRequest {
 	private String dayToExpiry;
 	private long employerId;
 	private long status;
+	private String expenseLimit;
 	private String response;
 	private List<CategoryEmployeeBandEntity> list;
 }
