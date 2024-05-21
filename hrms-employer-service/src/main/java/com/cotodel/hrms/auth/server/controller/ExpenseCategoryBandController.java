@@ -104,6 +104,39 @@ public class ExpenseCategoryBandController {
 	        
 	        return ResponseEntity.ok(new ExpenseCategoryBandResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
-
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/expenseCategoryBandDetailsId",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> expenseCategoryBandDetailsId(HttpServletRequest request,@Valid @RequestBody ExpenseCategoryBandRequest empolyeeRequest) {
+		 
+	    logger.info("inside expenseCategoryBandDetailsId");	    	
+	    	
+	    
+	    	String message = "";
+	    	ExpenseCategoryBandRequest response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=expenseCategoryBandService.getCompEmployeeBandDetailsId(empolyeeRequest.getExpenseCode());
+	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in expenseCategoryBandDetails====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new ExpenseCategoryBandResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
 	 
 	}

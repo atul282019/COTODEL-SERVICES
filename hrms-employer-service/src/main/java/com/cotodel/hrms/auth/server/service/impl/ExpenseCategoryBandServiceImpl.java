@@ -39,7 +39,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			
 			ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
 			CopyUtility.copyProperties(request,employeeBandEntity);			
-
+			employeeBandEntity.setStatus(1);
 			employeeBandEntity=expenseCategoryBandDao.saveDetails(employeeBandEntity);
 			List<CategoryEmployeeBandEntity> list1=new ArrayList<CategoryEmployeeBandEntity>();
 			List<CategoryEmployeeBandEntity> list2=new ArrayList<CategoryEmployeeBandEntity>();
@@ -110,6 +110,40 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			}
 			
 			response=MessageConstant.RESPONSE_SUCCESS;
+			expenseCategoryBandRequest.setResponse(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response=MessageConstant.RESPONSE_FAILED;
+			//companyEmployeeRequest.setResponse(response);
+		}
+		return expenseCategoryBandRequest;
+	}
+
+
+	@Override
+	public ExpenseCategoryBandRequest getCompEmployeeBandDetailsId(String expenseCode) {
+		ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
+		ExpenseCategoryBandRequest expenseCategoryBandRequest=new ExpenseCategoryBandRequest();
+		List<CategoryEmployeeBandEntity> categoryEmployeeBandEntity=new ArrayList<CategoryEmployeeBandEntity>();
+
+		String response=MessageConstant.RESPONSE_FAILED;
+		
+		try {
+			employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandId(expenseCode);
+			if(employeeBandEntity!=null) {
+				response=MessageConstant.RESPONSE_SUCCESS;
+				expenseCategoryBandRequest.setBandFlag(employeeBandEntity.getBandFlag());
+				expenseCategoryBandRequest.setBandId(employeeBandEntity.getBandId());
+				expenseCategoryBandRequest.setDayToExpiry(employeeBandEntity.getDayToExpiry());
+				expenseCategoryBandRequest.setEmployerId(employeeBandEntity.getEmployerId());
+				expenseCategoryBandRequest.setExpenseCategory(employeeBandEntity.getExpenseCategory());
+				expenseCategoryBandRequest.setExpenseCode(employeeBandEntity.getExpenseCode());
+				categoryEmployeeBandEntity=categoryEmpBandDao.getDetails(employeeBandEntity.getId());
+				expenseCategoryBandRequest.setList(categoryEmployeeBandEntity);
+				
+			}
+			
+			
 			expenseCategoryBandRequest.setResponse(response);
 		} catch (Exception e) {
 			e.printStackTrace();

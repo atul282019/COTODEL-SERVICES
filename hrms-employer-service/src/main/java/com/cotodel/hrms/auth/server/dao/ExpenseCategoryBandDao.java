@@ -6,5 +6,6 @@ public interface ExpenseCategoryBandDao {
 	public ExpenseCategoryBandEntity saveDetails(ExpenseCategoryBandEntity expenseCategoryBandEntity);
 	public ExpenseCategoryBandEntity getEmployeeBandDetails(String bandId);
 	public ExpenseCategoryBandEntity findByEmployeeBandId();
+	public ExpenseCategoryBandEntity findByEmployeeBandId(String expenseCode);
 	
 }
