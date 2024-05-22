@@ -45,6 +45,9 @@ public class EmployeeBandEntity implements Serializable{
 	@Column(name="employee_band_order")
 	private String employeeBandOrder;	
 	
+	@Column(name = "employer_id")
+	private long employerId;
+	
 	@Column(name="status")
 	private long status;	
 	

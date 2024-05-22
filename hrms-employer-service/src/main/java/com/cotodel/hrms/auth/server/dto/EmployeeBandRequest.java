@@ -13,7 +13,8 @@ public class EmployeeBandRequest {
 	private String bandEnabled;	
 	private String employeeBandNo;	
 	private String employeeBandNoAlpha;	
-	private String employeeBandOrder;	
+	private String employeeBandOrder;
+	private long employerId;
 	private long status;	
 	private String response;
 }
