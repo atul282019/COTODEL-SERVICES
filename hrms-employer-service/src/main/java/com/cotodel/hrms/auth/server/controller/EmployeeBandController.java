@@ -47,11 +47,11 @@ public class EmployeeBandController {
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/add/employeeBandDetails",produces = {"application/json"}, 
+	    @RequestMapping(value = "/add/employeeBand",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> saveEmployeeBandDetails(HttpServletRequest request,@Valid @RequestBody EmployeeBandRequest empolyeeRequest) {
+	    public ResponseEntity<Object> employeeBand(HttpServletRequest request,@Valid @RequestBody EmployeeBandRequest empolyeeRequest) {
 		 
-	    logger.info("inside employeeBandDetails");	    	
+	    logger.info("inside employeeBand");	    	
 	    	
 	    
 	    	String message = "";

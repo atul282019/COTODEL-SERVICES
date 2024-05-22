@@ -32,15 +32,18 @@ public class EmployeeBandEntity implements Serializable{
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="employee_band_seq")	
 	@Column(name="id")
 	private Long id;	
-    
-	@Column(name="band_id")
-	private String bandId;
 	
-	@Column(name="band_per_day")
-	private String bandPerDay;
+	@Column(name="band_enabled")
+	private String bandEnabled;
 	
-	@Column(name="band_per_month")
-	private String bandPerMonth;
+	@Column(name="employee_band_no")
+	private String employeeBandNo;	
+	
+	@Column(name="employee_band_no_alpha")
+	private String employeeBandNoAlpha;
+	
+	@Column(name="employee_band_order")
+	private String employeeBandOrder;	
 	
 	@Column(name="status")
 	private long status;	

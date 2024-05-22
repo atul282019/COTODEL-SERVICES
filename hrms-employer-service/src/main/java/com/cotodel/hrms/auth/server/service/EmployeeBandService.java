@@ -8,6 +8,6 @@ import com.cotodel.hrms.auth.server.model.EmployeeBandEntity;
 public interface EmployeeBandService {
 	
 	public EmployeeBandRequest  saveCompEmployeeBandDetails(EmployeeBandRequest request);
-	public EmployeeBandEntity  getCompEmployeeBandDetails(String bandid);
+	//public EmployeeBandEntity  getCompEmployeeBandDetails(String bandid);
 	public List<EmployeeBandEntity> getEmployeeBandList();
 }

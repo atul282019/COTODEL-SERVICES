@@ -20,11 +20,11 @@ public class EmployeeBandDaoImpl implements EmployeeBandDao{
 		return employeeBandRepository.saveAndFlush(employeeBandEntity);
 	}
 
-	@Override
-	public EmployeeBandEntity getEmployeeBandDetails(String bandId) {
-		
-		return employeeBandRepository.findByEmployeeBandId(bandId);
-	}
+//	@Override
+//	public EmployeeBandEntity getEmployeeBandDetails(String bandId) {
+//		
+//		return employeeBandRepository.findByEmployeeBandId(bandId);
+//	}
 
 	@Override
 	public List<EmployeeBandEntity> getEmployeeBandList() {
