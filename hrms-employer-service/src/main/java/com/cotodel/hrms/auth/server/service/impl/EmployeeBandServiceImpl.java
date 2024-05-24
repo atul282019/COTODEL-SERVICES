@@ -15,7 +15,6 @@ import com.cotodel.hrms.auth.server.dao.EmployeeBandDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierReviewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandRequest;
-import com.cotodel.hrms.auth.server.model.CategoryEmployeeBandEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeBandAddTierEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeBandAddTierReviewEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeBandEntity;
