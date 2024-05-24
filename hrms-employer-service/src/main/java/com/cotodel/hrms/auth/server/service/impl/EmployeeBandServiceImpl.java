@@ -226,5 +226,33 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 		}
 		return request;
 	}
+
+
+	@Override
+	public EmployeeBandAddTierRequest getEmployeeBandAddTierReview(Long employerId) {
+		String response=MessageConstant.RESPONSE_FAILED;
+		EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
+		List<EmployeeBandAddTierEntity> list=new ArrayList<EmployeeBandAddTierEntity>();
+		EmployeeBandAddTierRequest employeeBandAddTierRequest=new EmployeeBandAddTierRequest();
+		try {
+			employeeBandEntity=employeeBandDao.getEmployeeBandId(employerId);
+			if(employeeBandEntity!=null) {
+				employeeBandAddTierRequest.setBandEnabled(employeeBandEntity.getBandEnabled());
+				employeeBandAddTierRequest.setEmployeeBandNo(employeeBandEntity.getEmployeeBandNo());
+				employeeBandAddTierRequest.setEmployeeBandNoAlpha(employeeBandEntity.getEmployeeBandNoAlpha());
+				employeeBandAddTierRequest.setEmployeeBandOrder(employeeBandEntity.getEmployeeBandOrder());
+				employeeBandAddTierRequest.setEmployerId(employeeBandEntity.getEmployerId());
+				employeeBandAddTierRequest.setIntroAddTierFlag(employeeBandEntity.getIntroAddTierFlag());
+				employeeBandAddTierRequest.setStatus(employeeBandEntity.getStatus());
+				list=employeeBandAddTierDao.getDetails(employeeBandEntity.getId());
+				employeeBandAddTierRequest.setList(list);
+				response=MessageConstant.RESPONSE_SUCCESS;
+			}
+			employeeBandAddTierRequest.setResponse(response);	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return employeeBandAddTierRequest;
+	}
 	
 }

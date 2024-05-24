@@ -15,4 +15,5 @@ public interface EmployeeBandService {
 	
 	public EmployeeBandAddTierRequest  saveEmployeeBandAddTier(EmployeeBandAddTierRequest request);
 	public EmployeeBandAddTierReviewRequest  saveEmployeeBandAddTierReview(EmployeeBandAddTierReviewRequest request);
+	public EmployeeBandAddTierRequest  getEmployeeBandAddTierReview(Long  employerId);
 }

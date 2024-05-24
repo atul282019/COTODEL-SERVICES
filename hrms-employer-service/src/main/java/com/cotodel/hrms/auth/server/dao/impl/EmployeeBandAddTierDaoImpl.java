@@ -21,6 +21,12 @@ public class EmployeeBandAddTierDaoImpl implements EmployeeBandAddTierDao{
 		return employeeBandAddTierRepository.saveAllAndFlush(employeeBandAddTierEntity);
 	}
 
+	@Override
+	public List<EmployeeBandAddTierEntity> getDetails(Long bandtierId) {
+		// TODO Auto-generated method stub
+		return employeeBandAddTierRepository.getBandAddTier(bandtierId);
+	}
+
 	
 	
 	
