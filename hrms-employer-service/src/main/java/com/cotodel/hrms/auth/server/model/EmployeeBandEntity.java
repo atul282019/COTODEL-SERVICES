@@ -48,6 +48,9 @@ public class EmployeeBandEntity implements Serializable{
 	@Column(name = "employer_id")
 	private long employerId;
 	
+	@Column(name="intro_add_tier_flag")
+	private String introAddTierFlag;
+	
 	@Column(name="status")
 	private long status;	
 	

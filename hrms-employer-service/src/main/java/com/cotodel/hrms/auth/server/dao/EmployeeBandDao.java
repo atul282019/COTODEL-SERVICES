@@ -8,4 +8,5 @@ public interface EmployeeBandDao {
 	public EmployeeBandEntity saveDetails(EmployeeBandEntity employeeBandEntity);
 	//public EmployeeBandEntity getEmployeeBandDetails(String bandId);
 	public List<EmployeeBandEntity> getEmployeeBandList();
+	public EmployeeBandEntity getEmployeeBandId(Long employerId);
 }

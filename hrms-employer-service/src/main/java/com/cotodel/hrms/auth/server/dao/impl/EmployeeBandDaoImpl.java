@@ -31,6 +31,12 @@ public class EmployeeBandDaoImpl implements EmployeeBandDao{
 		// TODO Auto-generated method stub
 		return employeeBandRepository.findByEmployeeBandList();
 	}
+
+	@Override
+	public EmployeeBandEntity getEmployeeBandId(Long employerId) {
+		// TODO Auto-generated method stub
+		return employeeBandRepository.findByEmployeeBand(employerId);
+	}
 	
 	
 }

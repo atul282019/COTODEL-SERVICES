@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierResponse;
+import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierReviewRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierReviewResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandListResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandResponse;
@@ -74,6 +78,77 @@ public class EmployeeBandController {
 	        
 	        return ResponseEntity.ok(new EmployeeBandResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/employeeBandAddTier",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> employeeBandAddTier(HttpServletRequest request,@Valid @RequestBody EmployeeBandAddTierRequest empolyeeRequest) {
+		 
+	    logger.info("inside employeeBandAddTier");	    	
+	    	
+	    
+	    	String message = "";
+	    	EmployeeBandAddTierRequest response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=employeeBandService.saveEmployeeBandAddTier(empolyeeRequest);
+	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in saveProfileDetails====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/employeeBandAddTierReview",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> employeeBandAddTierReview(HttpServletRequest request,@Valid @RequestBody EmployeeBandAddTierReviewRequest empolyeeRequest) {
+		 
+	    logger.info("inside employeeBandAddTierReview");	    	
+	    	
+	    
+	    	String message = "";
+	    	EmployeeBandAddTierReviewRequest response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=employeeBandService.saveEmployeeBandAddTierReview(empolyeeRequest);
+	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new EmployeeBandAddTierReviewResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new EmployeeBandAddTierReviewResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in saveProfileDetails====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new EmployeeBandAddTierReviewResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
