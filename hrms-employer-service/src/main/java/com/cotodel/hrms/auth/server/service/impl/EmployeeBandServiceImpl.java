@@ -113,7 +113,7 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 			
 			//
 			CopyUtility.copyProperties(request,employeeBandEntity);
-			
+			employeeBandEntity.setStatus(1);
 				employeeBandEntity=employeeBandDao.saveDetails(employeeBandEntity);
 				response=MessageConstant.RESPONSE_SUCCESS;
 				request.setResponse(response);
