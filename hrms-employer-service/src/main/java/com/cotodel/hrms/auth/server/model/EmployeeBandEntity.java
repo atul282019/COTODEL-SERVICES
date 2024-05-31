@@ -43,9 +43,8 @@ public class EmployeeBandEntity implements Serializable{
 	private String employeeBandNoAlpha;
 	
 	@Column(name="employee_band_order")
-	private String employeeBandOrder;	
-	
-	@Column(name = "employer_id")
+	private String employeeBandOrder;
+	@Column(name = "employer_id", unique = true)
 	private long employerId;
 	
 	@Column(name="intro_add_tier_flag")
