@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -37,6 +39,13 @@ public class ExpenseCategoryBandDaoImpl implements ExpenseCategoryBandDao{
 	public ExpenseCategoryBandEntity findByEmployeeBandId(String expenseCode) {
 		// TODO Auto-generated method stub
 		return expenseCategoryBandRepository.findByEmployeeExpenseCode(expenseCode);
+	}
+
+
+	@Override
+	public List<ExpenseCategoryBandEntity> findByEmployerId(Long employerId) {
+		// TODO Auto-generated method stub
+		return expenseCategoryBandRepository.findByExpenseEmpoyerId(employerId);
 	}
 	
 

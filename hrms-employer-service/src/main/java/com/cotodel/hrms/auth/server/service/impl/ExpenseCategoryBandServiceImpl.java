@@ -1,6 +1,7 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -152,6 +153,40 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			//companyEmployeeRequest.setResponse(response);
 		}
 		return expenseCategoryBandRequest;
+	}
+
+
+	@Override
+	public List<ExpenseCategoryBandRequest> getCompEmployeeBandDetailsList(long employerid) {
+		List<ExpenseCategoryBandEntity> employeeBand=new ArrayList<ExpenseCategoryBandEntity>();
+		List<ExpenseCategoryBandRequest> expenseCategoryBandRequests=new ArrayList<ExpenseCategoryBandRequest>();
+		List<CategoryEmployeeBandEntity> categoryEmployeeBandEntity=new ArrayList<CategoryEmployeeBandEntity>();
+		employeeBand=expenseCategoryBandDao.findByEmployerId(employerid);
+		String response=MessageConstant.RESPONSE_FAILED;
+		try {
+			
+		
+		if(employeeBand!=null) {
+			for (ExpenseCategoryBandEntity employeeBandEntity: employeeBand) {
+				ExpenseCategoryBandRequest expenseCategoryBandRequest=new ExpenseCategoryBandRequest();
+				response=MessageConstant.RESPONSE_SUCCESS;
+				expenseCategoryBandRequest.setBandFlag(employeeBandEntity.getBandFlag());
+				expenseCategoryBandRequest.setBandId(employeeBandEntity.getBandId());
+				expenseCategoryBandRequest.setDayToExpiry(employeeBandEntity.getDayToExpiry());
+				expenseCategoryBandRequest.setEmployerId(employeeBandEntity.getEmployerId());
+				expenseCategoryBandRequest.setExpenseCategory(employeeBandEntity.getExpenseCategory());
+				expenseCategoryBandRequest.setExpenseCode(employeeBandEntity.getExpenseCode());
+				expenseCategoryBandRequest.setExpenseLimit(employeeBandEntity.getExpenseLimit());
+				categoryEmployeeBandEntity=categoryEmpBandDao.getDetails(employeeBandEntity.getId());
+				expenseCategoryBandRequest.setList(categoryEmployeeBandEntity);
+				expenseCategoryBandRequests.add(expenseCategoryBandRequest);
+				
+			}
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return expenseCategoryBandRequests;
 	}
 	
 	

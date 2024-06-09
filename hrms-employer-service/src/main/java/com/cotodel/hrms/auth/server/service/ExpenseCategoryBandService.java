@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.service;
 
+import java.util.List;
+
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandRequest;
 import com.cotodel.hrms.auth.server.model.ExpenseCategoryBandEntity;
 
@@ -9,4 +11,5 @@ public interface ExpenseCategoryBandService {
 	public ExpenseCategoryBandEntity  getCompEmployeeBandDetails(String bandid);
 	public ExpenseCategoryBandRequest  getCompEmployeeBandDetails();
 	public ExpenseCategoryBandRequest  getCompEmployeeBandDetailsId(String expenseCode);
+	public List<ExpenseCategoryBandRequest>  getCompEmployeeBandDetailsList(long employerid);
 }
