@@ -27,6 +27,12 @@ public class EmployeeBandAddTierDaoImpl implements EmployeeBandAddTierDao{
 		return employeeBandAddTierRepository.getBandAddTier(bandtierId);
 	}
 
+	@Override
+	public void deleteDetails(Long employeeBandId) {
+		employeeBandAddTierRepository.deleteDetails(employeeBandId);
+		
+	}
+
 	
 	
 	

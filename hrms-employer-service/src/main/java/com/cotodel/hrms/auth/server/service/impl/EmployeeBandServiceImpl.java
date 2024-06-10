@@ -112,8 +112,12 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 		try {
 			//
 			
-			// delete 
-			
+			// delete old data;
+			employeeBandEntity=employeeBandDao.getEmployeeBandId(request.getEmployerId());
+			if(employeeBandEntity!=null) {
+				employeeBandDao.deleteDetails(employeeBandEntity.getId());
+				employeeBandAddTierDao.deleteDetails(employeeBandEntity.getId());
+			}
 			
 			//
 			CopyUtility.copyProperties(request,employeeBandEntity);

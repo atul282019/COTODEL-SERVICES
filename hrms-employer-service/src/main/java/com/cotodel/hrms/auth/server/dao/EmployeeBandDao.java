@@ -9,4 +9,5 @@ public interface EmployeeBandDao {
 	//public EmployeeBandEntity getEmployeeBandDetails(String bandId);
 	public List<EmployeeBandEntity> getEmployeeBandList();
 	public EmployeeBandEntity getEmployeeBandId(Long employerId);
+	public void deleteDetails(Long id);
 }

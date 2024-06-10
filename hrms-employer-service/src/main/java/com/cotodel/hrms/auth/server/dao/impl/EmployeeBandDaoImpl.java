@@ -20,11 +20,6 @@ public class EmployeeBandDaoImpl implements EmployeeBandDao{
 		return employeeBandRepository.saveAndFlush(employeeBandEntity);
 	}
 
-//	@Override
-//	public EmployeeBandEntity getEmployeeBandDetails(String bandId) {
-//		
-//		return employeeBandRepository.findByEmployeeBandId(bandId);
-//	}
 
 	@Override
 	public List<EmployeeBandEntity> getEmployeeBandList() {
@@ -37,6 +32,15 @@ public class EmployeeBandDaoImpl implements EmployeeBandDao{
 		// TODO Auto-generated method stub
 		return employeeBandRepository.findByEmployeeBand(employerId);
 	}
+
+
+	@Override
+	public void deleteDetails(Long id) {
+		// TODO Auto-generated method stub
+		 employeeBandRepository.deleteById(id);
+	}
+	
+	
 	
 	
 }
