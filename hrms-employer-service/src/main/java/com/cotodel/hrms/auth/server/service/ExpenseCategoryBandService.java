@@ -10,6 +10,6 @@ public interface ExpenseCategoryBandService {
 	public ExpenseCategoryBandRequest  saveExpenseCategoryBandDetails(ExpenseCategoryBandRequest request);
 	public ExpenseCategoryBandEntity  getCompEmployeeBandDetails(String bandid);
 	public ExpenseCategoryBandRequest  getCompEmployeeBandDetails();
-	public ExpenseCategoryBandRequest  getCompEmployeeBandDetailsId(String expenseCode);
+	public ExpenseCategoryBandRequest  getCompEmployeeBandDetailsId(Long id,Long employerid);
 	public List<ExpenseCategoryBandRequest>  getCompEmployeeBandDetailsList(long employerid);
 }

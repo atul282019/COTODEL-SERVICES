@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExpenseCategoryBandRequest {
-	
+	private Long id;
 	private String expenseCategory;	
 	private String expenseCode;	
 	private String bandFlag;	
@@ -20,8 +20,8 @@ public class ExpenseCategoryBandRequest {
 	private String bandPerDay;	
 	private String bandPerMonth;
 	private String dayToExpiry;
-	private long employerId;
-	private long status;
+	private Long employerId;
+	private Long status;
 	private String expenseLimit;
 	private String response;
 	private List<CategoryEmployeeBandEntity> list;

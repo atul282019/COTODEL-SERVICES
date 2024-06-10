@@ -127,7 +127,7 @@ public class ExpenseCategoryBandController {
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=expenseCategoryBandService.getCompEmployeeBandDetailsId(empolyeeRequest.getExpenseCode());
+				response=expenseCategoryBandService.getCompEmployeeBandDetailsId(empolyeeRequest.getId(),empolyeeRequest.getEmployerId());
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {

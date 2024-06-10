@@ -36,9 +36,9 @@ public class ExpenseCategoryBandDaoImpl implements ExpenseCategoryBandDao{
 
 
 	@Override
-	public ExpenseCategoryBandEntity findByEmployeeBandId(String expenseCode) {
+	public ExpenseCategoryBandEntity findByEmployeeBandId(Long id) {
 		// TODO Auto-generated method stub
-		return expenseCategoryBandRepository.findByEmployeeExpenseCode(expenseCode);
+		return expenseCategoryBandRepository.findByEmployeeId(id);
 	}
 
 

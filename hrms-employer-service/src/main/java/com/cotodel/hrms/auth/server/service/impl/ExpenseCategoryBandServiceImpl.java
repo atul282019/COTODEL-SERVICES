@@ -1,10 +1,8 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +126,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 
 
 	@Override
-	public ExpenseCategoryBandRequest getCompEmployeeBandDetailsId(String expenseCode) {
+	public ExpenseCategoryBandRequest getCompEmployeeBandDetailsId(Long id,Long employerId) {
 		ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
 		ExpenseCategoryBandRequest expenseCategoryBandRequest=new ExpenseCategoryBandRequest();
 		List<CategoryEmployeeBandEntity> categoryEmployeeBandEntity=new ArrayList<CategoryEmployeeBandEntity>();
@@ -136,9 +134,10 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 		String response=MessageConstant.RESPONSE_FAILED;
 		
 		try {
-			employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandId(expenseCode);
+			employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandId(id);
 			if(employeeBandEntity!=null) {
 				response=MessageConstant.RESPONSE_SUCCESS;
+				expenseCategoryBandRequest.setId(employeeBandEntity.getId());
 				expenseCategoryBandRequest.setBandFlag(employeeBandEntity.getBandFlag());
 				expenseCategoryBandRequest.setBandId(employeeBandEntity.getBandId());
 				expenseCategoryBandRequest.setDayToExpiry(employeeBandEntity.getDayToExpiry());
@@ -146,6 +145,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 				expenseCategoryBandRequest.setExpenseCategory(employeeBandEntity.getExpenseCategory());
 				expenseCategoryBandRequest.setExpenseCode(employeeBandEntity.getExpenseCode());
 				expenseCategoryBandRequest.setExpenseLimit(employeeBandEntity.getExpenseLimit());
+				expenseCategoryBandRequest.setStatus(employeeBandEntity.getStatus());
 				categoryEmployeeBandEntity=categoryEmpBandDao.getDetails(employeeBandEntity.getId());
 				expenseCategoryBandRequest.setList(categoryEmployeeBandEntity);
 				
@@ -198,6 +198,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			for (ExpenseCategoryBandEntity employeeBandEntity: employeeBand) {
 				ExpenseCategoryBandRequest expenseCategoryBandRequest=new ExpenseCategoryBandRequest();
 				response=MessageConstant.RESPONSE_SUCCESS;
+				expenseCategoryBandRequest.setId(employeeBandEntity.getId());
 				expenseCategoryBandRequest.setBandFlag(employeeBandEntity.getBandFlag());
 				expenseCategoryBandRequest.setBandId(employeeBandEntity.getBandId());
 				expenseCategoryBandRequest.setDayToExpiry(employeeBandEntity.getDayToExpiry());
