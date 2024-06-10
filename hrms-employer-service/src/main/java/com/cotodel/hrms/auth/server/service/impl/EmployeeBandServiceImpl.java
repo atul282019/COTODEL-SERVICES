@@ -110,6 +110,10 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 		List<EmployeeBandAddTierEntity> list1=new ArrayList<EmployeeBandAddTierEntity>();
 		List<EmployeeBandAddTierEntity> list2=new ArrayList<EmployeeBandAddTierEntity>();
 		try {
+			//
+			
+			// delete 
+			
 			
 			//
 			CopyUtility.copyProperties(request,employeeBandEntity);

@@ -183,7 +183,8 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 					employeeBandEntity=new ExpenseCategoryBandEntity();
 					employeeBandEntity.setExpenseCategory(expenseCategoryMasterEntity.getExpenseCategory());
 					employeeBandEntity.setExpenseCode(expenseCategoryMasterEntity.getExpenseCode());
-					employeeBandEntity.setExpenseLimit(expenseCategoryMasterEntity.getDayToExpiry());
+					employeeBandEntity.setExpenseLimit(expenseCategoryMasterEntity.getExpenseLimit());
+					employeeBandEntity.setDayToExpiry(expenseCategoryMasterEntity.getDayToExpiry());
 					employeeBandEntity.setEmployerId(employerid);
 					employeeBandEntity.setStatus(1);
 					employeeBandEntity=expenseCategoryBandDao.saveDetails(employeeBandEntity);
