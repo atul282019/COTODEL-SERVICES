@@ -47,6 +47,13 @@ public class ExpenseCategoryBandDaoImpl implements ExpenseCategoryBandDao{
 		// TODO Auto-generated method stub
 		return expenseCategoryBandRepository.findByExpenseEmpoyerId(employerId);
 	}
+
+
+	@Override
+	public ExpenseCategoryBandEntity findByEmployeeBandIdWithEmployer(String expenseCode, Long employerId) {
+		// TODO Auto-generated method stub
+		return expenseCategoryBandRepository.findByEmployeeExpenseCodeWithEmployer(expenseCode, employerId);
+	}
 	
 
 }

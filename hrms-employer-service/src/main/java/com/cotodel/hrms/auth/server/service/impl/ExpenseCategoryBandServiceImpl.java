@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,11 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.BandDao;
 import com.cotodel.hrms.auth.server.dao.CategoryEmpBandDao;
 import com.cotodel.hrms.auth.server.dao.ExpenseCategoryBandDao;
+import com.cotodel.hrms.auth.server.dao.ExpenseCategoryMasterDao;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandRequest;
 import com.cotodel.hrms.auth.server.model.CategoryEmployeeBandEntity;
 import com.cotodel.hrms.auth.server.model.ExpenseCategoryBandEntity;
+import com.cotodel.hrms.auth.server.model.ExpenseCategoryMasterEntity;
 import com.cotodel.hrms.auth.server.service.ExpenseCategoryBandService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -29,7 +32,10 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 	
 	@Autowired
 	BandDao  bandDao;
-
+	
+	@Autowired
+	ExpenseCategoryMasterDao  expenseCategoryMasterDao;
+	
 	@Override
 	@Transactional
 	public ExpenseCategoryBandRequest saveExpenseCategoryBandDetails(ExpenseCategoryBandRequest request) {
@@ -160,12 +166,34 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 	public List<ExpenseCategoryBandRequest> getCompEmployeeBandDetailsList(long employerid) {
 		List<ExpenseCategoryBandEntity> employeeBand=new ArrayList<ExpenseCategoryBandEntity>();
 		List<ExpenseCategoryBandRequest> expenseCategoryBandRequests=new ArrayList<ExpenseCategoryBandRequest>();
-		List<CategoryEmployeeBandEntity> categoryEmployeeBandEntity=new ArrayList<CategoryEmployeeBandEntity>();
-		employeeBand=expenseCategoryBandDao.findByEmployerId(employerid);
+		List<CategoryEmployeeBandEntity> categoryEmployeeBandEntity=new ArrayList<CategoryEmployeeBandEntity>();		
 		String response=MessageConstant.RESPONSE_FAILED;
+		List<ExpenseCategoryMasterEntity> expenseCategoryMasterEntities=null;
 		try {
+						
+		expenseCategoryMasterEntities=expenseCategoryMasterDao.getExpenseCategoryMaster();
+		if(expenseCategoryMasterEntities!=null) {
+			for (ExpenseCategoryMasterEntity expenseCategoryMasterEntity: expenseCategoryMasterEntities) {
+				
+				ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
+				employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandIdWithEmployer(expenseCategoryMasterEntity.getExpenseCode(),employerid);
+				if(employeeBandEntity!=null) {
+					
+				}else {
+					employeeBandEntity=new ExpenseCategoryBandEntity();
+					employeeBandEntity.setExpenseCategory(expenseCategoryMasterEntity.getExpenseCategory());
+					employeeBandEntity.setExpenseCode(expenseCategoryMasterEntity.getExpenseCode());
+					employeeBandEntity.setExpenseLimit(expenseCategoryMasterEntity.getDayToExpiry());
+					employeeBandEntity.setEmployerId(employerid);
+					employeeBandEntity.setStatus(1);
+					employeeBandEntity=expenseCategoryBandDao.saveDetails(employeeBandEntity);
+				}
+				
+				
+			}
+		}
 			
-		
+		employeeBand=expenseCategoryBandDao.findByEmployerId(employerid);
 		if(employeeBand!=null) {
 			for (ExpenseCategoryBandEntity employeeBandEntity: employeeBand) {
 				ExpenseCategoryBandRequest expenseCategoryBandRequest=new ExpenseCategoryBandRequest();
