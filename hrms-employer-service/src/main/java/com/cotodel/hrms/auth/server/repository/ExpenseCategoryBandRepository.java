@@ -31,6 +31,6 @@ public interface ExpenseCategoryBandRepository extends JpaRepository<ExpenseCate
 	public ExpenseCategoryBandEntity findByEmployeeExpenseCodeWithEmployer(Long id,Long employerId);
 	
 	@Modifying
-    @Query(value = "UPDATE expense_category SET expense_category = :expenseCategory,expense_code = :expenseCode,day_to_expiry=:expirydays WHERE id = :id ", nativeQuery = true)
-	public int updateAmountById(@Param(value = "expenseCategory") String expenseCategory,@Param(value = "expenseCode") String expenseCode,@Param(value = "expirydays") String expirydays,@Param(value = "id") Long id);
+    @Query(value = "UPDATE expense_category SET expense_category = :expenseCategory,expense_code = :expenseCode,day_to_expiry=:expirydays, expense_limit=:expenseLimit WHERE id = :id ", nativeQuery = true)
+	public int updateAmountById(@Param(value = "expenseCategory") String expenseCategory,@Param(value = "expenseCode") String expenseCode,@Param(value = "expirydays") String expirydays,@Param(value = "expenseLimit") String expenseLimit,@Param(value = "id") Long id);
 }

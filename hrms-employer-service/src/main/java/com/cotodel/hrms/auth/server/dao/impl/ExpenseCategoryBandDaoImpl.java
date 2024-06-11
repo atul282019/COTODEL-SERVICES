@@ -62,7 +62,7 @@ public class ExpenseCategoryBandDaoImpl implements ExpenseCategoryBandDao{
 	@Override
 	public int updateDetails(ExpenseCategoryBandEntity expenseCategoryBandEntity) {
 		// TODO Auto-generated method stub
-		 return expenseCategoryBandRepository.updateAmountById(expenseCategoryBandEntity.getExpenseCategory(), expenseCategoryBandEntity.getExpenseCode(),expenseCategoryBandEntity.getDayToExpiry(), expenseCategoryBandEntity.getId());
+		 return expenseCategoryBandRepository.updateAmountById(expenseCategoryBandEntity.getExpenseCategory(), expenseCategoryBandEntity.getExpenseCode(),expenseCategoryBandEntity.getDayToExpiry(),expenseCategoryBandEntity.getExpenseLimit(), expenseCategoryBandEntity.getId());
 	}
 	
 
