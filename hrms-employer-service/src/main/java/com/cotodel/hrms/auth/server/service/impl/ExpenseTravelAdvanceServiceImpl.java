@@ -1,5 +1,8 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 			employeeBandEntity=new ExpanceTravelAdvanceEntity();
 			CopyUtility.copyProperties(request,employeeBandEntity);			
 			employeeBandEntity.setStatus(1l);
+			Date date = new Date();
+			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			employeeBandEntity.setCreated_date(localDate);
 			employeeBandEntity=expenseTravelAdvanceDao.saveDetails(employeeBandEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);

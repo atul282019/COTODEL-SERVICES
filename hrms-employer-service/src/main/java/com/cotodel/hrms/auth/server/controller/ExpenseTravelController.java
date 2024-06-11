@@ -95,10 +95,10 @@ public class ExpenseTravelController {
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				response=expenseTravelAdvanceService.getExpenseTravelAdvenceDetailsList(expenseTravelAdvanceRequest.getEmployerId());
-	    		if(response!=null && response.size()>1) {
-	    			return ResponseEntity.ok(new ExpenseTravelAdvanceListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		if(response!=null && response.size()>0) {
+	    			return ResponseEntity.ok(new ExpenseTravelAdvanceListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new ExpenseTravelAdvanceListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ExpenseTravelAdvanceListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
