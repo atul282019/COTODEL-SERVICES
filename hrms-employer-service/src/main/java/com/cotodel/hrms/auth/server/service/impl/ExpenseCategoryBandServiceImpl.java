@@ -43,9 +43,20 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			request.setResponse(response);					
 			
 			ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
-			CopyUtility.copyProperties(request,employeeBandEntity);			
-			employeeBandEntity.setStatus(1);
-			employeeBandEntity=expenseCategoryBandDao.saveDetails(employeeBandEntity);
+			
+			employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandId(request.getId());
+			if(employeeBandEntity!=null) {
+				employeeBandEntity.setExpenseCategory(request.getExpenseCategory());
+				employeeBandEntity.setExpenseCode(request.getExpenseCode());
+				int update=expenseCategoryBandDao.updateDetails(employeeBandEntity);
+				System.out.println(update);
+			}else {
+				employeeBandEntity=new ExpenseCategoryBandEntity();
+				CopyUtility.copyProperties(request,employeeBandEntity);			
+				employeeBandEntity.setStatus(1);
+				employeeBandEntity=expenseCategoryBandDao.saveDetails(employeeBandEntity);
+			}
+			
 			List<CategoryEmployeeBandEntity> list1=new ArrayList<CategoryEmployeeBandEntity>();
 			List<CategoryEmployeeBandEntity> list2=new ArrayList<CategoryEmployeeBandEntity>();
 			if(employeeBandEntity!=null) {
@@ -176,7 +187,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			for (ExpenseCategoryMasterEntity expenseCategoryMasterEntity: expenseCategoryMasterEntities) {
 				
 				ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
-				employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandIdWithEmployer(expenseCategoryMasterEntity.getExpenseCode(),employerid);
+				employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandIdWithEmployer(expenseCategoryMasterEntity.getId(),employerid);
 				if(employeeBandEntity!=null) {
 					
 				}else {
@@ -186,6 +197,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 					employeeBandEntity.setExpenseLimit(expenseCategoryMasterEntity.getExpenseLimit());
 					employeeBandEntity.setDayToExpiry(expenseCategoryMasterEntity.getDayToExpiry());
 					employeeBandEntity.setEmployerId(employerid);
+					employeeBandEntity.setMasterId(expenseCategoryMasterEntity.getId());
 					employeeBandEntity.setStatus(1);
 					employeeBandEntity=expenseCategoryBandDao.saveDetails(employeeBandEntity);
 				}

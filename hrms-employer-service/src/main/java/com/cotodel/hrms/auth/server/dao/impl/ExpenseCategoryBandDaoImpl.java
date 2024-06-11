@@ -3,18 +3,21 @@ package com.cotodel.hrms.auth.server.dao.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ExpenseCategoryBandDao;
 import com.cotodel.hrms.auth.server.model.ExpenseCategoryBandEntity;
 import com.cotodel.hrms.auth.server.repository.ExpenseCategoryBandRepository;
 @Repository
+
 public class ExpenseCategoryBandDaoImpl implements ExpenseCategoryBandDao{
 
 	@Autowired
 	ExpenseCategoryBandRepository expenseCategoryBandRepository;
 
 	@Override
+	@Modifying
 	public ExpenseCategoryBandEntity saveDetails(ExpenseCategoryBandEntity employeeBandEntity) {
 		
 		return expenseCategoryBandRepository.saveAndFlush(employeeBandEntity);
@@ -50,9 +53,16 @@ public class ExpenseCategoryBandDaoImpl implements ExpenseCategoryBandDao{
 
 
 	@Override
-	public ExpenseCategoryBandEntity findByEmployeeBandIdWithEmployer(String expenseCode, Long employerId) {
+	public ExpenseCategoryBandEntity findByEmployeeBandIdWithEmployer(Long id, Long employerId) {
 		// TODO Auto-generated method stub
-		return expenseCategoryBandRepository.findByEmployeeExpenseCodeWithEmployer(expenseCode, employerId);
+		return expenseCategoryBandRepository.findByEmployeeExpenseCodeWithEmployer(id, employerId);
+	}
+
+
+	@Override
+	public int updateDetails(ExpenseCategoryBandEntity expenseCategoryBandEntity) {
+		// TODO Auto-generated method stub
+		 return expenseCategoryBandRepository.updateAmountById(expenseCategoryBandEntity.getExpenseCategory(), expenseCategoryBandEntity.getExpenseCode(),expenseCategoryBandEntity.getDayToExpiry(), expenseCategoryBandEntity.getId());
 	}
 	
 

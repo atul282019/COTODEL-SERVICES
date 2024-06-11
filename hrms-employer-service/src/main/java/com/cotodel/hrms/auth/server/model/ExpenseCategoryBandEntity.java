@@ -21,8 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="expense_category" , uniqueConstraints = {
-	    @UniqueConstraint(columnNames = {"expense_code", "employer_id"})})
+@Table(name="expense_category")
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="expense_category_seq" , sequenceName="expense_category_seq", allocationSize=1)
 
@@ -55,6 +54,9 @@ public class ExpenseCategoryBandEntity implements Serializable{
 	
 	@Column(name = "employer_id")
 	private long employerId;
+	
+	@Column(name = "master_id")
+	private long masterId;
 	
 	@Column(name="expense_code")
 	private String expenseCode;

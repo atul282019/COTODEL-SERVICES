@@ -3,6 +3,7 @@ package com.cotodel.hrms.auth.server.dao.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.CategoryEmpBandDao;
@@ -23,9 +24,10 @@ public class CategoryEmpBandDaoImpl implements CategoryEmpBandDao{
 
 
 	@Override
+	@Modifying
 	public List<CategoryEmployeeBandEntity> saveDetails(List<CategoryEmployeeBandEntity> expenseCategoryBandEntity) {
 		// TODO Auto-generated method stub
-		return categoryEmpBandRepository.saveAllAndFlush(expenseCategoryBandEntity);
+		return categoryEmpBandRepository.saveAll(expenseCategoryBandEntity);
 	}
 
 

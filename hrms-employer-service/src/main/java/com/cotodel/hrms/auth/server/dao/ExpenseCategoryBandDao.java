@@ -10,5 +10,6 @@ public interface ExpenseCategoryBandDao {
 	public ExpenseCategoryBandEntity findByEmployeeBandId();
 	public ExpenseCategoryBandEntity findByEmployeeBandId(Long id);
 	public List<ExpenseCategoryBandEntity> findByEmployerId(Long employerId);
-	public ExpenseCategoryBandEntity findByEmployeeBandIdWithEmployer(String expenseCode,Long employerId);
+	public ExpenseCategoryBandEntity findByEmployeeBandIdWithEmployer(Long id,Long employerId);
+	public int updateDetails(ExpenseCategoryBandEntity expenseCategoryBandEntity);
 }

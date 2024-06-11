@@ -13,6 +13,6 @@ public interface EmployeeBandAddTierRepository extends JpaRepository<EmployeeBan
 	@Query("select s  from EmployeeBandAddTierEntity s where s.employeeBandId = ?1")
 	public List<EmployeeBandAddTierEntity> getBandAddTier(Long employeeBandId);
 	
-	@Query("delete s  from EmployeeBandAddTierEntity s where s.employeeBandId = ?1")
+	@Query("select s  from EmployeeBandAddTierEntity s where s.employeeBandId = ?1")
 	public List<EmployeeBandAddTierEntity> deleteDetails(Long employeeBandId);
 }
