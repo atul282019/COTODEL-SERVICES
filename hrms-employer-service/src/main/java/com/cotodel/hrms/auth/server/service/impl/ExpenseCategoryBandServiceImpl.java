@@ -48,6 +48,8 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			if(employeeBandEntity!=null) {
 				employeeBandEntity.setExpenseCategory(request.getExpenseCategory());
 				employeeBandEntity.setExpenseCode(request.getExpenseCode());
+				employeeBandEntity.setDayToExpiry(request.getDayToExpiry());
+				employeeBandEntity.setExpenseLimit(request.getExpenseLimit());
 				int update=expenseCategoryBandDao.updateDetails(employeeBandEntity);
 				System.out.println(update);
 			}else {
