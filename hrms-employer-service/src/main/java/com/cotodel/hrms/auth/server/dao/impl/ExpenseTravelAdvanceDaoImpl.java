@@ -22,12 +22,11 @@ public class ExpenseTravelAdvanceDaoImpl implements ExpenseTravelAdvanceDao{
 	}
 
 	@Override
-	public List<ExpanceTravelAdvanceEntity> findByEmployerId(Long employerId) {
+	public ExpanceTravelAdvanceEntity findByEmployerId(Long employerId) {
 		
-		return expenseTravelAdvanceRepository.findByExpenseEmpoyerId(employerId);
+		return expenseTravelAdvanceRepository.findByEmpoyerId(employerId);
 	}
 
 	
-
 
 }

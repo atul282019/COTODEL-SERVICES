@@ -15,7 +15,7 @@ public class ExpenseTravelAdvanceListResponse {
 	
 	 private boolean status;
 	 private String message;
-	 List<ExpanceTravelAdvanceEntity> data;
+	 ExpanceTravelAdvanceEntity data;
 	 private String txnId;
 	 private String timestamp;
 }

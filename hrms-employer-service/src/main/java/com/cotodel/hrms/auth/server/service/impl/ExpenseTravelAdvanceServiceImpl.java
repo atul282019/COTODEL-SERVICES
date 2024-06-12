@@ -24,18 +24,38 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 	public ExpenseTravelAdvanceRequest saveExpenseTravelAdvenceDetails(ExpenseTravelAdvanceRequest request) {
 		String response="";
 		ExpanceTravelAdvanceEntity employeeBandEntity=null;
+		ExpanceTravelAdvanceEntity employeeBandEntity1=null;
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);	
 			employeeBandEntity=new ExpanceTravelAdvanceEntity();
-			CopyUtility.copyProperties(request,employeeBandEntity);			
-			employeeBandEntity.setStatus(1l);
-			Date date = new Date();
-			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			employeeBandEntity.setCreated_date(localDate);
-			employeeBandEntity=expenseTravelAdvanceDao.saveDetails(employeeBandEntity);
-			response=MessageConstant.RESPONSE_SUCCESS;
-			request.setResponse(response);
+			
+			employeeBandEntity=expenseTravelAdvanceDao.findByEmployerId(request.getEmployerId());
+			if(employeeBandEntity!=null) {
+				employeeBandEntity1=new ExpanceTravelAdvanceEntity();
+				CopyUtility.copyProperties(request,employeeBandEntity1);
+				employeeBandEntity1.setStatus(1l);
+				employeeBandEntity1.setId(employeeBandEntity.getId());
+				employeeBandEntity1.setCreated_date(employeeBandEntity.getCreated_date());
+				Date date = new Date();
+				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				employeeBandEntity1.setModified_date(localDate);
+				employeeBandEntity1=expenseTravelAdvanceDao.saveDetails(employeeBandEntity1);
+				response=MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			}else {
+				employeeBandEntity=new ExpanceTravelAdvanceEntity();
+				CopyUtility.copyProperties(request,employeeBandEntity);			
+				employeeBandEntity.setStatus(1l);
+				Date date = new Date();
+				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				employeeBandEntity.setCreated_date(localDate);
+				employeeBandEntity=expenseTravelAdvanceDao.saveDetails(employeeBandEntity);
+				response=MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			}
+			
+			
 		} catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
 			e.printStackTrace();
@@ -45,8 +65,8 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 	}
 
 	@Override
-	public List<ExpanceTravelAdvanceEntity> getExpenseTravelAdvenceDetailsList(Long employerid) {
-		List<ExpanceTravelAdvanceEntity> expanceTravelAdvanceEntities=null;
+	public ExpanceTravelAdvanceEntity getExpenseTravelAdvenceDetails(Long employerid) {
+		ExpanceTravelAdvanceEntity expanceTravelAdvanceEntities=null;
 		String response="";
 		try {
 			expanceTravelAdvanceEntities=expenseTravelAdvanceDao.findByEmployerId(employerid);
@@ -62,113 +82,6 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 	
 	
 	
-//	@Override
-//	@Transactional
-//	public ExpenseTravelAdvanceRequest saveExpenseTravelAdvenceDetails(ExpenseTravelAdvanceRequest request) {
-//		String response="";
-//		try {
-//			response=MessageConstant.RESPONSE_FAILED;
-//			request.setResponse(response);					
-//			
-//			ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
-//			
-//			employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandId(request.getId());
-//			if(employeeBandEntity!=null) {
-//				employeeBandEntity.setExpenseCategory(request.getExpenseCategory());
-//				employeeBandEntity.setExpenseCode(request.getExpenseCode());
-//				int update=expenseCategoryBandDao.updateDetails(employeeBandEntity);
-//				System.out.println(update);
-//			}else {
-//				employeeBandEntity=new ExpenseCategoryBandEntity();
-//				CopyUtility.copyProperties(request,employeeBandEntity);			
-//				employeeBandEntity.setStatus(1);
-//				employeeBandEntity=expenseCategoryBandDao.saveDetails(employeeBandEntity);
-//			}
-//			
-//			List<CategoryEmployeeBandEntity> list1=new ArrayList<CategoryEmployeeBandEntity>();
-//			List<CategoryEmployeeBandEntity> list2=new ArrayList<CategoryEmployeeBandEntity>();
-//			if(employeeBandEntity!=null) {
-//				List<CategoryEmployeeBandEntity> list=request.getList();
-//				for(CategoryEmployeeBandEntity categoryEmployeeBandEntity:list) {
-//					categoryEmployeeBandEntity.setExpenseCategoryId(employeeBandEntity.getId());
-//					list1.add(categoryEmployeeBandEntity);
-//				}
-//				
-//				list2=categoryEmpBandDao.saveDetails(list1);
-//				
-//				response=MessageConstant.RESPONSE_SUCCESS;
-//			}
-//			
-//			
-//			request.setResponse(response);	
-//			
-//		} catch (Exception e) {
-//			response=MessageConstant.RESPONSE_FAILED;
-//			e.printStackTrace();
-//			request.setResponse(response);
-//		}
-//		return request;
-//
-//	}
 
-
-//	@Override
-//	public List<ExpanceTravelAdvanceEntity> getExpenseTravelAdvenceDetailsList(long employerid) {
-//		List<ExpanceTravelAdvanceEntity> employeeBand=new ArrayList<ExpanceTravelAdvanceEntity>();
-//		List<ExpenseTravelAdvanceRequest> expenseCategoryBandRequests=new ArrayList<ExpenseTravelAdvanceRequest>();
-//		List<CategoryEmployeeBandEntity> categoryEmployeeBandEntity=new ArrayList<CategoryEmployeeBandEntity>();		
-//		String response=MessageConstant.RESPONSE_FAILED;
-//		List<ExpenseCategoryMasterEntity> expenseCategoryMasterEntities=null;
-//		try {
-//						
-//		expenseCategoryMasterEntities=expenseCategoryMasterDao.getExpenseCategoryMaster();
-//		if(expenseCategoryMasterEntities!=null) {
-//			for (ExpenseCategoryMasterEntity expenseCategoryMasterEntity: expenseCategoryMasterEntities) {
-//				
-//				ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
-//				employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandIdWithEmployer(expenseCategoryMasterEntity.getId(),employerid);
-//				if(employeeBandEntity!=null) {
-//					
-//				}else {
-//					employeeBandEntity=new ExpenseCategoryBandEntity();
-//					employeeBandEntity.setExpenseCategory(expenseCategoryMasterEntity.getExpenseCategory());
-//					employeeBandEntity.setExpenseCode(expenseCategoryMasterEntity.getExpenseCode());
-//					employeeBandEntity.setExpenseLimit(expenseCategoryMasterEntity.getExpenseLimit());
-//					employeeBandEntity.setDayToExpiry(expenseCategoryMasterEntity.getDayToExpiry());
-//					employeeBandEntity.setEmployerId(employerid);
-//					employeeBandEntity.setMasterId(expenseCategoryMasterEntity.getId());
-//					employeeBandEntity.setStatus(1);
-//					employeeBandEntity=expenseCategoryBandDao.saveDetails(employeeBandEntity);
-//				}
-//				
-//				
-//			}
-//		}
-//			
-//		employeeBand=expenseCategoryBandDao.findByEmployerId(employerid);
-//		if(employeeBand!=null) {
-//			for (ExpenseCategoryBandEntity employeeBandEntity: employeeBand) {
-//				ExpenseCategoryBandRequest expenseCategoryBandRequest=new ExpenseCategoryBandRequest();
-//				response=MessageConstant.RESPONSE_SUCCESS;
-//				expenseCategoryBandRequest.setId(employeeBandEntity.getId());
-//				expenseCategoryBandRequest.setBandFlag(employeeBandEntity.getBandFlag());
-//				expenseCategoryBandRequest.setBandId(employeeBandEntity.getBandId());
-//				expenseCategoryBandRequest.setDayToExpiry(employeeBandEntity.getDayToExpiry());
-//				expenseCategoryBandRequest.setEmployerId(employeeBandEntity.getEmployerId());
-//				expenseCategoryBandRequest.setExpenseCategory(employeeBandEntity.getExpenseCategory());
-//				expenseCategoryBandRequest.setExpenseCode(employeeBandEntity.getExpenseCode());
-//				expenseCategoryBandRequest.setExpenseLimit(employeeBandEntity.getExpenseLimit());
-//				categoryEmployeeBandEntity=categoryEmpBandDao.getDetails(employeeBandEntity.getId());
-//				expenseCategoryBandRequest.setList(categoryEmployeeBandEntity);
-//				expenseCategoryBandRequests.add(expenseCategoryBandRequest);
-//				
-//			}
-//		}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return expenseCategoryBandRequests;
-//	}
-	
 	
 }

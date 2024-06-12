@@ -89,13 +89,13 @@ public class ExpenseTravelController {
 	    	
 	    
 	    	String message = "";
-	    	List<ExpanceTravelAdvanceEntity> response=null;
+	    	ExpanceTravelAdvanceEntity response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=expenseTravelAdvanceService.getExpenseTravelAdvenceDetailsList(expenseTravelAdvanceRequest.getEmployerId());
-	    		if(response!=null && response.size()>0) {
+				response=expenseTravelAdvanceService.getExpenseTravelAdvenceDetails(expenseTravelAdvanceRequest.getEmployerId());
+	    		if(response!=null) {
 	    			return ResponseEntity.ok(new ExpenseTravelAdvanceListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
 	    			return ResponseEntity.ok(new ExpenseTravelAdvanceListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));

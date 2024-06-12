@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -36,7 +34,7 @@ public class ExpanceTravelAdvanceEntity implements Serializable{
 	@Column(name="id")
 	private Long id;
 	
-	@Column(name = "employer_id")
+	@Column(name = "employer_id" , unique = true)
     private Long employerId;
 	
 	@Column(name = "allow_employees_travel")
@@ -55,8 +53,8 @@ public class ExpanceTravelAdvanceEntity implements Serializable{
     private String daysDisbursalCash;
 	
 	private LocalDate  created_date ;
+	private LocalDate  modified_date ;
 	
 	@Column(name = "status")
-    private Long status;;
-
+    private Long status;
 }
