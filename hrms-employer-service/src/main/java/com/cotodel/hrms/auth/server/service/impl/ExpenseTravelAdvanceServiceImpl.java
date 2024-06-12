@@ -2,13 +2,16 @@ package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ExpenseTravelAdvanceDao;
+import com.cotodel.hrms.auth.server.dto.ExpanceTravelAdvance;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
 import com.cotodel.hrms.auth.server.model.ExpanceTravelAdvanceEntity;
 import com.cotodel.hrms.auth.server.service.ExpenseTravelAdvanceService;
@@ -77,6 +80,33 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 			//request.setResponse(response);
 		}
 		return expanceTravelAdvanceEntities;
+	}
+
+	@Override
+	public ExpanceTravelAdvance getExpenseTravelAdvence(Long employerid) {
+		ExpanceTravelAdvanceEntity expanceTravelAdvanceEntities=new ExpanceTravelAdvanceEntity();
+		ExpanceTravelAdvance expanceTravelAdvance=new ExpanceTravelAdvance();
+		String response="";
+		List<String> list=new ArrayList<String>();
+		try {
+			expanceTravelAdvanceEntities=expenseTravelAdvanceDao.findByEmployerId(employerid);
+			if(expanceTravelAdvanceEntities!=null) {
+			CopyUtility.copyProperties(expanceTravelAdvanceEntities,expanceTravelAdvance);
+			String name=expanceTravelAdvanceEntities.getNameEmployeesCash();
+			if(name!=null) {
+				String [] nameOfArray=name.split(",");
+				for (String string : nameOfArray) {
+					list.add(string);
+				}
+			}
+			expanceTravelAdvance.setNameEmployeesCash(list);
+			response=MessageConstant.RESPONSE_SUCCESS;
+			}
+		} catch (Exception e) {
+			response=MessageConstant.RESPONSE_FAILED;
+			e.printStackTrace();
+		}
+		return expanceTravelAdvance;
 	}	
 	
 	
