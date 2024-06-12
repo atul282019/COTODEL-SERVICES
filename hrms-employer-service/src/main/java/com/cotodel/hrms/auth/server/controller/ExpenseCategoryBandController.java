@@ -195,11 +195,11 @@ public class ExpenseCategoryBandController {
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=expenseCategoryBandService.saveExpenseCategoryBandDetails(empolyeeRequest);
+				response=expenseCategoryBandService.deleteExpenseCategoryBandDetails(empolyeeRequest);
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.TRUE,MessageConstant.PROFILE_DELETE,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.FALSE,MessageConstant.PROFILE_DELETE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		e.printStackTrace();
@@ -207,7 +207,7 @@ public class ExpenseCategoryBandController {
 	    		message=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new ExpenseCategoryBandResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	
 	}

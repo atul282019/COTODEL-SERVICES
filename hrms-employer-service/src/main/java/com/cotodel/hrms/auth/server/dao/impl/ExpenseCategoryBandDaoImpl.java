@@ -64,6 +64,13 @@ public class ExpenseCategoryBandDaoImpl implements ExpenseCategoryBandDao{
 		// TODO Auto-generated method stub
 		 return expenseCategoryBandRepository.updateAmountById(expenseCategoryBandEntity.getExpenseCategory(), expenseCategoryBandEntity.getExpenseCode(),expenseCategoryBandEntity.getDayToExpiry(),expenseCategoryBandEntity.getExpenseLimit(), expenseCategoryBandEntity.getId());
 	}
+
+
+	@Override
+	public void deleteDetails(Long id) {
+		// TODO Auto-generated method stub
+		 expenseCategoryBandRepository.deleteById(id);
+	}
 	
 
 }

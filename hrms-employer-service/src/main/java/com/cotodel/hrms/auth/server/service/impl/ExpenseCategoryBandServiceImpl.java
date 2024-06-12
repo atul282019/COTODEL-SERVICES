@@ -237,7 +237,20 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 	@Override
 	public ExpenseCategoryBandRequest deleteExpenseCategoryBandDetails(ExpenseCategoryBandRequest request) {
 		// TODO Auto-generated method stub
-		return null;
+		String response=MessageConstant.RESPONSE_FAILED;
+		request.setResponse(response);
+		try {
+			expenseCategoryBandDao.deleteDetails(request.getId());
+			response=MessageConstant.RESPONSE_SUCCESS;
+			request.setResponse(response);
+		} catch (Exception e) {
+			// TODO: handle exception
+			response=MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+		}
+		
+		
+		return request;
 	}
 	
 	

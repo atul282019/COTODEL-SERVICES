@@ -17,4 +17,6 @@ public class MessageConstant {
 	public static final String DATA_NOT_FOUND = "No Data Found .";
 	public static final String DATA_FOUND = "Data Found .";
 	public static final Gson gson = new Gson();
+	public static final String PROFILE_DELETE = "Data Delete Successfully.";
+	public static final String PROFILE_DELETE_FAILED = "Data Not Delete Successfully.";
 }
