@@ -1,11 +1,6 @@
 package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDate;
-import java.util.List;
-
-import javax.persistence.Column;
-
-import com.cotodel.hrms.auth.server.model.CategoryEmployeeBandEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

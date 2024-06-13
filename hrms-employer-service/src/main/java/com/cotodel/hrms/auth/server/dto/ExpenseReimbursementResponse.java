@@ -1,7 +1,5 @@
 package com.cotodel.hrms.auth.server.dto;
 
-import com.cotodel.hrms.auth.server.model.ExpanceTravelAdvanceEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExpenseTravelAdvanceListResponse {
+public class ExpenseReimbursementResponse {
 	
 	 private boolean status;
 	 private String message;
-	 ExpanceTravelAdvanceEntity data;
+	 ExpenseReimbursementRequest data;
 	 private String txnId;
 	 private String timestamp;
 }
