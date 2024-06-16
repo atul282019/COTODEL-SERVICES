@@ -227,7 +227,7 @@ public class ExpenseCategoryBandController {
 	    	
 	    
 	    	String message = "";
-	    	ExpenseBandNumberEntity response=null;
+	    	List<ExpenseBandNumberEntity> response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);

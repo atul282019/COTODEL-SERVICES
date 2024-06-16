@@ -260,17 +260,18 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 
 
 	@Override
-	public ExpenseBandNumberEntity getExpenseBandList(Long employerId) {
-		ExpenseBandNumberEntity expenseBandNumberEntity=new ExpenseBandNumberEntity();		
+	public List<ExpenseBandNumberEntity> getExpenseBandList(Long employerId) {
+		ExpenseBandNumberEntity expenseBandNumberEntity=new ExpenseBandNumberEntity();
+		List<ExpenseBandNumberEntity> list=new ArrayList<ExpenseBandNumberEntity>();
 		try {
 			expenseBandNumberEntity=expenseBandNumberDao.findByEmployerId(employerId);
 			if(expenseBandNumberEntity!=null) {
-				
+				list.add(expenseBandNumberEntity);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return expenseBandNumberEntity;
+		return list;
 	}
 	
 	

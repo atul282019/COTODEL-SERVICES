@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import java.util.List;
+
 import com.cotodel.hrms.auth.server.model.ExpenseBandNumberEntity;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +15,7 @@ public class ExpenseBandListResponse {
 	
 	 private boolean status;
 	 private String message;
-	 ExpenseBandNumberEntity data;
+	 List<ExpenseBandNumberEntity> data;
 	 private String txnId;
 	 private String timestamp;
 }
