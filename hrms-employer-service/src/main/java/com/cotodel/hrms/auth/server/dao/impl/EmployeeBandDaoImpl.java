@@ -39,6 +39,13 @@ public class EmployeeBandDaoImpl implements EmployeeBandDao{
 		// TODO Auto-generated method stub
 		 employeeBandRepository.deleteById(id);
 	}
+
+
+	@Override
+	public EmployeeBandEntity findByEmployeeBandED(Long employerId) {
+		// TODO Auto-generated method stub
+		return employeeBandRepository.findByEmployeeBandED(employerId);
+	}
 	
 	
 	

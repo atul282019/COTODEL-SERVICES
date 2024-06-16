@@ -10,4 +10,6 @@ public interface EmployeeBandDao {
 	public List<EmployeeBandEntity> getEmployeeBandList();
 	public EmployeeBandEntity getEmployeeBandId(Long employerId);
 	public void deleteDetails(Long id);
+	public EmployeeBandEntity findByEmployeeBandED(Long employerId);
+	
 }

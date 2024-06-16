@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierReviewRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeBandNameRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeBandEntity;
 
@@ -16,4 +17,7 @@ public interface EmployeeBandService {
 	public EmployeeBandAddTierRequest  saveEmployeeBandAddTier(EmployeeBandAddTierRequest request);
 	public EmployeeBandAddTierReviewRequest  saveEmployeeBandAddTierReview(EmployeeBandAddTierReviewRequest request);
 	public EmployeeBandAddTierRequest  getEmployeeBandAddTierReview(Long  employerId);
+	public EmployeeBandAddTierRequest  getEmployeeBandAddTierDisable(Long  employerId);
+	public EmployeeBandAddTierRequest  getEmployeeBandAddTierEnaable(Long  employerId);
+	public EmployeeBandNameRequest  getEmployeeBandName(Long  employerId);
 }

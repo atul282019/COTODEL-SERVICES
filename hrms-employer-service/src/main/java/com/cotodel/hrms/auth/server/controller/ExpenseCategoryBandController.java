@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.ExpenseBandListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandRequest;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
+import com.cotodel.hrms.auth.server.model.ExpenseBandNumberEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.ExpenseCategoryBandService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -210,4 +212,38 @@ public class ExpenseCategoryBandController {
 	        return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/getExpenseBandList",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> getExpenseBandList(HttpServletRequest request,@Valid @RequestBody ExpenseCategoryBandRequest empolyeeRequest) {
+		 
+	    logger.info("inside getExpenseBandList");	    	
+	    	
+	    
+	    	String message = "";
+	    	ExpenseBandNumberEntity response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=expenseCategoryBandService.getExpenseBandList(empolyeeRequest.getEmployerId());
+	    		if(response!=null) {
+	    			return ResponseEntity.ok(new ExpenseBandListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new ExpenseBandListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in ExpenseBandListResponse====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new ExpenseBandListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
 	}

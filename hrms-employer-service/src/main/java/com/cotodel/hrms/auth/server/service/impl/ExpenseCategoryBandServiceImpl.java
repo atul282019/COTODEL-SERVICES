@@ -10,10 +10,12 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.BandDao;
 import com.cotodel.hrms.auth.server.dao.CategoryEmpBandDao;
+import com.cotodel.hrms.auth.server.dao.ExpenseBandNumberDao;
 import com.cotodel.hrms.auth.server.dao.ExpenseCategoryBandDao;
 import com.cotodel.hrms.auth.server.dao.ExpenseCategoryMasterDao;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandRequest;
 import com.cotodel.hrms.auth.server.model.CategoryEmployeeBandEntity;
+import com.cotodel.hrms.auth.server.model.ExpenseBandNumberEntity;
 import com.cotodel.hrms.auth.server.model.ExpenseCategoryBandEntity;
 import com.cotodel.hrms.auth.server.model.ExpenseCategoryMasterEntity;
 import com.cotodel.hrms.auth.server.service.ExpenseCategoryBandService;
@@ -33,6 +35,9 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 	
 	@Autowired
 	ExpenseCategoryMasterDao  expenseCategoryMasterDao;
+	
+	@Autowired
+	ExpenseBandNumberDao  expenseBandNumberDao;
 	
 	@Override
 	@Transactional
@@ -251,6 +256,21 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 		
 		
 		return request;
+	}
+
+
+	@Override
+	public ExpenseBandNumberEntity getExpenseBandList(Long employerId) {
+		ExpenseBandNumberEntity expenseBandNumberEntity=new ExpenseBandNumberEntity();		
+		try {
+			expenseBandNumberEntity=expenseBandNumberDao.findByEmployerId(employerId);
+			if(expenseBandNumberEntity!=null) {
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return expenseBandNumberEntity;
 	}
 	
 	
