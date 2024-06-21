@@ -41,16 +41,23 @@ public class CategoryEmployeeBandEntity implements Serializable{
 	@Column(name="band_one_inr")
 	private int bandOneInr;
 	
-	@Column(name="band_Two_inr")
+	@Column(name="band_two_inr")
 	private int bandTwoInr;
 	
-	@Column(name="band_Three_inr")
+	@Column(name="band_three_inr")
 	private int bandThreeInr;
+	
+	@Column(name="band_four_inr")
+	private int bandFourInr;
+	
+	@Column(name="band_five_inr")
+	private int bandFiveInr;
+	
+	@Column(name="band_six_inr")
+	private int bandSixInr;
 	
 	@Column(name="expense_category_id")
 	private Long expenseCategoryId;
 	
-//	@ManyToOne
-//    @JoinColumn(name = "expense_category_id")
-//    private ExpenseCategoryBandEntity bandEntity;
+
 }
