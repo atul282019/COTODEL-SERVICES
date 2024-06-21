@@ -37,6 +37,14 @@ public class CategoryEmpBandDaoImpl implements CategoryEmpBandDao{
 		// TODO Auto-generated method stub
 		return categoryEmpBandRepository.findByCategoryId(categoryId);
 	}
+
+
+
+	@Override
+	public void deleteById(Long id) {
+		categoryEmpBandRepository.deleteById(id);
+		
+	}
 	
 
 }

@@ -66,9 +66,17 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			
 			List<CategoryEmployeeBandEntity> list1=new ArrayList<CategoryEmployeeBandEntity>();
 			List<CategoryEmployeeBandEntity> list2=new ArrayList<CategoryEmployeeBandEntity>();
+			List<CategoryEmployeeBandEntity> list3=new ArrayList<CategoryEmployeeBandEntity>();
 			if(employeeBandEntity!=null) {
+				//delete in case old data exist
+				list3=categoryEmpBandDao.getDetails(employeeBandEntity.getId());
+				if(list3!=null) {
+					for(CategoryEmployeeBandEntity categoryEmployeeBandEntity:list3) {
+						categoryEmpBandDao.deleteById(categoryEmployeeBandEntity.getId());
+					}
+				}
 				List<CategoryEmployeeBandEntity> list=request.getList();
-				for(CategoryEmployeeBandEntity categoryEmployeeBandEntity:list) {
+				for(CategoryEmployeeBandEntity categoryEmployeeBandEntity:list) {					
 					categoryEmployeeBandEntity.setExpenseCategoryId(employeeBandEntity.getId());
 					list1.add(categoryEmployeeBandEntity);
 				}

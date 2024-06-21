@@ -8,4 +8,5 @@ public interface CategoryEmpBandDao {
 	public CategoryEmployeeBandEntity saveDetails(CategoryEmployeeBandEntity expenseCategoryBandEntity);
 	public List<CategoryEmployeeBandEntity> saveDetails(List<CategoryEmployeeBandEntity> expenseCategoryBandEntity);
 	public List<CategoryEmployeeBandEntity> getDetails(long categoryId);
+	public void deleteById(Long id);
 }
