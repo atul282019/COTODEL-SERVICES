@@ -2,10 +2,12 @@ package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cotodel.hrms.auth.server.dao.ExpenseReimbursementDao;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementRequest;
@@ -20,7 +22,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 	ExpenseReimbursementDao  expenseReimbursementDao;
 
 	@Override
-	public ExpenseReimbursementRequest saveExpenseReimbursementFileUpload(ExpenseReimbursementRequest request) {
+	public ExpenseReimbursementEntity saveExpenseReimbursementFileUpload(ExpenseReimbursementRequest request) {
 		String response="";
 		ExpenseReimbursementEntity expenseReimbursementEntity=null;
 		try {
@@ -32,24 +34,22 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			Date date = new Date();
 			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			expenseReimbursementEntity.setCreated_date(localDate);
-			//
-//			if(request.getFile()!=null) {
-//				String fileName = request.getFile().getOriginalFilename();
-//				expenseReimbursementEntity.setFileName(fileName);
-//				expenseReimbursementEntity.setFile(request.getFile().getBytes());
-//				expenseReimbursementEntity.setFileType(request.getFile().getContentType());
-//			}			 
+			// byte[] data = Base64.getDecoder().decode(request.getFile());
+			//expenseReimbursementEntity.setFile(data);
+			
 			//
 			expenseReimbursementEntity=expenseReimbursementDao.saveDetails(expenseReimbursementEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
 		} catch (Exception e) {
+			e.printStackTrace();
 			// TODO: handle exception
 		}
-		return request;
+		return expenseReimbursementEntity;
 	}
 
 	@Override
+    @Transactional(readOnly = true)
 	public ExpenseReimbursementEntity getExpenseReimbursementFileDownload(Long id) {
 		
 		ExpenseReimbursementEntity expenseReimbursementEntity=new ExpenseReimbursementEntity();

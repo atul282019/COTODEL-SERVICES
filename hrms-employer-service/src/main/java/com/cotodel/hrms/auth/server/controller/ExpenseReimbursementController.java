@@ -54,13 +54,15 @@ public class ExpenseReimbursementController {
 	    	
 	    
 	    	String message = "";
-	    	ExpenseReimbursementRequest response=null;
+	    	ExpenseReimbursementEntity response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				response=expenseReimbursementService.saveExpenseReimbursementFileUpload(expenseReimbursementRequest);
-	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+				
+	    		if(response!=null) {
+	    			response.setFile(null);
 	    			return ResponseEntity.ok(new ExpenseReimbursementResponse(true,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
 	    			return ResponseEntity.ok(new ExpenseReimbursementResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
@@ -82,7 +84,7 @@ public class ExpenseReimbursementController {
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/expenseReimbursementFileDownload",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    consumes = {"application/json","application/text"},method = RequestMethod.GET)
 	    public ResponseEntity<Object> expenseReimbursementFileDownload(HttpServletRequest request,@Valid @RequestBody ExpenseTravelAdvanceRequest expenseTravelAdvanceRequest) {
 		 
 	    logger.info("inside expenseReimbursementFileDownload");	    	

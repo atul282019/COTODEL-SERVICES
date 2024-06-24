@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
+import org.hibernate.annotations.Type;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,6 +48,7 @@ public class ExpenseReimbursementEntity implements Serializable{
 	private String expenseCategory;
 	
 	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
     private byte[] file;
 	
 	@Column(name="file_name")
