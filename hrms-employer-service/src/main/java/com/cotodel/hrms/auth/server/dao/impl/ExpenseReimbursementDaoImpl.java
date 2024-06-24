@@ -31,6 +31,12 @@ public class ExpenseReimbursementDaoImpl implements ExpenseReimbursementDao{
 		return expenseReimbursementRepository.getById(id);
 	}
 
+	@Override
+	public List<ExpenseReimbursementEntity> getExpenseReimbursementDetailsList(Long employeeID) {
+		// TODO Auto-generated method stub
+		return  expenseReimbursementRepository.findByEmployeeId(employeeID);
+	}
+
 
 
 

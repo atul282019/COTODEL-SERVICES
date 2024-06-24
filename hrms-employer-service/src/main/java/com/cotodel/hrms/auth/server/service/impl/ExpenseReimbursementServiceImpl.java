@@ -2,8 +2,10 @@ package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -63,6 +65,18 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			//request.setResponse(response);
 		}
 		return expenseReimbursementEntity;
+	}
+
+	@Override
+	public List<ExpenseReimbursementEntity> getExpenseReimbFileByEmpID(Long employeeId) {
+		// TODO Auto-generated method stub
+		List<ExpenseReimbursementEntity> list=new ArrayList<ExpenseReimbursementEntity>();
+		try {
+			list=expenseReimbursementDao.getExpenseReimbursementDetailsList(employeeId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 
