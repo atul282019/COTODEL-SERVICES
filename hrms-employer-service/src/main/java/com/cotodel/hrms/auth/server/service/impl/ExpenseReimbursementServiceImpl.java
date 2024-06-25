@@ -76,7 +76,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 		try {
 			list=expenseReimbursementDao.getExpenseReimbursementDetailsList(employeeId);
 			for (ExpenseReimbursementEntity expenseReimbursementEntity:list) {
-				expenseReimbursementEntity.setFile(null);
+				//expenseReimbursementEntity.setFile(null);
 				list1.add(expenseReimbursementEntity);
 			}
 		} catch (Exception e) {
