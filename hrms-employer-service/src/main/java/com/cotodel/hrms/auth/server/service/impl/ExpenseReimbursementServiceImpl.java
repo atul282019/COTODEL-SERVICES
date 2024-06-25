@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,14 +70,19 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 
 	@Override
 	public List<ExpenseReimbursementEntity> getExpenseReimbFileByEmpID(Long employeeId) {
-		// TODO Auto-generated method stub
+		
 		List<ExpenseReimbursementEntity> list=new ArrayList<ExpenseReimbursementEntity>();
+		List<ExpenseReimbursementEntity> list1=new ArrayList<ExpenseReimbursementEntity>();
 		try {
 			list=expenseReimbursementDao.getExpenseReimbursementDetailsList(employeeId);
+			for (ExpenseReimbursementEntity expenseReimbursementEntity:list) {
+				expenseReimbursementEntity.setFile(null);
+				list1.add(expenseReimbursementEntity);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return list;
+		return list1;
 	}
 
 

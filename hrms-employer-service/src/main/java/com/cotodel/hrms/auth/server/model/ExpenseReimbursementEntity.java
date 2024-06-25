@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="expense_reimbursement_seq" , sequenceName="expense_reimbursement_seq", allocationSize=1)
 
-public class ExpenseReimbursementEntity implements Serializable{
+public class ExpenseReimbursementEntity  implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
