@@ -86,9 +86,9 @@ public class ExpenseReimbursementController {
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/expenseReimbursementFileDownload",produces = {"application/json"}, 
+	    @RequestMapping(value = "/get/expenseReimbFileDownloadByID",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> expenseReimbursementFileDownload(HttpServletRequest request,@Valid @RequestBody ExpenseTravelAdvanceRequest expenseTravelAdvanceRequest) {
+	    public ResponseEntity<Object> expenseReimbFileDownloadByID(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseReimbursementRequest) {
 		 
 	    logger.info("inside expenseReimbursementFileDownload");	    	
 	    	
@@ -99,7 +99,7 @@ public class ExpenseReimbursementController {
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=expenseReimbursementService.getExpenseReimbursementFileDownload(expenseTravelAdvanceRequest.getId());
+				response=expenseReimbursementService.getExpenseReimbursementFileDownload(expenseReimbursementRequest.getId());
 	    		if(response!=null) {
 	    			return ResponseEntity.ok(new ExpenseReimbursementByIdResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
