@@ -3,9 +3,7 @@ package com.cotodel.hrms.auth.server.service.impl;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +35,6 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			Date date = new Date();
 			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			expenseReimbursementEntity.setCreated_date(localDate);
-			// byte[] data = Base64.getDecoder().decode(request.getFile());
-			//expenseReimbursementEntity.setFile(data);
 			
 			//
 			expenseReimbursementEntity=expenseReimbursementDao.saveDetails(expenseReimbursementEntity);
@@ -83,6 +79,25 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			e.printStackTrace();
 		}
 		return list1;
+	}
+
+	@Override
+	public ExpenseReimbursementRequest getExpenseReimbursementFileDelete(ExpenseReimbursementRequest request) {
+		// TODO Auto-generated method stub
+				String response=MessageConstant.RESPONSE_FAILED;
+				request.setResponse(response);
+				try {
+					expenseReimbursementDao.deleteDetails(request.getId());
+					response=MessageConstant.RESPONSE_SUCCESS;
+					request.setResponse(response);
+				} catch (Exception e) {
+					// TODO: handle exception
+					response=MessageConstant.RESPONSE_FAILED;
+					request.setResponse(response);
+				}
+				
+				
+				return request;
 	}
 
 

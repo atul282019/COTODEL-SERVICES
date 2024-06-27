@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementByIdListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementByIdResponse;
+import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDeleteByIdResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementRequest;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
@@ -146,5 +147,38 @@ public class ExpenseReimbursementController {
 	        
 	        return ResponseEntity.ok(new ExpenseReimbursementByIdListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
-
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/delete/expenseReimbFileDeleteByID",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> expenseReimbFileDeleteByID(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseReimbursementRequest) {
+		 
+	    logger.info("inside expenseReimbFileDeleteByID");	    	
+	    	
+	    
+	    	String message = "";
+	    	ExpenseReimbursementRequest response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=expenseReimbursementService.getExpenseReimbursementFileDelete(expenseReimbursementRequest);
+	    		if(response!=null) {
+	    			return ResponseEntity.ok(new ExpenseReimbursementDeleteByIdResponse(MessageConstant.TRUE,MessageConstant.PROFILE_DELETE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new ExpenseReimbursementDeleteByIdResponse(MessageConstant.FALSE,MessageConstant.PROFILE_DELETE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		e.printStackTrace();
+	    		logger.error("error in ExpenseReimbursementDeleteByIdResponse====="+e);
+	    		message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new ExpenseReimbursementDeleteByIdResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
 }

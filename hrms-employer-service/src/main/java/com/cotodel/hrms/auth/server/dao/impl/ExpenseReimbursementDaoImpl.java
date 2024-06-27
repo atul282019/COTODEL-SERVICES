@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ExpenseReimbursementDao;
-import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementResp;
 import com.cotodel.hrms.auth.server.model.ExpenseReimbursementEntity;
 import com.cotodel.hrms.auth.server.repository.ExpenseReimbursementRepository;
 @Repository
@@ -32,6 +31,11 @@ public class ExpenseReimbursementDaoImpl implements ExpenseReimbursementDao{
 	public List<ExpenseReimbursementEntity> getExpenseReimbursementDetailsList(Long employeeID) {
 		// TODO Auto-generated method stub
 		return  expenseReimbursementRepository.findByEmployeeId(employeeID);
+	}
+
+	@Override
+	public void deleteDetails(Long id) {
+		expenseReimbursementRepository.deleteById(id);		
 	}
 
 
