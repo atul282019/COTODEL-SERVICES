@@ -64,8 +64,8 @@ public class UserEntity implements Serializable{
 //    @OneToMany
 //   	@JoinTable(name = "h_user_emp", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user"))
 //    private List<UserEmpEntity> userEmpEntity ;
-    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserEmpEntity> userEmpEntity;
+    //@OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL, orphanRemoval = true)
+   // private List<UserEmpEntity> userEmpEntity;
    // @OneToMany
 //    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="user")
 //    private List<UserEmpEntity> userEmpEntity ;
