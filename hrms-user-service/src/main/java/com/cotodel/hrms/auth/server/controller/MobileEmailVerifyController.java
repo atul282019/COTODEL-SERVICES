@@ -29,6 +29,7 @@ import com.cotodel.hrms.auth.server.dto.UserVerifyResponse;
 import com.cotodel.hrms.auth.server.entity.RoleMaster;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.UserService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
@@ -50,6 +51,9 @@ public class MobileEmailVerifyController {
 	
 	@Autowired
 	UserDetailsDao userDetailsDao;
+	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
 	
 	private static final Logger logger = LoggerFactory.getLogger(MobileEmailVerifyController.class);
     
@@ -272,9 +276,15 @@ public class MobileEmailVerifyController {
 	    		String authToken=request.getHeader("Authorization");
 	    		userEntity=userService.checkUserMobile(userReq.getMobile());
 	    		if(userEntity!=null) {
-	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
-	    			response=userService.sendSmsOtpNew(userReq.getMobile());
 	    			String orderId="";
+	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    			if(applicationConstantConfig.otpLessSenderClientEnable.equalsIgnoreCase("N")) {
+	    				//orderId="444444";
+	    				response="{\"orderId\":\"44444\"}";
+	    			}else {
+	    				response=userService.sendSmsOtpNew(userReq.getMobile());
+	    			}
+	    			
 	    			//response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";
 	    			if(!ObjectUtils.isEmpty(response)) {
 
@@ -329,8 +339,13 @@ public class MobileEmailVerifyController {
 	    		userEntity=userService.checkUserMobile(userReq.getMobile());
 	    		if(userEntity!=null) {
 	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    			if(applicationConstantConfig.otpLessSenderClientEnable.equalsIgnoreCase("N")) {
+	    				response="{\"isOTPVerified\":true}";
+	    				
+	    			}else {
 	    			response=userService.verifySmsOtpNew(userReq.getOrderId(),userReq.getMobile(),userReq.getOtp());
 	    			//response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";	
+	    			}
 	    			if(!ObjectUtils.isEmpty(response)) {
 
 						JSONObject demoRes= new JSONObject(response);

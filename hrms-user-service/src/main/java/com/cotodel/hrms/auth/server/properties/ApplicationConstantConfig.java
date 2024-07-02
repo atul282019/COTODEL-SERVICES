@@ -52,7 +52,8 @@ public class ApplicationConstantConfig {
 	@Value("${otp.less.resender.url}")
 	public String otpLessResenderUrl;
 	
-	
+	@Value("${otp.less.sender.client.enable}")
+	public String otpLessSenderClientEnable;
 	
 	
 }
