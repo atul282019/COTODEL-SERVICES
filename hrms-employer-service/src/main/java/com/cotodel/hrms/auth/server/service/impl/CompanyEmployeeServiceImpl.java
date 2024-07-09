@@ -8,13 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.CompanyEmployeeDao;
 import com.cotodel.hrms.auth.server.dao.LeaveRequestDao;
 import com.cotodel.hrms.auth.server.dao.PerformanceReviewDao;
-import com.cotodel.hrms.auth.server.dao.TimesheetDao;
 import com.cotodel.hrms.auth.server.dto.CompanyEmployeeRequest;
 import com.cotodel.hrms.auth.server.model.CompanyEmployeeEntity;
 import com.cotodel.hrms.auth.server.model.EmployerEntity;
 import com.cotodel.hrms.auth.server.model.LeaveRequest;
 import com.cotodel.hrms.auth.server.model.PerformanceReview;
-import com.cotodel.hrms.auth.server.model.Timesheet;
 import com.cotodel.hrms.auth.server.service.CompanyEmployeeService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -27,8 +25,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService{
 	@Autowired
 	LeaveRequestDao  leaveRequestDao;
 	
-	@Autowired
-	TimesheetDao  timesheetDao;
+	
 	
 	@Autowired
 	PerformanceReviewDao  performanceReviewDao;
@@ -43,7 +40,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService{
 			request.setResponse(response);		
 			CompanyEmployeeEntity employee=new CompanyEmployeeEntity();
 			LeaveRequest leaveRequestEntity=new LeaveRequest();
-			Timesheet timesheet=new Timesheet();
+			//Timesheet timesheet=new Timesheet();
 			PerformanceReview perEntity=new PerformanceReview();
 			CopyUtility.copyProperties(request.getEmployee(),employee);
 		
@@ -54,12 +51,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService{
 			leaveRequestEntity.setEmployeeId(employee.getId());
 			leaveRequestEntity=leaveRequestDao.saveDetails(leaveRequestEntity);
 			}
-			//timesheet
-			CopyUtility.copyProperties(request.getTimesheet(),timesheet);
-			if(timesheet!=null) {
-				timesheet.setEmployeeId(employee.getId());
-				timesheet=timesheetDao.saveDetails(timesheet);
-			}
+			
 			
 			//performanceReview
 			CopyUtility.copyProperties(request.getPerformanceReview(),perEntity);
@@ -88,7 +80,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService{
 		try {
 			CompanyEmployeeEntity employee=companyEmployeeDao.getCompanyEmployee(employeeid);
 			LeaveRequest leaveRequest=leaveRequestDao.getLeaveRequest(employeeid);
-			Timesheet timesheet=timesheetDao.getTimesheet(employeeid);
+			//Timesheet timesheet=timesheetDao.getTimesheet(employeeid);
 			PerformanceReview performanceReview=performanceReviewDao.getPerformanceReview(employeeid);
 //			employee.setLeaveRequest(leaveRequest);
 //			employee.setTimesheet(timesheet);
@@ -96,7 +88,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService{
 			
 			companyEmployeeRequest.setEmployee(employee);
 			companyEmployeeRequest.setLeaveRequest(leaveRequest);
-			companyEmployeeRequest.setTimesheet(timesheet);
+			//companyEmployeeRequest.setTimesheet(timesheet);
 			companyEmployeeRequest.setPerformanceReview(performanceReview);
 			CopyUtility.copyProperties(companyEmployeeRequest, companyEmployeeRequest);
 			response=MessageConstant.RESPONSE_SUCCESS;

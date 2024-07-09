@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cotodel.hrms.auth.server.dao.ExpenseReimbursementDao;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementRequest;
 import com.cotodel.hrms.auth.server.model.ExpenseReimbursementEntity;
+import com.cotodel.hrms.auth.server.repository.UploadSequenceRepository;
 import com.cotodel.hrms.auth.server.service.ExpenseReimbursementService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -21,7 +22,10 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 
 	@Autowired
 	ExpenseReimbursementDao  expenseReimbursementDao;
-
+	
+	@Autowired
+	UploadSequenceRepository uploadSequenceRepository;
+	
 	@Override
 	public ExpenseReimbursementEntity saveExpenseReimbursementFileUpload(ExpenseReimbursementRequest request) {
 		String response="";
@@ -31,15 +35,17 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			request.setResponse(response);	
 			expenseReimbursementEntity=new ExpenseReimbursementEntity();
 			CopyUtility.copyProperties(request,expenseReimbursementEntity);			
-			expenseReimbursementEntity.setStatus(1l);
+			expenseReimbursementEntity.setStatus(0);
 			Date date = new Date();
 			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			expenseReimbursementEntity.setCreated_date(localDate);
-			
+			String seq=sequenceID();
+			expenseReimbursementEntity.setSequenceId(seq);
 			//
 			expenseReimbursementEntity=expenseReimbursementDao.saveDetails(expenseReimbursementEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			// TODO: handle exception
@@ -100,9 +106,66 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 				return request;
 	}
 
+	@Override
+	public ExpenseReimbursementEntity saveExpenseReimbursementFileUploadSubmit(ExpenseReimbursementRequest request) {
+		String response="";
+		ExpenseReimbursementEntity expenseReimbursementEntity=null;
+		try {
+			response=MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);	
+			expenseReimbursementEntity=new ExpenseReimbursementEntity();
+			CopyUtility.copyProperties(request,expenseReimbursementEntity);			
+			expenseReimbursementEntity.setStatus(1l);
+			Date date = new Date();
+			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			expenseReimbursementEntity.setCreated_date(localDate);
+			String seq=sequenceID();
+			expenseReimbursementEntity.setSequenceId(seq);
+			//
+			expenseReimbursementEntity=expenseReimbursementDao.saveDetails(expenseReimbursementEntity);
+			response=MessageConstant.RESPONSE_SUCCESS;
+			request.setResponse(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+		return expenseReimbursementEntity;
+	}
 
+	 @Transactional
+	 public Long fetchNextSequenceValue() {
+	    return uploadSequenceRepository.getNextSeriesId();
+	 }
 	
-	
+	public String sequenceID() {
+		
+		String  sequence=String.valueOf(fetchNextSequenceValue());
+		
+		String sequenceValue="";
+		String finalSequenceValue="";
+		
+		if(sequence.length()==1) {
+			sequenceValue="00"+sequence;
+		}else if(sequence.length()==2) {
+			sequenceValue="0"+sequence;
+		}else {
+			sequenceValue=sequence;
+		}
+		
+		finalSequenceValue=monthYear()+"-"+sequenceValue;
+		
+		return finalSequenceValue;
+	}
 
-	
+	public String monthYear() {
+		
+		LocalDate date = LocalDate.now();		
+		String month=String.valueOf(date.getMonthValue());
+		String year=String.valueOf(date.getYear());
+		String str="CDL-";
+		String  monthValue=month.length()==1?"0"+month:month;
+		String  yearValue=year.substring(2,4);
+		
+		return str+monthValue+yearValue;
+	}
 }

@@ -35,6 +35,9 @@ public class ExpenseReimbursementEntity  implements Serializable{
 	@Column(name="id")
 	private Long id;	
 	
+	@Column(name = "sequence_id")
+	private String sequenceId;
+	
 	@Column(name = "employer_id")
 	private long employerId;
 	

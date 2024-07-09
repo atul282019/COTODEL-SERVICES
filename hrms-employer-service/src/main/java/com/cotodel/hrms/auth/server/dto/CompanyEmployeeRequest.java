@@ -1,13 +1,8 @@
 package com.cotodel.hrms.auth.server.dto;
 
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
 import com.cotodel.hrms.auth.server.model.CompanyEmployeeEntity;
 import com.cotodel.hrms.auth.server.model.LeaveRequest;
 import com.cotodel.hrms.auth.server.model.PerformanceReview;
-import com.cotodel.hrms.auth.server.model.Timesheet;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +16,7 @@ public class CompanyEmployeeRequest {
    
     private CompanyEmployeeEntity employee;    
 	LeaveRequest leaveRequest;		
-	Timesheet timesheet;	
+	//Timesheet timesheet;	
 	PerformanceReview performanceReview;
 	//private EmploymentDetails employmentDetails;
 //	private Supervisor supervisor;
