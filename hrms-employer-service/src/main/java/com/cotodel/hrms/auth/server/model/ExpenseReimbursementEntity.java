@@ -2,7 +2,7 @@ package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-
+import javax.persistence.Transient;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -13,7 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
 import org.hibernate.annotations.Type;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -85,5 +87,7 @@ public class ExpenseReimbursementEntity  implements Serializable{
 	
 	@Column(name="remarks")
 	private String remarks;
-		
+	
+	@Transient
+	private String statusMessage;
 }

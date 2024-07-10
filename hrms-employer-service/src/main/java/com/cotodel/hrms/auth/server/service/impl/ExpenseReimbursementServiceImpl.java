@@ -79,6 +79,8 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			list=expenseReimbursementDao.getExpenseReimbursementDetailsList(employeeId);
 			for (ExpenseReimbursementEntity expenseReimbursementEntity:list) {
 				//expenseReimbursementEntity.setFile(null);
+				String message=getMessage(expenseReimbursementEntity.getStatus());
+				expenseReimbursementEntity.setStatusMessage(message);
 				list1.add(expenseReimbursementEntity);
 			}
 		} catch (Exception e) {
@@ -167,5 +169,25 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 		String  yearValue=year.substring(2,4);
 		
 		return str+monthValue+yearValue;
+	}
+
+	public String getMessage(Long status) {
+
+		int st = status.intValue();		
+		String message = "";		
+		switch (st) {
+		case 0:
+			message = "Draft";
+			break;
+		case 1:
+			message = "Draft";
+			break;
+		case 2:
+			message = "InProgress";
+			break;
+		default:
+			message = "Draft";
+		}
+		return message;
 	}
 }
