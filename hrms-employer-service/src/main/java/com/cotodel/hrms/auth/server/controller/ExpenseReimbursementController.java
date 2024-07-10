@@ -192,7 +192,7 @@ public class ExpenseReimbursementController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseReimbursementFileUploadSubmit(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseReimbursementRequest) {
 		 
-	    logger.info("inside expenseReimbursementFileUpload");	    	
+	    logger.info("inside expenseReimbursementFileUploadSubmit");	    	
 	    	
 	    
 	    	String message = "";
