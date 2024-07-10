@@ -179,7 +179,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			message = "Draft";
 			break;
 		case 1:
-			message = "Draft";
+			message = "Submitted";
 			break;
 		case 2:
 			message = "InProgress";
