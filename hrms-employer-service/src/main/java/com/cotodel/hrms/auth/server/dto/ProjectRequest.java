@@ -2,8 +2,6 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

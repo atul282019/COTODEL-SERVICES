@@ -51,7 +51,7 @@ public class ExpenseTravelController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expanceTravelAdvanceRequest(HttpServletRequest request,@Valid @RequestBody ExpenseTravelAdvanceRequest expenseTravelAdvanceRequest) {
 		 
-	    logger.info("inside expanceTravelAdvanceRequest");	    	
+	    logger.info("inside expanceTravelAdvanceRequest+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -67,9 +67,9 @@ public class ExpenseTravelController {
 	    			return ResponseEntity.ok(new ExpenseTravelAdvanceResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseTravelAdvanceResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -101,9 +101,9 @@ public class ExpenseTravelController {
 	    			return ResponseEntity.ok(new ExpenseTravelAdvanceListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseTravelAdvanceListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -119,7 +119,7 @@ public class ExpenseTravelController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getExpanceTravelAdvance(HttpServletRequest request,@Valid @RequestBody ExpenseTravelAdvanceRequest expenseTravelAdvanceRequest) {
 		 
-	    logger.info("inside expanceTravelAdvance");	    	
+	    logger.info("inside expanceTravelAdvance+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -135,9 +135,9 @@ public class ExpenseTravelController {
 	    			return ResponseEntity.ok(new ExpenseTravelAdvanceNameListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseTravelAdvanceNameListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

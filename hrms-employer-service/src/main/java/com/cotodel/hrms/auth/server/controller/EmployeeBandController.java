@@ -73,9 +73,9 @@ public class EmployeeBandController {
 	    			return ResponseEntity.ok(new EmployeeBandResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeBandResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -92,7 +92,7 @@ public class EmployeeBandController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> employeeBandAddTier(HttpServletRequest request,@Valid @RequestBody EmployeeBandAddTierRequest empolyeeRequest) {
 		 
-	    logger.info("inside employeeBandAddTier");	    	
+	    logger.info("inside employeeBandAddTier+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -108,9 +108,9 @@ public class EmployeeBandController {
 	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -143,9 +143,9 @@ public class EmployeeBandController {
 	    			return ResponseEntity.ok(new EmployeeBandAddTierReviewResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeBandAddTierReviewResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -179,9 +179,9 @@ public class EmployeeBandController {
 	    			return ResponseEntity.ok(new EmployeeBandListResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeBandListResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -198,7 +198,7 @@ public class EmployeeBandController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> employeeBandAddTierReview(HttpServletRequest request,@Valid @RequestBody EmployeeBandAddTierRequest empolyeeRequest) {
 		 
-	    logger.info("inside employeeBandAddTier");	    	
+	    logger.info("inside employeeBandAddTier+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -214,9 +214,9 @@ public class EmployeeBandController {
 	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -249,9 +249,9 @@ public class EmployeeBandController {
 	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -283,9 +283,9 @@ public class EmployeeBandController {
 	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -301,7 +301,7 @@ public class EmployeeBandController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> employeeBandName(HttpServletRequest request,@Valid @RequestBody EmployeeBandNameRequest empolyeeRequest) {
 		 
-	    logger.info("inside employeeBandName");	    	
+	    logger.info("inside employeeBandName+++++");	    	
 	    	
 	    
 	    	String message = "";
@@ -317,9 +317,9 @@ public class EmployeeBandController {
 	    			return ResponseEntity.ok(new EmployeeBandNameResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeBandNameResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

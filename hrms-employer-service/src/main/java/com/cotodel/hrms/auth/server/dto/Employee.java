@@ -2,10 +2,6 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -52,7 +52,7 @@ public class EmployeeProfileController {
 	    @RequestMapping(value = "/get/saveProfileDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveProfileDetails(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest empolyeeProfileRequest) {
-	    logger.info("inside saveProfileDetails");	    	
+	    logger.info("inside saveProfileDetails+++");	    	
 	    	
 	    	SignUpEntity userEntity=null;
 	    	String message = "";
@@ -67,9 +67,9 @@ public class EmployeeProfileController {
 	    			return ResponseEntity.ok(new EmployeeProfileResponse(false,MessageConstant.PROFILE_FAILED,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeProfileResponse(false,message,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -99,9 +99,9 @@ public class EmployeeProfileController {
 	    			return ResponseEntity.ok(new EmployeeProfileResponse(false,MessageConstant.PROFILE_FAILED,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeProfileResponse(false,message,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -132,9 +132,9 @@ public class EmployeeProfileController {
 	    			return ResponseEntity.ok(new EmployeeProfileGetResponse(false,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in empAllDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeProfileGetResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -149,7 +149,7 @@ public class EmployeeProfileController {
 	    @RequestMapping(value = "/get/getEmpComplete",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getEmpComplete(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest employeeProfileRequest) {
-	    logger.info("inside empAllDetails.....");	    	
+	    logger.info("inside empAllDetails.....+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -165,9 +165,9 @@ public class EmployeeProfileController {
 	    			return ResponseEntity.ok(new EmployeeCompleteResponse(false,MessageConstant.DATA_NOT_FOUND,0,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in empAllDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeCompleteResponse(false,message,0,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

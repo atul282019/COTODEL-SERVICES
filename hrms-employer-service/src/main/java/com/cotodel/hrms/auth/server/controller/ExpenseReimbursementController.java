@@ -53,7 +53,7 @@ public class ExpenseReimbursementController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseReimbursementFileUpload(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseReimbursementRequest) {
 		 
-	    logger.info("inside expenseReimbursementFileUpload");	    	
+	    logger.info("inside expenseReimbursementFileUpload+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -71,9 +71,9 @@ public class ExpenseReimbursementController {
 	    			return ResponseEntity.ok(new ExpenseReimbursementResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseReimbursementFileUpload====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseReimbursementResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -90,7 +90,7 @@ public class ExpenseReimbursementController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseReimbFileDownloadByID(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseReimbursementRequest) {
 		 
-	    logger.info("inside expenseReimbursementFileDownload");	    	
+	    logger.info("inside expenseReimbursementFileDownload+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -106,9 +106,9 @@ public class ExpenseReimbursementController {
 	    			return ResponseEntity.ok(new ExpenseReimbursementByIdResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseReimbursementFileDownload====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseReimbursementByIdResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -124,7 +124,7 @@ public class ExpenseReimbursementController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseReimbFileDownloadByEmpID(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseTravelAdvanceRequest) {
 		 
-	    logger.info("inside expenseReimbFileDownloadByEmpID");	    	
+	    logger.info("inside expenseReimbFileDownloadByEmpID+++");	    	
 	    	
 	    	String message = "";
 	    	List<ExpenseReimbursementEntity> response=null;
@@ -139,9 +139,9 @@ public class ExpenseReimbursementController {
 	    			return ResponseEntity.ok(new ExpenseReimbursementByIdListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseReimbursementFileDownload====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseReimbursementByIdListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -157,7 +157,7 @@ public class ExpenseReimbursementController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseReimbFileDeleteByID(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseReimbursementRequest) {
 		 
-	    logger.info("inside expenseReimbFileDeleteByID");	    	
+	    logger.info("inside expenseReimbFileDeleteByID+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -173,9 +173,9 @@ public class ExpenseReimbursementController {
 	    			return ResponseEntity.ok(new ExpenseReimbursementDeleteByIdResponse(MessageConstant.FALSE,MessageConstant.PROFILE_DELETE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in ExpenseReimbursementDeleteByIdResponse====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseReimbursementDeleteByIdResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -192,7 +192,7 @@ public class ExpenseReimbursementController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseReimbursementFileUploadSubmit(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseReimbursementRequest) {
 		 
-	    logger.info("inside expenseReimbursementFileUploadSubmit");	    	
+	    logger.info("inside expenseReimbursementFileUploadSubmit+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -210,9 +210,9 @@ public class ExpenseReimbursementController {
 	    			return ResponseEntity.ok(new ExpenseReimbursementResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseReimbursementFileUpload====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseReimbursementResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

@@ -66,9 +66,9 @@ public class EmployeeIncentiveController {
 	    			return ResponseEntity.ok(new EmployeeIncentiveResponse(false,MessageConstant.PROFILE_FAILED,employeeIncentiveRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeIncentiveResponse(false,message,employeeIncentiveRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -99,9 +99,9 @@ public class EmployeeIncentiveController {
 	    			return ResponseEntity.ok(new EmployeeIncentiveGetResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in getEmployeeSalary====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeIncentiveGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

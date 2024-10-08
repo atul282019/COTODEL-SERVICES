@@ -69,7 +69,7 @@ public class EmployeeDetailsController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/empDetails",produces = {"application/json"},consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveEmpDetails(HttpServletRequest request,@Valid @RequestBody EmployeeDetailsRequest empolyeeRequest) {
-	    logger.info("inside empDetails");	    	
+	    logger.info("inside empDetails+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -86,9 +86,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new EmployeeDetailsResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in empDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeDetailsResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -103,7 +103,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/empAllDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getEmpAllDetails(HttpServletRequest request,@Valid @RequestBody EmployeeDetailsRequest empolyeeRequest) {
-	    logger.info("inside empAllDetails.....");	    	
+	    logger.info("inside empAllDetails.....+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -119,9 +119,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in empAllDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -137,7 +137,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/add/empFamilyDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveEmpFamilyDetails(HttpServletRequest request,@Valid @RequestBody EmployeeFamilyDetailsRequest empolyeeRequest) {
-	    logger.info("inside empFamilyDetails");	    	
+	    logger.info("inside empFamilyDetails+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -154,9 +154,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in empFamilyDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -171,7 +171,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/empFamilyAllDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getEmpFamilyAllDetails(HttpServletRequest request,@Valid @RequestBody EmployeeFamilyDetailsRequest empolyeeRequest) {
-	    logger.info("inside empFamilyAllDetails.....");	    	
+	    logger.info("inside empFamilyAllDetails.....+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -187,9 +187,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new EmployeeFamilyGetDetailsResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in empFamilyAllDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeFamilyGetDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -205,7 +205,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/add/saveQualification",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveQualification(HttpServletRequest request,@Valid @RequestBody QualificationRequest qualificationRequest) {
-	    logger.info("inside saveQualification...");	    	
+	    logger.info("inside saveQualification...+++");	    	
 	    
 	    	String message = "";
 	    	QualificationRequest response=null;
@@ -221,9 +221,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new QualificationResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveQualification====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new QualificationResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -239,7 +239,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/getQualification",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getQualification(HttpServletRequest request,@Valid @RequestBody QualificationRequest qualificationRequest) {
-	    logger.info("inside getQualification.....");	    	
+	    logger.info("inside getQualification.....+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -255,9 +255,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in getQualification====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -272,7 +272,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/add/saveExperience",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveExperience(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
-	    logger.info("inside saveExperience...");	    	
+	    logger.info("inside saveExperience...+++");	    	
 	    
 	    	String message = "";
 	    	ExperienceRequest response=null;
@@ -288,9 +288,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new ExperienceResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveExperience====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExperienceResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -306,7 +306,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/getExperience",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getExperience(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
-	    logger.info("inside getExperience.....");	    	
+	    logger.info("inside getExperience.....+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -322,9 +322,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new ExperienceGetResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in getExperience====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExperienceGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -339,7 +339,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/add/saveCertificate",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveCertificate(HttpServletRequest request,@Valid @RequestBody CertificateRequest certificateRequest) {
-	    logger.info("inside saveCertificate...");	    	
+	    logger.info("inside saveCertificate...+++");	    	
 	    
 	    	String message = "";
 	    	CertificateRequest response=null;
@@ -355,9 +355,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new CertificateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveCertificate====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new CertificateResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -373,7 +373,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/getCertificate",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getCertificate(HttpServletRequest request,@Valid @RequestBody CertificateRequest certificateRequest) {
-	    logger.info("inside getCertificate.....");	    	
+	    logger.info("inside getCertificate.....+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -389,9 +389,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new CertificateGetResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in getCertificate====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new CertificateGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -406,7 +406,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/add/saveProject",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveProject(HttpServletRequest request,@Valid @RequestBody ProjectRequest projectRequest) {
-	    logger.info("inside saveQualification...");	    	
+	    logger.info("inside saveQualification...+++");	    	
 	    
 	    	String message = "";
 	    	ProjectRequest response=null;
@@ -422,9 +422,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new ProjectResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProject====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ProjectResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -440,7 +440,7 @@ public class EmployeeDetailsController {
 	    @RequestMapping(value = "/get/getProject",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getProject(HttpServletRequest request,@Valid @RequestBody ProjectRequest projectRequest) {
-	    logger.info("inside getProject.....");	    	
+	    logger.info("inside getProject.....+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -456,9 +456,9 @@ public class EmployeeDetailsController {
 	    			return ResponseEntity.ok(new ProjectGetResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in getProject====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ProjectGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

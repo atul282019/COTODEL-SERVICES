@@ -63,7 +63,7 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 			
 		} catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
-			e.printStackTrace();
+			//e.printStackTrace();
 			request.setResponse(response);
 		}
 		return request;
@@ -103,7 +103,7 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 			response=MessageConstant.RESPONSE_SUCCESS;
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			response=MessageConstant.RESPONSE_FAILED;
 			//companyEmployeeRequest.setResponse(response);
 		}
@@ -240,7 +240,7 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 			request.setResponse(response);	
 		}catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
-			e.printStackTrace();
+			//e.printStackTrace();
 			request.setResponse(response);
 		}
 		return request;
@@ -268,7 +268,7 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 			request.setResponse(response);	
 		}catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
-			e.printStackTrace();
+			//e.printStackTrace();
 			request.setResponse(response);
 		}
 		return request;

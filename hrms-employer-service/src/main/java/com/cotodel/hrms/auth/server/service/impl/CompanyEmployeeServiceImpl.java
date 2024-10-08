@@ -65,7 +65,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService{
 			request.setResponse(response);
 		} catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
-			e.printStackTrace();
+			//e.printStackTrace();
 			request.setResponse(response);
 		}
 		return request;
@@ -95,7 +95,7 @@ public class CompanyEmployeeServiceImpl implements CompanyEmployeeService{
 			companyEmployeeRequest.setResponse(response);
 			//System.out.println(employee.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			response=MessageConstant.RESPONSE_FAILED;
 			companyEmployeeRequest.setResponse(response);
 		}

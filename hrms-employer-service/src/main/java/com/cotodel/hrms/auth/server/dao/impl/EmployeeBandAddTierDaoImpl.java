@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeBandAddTierDao;
 import com.cotodel.hrms.auth.server.model.EmployeeBandAddTierEntity;
-import com.cotodel.hrms.auth.server.model.EmployeeBandEntity;
 import com.cotodel.hrms.auth.server.repository.EmployeeBandAddTierRepository;
 @Repository
 public class EmployeeBandAddTierDaoImpl implements EmployeeBandAddTierDao{

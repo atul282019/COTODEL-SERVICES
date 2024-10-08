@@ -15,12 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingFailListResponse;
-import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
-import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
-import com.cotodel.hrms.auth.server.model.EmployeeOnboardingFailEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.EmployeeOnboardingFailService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -69,9 +66,9 @@ public class EmployeeOnboardingFailController {
 	    			return ResponseEntity.ok(new EmployeeOnboardingResponse(MessageConstant.FALSE,message1,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeOnboardingResponse(MessageConstant.FALSE,message,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -86,7 +83,7 @@ public class EmployeeOnboardingFailController {
 	    @RequestMapping(value = "/get/empOnboardingFailList",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> empOnboardingFailList(HttpServletRequest request,@Valid @RequestBody EmployeeOnboardingRequest employeeOnboardingRequest) {
-	    logger.info("inside empOnboardingFailList...");	    	
+	    logger.info("inside empOnboardingFailList...+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -102,9 +99,9 @@ public class EmployeeOnboardingFailController {
 	    			return ResponseEntity.ok(new EmployeeOnboardingFailListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeOnboardingFailListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

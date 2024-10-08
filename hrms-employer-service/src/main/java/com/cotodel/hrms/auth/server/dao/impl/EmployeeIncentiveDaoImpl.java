@@ -6,11 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeIncentiveDao;
-import com.cotodel.hrms.auth.server.dao.EmployeeSalaryDao;
 import com.cotodel.hrms.auth.server.model.EmployeeIncentiveEntity;
-import com.cotodel.hrms.auth.server.model.EmployeeSalaryEntity;
 import com.cotodel.hrms.auth.server.repository.EmployeeIncentiveRepository;
-import com.cotodel.hrms.auth.server.repository.EmployeeSalaryRepository;
 @Repository
 public class EmployeeIncentiveDaoImpl implements EmployeeIncentiveDao{
 

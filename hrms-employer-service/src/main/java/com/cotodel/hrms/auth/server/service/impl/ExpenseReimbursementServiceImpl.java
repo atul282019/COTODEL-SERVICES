@@ -47,7 +47,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			request.setResponse(response);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			// TODO: handle exception
 		}
 		return expenseReimbursementEntity;
@@ -64,7 +64,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			
 		} catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
-			e.printStackTrace();
+			//e.printStackTrace();
 			//request.setResponse(response);
 		}
 		return expenseReimbursementEntity;
@@ -84,7 +84,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 				list1.add(expenseReimbursementEntity);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return list1;
 	}
@@ -128,13 +128,12 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			// TODO: handle exception
 		}
 		return expenseReimbursementEntity;
 	}
 
-	 @Transactional
 	 public Long fetchNextSequenceValue() {
 	    return uploadSequenceRepository.getNextSeriesId();
 	 }

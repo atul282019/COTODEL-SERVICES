@@ -52,7 +52,7 @@ public class ExpenseCategoryBandController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseCategoryBandDetails(HttpServletRequest request,@Valid @RequestBody ExpenseCategoryBandRequest empolyeeRequest) {
 		 
-	    logger.info("inside expenseCategoryBandService");	    	
+	    logger.info("inside expenseCategoryBandService+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -68,9 +68,9 @@ public class ExpenseCategoryBandController {
 	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseCategoryBandResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -102,9 +102,9 @@ public class ExpenseCategoryBandController {
 	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(false,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseCategoryBandResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -120,7 +120,7 @@ public class ExpenseCategoryBandController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseCategoryBandDetailsId(HttpServletRequest request,@Valid @RequestBody ExpenseCategoryBandRequest empolyeeRequest) {
 		 
-	    logger.info("inside expenseCategoryBandDetailsId");	    	
+	    logger.info("inside expenseCategoryBandDetailsId+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -136,9 +136,9 @@ public class ExpenseCategoryBandController {
 	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseCategoryBandResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -154,7 +154,7 @@ public class ExpenseCategoryBandController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getExpenseCategoryBandDetailsList(HttpServletRequest request,@Valid @RequestBody ExpenseCategoryBandRequest empolyeeRequest) {
 		 
-	    logger.info("inside getExpenseCategoryBandDetailsList");	    	
+	    logger.info("inside getExpenseCategoryBandDetailsList+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -170,9 +170,9 @@ public class ExpenseCategoryBandController {
 	    			return ResponseEntity.ok(new ExpenseCategoryBandListResponse(false,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseCategoryBandListResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -188,7 +188,7 @@ public class ExpenseCategoryBandController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> deleteExpenseCategoryDetails(HttpServletRequest request,@Valid @RequestBody ExpenseCategoryBandRequest empolyeeRequest) {
 		 
-	    logger.info("inside expenseCategoryBandService");	    	
+	    logger.info("inside expenseCategoryBandService+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -204,9 +204,9 @@ public class ExpenseCategoryBandController {
 	    			return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.FALSE,MessageConstant.PROFILE_DELETE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseCategoryBandResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -223,7 +223,7 @@ public class ExpenseCategoryBandController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getExpenseBandList(HttpServletRequest request,@Valid @RequestBody ExpenseCategoryBandRequest empolyeeRequest) {
 		 
-	    logger.info("inside getExpenseBandList");	    	
+	    logger.info("inside getExpenseBandList+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -239,9 +239,9 @@ public class ExpenseCategoryBandController {
 	    			return ResponseEntity.ok(new ExpenseBandListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in ExpenseBandListResponse====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseBandListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

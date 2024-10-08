@@ -91,7 +91,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			
 		} catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
-			e.printStackTrace();
+			//e.printStackTrace();
 			request.setResponse(response);
 		}
 		return request;
@@ -111,7 +111,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			response=MessageConstant.RESPONSE_SUCCESS;
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			response=MessageConstant.RESPONSE_FAILED;
 			//companyEmployeeRequest.setResponse(response);
 		}
@@ -143,7 +143,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			response=MessageConstant.RESPONSE_SUCCESS;
 			expenseCategoryBandRequest.setResponse(response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			response=MessageConstant.RESPONSE_FAILED;
 			//companyEmployeeRequest.setResponse(response);
 		}
@@ -180,7 +180,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			
 			expenseCategoryBandRequest.setResponse(response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			response=MessageConstant.RESPONSE_FAILED;
 			//companyEmployeeRequest.setResponse(response);
 		}
@@ -241,7 +241,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			}
 		}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return expenseCategoryBandRequests;
 	}
@@ -277,7 +277,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 				list.add(expenseBandNumberEntity);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return list;
 	}

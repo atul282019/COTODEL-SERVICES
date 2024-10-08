@@ -4,7 +4,9 @@ package com.cotodel.hrms.auth.server.security;
  * @author vinay
  */
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -71,7 +73,9 @@ public class HrmsSecurityFilter implements Filter{
 		logger.info("Filter Loggin Request {} : {}",httpServletRequest.getMethod(),httpServletRequest.getRequestURI());
 		String method=	httpServletRequest.getMethod();
 		boolean authCheck=false;
+		UUID customUuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
 		try {
+			
 			if(crossValidation.equals("Y")) {
 				if(!method.equals("OPTIONS")) {
 					authCheck=	tokenAuthenticate(requestURI,ip,companyId,authToken,txnId);
@@ -83,7 +87,7 @@ public class HrmsSecurityFilter implements Filter{
 			if(authCheck) {
 			chain.doFilter(request, response);
 			}else {
-				ErrorResponse errResp= new ErrorResponse(new Date(), null, null, 
+				ErrorResponse errResp= new ErrorResponse(new Date(), null, customUuid, 
 						new Error(String.valueOf("500"),"Unhandled Exceptions",null));
 				
 				httpServletresponse.setStatus(200);
@@ -93,8 +97,8 @@ public class HrmsSecurityFilter implements Filter{
 		}catch (ApiExceptions e) {
 			// TODO: handle exception
 		
-		ErrorResponse errResp= new ErrorResponse(new Date(), null, null, 
-				new Error(String.valueOf(e.getCode()),e.getDescription(),e.getStackTrace().toString()));
+		ErrorResponse errResp= new ErrorResponse(new Date(), null, customUuid, 
+				new Error(String.valueOf(e.getCode()),e.getDescription(),Arrays.toString(e.getStackTrace())));
 		
 		httpServletresponse.setStatus(200);
 		httpServletresponse.getWriter().write(convertObjectToJson(errResp));

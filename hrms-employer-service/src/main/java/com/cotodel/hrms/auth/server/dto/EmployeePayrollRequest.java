@@ -3,7 +3,6 @@ package com.cotodel.hrms.auth.server.dto;
 import java.util.List;
 
 import com.cotodel.hrms.auth.server.model.EmployeePayrollNewEntity;
-import com.cotodel.hrms.auth.server.model.EmployerEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

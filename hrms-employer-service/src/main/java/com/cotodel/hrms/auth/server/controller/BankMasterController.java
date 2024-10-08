@@ -8,15 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cotodel.hrms.auth.server.dto.ExpenseCategoryMasterResponse;
+import com.cotodel.hrms.auth.server.dto.BankMasterListResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
-import com.cotodel.hrms.auth.server.model.ExpenseCategoryMasterEntity;
+import com.cotodel.hrms.auth.server.model.BankMasterEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
-import com.cotodel.hrms.auth.server.service.ExpenseCategoryMasterService;
+import com.cotodel.hrms.auth.server.service.BankMasterService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -26,16 +26,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping("/Api")
-public class ExpenseCategoryMasterController {
+public class BankMasterController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ExpenseCategoryMasterController.class);
 	
 	@Autowired
-	ExpenseCategoryMasterService expenseCategoryMasterService;
-	
+	BankMasterService bankMasterService;	
+	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {
@@ -43,31 +43,33 @@ public class ExpenseCategoryMasterController {
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/expenseCategoryMaster",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> expenseCategoryMaster(HttpServletRequest request) {
+	    @PostMapping(value = "/get/getBankMasterDetailsList",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"})
+	    public ResponseEntity<Object> getBankMasterDetailsList(HttpServletRequest request) {
 		 
-	    logger.info("inside expenseCategoryMasterService");	    	
-	    		    
+	    log.info("inside bank master-------");	      	
+	    log.info("inside method");
 	    	String message = "";
-	    	List<ExpenseCategoryMasterEntity> response=null;
+	    	List<BankMasterEntity> response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=expenseCategoryMasterService.getExpenseCategoryMaster();
-	    		if(response!=null && response.size()>0) {
-	    			return ResponseEntity.ok(new ExpenseCategoryMasterResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+				response=bankMasterService.getBankMaster();
+				
+	    		if(response!=null) {
+	    			return ResponseEntity.ok(new BankMasterListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new ExpenseCategoryMasterResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new BankMasterListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in expenseCategoryBandDetails====="+e);
+	    		log.error("error in getBankMasterDetailsList====="+e);
 	    		//message=e.getMessage();
 			}
 	        
-	        return ResponseEntity.ok(new ExpenseCategoryMasterResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new BankMasterListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	 
+
 	}

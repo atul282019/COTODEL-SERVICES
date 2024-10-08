@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.cotodel.hrms.auth.server.model.EmployeeIncentiveEntity;
-import com.cotodel.hrms.auth.server.model.EmployeeSalaryEntity;
 
 public interface EmployeeIncentiveRepository extends JpaRepository<EmployeeIncentiveEntity, Long>{
 	

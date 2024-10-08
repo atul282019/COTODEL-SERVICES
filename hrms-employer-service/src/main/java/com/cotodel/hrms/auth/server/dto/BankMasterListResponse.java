@@ -1,5 +1,9 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import java.util.List;
+
+import com.cotodel.hrms.auth.server.model.BankMasterEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeBandNameResponse {
+public class BankMasterListResponse {
 	
 	 private boolean status;
 	 private String message;
-	  EmployeeBandNameRequest data;
-	  private String txnId;
-	  private String timestamp;
+	 List<BankMasterEntity> data;
+	 private String txnId;
+	 private String timestamp;
 }

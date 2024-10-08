@@ -46,7 +46,7 @@ public class EmployeeOnboardingServiceFailImpl implements EmployeeOnboardingFail
 		} catch (Exception e) {
 			response = MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return request;
 
@@ -76,7 +76,7 @@ public class EmployeeOnboardingServiceFailImpl implements EmployeeOnboardingFail
             }
 		}
         } catch (Exception e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
 		return employeeOnboardingRequests;
 	}	

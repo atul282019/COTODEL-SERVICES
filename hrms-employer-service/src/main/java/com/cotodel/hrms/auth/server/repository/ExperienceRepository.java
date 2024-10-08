@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.model.ExperienceEntity;
-import com.cotodel.hrms.auth.server.model.QualificationEntity;
 @Repository
 public interface ExperienceRepository extends JpaRepository<ExperienceEntity,Long>{
 	

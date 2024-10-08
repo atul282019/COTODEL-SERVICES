@@ -54,7 +54,7 @@ public class EmployeeOnboardingController {
 	    @RequestMapping(value = "/add/saveEmplOnboarding",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveEmplOnboarding(HttpServletRequest request,@Valid @RequestBody EmployeeOnboardingRequest employeeOnboardingRequest) {
-	    logger.info("inside saveEmplOnboarding");    	
+	    logger.info("inside saveEmplOnboarding+++");    	
 	    
 	    	String message = "";
 	    	String message1 = "";
@@ -71,9 +71,9 @@ public class EmployeeOnboardingController {
 	    			return ResponseEntity.ok(new EmployeeOnboardingResponse(MessageConstant.FALSE,message1,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeOnboardingResponse(MessageConstant.FALSE,message,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -89,7 +89,7 @@ public class EmployeeOnboardingController {
 	    @RequestMapping(value = "/get/empOnboardingList",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> empOnboardingList(HttpServletRequest request,@Valid @RequestBody EmployeeOnboardingRequest employeeOnboardingRequest) {
-	    logger.info("inside empOnboardingList...");	    	
+	    logger.info("inside empOnboardingList...+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -105,9 +105,9 @@ public class EmployeeOnboardingController {
 	    			return ResponseEntity.ok(new EmployeeOnboardingListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeOnboardingListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -123,7 +123,7 @@ public class EmployeeOnboardingController {
 	    @RequestMapping(value = "/add/saveBulkEmplOnboarding",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveBulkEmplOnboarding(HttpServletRequest request,@Valid @RequestBody EmployeeOnboardingRequest employeeOnboardingRequest) {
-	    logger.info("inside saveBulkEmplOnboarding");    	
+	    logger.info("inside saveBulkEmplOnboarding+++");    	
 	    
 	    	String message = "";
 	    	String message1 = "";
@@ -140,9 +140,9 @@ public class EmployeeOnboardingController {
 	    			return ResponseEntity.ok(new EmployeeOnboardingResponse(MessageConstant.FALSE,message1,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeOnboardingResponse(MessageConstant.FALSE,message,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -158,7 +158,7 @@ public class EmployeeOnboardingController {
 	    @RequestMapping(value = "/add/confirmBulkEmplOnboarding",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> confirmBulkEmplOnboarding(HttpServletRequest request,@Valid @RequestBody List<EmployeeOnboardingRequest> employeeOnboardingRequest) {
-	    logger.info("inside confirmBulkEmplOnboarding");    	
+	    logger.info("inside confirmBulkEmplOnboarding+++");    	
 	    
 	    	String message = "";
 	    	String message1 = "";
@@ -171,9 +171,9 @@ public class EmployeeOnboardingController {
 	    			return ResponseEntity.ok(new EmployeeConfirmOnboardingResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeConfirmOnboardingResponse(MessageConstant.FALSE,message,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -201,9 +201,9 @@ public class EmployeeOnboardingController {
 	    			return ResponseEntity.ok(new EmployeeConfirmOnboardingResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeConfirmOnboardingResponse(MessageConstant.FALSE,message,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -218,7 +218,7 @@ public class EmployeeOnboardingController {
 	    @RequestMapping(value = "/get/empOnboardingById",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> empOnboardingById(HttpServletRequest request,@Valid @RequestBody EmployeeOnboardingRequest employeeOnboardingRequest) {
-	    logger.info("inside empOnboardingList...");	    	
+	    logger.info("inside empOnboardingList...+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -234,9 +234,9 @@ public class EmployeeOnboardingController {
 	    			return ResponseEntity.ok(new EmployeeOnboardingIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeOnboardingIdResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -251,7 +251,7 @@ public class EmployeeOnboardingController {
 	    @RequestMapping(value = "/add/saveEmplOnboardingNew",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveEmplOnboardingNew(HttpServletRequest request,@Valid @RequestBody EmployeeOnboardingNewRequest employeeOnboardingRequest) {
-	    logger.info("inside saveEmplOnboardingNew");    	
+	    logger.info("inside saveEmplOnboardingNew+++");    	
 	    
 	    	String message = "";
 	    	String message1 = "";
@@ -268,9 +268,9 @@ public class EmployeeOnboardingController {
 	    			return ResponseEntity.ok(new EmployeeOnboardingNewResponse(MessageConstant.FALSE,message1,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveEmplOnboardingNew====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeeOnboardingNewResponse(MessageConstant.FALSE,message,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

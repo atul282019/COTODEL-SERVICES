@@ -66,7 +66,7 @@ public class CommonUtility {
 			logger.info(" response Json---"+returnStr);
 			return returnStr;
 		}catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}finally {
 			restTemplate=null;headers=null;	

@@ -1,15 +1,6 @@
 package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDate;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Lob;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.web.multipart.MultipartFile;
-
-import com.cotodel.hrms.auth.server.model.CategoryEmployeeBandEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

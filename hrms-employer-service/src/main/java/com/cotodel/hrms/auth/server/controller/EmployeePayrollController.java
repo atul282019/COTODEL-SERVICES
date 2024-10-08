@@ -48,7 +48,7 @@ public class EmployeePayrollController {
 	    @RequestMapping(value = "/save/payrollDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> payrollDetails(HttpServletRequest request,@Valid @RequestBody EmployeePayrollRequest empolyeeRequest) {
-	    logger.info("inside payrollDetails");	    	
+	    logger.info("inside payrollDetails+++");	    	
 	    	
 	    	String message = "";
 	    	EmployeePayrollRequest response=null;
@@ -62,9 +62,9 @@ public class EmployeePayrollController {
 	    			return ResponseEntity.ok(new EmployeePayrollResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeePayrollResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -94,9 +94,9 @@ public class EmployeePayrollController {
 	    			return ResponseEntity.ok(new EmployeePayrollTaxResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeePayrollTaxResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
@@ -111,7 +111,7 @@ public class EmployeePayrollController {
 	    @RequestMapping(value = "/save/payrollDetailsNew",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> payrollDetailsNew(HttpServletRequest request,@Valid @RequestBody EmployeePayrollRequest empolyeeRequest) {
-	    logger.info("inside payrollDetailsNew");	    	
+	    logger.info("inside payrollDetailsNew+++");	    	
 	    	
 	    	String message = "";
 	    	EmployeePayrollRequest response=null;
@@ -125,9 +125,9 @@ public class EmployeePayrollController {
 	    			return ResponseEntity.ok(new EmployeePayrollResponse(false,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		e.printStackTrace();
+	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
-	    		message=e.getMessage();
+	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new EmployeePayrollResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
