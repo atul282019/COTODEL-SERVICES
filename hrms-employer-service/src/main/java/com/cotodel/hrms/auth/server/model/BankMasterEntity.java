@@ -1,6 +1,7 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -16,27 +17,36 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="bank_master")
+@Table(name="bankmaster")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="bank_master_seq" , sequenceName="bank_master_seq", allocationSize=1)
-
+@SequenceGenerator(name="bankmaster_seq" , sequenceName="bankmaster_seq", allocationSize=1)
 public class BankMasterEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bank_master_seq")	
-	@Column(name="id")
-	private Long id;	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bankmaster_seq")
+	@Column(name="id_pk")
+	private Long id;
 	
-	@Column(name="bank_name")
+	@Column(name="bankcode", length=99)
+	private String bankCode;
+	
+	@Column(name="bankname", length=99)
 	private String bankName;
 	
 	@Column(name="status")
-	private long status;	
+	private int status;		
+	
+	@Column(name = "creationdate")
+    private LocalDateTime creationDate;
+
+	
 	
 }

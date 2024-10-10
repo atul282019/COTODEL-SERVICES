@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanyEmployeeResponse {
+public class ErupiLinkAccountResponse {
 	
 	 private boolean status;
 	 private String message;
-	 CompanyEmployeeRequest data;
+	 ErupiLinkAccountRequest data;
 	 private String txnId;
 	 private String timestamp;
 }

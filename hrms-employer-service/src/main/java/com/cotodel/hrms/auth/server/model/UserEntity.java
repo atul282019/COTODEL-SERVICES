@@ -59,4 +59,5 @@ public class UserEntity implements Serializable{
     private int status ;
     private int employerid ;
     private int role_id ;
+    
 }
