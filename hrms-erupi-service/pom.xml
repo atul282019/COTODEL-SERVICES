@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.cotodel.hrms</groupId>
-	<artifactId>hrms-erupi-service</artifactId>
+	<artifactId>erupistaging</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>hrms-erupi-service</name>
+	<name>erupistaging</name>
 	<description>Hrms erupi  server</description>
 	<properties>
 		<java.version>11</java.version>
