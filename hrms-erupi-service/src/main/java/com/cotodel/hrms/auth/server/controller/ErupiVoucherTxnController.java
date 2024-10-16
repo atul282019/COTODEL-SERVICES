@@ -81,7 +81,7 @@ private static final Logger logger = LoggerFactory.getLogger(ErupiVoucherTxnCont
 	    	try {	    		
 	    		//String companyId = request.getHeader("companyId");
 				//SetDatabaseTenent.setDataSource(companyId);
-				
+				logger.info("Hi");
 	    		
 				
 	    	}catch (Exception e) {				
