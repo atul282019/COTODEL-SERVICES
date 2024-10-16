@@ -62,4 +62,34 @@ private static final Logger logger = LoggerFactory.getLogger(ErupiVoucherTxnCont
 	    }
 	 
 	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/create/txnId/{txnid}",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.GET)
+	    public ResponseEntity<Object> erupiCreateTxnGet(@PathVariable("txnid") String txnid,@RequestBody String respString) {
+		 
+	    logger.info("inside erupiCreateTxn...txnid."+txnid);	    	
+	    logger.info("inside erupiCreateTxn...respString."+respString);
+	    
+	    	String message = "";
+	    	ErupiVoucherTxnRequest response=null;
+	    	try {	    		
+	    		//String companyId = request.getHeader("companyId");
+				//SetDatabaseTenent.setDataSource(companyId);
+				
+	    		
+				
+	    	}catch (Exception e) {				
+	    		logger.error("error in erupiVoucherInitiateDetails====="+e);
+			}
+	        
+	        return ResponseEntity.ok(MessageConstant.TRUE);	        
+	    }
+	 
+	 
 }
