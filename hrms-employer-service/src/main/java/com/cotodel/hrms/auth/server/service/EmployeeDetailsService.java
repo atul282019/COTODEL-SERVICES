@@ -3,16 +3,14 @@ package com.cotodel.hrms.auth.server.service;
 import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeDetailsRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeDetailsEntity;
-import com.cotodel.hrms.auth.server.model.EmployeeFamilyDetailEntity;
 
 public interface EmployeeDetailsService {
 	
 	public EmployeeDetailsRequest  saveEmpDetails(EmployeeDetailsRequest request);	
-	public List<EmployeeDetailsEntity>  getEmpDetailsList(Long empid);	
-	public EmployeeFamilyDetailsRequest  saveEmpFamilyDetails(EmployeeFamilyDetailsRequest request);
-	public List<EmployeeFamilyDetailEntity>  getEmpFamilyDetailsList(Long empid);
+	//public List<EmployeeDetailsEntity>  getEmpDetailsList(Long empid);	
+	//public EmployeeFamilyDetailsRequest  saveEmpFamilyDetails(EmployeeFamilyDetailsRequest request);
+	//public List<EmployeeFamilyDetailEntity>  getEmpFamilyDetailsList(Long empid);
 	//public QualificationRequest  saveQualification(QualificationRequest request);
 	//public List<QualificationEntity>  getQualificationList(Long empid,Long employerid);
 	//public ExperienceRequest  saveExperience(ExperienceRequest request);

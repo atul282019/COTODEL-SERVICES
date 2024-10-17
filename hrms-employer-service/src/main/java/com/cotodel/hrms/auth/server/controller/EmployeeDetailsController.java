@@ -16,13 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeDetailsResponse;
-import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsResponse;
-import com.cotodel.hrms.auth.server.dto.EmployeeFamilyGetDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeGetDetailsResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.EmployeeDetailsEntity;
-import com.cotodel.hrms.auth.server.model.EmployeeFamilyDetailEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.EmployeeDetailsService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -77,107 +73,107 @@ public class EmployeeDetailsController {
 	        
 	        return ResponseEntity.ok(new EmployeeDetailsResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/empAllDetails",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getEmpAllDetails(HttpServletRequest request,@Valid @RequestBody EmployeeDetailsRequest empolyeeRequest) {
-	    logger.info("inside empAllDetails.....+++");	    	
-	    	
-	    
-	    	String message = "";
-	    	List<EmployeeDetailsEntity> response=null;
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				response=employeeDetailsService.getEmpDetailsList(empolyeeRequest.getEmployerId());
-	    		if(response!=null && response.size()>0) {
-	    			return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
-	    	}catch (Exception e) {				
-	    		//e.printStackTrace();
-	    		logger.error("error in empAllDetails====="+e);
-	    		//message=e.getMessage();
-			}
-	        
-	        return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/get/empAllDetails",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+//	    public ResponseEntity<Object> getEmpAllDetails(HttpServletRequest request,@Valid @RequestBody EmployeeDetailsRequest empolyeeRequest) {
+//	    logger.info("inside empAllDetails.....+++");	    	
+//	    	
+//	    
+//	    	String message = "";
+//	    	List<EmployeeDetailsEntity> response=null;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				response=employeeDetailsService.getEmpDetailsList(empolyeeRequest.getEmployerId());
+//	    		if(response!=null && response.size()>0) {
+//	    			return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		//e.printStackTrace();
+//	    		logger.error("error in empAllDetails====="+e);
+//	    		//message=e.getMessage();
+//			}
+//	        
+//	        return ResponseEntity.ok(new EmployeeGetDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//	    }
 
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/add/empFamilyDetails",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> saveEmpFamilyDetails(HttpServletRequest request,@Valid @RequestBody EmployeeFamilyDetailsRequest empolyeeRequest) {
-	    logger.info("inside empFamilyDetails+++");	    	
-	    	
-	    
-	    	String message = "";
-	    	EmployeeFamilyDetailsRequest response=null;
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				response=employeeDetailsService.saveEmpFamilyDetails(empolyeeRequest);
-				
-	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
-	    	}catch (Exception e) {				
-	    		//e.printStackTrace();
-	    		logger.error("error in empFamilyDetails====="+e);
-	    		//message=e.getMessage();
-			}
-	        
-	        return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    }
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/empFamilyAllDetails",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getEmpFamilyAllDetails(HttpServletRequest request,@Valid @RequestBody EmployeeFamilyDetailsRequest empolyeeRequest) {
-	    logger.info("inside empFamilyAllDetails.....+++");	    	
-	    	
-	    
-	    	String message = "";
-	    	List<EmployeeFamilyDetailEntity> response=null;
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				response=employeeDetailsService.getEmpFamilyDetailsList(empolyeeRequest.getEmployeeId());
-	    		if(response!=null && response.size()>0) {
-	    			return ResponseEntity.ok(new EmployeeFamilyGetDetailsResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new EmployeeFamilyGetDetailsResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
-	    	}catch (Exception e) {				
-	    		//e.printStackTrace();
-	    		logger.error("error in empFamilyAllDetails====="+e);
-	    		//message=e.getMessage();
-			}
-	        
-	        return ResponseEntity.ok(new EmployeeFamilyGetDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/add/empFamilyDetails",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+//	    public ResponseEntity<Object> saveEmpFamilyDetails(HttpServletRequest request,@Valid @RequestBody EmployeeFamilyDetailsRequest empolyeeRequest) {
+//	    logger.info("inside empFamilyDetails+++");	    	
+//	    	
+//	    
+//	    	String message = "";
+//	    	EmployeeFamilyDetailsRequest response=null;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				response=employeeDetailsService.saveEmpFamilyDetails(empolyeeRequest);
+//				
+//	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+//	    			return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		//e.printStackTrace();
+//	    		logger.error("error in empFamilyDetails====="+e);
+//	    		//message=e.getMessage();
+//			}
+//	        
+//	        return ResponseEntity.ok(new EmployeeFamilyDetailsResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/get/empFamilyAllDetails",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+//	    public ResponseEntity<Object> getEmpFamilyAllDetails(HttpServletRequest request,@Valid @RequestBody EmployeeFamilyDetailsRequest empolyeeRequest) {
+//	    logger.info("inside empFamilyAllDetails.....+++");	    	
+//	    	
+//	    
+//	    	String message = "";
+//	    	List<EmployeeFamilyDetailEntity> response=null;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				response=employeeDetailsService.getEmpFamilyDetailsList(empolyeeRequest.getEmployeeId());
+//	    		if(response!=null && response.size()>0) {
+//	    			return ResponseEntity.ok(new EmployeeFamilyGetDetailsResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new EmployeeFamilyGetDetailsResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		//e.printStackTrace();
+//	    		logger.error("error in empFamilyAllDetails====="+e);
+//	    		//message=e.getMessage();
+//			}
+//	        
+//	        return ResponseEntity.ok(new EmployeeFamilyGetDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//	    }
 
 //	 @Operation(summary = "This API will provide the Save User Details ", security = {
 //	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
