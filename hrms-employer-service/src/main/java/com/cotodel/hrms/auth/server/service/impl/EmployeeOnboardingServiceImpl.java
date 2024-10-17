@@ -3,8 +3,6 @@ package com.cotodel.hrms.auth.server.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
