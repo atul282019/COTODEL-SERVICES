@@ -8,16 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeDetailsDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeFamilyDetailsDao;
-import com.cotodel.hrms.auth.server.dao.ExperienceDao;
-import com.cotodel.hrms.auth.server.dao.QualificationDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsRequest;
-import com.cotodel.hrms.auth.server.dto.ExperienceRequest;
-import com.cotodel.hrms.auth.server.dto.QualificationRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeDetailsEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeFamilyDetailEntity;
-import com.cotodel.hrms.auth.server.model.ExperienceEntity;
-import com.cotodel.hrms.auth.server.model.QualificationEntity;
 import com.cotodel.hrms.auth.server.service.EmployeeDetailsService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -32,15 +26,7 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 	@Autowired
 	EmployeeFamilyDetailsDao  employeeFamilyDetailsDao;
 	
-	@Autowired
-	QualificationDao  qualificationDao;
-	
-	@Autowired
-	ExperienceDao  experienceDao;
-	
-	
-	
-	
+		
 	@Override
 	public EmployeeDetailsRequest saveEmpDetails(EmployeeDetailsRequest request) {
 		
@@ -99,60 +85,60 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService{
 		return employeeFamilyDetailsDao.getEmployeeDetails(empid);
 	}
 
-	@Override
-	public QualificationRequest saveQualification(QualificationRequest request) {
-		String response="";
-		try {
-			response=MessageConstant.RESPONSE_FAILED;
-			request.setResponse(response);		
-			QualificationEntity employee=new QualificationEntity();
-			CopyUtility.copyProperties(request,employee);
-			if(request.getDocfile()!=null)
-				employee.setDocfile(Base64.getDecoder().decode(request.getDocfile()));
-			employee=qualificationDao.saveDetails(employee);
-			response=MessageConstant.RESPONSE_SUCCESS;
-			request.setResponse(response);
-		} catch (Exception e) {
-			response=MessageConstant.RESPONSE_FAILED;
-			request.setResponse(response);
-		}
+//	@Override
+//	public QualificationRequest saveQualification(QualificationRequest request) {
+//		String response="";
+//		try {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			request.setResponse(response);		
+//			QualificationEntity employee=new QualificationEntity();
+//			CopyUtility.copyProperties(request,employee);
+//			if(request.getDocfile()!=null)
+//				employee.setDocfile(Base64.getDecoder().decode(request.getDocfile()));
+//			employee=qualificationDao.saveDetails(employee);
+//			response=MessageConstant.RESPONSE_SUCCESS;
+//			request.setResponse(response);
+//		} catch (Exception e) {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			request.setResponse(response);
+//		}
+//
+//		return request;
+//
+//	}
+//
+//	@Override
+//	public List<QualificationEntity> getQualificationList(Long empid,Long employerid) {
+//		
+//		return qualificationDao.getQualification(empid,employerid);
+//	}
 
-		return request;
+//	@Override
+//	public ExperienceRequest saveExperience(ExperienceRequest request) {
+//		String response="";
+//		try {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			request.setResponse(response);		
+//			ExperienceEntity employee=new ExperienceEntity();
+//			CopyUtility.copyProperties(request,employee);
+//			if(request.getDocfile()!=null)
+//				employee.setDocfile(Base64.getDecoder().decode(request.getDocfile()));
+//			employee=experienceDao.saveDetails(employee);
+//			response=MessageConstant.RESPONSE_SUCCESS;
+//			request.setResponse(response);
+//		} catch (Exception e) {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			request.setResponse(response);
+//		}
+//
+//		return request;		
+//	}
 
-	}
-
-	@Override
-	public List<QualificationEntity> getQualificationList(Long empid,Long employerid) {
-		
-		return qualificationDao.getQualification(empid,employerid);
-	}
-
-	@Override
-	public ExperienceRequest saveExperience(ExperienceRequest request) {
-		String response="";
-		try {
-			response=MessageConstant.RESPONSE_FAILED;
-			request.setResponse(response);		
-			ExperienceEntity employee=new ExperienceEntity();
-			CopyUtility.copyProperties(request,employee);
-			if(request.getDocfile()!=null)
-				employee.setDocfile(Base64.getDecoder().decode(request.getDocfile()));
-			employee=experienceDao.saveDetails(employee);
-			response=MessageConstant.RESPONSE_SUCCESS;
-			request.setResponse(response);
-		} catch (Exception e) {
-			response=MessageConstant.RESPONSE_FAILED;
-			request.setResponse(response);
-		}
-
-		return request;		
-	}
-
-	@Override
-	public List<ExperienceEntity> getExperienceList(Long empid) {
-		// TODO Auto-generated method stub
-		return experienceDao.getExperience(empid);
-	}
+//	@Override
+//	public List<ExperienceEntity> getExperienceList(Long empid) {
+//		// TODO Auto-generated method stub
+//		return experienceDao.getExperience(empid);
+//	}
 
 //	@Override
 //	public CertificateRequest saveCertificate(CertificateRequest request) {

@@ -20,17 +20,9 @@ import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeFamilyDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeFamilyGetDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeGetDetailsResponse;
-import com.cotodel.hrms.auth.server.dto.ExperienceGetResponse;
-import com.cotodel.hrms.auth.server.dto.ExperienceRequest;
-import com.cotodel.hrms.auth.server.dto.ExperienceResponse;
-import com.cotodel.hrms.auth.server.dto.QualificationGetResponse;
-import com.cotodel.hrms.auth.server.dto.QualificationRequest;
-import com.cotodel.hrms.auth.server.dto.QualificationResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.EmployeeDetailsEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeFamilyDetailEntity;
-import com.cotodel.hrms.auth.server.model.ExperienceEntity;
-import com.cotodel.hrms.auth.server.model.QualificationEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.EmployeeDetailsService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -187,140 +179,140 @@ public class EmployeeDetailsController {
 	        return ResponseEntity.ok(new EmployeeFamilyGetDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/add/saveQualification",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> saveQualification(HttpServletRequest request,@Valid @RequestBody QualificationRequest qualificationRequest) {
-	    logger.info("inside saveQualification...+++");	    	
-	    
-	    	String message = "";
-	    	QualificationRequest response=null;
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				response=employeeDetailsService.saveQualification(qualificationRequest);
-				
-	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new QualificationResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new QualificationResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
-	    	}catch (Exception e) {				
-	    		//e.printStackTrace();
-	    		logger.error("error in saveQualification====="+e);
-	    		//message=e.getMessage();
-			}
-	        
-	        return ResponseEntity.ok(new QualificationResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/add/saveQualification",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+//	    public ResponseEntity<Object> saveQualification(HttpServletRequest request,@Valid @RequestBody QualificationRequest qualificationRequest) {
+//	    logger.info("inside saveQualification...+++");	    	
+//	    
+//	    	String message = "";
+//	    	QualificationRequest response=null;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				response=employeeDetailsService.saveQualification(qualificationRequest);
+//				
+//	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+//	    			return ResponseEntity.ok(new QualificationResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new QualificationResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		//e.printStackTrace();
+//	    		logger.error("error in saveQualification====="+e);
+//	    		//message=e.getMessage();
+//			}
+//	        
+//	        return ResponseEntity.ok(new QualificationResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//	    }
 	
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/getQualification",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getQualification(HttpServletRequest request,@Valid @RequestBody QualificationRequest qualificationRequest) {
-	    logger.info("inside getQualification.....+++");	    	
-	    	
-	    
-	    	String message = "";
-	    	List<QualificationEntity> response=null;
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				response=employeeDetailsService.getQualificationList(qualificationRequest.getEmployeeId(),qualificationRequest.getEmployerId());
-	    		if(response!=null && response.size()>0) {
-	    			return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
-	    	}catch (Exception e) {				
-	    		//e.printStackTrace();
-	    		logger.error("error in getQualification====="+e);
-	    		//message=e.getMessage();
-			}
-	        
-	        return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    }
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/add/saveExperience",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> saveExperience(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
-	    logger.info("inside saveExperience...+++");	    	
-	    
-	    	String message = "";
-	    	ExperienceRequest response=null;
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				response=employeeDetailsService.saveExperience(experienceRequest);
-				
-	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new ExperienceResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new ExperienceResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
-	    	}catch (Exception e) {				
-	    		//e.printStackTrace();
-	    		logger.error("error in saveExperience====="+e);
-	    		//message=e.getMessage();
-			}
-	        
-	        return ResponseEntity.ok(new ExperienceResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    }
-	
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/getExperience",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getExperience(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
-	    logger.info("inside getExperience.....+++");	    	
-	    	
-	    
-	    	String message = "";
-	    	List<ExperienceEntity> response=null;
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				response=employeeDetailsService.getExperienceList(experienceRequest.getEmployeeId());
-	    		if(response!=null && response.size()>0) {
-	    			return ResponseEntity.ok(new ExperienceGetResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new ExperienceGetResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
-	    	}catch (Exception e) {				
-	    		//e.printStackTrace();
-	    		logger.error("error in getExperience====="+e);
-	    		//message=e.getMessage();
-			}
-	        
-	        return ResponseEntity.ok(new ExperienceGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/get/getQualification",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+//	    public ResponseEntity<Object> getQualification(HttpServletRequest request,@Valid @RequestBody QualificationRequest qualificationRequest) {
+//	    logger.info("inside getQualification.....+++");	    	
+//	    	
+//	    
+//	    	String message = "";
+//	    	List<QualificationEntity> response=null;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				response=employeeDetailsService.getQualificationList(qualificationRequest.getEmployeeId(),qualificationRequest.getEmployerId());
+//	    		if(response!=null && response.size()>0) {
+//	    			return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		//e.printStackTrace();
+//	    		logger.error("error in getQualification====="+e);
+//	    		//message=e.getMessage();
+//			}
+//	        
+//	        return ResponseEntity.ok(new QualificationGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/add/saveExperience",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+//	    public ResponseEntity<Object> saveExperience(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
+//	    logger.info("inside saveExperience...+++");	    	
+//	    
+//	    	String message = "";
+//	    	ExperienceRequest response=null;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				response=employeeDetailsService.saveExperience(experienceRequest);
+//				
+//	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+//	    			return ResponseEntity.ok(new ExperienceResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new ExperienceResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		//e.printStackTrace();
+//	    		logger.error("error in saveExperience====="+e);
+//	    		//message=e.getMessage();
+//			}
+//	        
+//	        return ResponseEntity.ok(new ExperienceResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//	    }
+//	
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/get/getExperience",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+//	    public ResponseEntity<Object> getExperience(HttpServletRequest request,@Valid @RequestBody ExperienceRequest experienceRequest) {
+//	    logger.info("inside getExperience.....+++");	    	
+//	    	
+//	    
+//	    	String message = "";
+//	    	List<ExperienceEntity> response=null;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				response=employeeDetailsService.getExperienceList(experienceRequest.getEmployeeId());
+//	    		if(response!=null && response.size()>0) {
+//	    			return ResponseEntity.ok(new ExperienceGetResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new ExperienceGetResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		//e.printStackTrace();
+//	    		logger.error("error in getExperience====="+e);
+//	    		//message=e.getMessage();
+//			}
+//	        
+//	        return ResponseEntity.ok(new ExperienceGetResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//	    }
 //	 @Operation(summary = "This API will provide the Save User Details ", security = {
 //	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 //	    @ApiResponses(value = {
