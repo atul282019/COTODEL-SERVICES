@@ -16,5 +16,10 @@ public class ErupiVoucherTxnRequest {
 	private Long accountId;	
 	private Long orgIdPk;
 	private String response;
+	
 
 }
+
+
+
+
