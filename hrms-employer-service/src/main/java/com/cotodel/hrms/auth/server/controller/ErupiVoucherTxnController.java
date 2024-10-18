@@ -64,7 +64,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    			return ResponseEntity.ok(new ErupiVoucherTxnResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		logger.error("error in erupiVoucherInitiateDetails====="+e);
+	    		logger.error("error in erupiVoucherTxn====="+e);
 			}
 	        
 	        return ResponseEntity.ok(new ErupiVoucherTxnResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
