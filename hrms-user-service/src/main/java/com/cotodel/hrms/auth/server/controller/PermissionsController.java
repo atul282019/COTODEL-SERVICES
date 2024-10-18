@@ -51,7 +51,7 @@ public class PermissionsController {
 	    @RequestMapping(value = "/get/Permissions",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveUserDetails(@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside get Roles");
+	    	logger.info("inside get Roles+++");
 	    	List<PermissionsMaster> permissionsMasters=null;
 	    	try {
 	    		

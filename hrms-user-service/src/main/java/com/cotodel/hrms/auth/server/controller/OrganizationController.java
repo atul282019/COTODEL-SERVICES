@@ -47,7 +47,7 @@ public class OrganizationController {
 	    @RequestMapping(value = "/get/Organization",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> getOrganizationList() {
-	    	logger.info("inside get Organization");
+	    	logger.info("inside get Organization+++");
 	    	List<OrganizationMaster> organizationMasters=null;
 	    	try {
 	    		

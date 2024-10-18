@@ -49,7 +49,7 @@ public class WaitingListController {
     @RequestMapping(value = "/add/saveWaitingListUsers",produces = {"application/json"}, 
     consumes = {"application/json","application/text"},method = RequestMethod.POST)
     public ResponseEntity<Object> saveWaitingListUsers(HttpServletRequest request,@Valid @RequestBody UserWaitingListEntity userWaitingListEntity) {
-    	logger.info("inside get saveWaitingListUsers");
+    	logger.info("inside get saveWaitingListUsers+++");
     	UserWaitingListEntity userEntity=null;
     	String authToken = "";
     	String message=MessageConstant.RESPONSE_FAILED;

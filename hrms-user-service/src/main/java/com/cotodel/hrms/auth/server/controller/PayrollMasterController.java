@@ -43,7 +43,7 @@ public class PayrollMasterController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/payroll-list",produces = {"application/json"}, consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getState() {
-	    	logger.info("inside get state-list");
+	    	logger.info("inside get state-list+++");
 	    	List<PayrollMasterEntity>  payrollMasterServices=null;
 	    	try {
 	    		payrollMasterServices=payrollMasterService.getByPayrollMasterList();

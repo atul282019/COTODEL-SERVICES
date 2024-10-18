@@ -50,7 +50,7 @@ public class BulkInviteController {
 	    @RequestMapping(value = "/get/sendBulkEmail",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> sendBulkEmail(HttpServletRequest request,@Valid @RequestBody BulkInviteRequest bulkInviteRequest) {
-	    	logger.info("inside get sendBulkEmail");
+	    	logger.info("inside get sendBulkEmail+++");
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
