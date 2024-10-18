@@ -46,7 +46,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> erupiVoucherTxn(HttpServletRequest request,@Valid @RequestBody ErupiVoucherTxnRequest erupiVoucherTxnRequest) {
 		 
-	    logger.info("inside erupiVoucherTxn....");	    	
+	    logger.info("inside erupiVoucherTxn.... ");	    	
 	    	
 	    
 	    	String message = "";
