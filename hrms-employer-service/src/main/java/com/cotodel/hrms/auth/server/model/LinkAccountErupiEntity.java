@@ -110,4 +110,16 @@ public class LinkAccountErupiEntity implements Serializable{
 	private Long accstatus;//Flag value 1 for Active and 0 for inactive Default is null
 	//Remarks:big int default value value is 0
 	
+	@Column(name="tid", length=99)
+	private String tid;
+	
+	@Column(name="mid", length=99)
+	private String mid;	
+	
+	@Column(name="extra1", length=99)
+	private String extra1;
+	
+	
+	
+	
 }
