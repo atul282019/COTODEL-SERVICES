@@ -59,7 +59,7 @@ public class VoucherTypeMasterEntity implements Serializable{
 	@Column(name="createdby", length=99)
 	private String createdby;
 	
-	@Column(name="status", length=99)
+	@Column(name="status")
 	private Long status;//Flag value for active/inactive
 		
 	

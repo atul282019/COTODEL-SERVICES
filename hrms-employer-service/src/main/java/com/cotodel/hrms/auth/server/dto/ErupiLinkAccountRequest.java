@@ -43,5 +43,9 @@ public class ErupiLinkAccountRequest {
 	private String mobile;	
 	private Long accstatus;//Flag value 1 for Active and 0 for inactive Default is null
 	//Remarks:big int default value value is 0
+	private String tid;	
+	private String mid;		
+	private String extra1;
+	
 	private String response;
 }
