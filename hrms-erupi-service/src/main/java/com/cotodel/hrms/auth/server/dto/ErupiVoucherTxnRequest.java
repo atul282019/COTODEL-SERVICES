@@ -18,3 +18,7 @@ public class ErupiVoucherTxnRequest {
 	private String response;
 
 }
+
+
+
+
