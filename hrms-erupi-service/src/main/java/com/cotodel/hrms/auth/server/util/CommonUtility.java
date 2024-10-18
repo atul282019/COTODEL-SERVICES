@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
@@ -74,32 +75,35 @@ public class CommonUtility {
 	}
 
 	public static String userRequestForCreateVoucher(String sAccessToken,String mid,String requestJson,String url){
-		String returnStr=null;
-		RestTemplate restTemplate = new RestTemplate();
+		String response="";
 		HttpHeaders headers = new HttpHeaders();
-		try{
-			logger.info(" Request Json for url"+url+"---"+requestJson);
+        
+        logger.info("Request JSON for URL: " + url + " --- " + requestJson);
 
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			
-			if(sAccessToken!=null && !sAccessToken.isEmpty()) {
-				headers.setBearerAuth(sAccessToken);
-			}
-			headers.set("MID", mid);
-			HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
-
-			returnStr = restTemplate.postForObject(url, entity, String.class);
-			logger.info(" response Json---"+returnStr);
-			return returnStr;
-		}catch(HttpStatusCodeException e) {
-			logger.error("HttpStatusCodeException error in---"+url+"-"+e.getResponseBodyAsString());
-			return e.getResponseBodyAsString();
-		}catch(Exception e){
-			logger.error(" error in---"+url+"-"+e);
-			return null;
-		}finally {
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        
+        if (sAccessToken != null && !sAccessToken.isEmpty()) {
+            headers.setBearerAuth(sAccessToken);
+        }
+        
+        headers.set("MID", mid);
+        
+        HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
+        
+        RestTemplate restTemplate = new RestTemplate();
+        
+        try {
+        	response = restTemplate.postForObject(url, entity, String.class);
+            logger.info("Response: " + response);
+            return response;
+        } catch (HttpClientErrorException e) {
+            logger.error("Error Response: " + e.getResponseBodyAsString());
+            logger.error("Status Code: " + e.getStatusCode());
+            response=e.getMessage();
+        }finally {
 			restTemplate=null;headers=null;sAccessToken=null;requestJson=null;url=null;	
 		}		
+        return response;
 	}
 	
 }

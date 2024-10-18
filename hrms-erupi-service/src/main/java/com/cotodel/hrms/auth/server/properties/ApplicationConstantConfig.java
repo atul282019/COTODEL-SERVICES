@@ -14,5 +14,14 @@ public class ApplicationConstantConfig {
 	
 	@Value("${auth.token.get.url}")
 	public String getTokenUrl;	
+	
+	@Value("${erupi.create.vouchers.url}")
+	public String getCreateVouchersUrl;
+	
+	@Value("${erupi.create.vouchers.apikey}")
+	public String getCreateVouchersToken;
+	
+	@Value("${erupi.create.vouchers.mid}")
+	public String getCreateVouchersMid;
 		
 }

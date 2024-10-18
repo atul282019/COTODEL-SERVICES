@@ -84,13 +84,13 @@ private static final Logger logger = LoggerFactory.getLogger(ErupiVoucherTxnCont
 						//SetDatabaseTenent.setDataSource(companyId);
 						logger.info("Hi");
 			    		
-						erupiVoucherTxnService.saveErupiVoucherTxnDetails(erupiVoucherCreateRequest);
+						message=erupiVoucherTxnService.saveErupiVoucherTxnDetails(erupiVoucherCreateRequest);
 
 			    	}catch (Exception e) {				
 			    		logger.error("error in erupiVoucherInitiateDetails====="+e);
 					}
 			        
-			        return ResponseEntity.ok(MessageConstant.TRUE);	        
+			        return ResponseEntity.ok(message);	        
 			    }
 
 }
