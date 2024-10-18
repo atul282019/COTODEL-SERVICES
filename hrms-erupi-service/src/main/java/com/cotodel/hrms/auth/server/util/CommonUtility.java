@@ -73,6 +73,33 @@ public class CommonUtility {
 		}		
 	}
 
-	
+	public static String userRequestForCreateVoucher(String sAccessToken,String mid,String requestJson,String url){
+		String returnStr=null;
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		try{
+			logger.info(" Request Json for url"+url+"---"+requestJson);
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			
+			if(sAccessToken!=null && !sAccessToken.isEmpty()) {
+				headers.setBearerAuth(sAccessToken);
+			}
+			headers.set("MID", mid);
+			HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
+
+			returnStr = restTemplate.postForObject(url, entity, String.class);
+			logger.info(" response Json---"+returnStr);
+			return returnStr;
+		}catch(HttpStatusCodeException e) {
+			logger.error("HttpStatusCodeException error in---"+url+"-"+e.getResponseBodyAsString());
+			return e.getResponseBodyAsString();
+		}catch(Exception e){
+			logger.error(" error in---"+url+"-"+e);
+			return null;
+		}finally {
+			restTemplate=null;headers=null;sAccessToken=null;requestJson=null;url=null;	
+		}		
+	}
 	
 }
