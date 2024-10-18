@@ -68,7 +68,7 @@ public class MobileEmailVerifyController {
 	    @RequestMapping(value = "/getOtp",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> sendOtp(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside  getOtp......");
+	    	logger.info("inside  getOtp......+++");
 	    	List<RoleMaster> roleMaster=null;
 	    	String response="";
 	    	UserEntity userEntity=null;
@@ -126,7 +126,7 @@ public class MobileEmailVerifyController {
 	    @RequestMapping(value = "/verifyOtp",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> verifyOtp(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside token verifyOtp");
+	    	logger.info("inside token verifyOtp+++");
 	    	List<RoleMaster> roleMaster=null;
 	    	String response="";
 	    	UserEntity userEntity=null;
@@ -228,7 +228,7 @@ public class MobileEmailVerifyController {
 	    @RequestMapping(value = "/verifyLink",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> verifyLinkFromEmail(@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside verifyLink..");
+	    	logger.info("inside verifyLink..+++");
 	    	List<RoleMaster> roleMaster=null;
 	    	String response="";
 	    	UserEntity userDetails= null;
@@ -267,7 +267,7 @@ public class MobileEmailVerifyController {
 	    @RequestMapping(value = "/getOtpNew",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> getOtpNew(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside  getOtpNew......");
+	    	logger.info("inside  getOtpNew......+++");
 	    	//List<RoleMaster> roleMaster=null;
 	    	String response="";
 	    	UserEntity userEntity=null;
@@ -327,7 +327,7 @@ public class MobileEmailVerifyController {
 	    @RequestMapping(value = "/verifyOtpNew",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> verifyOtpNew(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside token verifyOtp");
+	    	logger.info("inside token verifyOtp+++");
 	    	String response="";
 	    	String message="";
 	    	UserEntity userEntity=null;
@@ -390,7 +390,7 @@ public class MobileEmailVerifyController {
 	    @RequestMapping(value = "/getOtpResend",produces = {"application/json"}, consumes = {"application/json","application/text"},
 	    method = RequestMethod.POST)
 	    public ResponseEntity<Object> getOtpResend(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside  getOtpNew......");
+	    	logger.info("inside  getOtpNew......+++");
 	    	//List<RoleMaster> roleMaster=null;
 	    	String response="";
 	    	UserEntity userEntity=null;

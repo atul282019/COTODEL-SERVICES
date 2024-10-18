@@ -56,7 +56,7 @@ public class UserSignUpController {
 	    @RequestMapping(value = "/get/saveUserDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveUserDetails(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside get saveUserDetails");
+	    	logger.info("inside get saveUserDetails+++");
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
@@ -133,7 +133,7 @@ public class UserSignUpController {
 	    @RequestMapping(value = "/add/saveUsers",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveUsers(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside get saveUserDetails");
+	    	logger.info("inside get saveUserDetails+++");
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
@@ -179,7 +179,7 @@ public class UserSignUpController {
 	    @RequestMapping(value = "/get/userList",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> userList(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
-	    	logger.info("inside get saveUserDetails");
+	    	logger.info("inside get saveUserDetails+++");
 	    	List<UserDto>  list=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
