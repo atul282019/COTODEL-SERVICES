@@ -1,0 +1,84 @@
+package com.cotodel.hrms.auth.server.util;
+
+import java.io.FileInputStream;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+public class EncryptionUtil {
+	 static {
+	        Security.addProvider(new BouncyCastleProvider());
+	    }
+
+	    public static String encryptSessionKey(String sessionKey, PublicKey publicKey) throws Exception {
+	        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+	        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+	        byte[] encryptedKey = cipher.doFinal(sessionKey.getBytes());
+	        return Base64.getEncoder().encodeToString(encryptedKey);
+	    }
+
+	    public static String encryptData(String data, String sessionKey, byte[] iv) throws Exception {
+	        SecretKey secretKey = new SecretKeySpec(sessionKey.getBytes(), "AES");
+	        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	        cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
+	        byte[] encryptedData = cipher.doFinal(data.getBytes());
+	        return Base64.getEncoder().encodeToString(encryptedData);
+	    }
+
+	    public static String generateSessionKey(int length) {
+	        SecureRandom secureRandom = new SecureRandom();
+	        byte[] randomBytes = new byte[length];
+	        secureRandom.nextBytes(randomBytes);
+	        return Base64.getEncoder().encodeToString(randomBytes);
+	    }
+
+//	    public static PublicKey getPublicKey(String key) throws Exception {
+//	        byte[] byteKey = Base64.getDecoder().decode(key);
+//	        X509EncodedKeySpec spec = new X509EncodedKeySpec(byteKey);
+//	        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+//	        return keyFactory.generatePublic(spec);
+//	    }
+	    public static PublicKey getPublicKeyFromCer(String cerFilePath) throws Exception {
+	        FileInputStream fis = new FileInputStream(cerFilePath);
+	        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+	        X509Certificate certificate = (X509Certificate) cf.generateCertificate(fis);
+	        return certificate.getPublicKey();
+	    }
+
+	    public static PrivateKey getPrivateKey(String keyPath) throws Exception {
+	        try (FileInputStream fis = new FileInputStream(keyPath)) {
+	            byte[] keyBytes = fis.readAllBytes();
+	            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+	            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+	            return keyFactory.generatePrivate(spec);
+	        }
+	    }
+
+	    public static String decryptSessionKey(String encryptedKey, PrivateKey privateKey) throws Exception {
+	        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+	        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+	        byte[] decryptedKey = cipher.doFinal(Base64.getDecoder().decode(encryptedKey));
+	        return new String(decryptedKey);
+	    }
+
+	    public static String decryptData(String encryptedData, String sessionKey, byte[] iv) throws Exception {
+	        SecretKey secretKey = new SecretKeySpec(sessionKey.getBytes(), "AES");
+	        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	        cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+	        byte[] decryptedData = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
+	        return new String(decryptedData);
+	    }
+}
