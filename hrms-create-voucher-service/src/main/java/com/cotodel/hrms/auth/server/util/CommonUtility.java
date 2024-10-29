@@ -306,7 +306,8 @@ public class CommonUtility {
 		request.put("iv", req.getIv());
 		request.put("encryptedData", req.getEncryptedData());
 		request.put("oaepHashingAlgorithm", req.getOaepHashingAlgorithm());
-		request.put("clientInfo", req.getClientInfo());
+		request.put("clientInfo", "");
+		request.put("optionalParam", "");
 		
 		return request.toString();
 	}
