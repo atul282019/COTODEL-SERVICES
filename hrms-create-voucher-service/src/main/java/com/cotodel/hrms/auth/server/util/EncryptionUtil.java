@@ -1,6 +1,8 @@
 package com.cotodel.hrms.auth.server.util;
 
 import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -59,18 +61,33 @@ public class EncryptionUtil {
 	    }
 
 	    public static PrivateKey getPrivateKey(String keyPath) throws Exception {
-	        try (FileInputStream fis = new FileInputStream(keyPath)) {
-	            byte[] keyBytes = fis.readAllBytes();
-	            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-	            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-	            return keyFactory.generatePrivate(spec);
-	        }
+//	        try (FileInputStream fis = new FileInputStream(keyPath)) {
+//	            byte[] keyBytes = fis.readAllBytes();
+//	            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+//	            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+//	            return keyFactory.generatePrivate(spec);
+//	        }
+	    	String privateKeyPEM = new String(Files.readAllBytes(Paths.get(keyPath)));
+
+	        // Remove the first and last lines
+	    	privateKeyPEM = privateKeyPEM.replace("-----BEGIN RSA PRIVATE KEY-----\r\n", "");
+	        privateKeyPEM = privateKeyPEM.replace("-----END RSA PRIVATE KEY-----", "");
+	        privateKeyPEM = privateKeyPEM.replaceAll("\\s", "");
+
+	        // Decode the base64 encoded string
+	        byte[] keyBytes = Base64.getDecoder().decode(privateKeyPEM);
+
+	        // Generate the private key
+	        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+	        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+	        return keyFactory.generatePrivate(spec);
 	    }
 
 	    public static String decryptSessionKey(String encryptedKey, PrivateKey privateKey) throws Exception {
 	        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 	        cipher.init(Cipher.DECRYPT_MODE, privateKey);
 	        byte[] decryptedKey = cipher.doFinal(Base64.getDecoder().decode(encryptedKey));
+	        
 	        return new String(decryptedKey);
 	    }
 

@@ -59,8 +59,11 @@ public class ApplicationConstantConfig {
 //	@Value("${otp.less.sender.client.enable}")
 //	public String otpLessSenderClientEnable;
 	
-	@Value("${erupi.signature.keystore.path}")
-	public String getSignaturePath;
+	@Value("${erupi.signature.keystore.public.path}")
+	public String getSignaturePublicPath;
+	
+	@Value("${erupi.signature.keystore.private.path}")
+	public String getSignaturePrivatePath;
 	
 	@Value("${erupi.signature.keystore.password}")
 	public String getSignaturePassword;

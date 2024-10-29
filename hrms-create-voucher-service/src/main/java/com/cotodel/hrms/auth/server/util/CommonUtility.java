@@ -1,8 +1,14 @@
 package com.cotodel.hrms.auth.server.util;
 
+import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.util.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +23,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.cotodel.hrms.auth.server.dto.EncryptedRequest;
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -185,18 +190,22 @@ public class CommonUtility {
 //    }
 	
 
-	public static  String userRequestForCreateVoucher(String sAccessToken,String mid,String requestJson,String url,String filepath) throws Exception{
+	public static  String userRequestForCreateVoucher(String sAccessToken,String mid,String requestJson,String url,String filepath,String privateFilepath) throws Exception{
 		String response="";
 		
 		String sessionKey = EncryptionUtil.generateSessionKey(16);
 		
 		PublicKey publicKey = EncryptionUtil.getPublicKeyFromCer(filepath);
 		
+		logger.info("sessionKey...."+sessionKey);
+		
 		//CommonUtility(publicKey);
 		
 		String encryptedKey = EncryptionUtil.encryptSessionKey(sessionKey, publicKey);
 		logger.info("sAccessToken...."+sAccessToken);
 		logger.info("requestJson...."+requestJson);
+		logger.info("publicKey...."+publicKey);
+		
 		// Step 3: Generate a random IV for AES encryption
         byte[] iv = new byte[16]; // AES block size
         new SecureRandom().nextBytes(iv); // Generate a random IV
@@ -224,7 +233,8 @@ public class CommonUtility {
         
         headers.set("apikey", sAccessToken);
         
-        logger.info("Response: " + response);
+        logger.info("headers: " + headers);
+        logger.info("ecripotDatajson: " + ecripotDatajson);
         
         HttpEntity<String> requestEntity = new HttpEntity<>(ecripotDatajson, headers);
         
@@ -234,6 +244,9 @@ public class CommonUtility {
         try {
         	
         	response = restTemplate.postForObject(url, requestEntity, String.class);
+        	
+        //	String result=decryptRequest(encryptedKey, response, privateFilepath);
+        //	logger.info("result: " + result);
             logger.info("Response: " + response);
             return response;
         } catch (HttpClientErrorException e) {
@@ -255,6 +268,36 @@ public class CommonUtility {
 		}		
         return response;
 	}
+	
+	
+	 private static final String RSA = "RSA/ECB/PKCS1Padding";
+	    private static final String AES = "AES/CBC/PKCS5Padding";
+	    private static final int IV_SIZE = 16;
+	public static String decryptRequest(String encryptedKey, String encryptedData, String filepath) throws Exception {
+		
+		PrivateKey privateKey = EncryptionUtil.getPrivateKey(filepath);
+		
+		// Step 1: Decrypt the session key using RSA
+        Cipher rsaCipher = Cipher.getInstance(RSA);
+        rsaCipher.init(Cipher.DECRYPT_MODE, privateKey);
+        byte[] sessionKeyBytes = rsaCipher.doFinal(Base64.getDecoder().decode(encryptedKey));
+        SecretKeySpec sessionKey = new SecretKeySpec(sessionKeyBytes, "AES");
+
+        // Step 2: Extract IV and encrypted response
+        byte[] combined = Base64.getDecoder().decode(encryptedData);
+        byte[] iv = new byte[IV_SIZE];
+        System.arraycopy(combined, 0, iv, 0, iv.length);
+        byte[] encryptedResponse = new byte[combined.length - iv.length];
+        System.arraycopy(combined, iv.length, encryptedResponse, 0, encryptedResponse.length);
+
+        // Step 3: Decrypt the response using AES
+        IvParameterSpec ivParams = new IvParameterSpec(iv);
+        Cipher aesCipher = Cipher.getInstance(AES);
+        aesCipher.init(Cipher.DECRYPT_MODE, sessionKey, ivParams);
+        byte[] decryptedResponse = aesCipher.doFinal(encryptedResponse);
+
+        return new String(decryptedResponse, StandardCharsets.UTF_8);
+    }
 	public static String encriptRequest(EncryptedRequest req) {
 		JSONObject request= new JSONObject();				
 		request.put("requestId", req.getRequestId());

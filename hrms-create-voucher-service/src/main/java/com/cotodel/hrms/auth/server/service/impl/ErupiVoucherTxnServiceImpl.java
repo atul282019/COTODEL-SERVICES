@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.security.PrivateKey;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherTxnService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
+import com.cotodel.hrms.auth.server.util.EncryptionUtil;
 import com.google.gson.Gson;
 
 @Repository
@@ -28,7 +31,9 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 		String message="";
 		CallApiVoucherCreateResponse callApiVoucherCreateResponse=null;
 		try {
-			message=CommonUtility.userRequestForCreateVoucher(applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getCreateVouchersMid,createVoucherRequest(request), applicationConstantConfig.getCreateVouchersUrl,applicationConstantConfig.getSignaturePath);
+			//PrivateKey privateq=EncryptionUtil.getPrivateKey(applicationConstantConfig.getSignaturePrivatePath);
+			//System.out.println(privateq);
+			message=CommonUtility.userRequestForCreateVoucher(applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getCreateVouchersMid,createVoucherRequest(request), applicationConstantConfig.getCreateVouchersUrl,applicationConstantConfig.getSignaturePublicPath,applicationConstantConfig.getSignaturePrivatePath);
 			callApiVoucherCreateResponse=message==""?null:jsonToPOJO(message);
 		} catch (Exception e) {
 			logger.error("error Exception ...."+e.getMessage());
