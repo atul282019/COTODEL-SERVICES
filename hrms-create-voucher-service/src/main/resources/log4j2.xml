@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN" monitorInterval="30">
-	<Properties>
-		<Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n</Property>
-		<Property name="APP_INFO_LOG_ROOT">/opt/hrms/logs</Property>
-	</Properties>
-	<Appenders>
-		<Console name="Console" target="SYSTEM_OUT" follow="true">
-			<PatternLayout pattern="${LOG_PATTERN}" />
-		</Console>
-		<RollingFile name="ManageWebInfo" fileName="${APP_INFO_LOG_ROOT}/hrms-auth-services.log"
-			filePattern="${APP_LOG_ROOT}/hrms-auth-services-%d{yyyy-MM-dd}-%i.log">
-			<PatternLayout pattern="${LOG_PATTERN}" />
-			<Policies>
-				<SizeBasedTriggeringPolicy size="19500KB" />
-			</Policies>
-			<DefaultRolloverStrategy max="1" />
-		</RollingFile>
-	</Appenders>
-	<Loggers>
-		<Logger name="com.cotodel.hrms" additivity="false">
-			<AppenderRef ref="ManageWebInfo" />
-			<AppenderRef ref="Console" />
-		</Logger>
-
-		<Root level="info">
-			<AppenderRef ref="Console" />
-		</Root>
-	</Loggers>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="logFile">${sys:logging.file.name}</Property>
+    </Properties>
+    
+    <Appenders>
+        <RollingFile name="RollingFile" fileName="${logFile}"
+                     filePattern="${logFile}-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
 </Configuration>
