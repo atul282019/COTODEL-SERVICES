@@ -217,6 +217,7 @@ public class CommonUtility {
         String encryptedData = EncryptionUtil.encryptData(requestJson, sessionKey, iv);
         
         String requestId = UUID.randomUUID().toString();
+        logger.info("requestId...."+requestId);
         // Step 5: Prepare the complete request
         EncryptedRequest encryptedRequest = new EncryptedRequest();
         encryptedRequest.setRequestId(requestId);
