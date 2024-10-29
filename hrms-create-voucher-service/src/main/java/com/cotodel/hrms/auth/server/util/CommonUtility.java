@@ -5,6 +5,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.UUID;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -215,10 +216,10 @@ public class CommonUtility {
        // String requestData = objectMapper.writeValueAsString(accountRequest); // Convert request to JSON
         String encryptedData = EncryptionUtil.encryptData(requestJson, sessionKey, iv);
         
-        
+        String requestId = UUID.randomUUID().toString();
         // Step 5: Prepare the complete request
         EncryptedRequest encryptedRequest = new EncryptedRequest();
-        encryptedRequest.setRequestId("555");
+        encryptedRequest.setRequestId(requestId);
         encryptedRequest.setService("AccountCreation");
         encryptedRequest.setEncryptedKey(encryptedKey);
         encryptedRequest.setIv(Base64.getEncoder().encodeToString(iv)); // Encode IV to Base64
