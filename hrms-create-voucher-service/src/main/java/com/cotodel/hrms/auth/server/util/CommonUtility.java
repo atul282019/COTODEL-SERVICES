@@ -237,6 +237,7 @@ public class CommonUtility {
         headers.set("apikey", sAccessToken);
         
         logger.info("headers: " + headers);
+        logger.info("url: " + url);
         logger.info("ecripotDatajson: " + ecripotDatajson);
         
         HttpEntity<String> requestEntity = new HttpEntity<>(ecripotDatajson, headers);
@@ -309,8 +310,8 @@ public class CommonUtility {
 		request.put("iv", req.getIv());
 		request.put("encryptedData", req.getEncryptedData());
 		request.put("oaepHashingAlgorithm", req.getOaepHashingAlgorithm());
-		request.put("clientInfo", "");
-		request.put("optionalParam", "");
+		request.put("clientInfo",req.getClientInfo());
+		request.put("optionalParam", req.getOptionalParam());
 		
 		return request.toString();
 	}

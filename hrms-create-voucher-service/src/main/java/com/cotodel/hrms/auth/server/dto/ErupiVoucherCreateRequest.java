@@ -18,10 +18,9 @@ public class ErupiVoucherCreateRequest {
 	private String amount;
 	private String expiry;
 	private String purposeCode;
-	private String mcc;
-	private String VoucherRedemptionType;
-	private String PayerVA;
+	private String mcc;	
 	private String type;
-
+	private String voucherRedemptionType;
+	private String payerVA;
 	
 }
