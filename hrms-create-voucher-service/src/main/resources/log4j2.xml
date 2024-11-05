@@ -6,7 +6,7 @@
     
     <Appenders>
         <RollingFile name="RollingFile" fileName="${logFile}"
-                     filePattern="${logFile}-%d{yyyy-MM-dd}-%i.log">
+                     filePattern="${logFile}-%d{yyyy-MM-dd}.log">
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n</Pattern>
             </PatternLayout>
@@ -14,6 +14,7 @@
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
                 <SizeBasedTriggeringPolicy size="10MB"/>
             </Policies>
+            <DefaultRolloverStrategy max="30"/>
         </RollingFile>
     </Appenders>
     
