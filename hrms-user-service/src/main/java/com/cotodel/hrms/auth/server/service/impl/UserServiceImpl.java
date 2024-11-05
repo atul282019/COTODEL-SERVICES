@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setStatus(UserEntity1.getStatus());
 		
 		userEmpEntity.setCreated_date(localDate);
-		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
 		
 		return UserEntity1;
@@ -317,7 +317,7 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setStatus(UserEntity1.getStatus());
 		
 		userEmpEntity.setCreated_date(localDate);
-		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
 		return UserEntity1;
 
@@ -346,7 +346,7 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setCreated_date(localDate);
 		userEmpEntity.setUpdated_date(localDate);
 		userEmpEntity.setUpdated_by(""+UserEntity1.getEmployerid());
-		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		return UserEntity1;
 	}
 
@@ -380,7 +380,7 @@ public class UserServiceImpl implements UserService {
 			userEmpEntity.setStatus(UserEntity1.getStatus());
 			
 			userEmpEntity.setCreated_date(localDate);
-			userDetailsDao.saveUserEmpEntity(userEmpEntity);
+			//userDetailsDao.saveUserEmpEntity(userEmpEntity);
 			if(user.isEmailStatus()) {
 				CommonUtility.sendEmail(user);
 			}
@@ -408,7 +408,7 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setStatus(UserEntity1.getStatus());
 		
 		userEmpEntity.setCreated_date(localDate);
-		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
 		return UserEntity1;
 
