@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherTxnDao;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTxnRequest;
-import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnEntity;
+import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnDetailsEntity;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherTxnService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -23,11 +23,11 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 	public ErupiVoucherTxnRequest saveErupiVoucherTxnDetails(ErupiVoucherTxnRequest request) {
 		String response="";
 		log.info("Starting ErupiVoucherTxnServiceImpl ... saveErupiVoucherTxnDetails..");
-		ErupiVoucherTxnEntity erupiVoucherTxnEntity=null;
+		ErupiVoucherTxnDetailsEntity erupiVoucherTxnEntity=null;
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
 				
-			erupiVoucherTxnEntity=new ErupiVoucherTxnEntity();
+			erupiVoucherTxnEntity=new ErupiVoucherTxnDetailsEntity();
 			CopyUtility.copyProperties(request,erupiVoucherTxnEntity);
 			request.setResponse(response);
 			LocalDateTime eventDate = LocalDateTime.now();	

@@ -25,15 +25,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="erupi_voucher_txn")
+@Table(name="erupi_voucher_txn_details")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="erupi_voucher_txn_seq" , sequenceName="erupi_voucher_txn_seq", allocationSize=1)
-public class ErupiVoucherTxnEntity implements Serializable{
+@SequenceGenerator(name="erupi_voucher_txn_details_seq" , sequenceName="erupi_voucher_txn_details_seq", allocationSize=1)
+public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="erupi_voucher_txn_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="erupi_voucher_txn_details_seq")
 	@Column(name="id_pk")
 	private Long id;
 	

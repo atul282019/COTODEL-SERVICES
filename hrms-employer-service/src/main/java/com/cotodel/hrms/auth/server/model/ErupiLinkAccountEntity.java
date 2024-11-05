@@ -30,8 +30,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="erupi_linkaccount", indexes = {
-	    @Index(name = "idx_employecode", columnList = "employecode")})
+@Table(name = "erupi_linkaccount"/*
+									 * , indexes = {
+									 * 
+									 * @Index(name = "idx_employecode", columnList = "employecode")}
+									 */)
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="erupi_linkaccount_seq" , sequenceName="erupi_linkaccount_seq", allocationSize=1)
 public class ErupiLinkAccountEntity implements Serializable{
