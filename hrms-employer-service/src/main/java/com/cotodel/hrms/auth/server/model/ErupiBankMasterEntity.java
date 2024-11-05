@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Table(name="erupi_bankmaster")
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="erupi_bankmaster_seq" , sequenceName="erupi_bankmaster_seq", allocationSize=1)
-public class BankMasterEntity implements Serializable{
+public class ErupiBankMasterEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	

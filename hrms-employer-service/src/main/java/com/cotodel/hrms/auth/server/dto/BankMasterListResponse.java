@@ -2,7 +2,7 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.util.List;
 
-import com.cotodel.hrms.auth.server.model.BankMasterEntity;
+import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ public class BankMasterListResponse {
 	
 	 private boolean status;
 	 private String message;
-	 List<BankMasterEntity> data;
+	 List<ErupiBankMasterEntity> data;
 	 private String txnId;
 	 private String timestamp;
 }

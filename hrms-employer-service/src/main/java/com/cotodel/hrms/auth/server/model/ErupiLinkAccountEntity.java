@@ -30,23 +30,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="linkaccount_erupi", indexes = {
+@Table(name="erupi_linkaccount", indexes = {
 	    @Index(name = "idx_employecode", columnList = "employecode")})
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="linkaccount_erupi_seq" , sequenceName="linkaccount_erupi_seq", allocationSize=1)
-public class LinkAccountErupiEntity implements Serializable{
+@SequenceGenerator(name="erupi_linkaccount_seq" , sequenceName="erupi_linkaccount_seq", allocationSize=1)
+public class ErupiLinkAccountEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="linkaccount_erupi_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="erupi_linkaccount_seq")
 	@Column(name="id_pk")
 	private Long id;
 	
 	
 	 @ManyToOne
 	 @JoinColumn(name = "bank_id", referencedColumnName = "id_pk")  // foreign key column
-	  private BankMasterEntity bank;
+	  private ErupiBankMasterEntity bank;
 	
 	@Column(name="bankcode", length=99)
 	private String bankCode;//FK

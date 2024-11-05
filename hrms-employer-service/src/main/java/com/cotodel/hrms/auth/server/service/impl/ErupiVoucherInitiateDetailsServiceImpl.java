@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherInitiateDetailsRequest;
-import com.cotodel.hrms.auth.server.model.ErupiVoucherInitiateDetailsEntity;
+import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherInitiateDetailsService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -23,11 +23,11 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 	public ErupiVoucherInitiateDetailsRequest saveErupiVoucherInitiateDetails(ErupiVoucherInitiateDetailsRequest request) {
 		String response="";
 		log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... saveErupiVoucherInitiateDetails..");
-		ErupiVoucherInitiateDetailsEntity erupiVoucherInitiateDetailsEntity=null;
+		ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);	
-			erupiVoucherInitiateDetailsEntity=new ErupiVoucherInitiateDetailsEntity();
+			erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
 			CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
 
 			LocalDate eventDate = LocalDate.now();	

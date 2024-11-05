@@ -9,7 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.cotodel.hrms.auth.server.model.BankMasterEntity;
+import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.util.AccountType;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ErupiLinkAccountRequest {
 	private Long id;
-	private BankMasterEntity bank;	
+	private ErupiBankMasterEntity bank;	
 	private String bankCode;//FK	
 	private String bankName;	
 	private String accountHolderName;		

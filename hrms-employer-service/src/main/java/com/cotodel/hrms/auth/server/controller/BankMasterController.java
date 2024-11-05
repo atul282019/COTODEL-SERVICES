@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.BankMasterListResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
-import com.cotodel.hrms.auth.server.model.BankMasterEntity;
+import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.BankMasterService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -50,7 +50,7 @@ public class BankMasterController {
 	    log.info("inside bank master-------");	      	
 	    log.info("inside method");
 	    	String message = "";
-	    	List<BankMasterEntity> response=null;
+	    	List<ErupiBankMasterEntity> response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);

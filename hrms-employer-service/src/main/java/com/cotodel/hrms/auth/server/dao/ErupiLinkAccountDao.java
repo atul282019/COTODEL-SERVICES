@@ -1,9 +1,9 @@
 package com.cotodel.hrms.auth.server.dao;
 
-import com.cotodel.hrms.auth.server.model.LinkAccountErupiEntity;
+import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
 
 public interface ErupiLinkAccountDao {
-	public LinkAccountErupiEntity saveDetails(LinkAccountErupiEntity linkAccountErupiEntity);	
+	public ErupiLinkAccountEntity saveDetails(ErupiLinkAccountEntity linkAccountErupiEntity);	
 	
 	
 }

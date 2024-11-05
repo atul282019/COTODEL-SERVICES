@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
-import com.cotodel.hrms.auth.server.model.LinkAccountErupiEntity;
+import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
 import com.cotodel.hrms.auth.server.service.ErupiLinkAccountService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -23,11 +23,11 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 	@Override
 	public ErupiLinkAccountRequest saveErupiAccountDetails(ErupiLinkAccountRequest request) {
 		String response="";
-		LinkAccountErupiEntity linkAccountErupiEntity=null;
+		ErupiLinkAccountEntity linkAccountErupiEntity=null;
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);	
-			linkAccountErupiEntity=new LinkAccountErupiEntity();
+			linkAccountErupiEntity=new ErupiLinkAccountEntity();
 			CopyUtility.copyProperties(request,linkAccountErupiEntity);
 			if(!linkAccountErupiEntity.getAcNumber().equalsIgnoreCase(linkAccountErupiEntity.getConirmAccNumber())) {				
 				response=MessageConstant.ACC_MIS_MATCH;
