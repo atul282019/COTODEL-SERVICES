@@ -45,9 +45,9 @@ public class UserEmpEntity implements Serializable{
     private LocalDate updated_date;
     private String  updated_by;
     
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity userDetails;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id", referencedColumnName = "id")
+//    private UserEntity userDetails;
 //    @ManyToOne
 //    @JoinColumn(name = "user_id")
 //    private UserEntity user;
