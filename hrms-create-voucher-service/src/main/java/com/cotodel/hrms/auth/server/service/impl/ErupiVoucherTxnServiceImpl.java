@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dto.CallApiVoucherCreateResponse;
+import com.cotodel.hrms.auth.server.dto.DecryptedResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherTxnService;
+import com.cotodel.hrms.auth.server.util.ApiRequestSender;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.EncryptionUtil;
 import com.google.gson.Gson;
@@ -27,19 +29,22 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 	
 	
 	@Override
-	public CallApiVoucherCreateResponse calApiErupiVoucherCreateDetails(ErupiVoucherCreateRequest request) {
+	public DecryptedResponse calApiErupiVoucherCreateDetails(ErupiVoucherCreateRequest request) {
 		String message="";
-		CallApiVoucherCreateResponse callApiVoucherCreateResponse=null;
+		DecryptedResponse decryptedResponse=null;
 		try {
+			logger.info("In side calApiErupiVoucherCreateDetails:::"+request);
 			//PrivateKey privateq=EncryptionUtil.getPrivateKey(applicationConstantConfig.getSignaturePrivatePath);
 			//System.out.println(privateq);
-			message=CommonUtility.userRequestForCreateVoucher(applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getCreateVouchersMid,createVoucherRequest(request), applicationConstantConfig.getCreateVouchersUrl,applicationConstantConfig.getSignaturePublicPath,applicationConstantConfig.getSignaturePrivatePath);
-			callApiVoucherCreateResponse=message==""?null:jsonToPOJO(message);
+			//message=CommonUtility.userRequestForCreateVoucher(applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getCreateVouchersMid,createVoucherRequest(request), applicationConstantConfig.getCreateVouchersUrl,applicationConstantConfig.getSignaturePublicPath,applicationConstantConfig.getSignaturePrivatePath);
+			message=ApiRequestSender.createRequest(createVoucherRequest(request),applicationConstantConfig.getCreateVouchersUrl,applicationConstantConfig.getSignaturePublicPath,applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getSignaturePrivatePath);
+			decryptedResponse=message==""?null:jsonToPOJO(message);
+			
 		} catch (Exception e) {
 			logger.error("error Exception ...."+e.getMessage());
-			callApiVoucherCreateResponse.setMessage(e.getMessage());
+			//callApiVoucherCreateResponse.setMessage(e.getMessage());
 		}
-		return callApiVoucherCreateResponse;
+		return decryptedResponse;
 	}
 	
 
@@ -62,36 +67,19 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 		return request.toString();
 	}
 
-	public  CallApiVoucherCreateResponse jsonToPOJO(String json) {
+	public  DecryptedResponse jsonToPOJO(String json) {
 		
 		Gson gson = new Gson();
-		CallApiVoucherCreateResponse user =null;
+		DecryptedResponse decryptedResponse =new DecryptedResponse();
 		try {
-			user = gson.fromJson(json, CallApiVoucherCreateResponse.class);
-	        //System.out.println("User Name: " + user.isSuccess());
+			decryptedResponse = gson.fromJson(json, DecryptedResponse.class);
+	        //System.out.println("decryptedResponse Name: " + user.isSuccess());
 		} catch (Exception e) {
 			logger.error("error in CallApiVoucherCreateResponse..."+e.getMessage());
 		}
 		
-        return user;
+        return decryptedResponse;
 	}
-	public static void main(String[] args) {
-		String json="{\r\n"
-				+ "\"expiryDate\": \"17-06-2022\",\r\n"
-				+ "\"merchantId\": \"400899\",\r\n"
-				+ "\"success\": true,\r\n"
-				+ "\"response\": \"0\",\r\n"
-				+ "\"Amount\": \"202.0\",\r\n"
-				+ "\"UMN\": \"EZCb4dfa3cab8c2415787cbc880bff54@prepaidicici\",\r\n"
-				+ "\"message\": \"Transaction Successful\",\r\n"
-				+ "\"UUID\": \"1a7d50ff7a2545479e4f86910302dca3A300@prepaid.npci\",\r\n"
-				+ "\"merchantTranId\": \"55765765765757\",\r\n"
-				+ "\"status\": \"CREATE_SUCCESS\"\r\n"
-				+ "}";
-		ErupiVoucherTxnServiceImpl erupiVoucherTxnServiceImpl=new ErupiVoucherTxnServiceImpl();
-		CallApiVoucherCreateResponse response=erupiVoucherTxnServiceImpl.jsonToPOJO(json);
-		System.out.println(response);
-		
-	}
+	
 	
 }

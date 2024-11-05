@@ -11,6 +11,7 @@ import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
@@ -59,7 +60,35 @@ public class EncryptionUtil {
 	        X509Certificate certificate = (X509Certificate) cf.generateCertificate(fis);
 	        return certificate.getPublicKey();
 	    }
+	    public static PublicKey getPublicKeyFromCerFile(String cerFilePath) throws Exception {
+	        String certificatePEM = new String(Files.readAllBytes(Paths.get(cerFilePath)));
 
+	        // Remove the first and last lines
+	        certificatePEM = certificatePEM.replace("-----BEGIN CERTIFICATE-----\n", "");
+	        certificatePEM = certificatePEM.replace("-----END CERTIFICATE-----", "");
+	        certificatePEM = certificatePEM.replaceAll("\\s", "");
+
+	        // Decode the base64 encoded string
+	        byte[] decoded = Base64.getDecoder().decode(certificatePEM);
+
+	        // Generate the public key from the certificate
+	        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+	        X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(new java.io.ByteArrayInputStream(decoded));
+	        
+	        return certificate.getPublicKey();
+	    }
+	    public static PublicKey stringToPublicKey(String publicKeyPEM) throws Exception {
+	        String publicKeyFormatted = publicKeyPEM
+	                .replace("-----BEGIN PUBLIC KEY-----", "")
+	                .replace("-----END PUBLIC KEY-----", "")
+	                .replaceAll("\\s", ""); // Remove whitespace
+
+	        byte[] decodedKey = Base64.getDecoder().decode(publicKeyFormatted);
+	        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
+	        KeyFactory keyFactory = KeyFactory.getInstance("RSA"); // Change to appropriate algorithm if needed
+	        return keyFactory.generatePublic(keySpec);
+	    }
+	    
 	    public static PrivateKey getPrivateKey(String keyPath) throws Exception {
 //	        try (FileInputStream fis = new FileInputStream(keyPath)) {
 //	            byte[] keyBytes = fis.readAllBytes();

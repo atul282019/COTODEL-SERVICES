@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EncryptedRequest {
+public class EncryptedResponse {
 	private String requestId;
     private String service;
     private String iv;

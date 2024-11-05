@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.CallApiResponse;
 import com.cotodel.hrms.auth.server.dto.CallApiVoucherCreateResponse;
+import com.cotodel.hrms.auth.server.dto.DecryptedResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherTxnService;
@@ -47,23 +48,23 @@ public class ErupiVoucherCreateApiController extends CotoDelBaseController{
 		    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 		    public ResponseEntity<Object> voucherCreation(@RequestBody ErupiVoucherCreateRequest erupiVoucherCreateRequest) {
 		
-		CallApiVoucherCreateResponse callApiVoucherCreateResponse=null; 
+    	DecryptedResponse decryptedResponse=null; 
 		
 		try {
 			
 		    logger.info("inside /callapi/vouchercreation...respString."+erupiVoucherCreateRequest);
 		    
-		    callApiVoucherCreateResponse= erupiVoucherTxnService.calApiErupiVoucherCreateDetails(erupiVoucherCreateRequest);
-		    if(callApiVoucherCreateResponse!=null) {
-		    	return ResponseEntity.ok(new CallApiResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,callApiVoucherCreateResponse,TransactionManager.getCurrentTimeStamp()));
+		    decryptedResponse= erupiVoucherTxnService.calApiErupiVoucherCreateDetails(erupiVoucherCreateRequest);
+		    if(decryptedResponse!=null && decryptedResponse.getSuccess().equalsIgnoreCase("true")) {
+		    	return ResponseEntity.ok(new CallApiResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,decryptedResponse,TransactionManager.getCurrentTimeStamp()));
 		    }else {
-		    	return ResponseEntity.ok(new CallApiResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,callApiVoucherCreateResponse,TransactionManager.getCurrentTimeStamp()));
+		    	return ResponseEntity.ok(new CallApiResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,decryptedResponse,TransactionManager.getCurrentTimeStamp()));
 		    }
 				 
 		} catch (Exception e) {
 			e.printStackTrace();
 			
-			return ResponseEntity.ok(new CallApiResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,callApiVoucherCreateResponse,TransactionManager.getCurrentTimeStamp()));
+			return ResponseEntity.ok(new CallApiResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,decryptedResponse,TransactionManager.getCurrentTimeStamp()));
 		}
 		
 	}

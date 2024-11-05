@@ -10,7 +10,7 @@ public class CallApiResponse {
 	
 	 private boolean status;
 	 private String message;
-	 CallApiVoucherCreateResponse data;
+	 DecryptedResponse data;
 	 private String timestamp;
 	
 	
