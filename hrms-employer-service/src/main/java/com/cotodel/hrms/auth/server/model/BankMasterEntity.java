@@ -23,15 +23,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="bankmaster")
+@Table(name="erupi_bankmaster")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="bankmaster_seq" , sequenceName="bankmaster_seq", allocationSize=1)
+@SequenceGenerator(name="erupi_bankmaster_seq" , sequenceName="erupi_bankmaster_seq", allocationSize=1)
 public class BankMasterEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bankmaster_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="erupi_bankmaster_seq")
 	@Column(name="id_pk")
 	private Long id;
 	
