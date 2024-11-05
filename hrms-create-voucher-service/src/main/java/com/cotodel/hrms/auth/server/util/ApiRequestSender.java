@@ -10,15 +10,12 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateFactory;
 import java.util.Base64;
 import java.util.UUID;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.cotodel.hrms.auth.server.dto.EncryptedRequest;
 import com.cotodel.hrms.auth.server.dto.EncryptedResponse;
 import com.google.gson.Gson;
