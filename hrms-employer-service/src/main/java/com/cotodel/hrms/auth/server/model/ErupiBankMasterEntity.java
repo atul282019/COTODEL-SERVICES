@@ -10,8 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,7 +49,12 @@ public class ErupiBankMasterEntity implements Serializable{
 	
 	@Column(name = "creationdate")
     private LocalDateTime creationDate;
-
+	
+	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
+	@Column(name = "banklogo")
+    private byte[] bankLogo;
+	
 	
 	
 }
