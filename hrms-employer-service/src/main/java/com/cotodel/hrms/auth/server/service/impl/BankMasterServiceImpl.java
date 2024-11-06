@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.BankMasterDao;
 import com.cotodel.hrms.auth.server.dto.BankMasterRequest;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
+import com.cotodel.hrms.auth.server.model.ErupiBankNameMasterEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnDetailsEntity;
 import com.cotodel.hrms.auth.server.model.ExpenseReimbursementEntity;
 import com.cotodel.hrms.auth.server.repository.BankMasterRepository;
+import com.cotodel.hrms.auth.server.repository.ErupiBankNameRepository;
 import com.cotodel.hrms.auth.server.service.BankMasterService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -24,6 +26,9 @@ public class BankMasterServiceImpl implements BankMasterService{
 	@Autowired
 	BankMasterDao bankMasterDao;
 		
+	
+	@Autowired
+	ErupiBankNameRepository erupiBankNameRepository;
 
 	@Override
 	public List<ErupiBankMasterEntity> getBankMaster() {
@@ -51,6 +56,13 @@ public class BankMasterServiceImpl implements BankMasterService{
 			e.printStackTrace();
 		}
 		return bankMasterRequest;
+	}
+
+
+	@Override
+	public List<ErupiBankNameMasterEntity> getBankNameMaster() {
+		// TODO Auto-generated method stub
+		return erupiBankNameRepository.getErupiBankNameMaster();
 	}
 
 	

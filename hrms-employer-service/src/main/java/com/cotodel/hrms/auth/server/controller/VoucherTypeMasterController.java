@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,12 +41,11 @@ public class VoucherTypeMasterController {
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @PostMapping(value = "/get/voucherTypeMasterList",produces = {"application/json"}, 
+	    @GetMapping(value = "/get/voucherTypeMasterList",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"})
 	    public ResponseEntity<Object> voucherTypeMasterList(HttpServletRequest request) {
 		 
-	    log.info("inside bank master-------");	      	
-	    log.info("inside method");
+	    log.info("inside voucherTypeMasterList-------");
 	    	String message = "";
 	    	List<VoucherTypeMasterEntity> response=null;
 	    	try {	    		
