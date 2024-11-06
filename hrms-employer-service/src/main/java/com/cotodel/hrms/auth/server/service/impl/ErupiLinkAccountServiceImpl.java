@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
+import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
 import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
 import com.cotodel.hrms.auth.server.service.ErupiLinkAccountService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
@@ -43,6 +44,22 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			log.error("Error in ErupiLinkAccountServiceImpl......."+e.getMessage());
 		}
 		return request;
+	}
+
+	@Override
+	public ErupiLinkAccountWithOutResponse getErupiAccountDetails(ErupiLinkAccountRequest request) {
+		ErupiLinkAccountEntity erupiLinkAccountEntity=null;
+		String response="";
+		ErupiLinkAccountWithOutResponse erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
+		try {
+			erupiLinkAccountEntity=erupiLinkAccountDao.findByOrgId(request.getOrgId());
+			CopyUtility.copyProperties(erupiLinkAccountEntity,erupiLinkAccountWithOutResponse);
+		} catch (Exception e) {
+			response=MessageConstant.RESPONSE_FAILED;
+			//e.printStackTrace();
+			//request.setResponse(response);
+		}
+		return erupiLinkAccountWithOutResponse;
 	}
 
 	

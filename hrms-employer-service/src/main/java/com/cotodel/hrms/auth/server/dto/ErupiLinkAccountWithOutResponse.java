@@ -12,9 +12,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErupiLinkAccountRequest {
+public class ErupiLinkAccountWithOutResponse {
 	private Long id;
-	private ErupiBankMasterEntity bank;	
 	private String bankCode;//FK	
 	private String bankName;	
 	private String accountHolderName;		
