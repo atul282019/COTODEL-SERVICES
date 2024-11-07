@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.cotodel.hrms.auth.server.util.AccountType;
 
@@ -30,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "erupi_linkaccount", indexes = {@Index(name = "idx_employecode", columnList = "employecode")} )
+@Table(name = "erupi_linkaccount", uniqueConstraints = @UniqueConstraint(columnNames = {"acnumber"}) )
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="erupi_linkaccount_seq" , sequenceName="erupi_linkaccount_seq", allocationSize=1)
 public class ErupiLinkAccountEntity implements Serializable{
@@ -55,8 +56,8 @@ public class ErupiLinkAccountEntity implements Serializable{
 	
 	@Column(name="accountholdername", length=99)
 	private String accountHolderName;
-		
-	@Column(name="acnumber", length=99)
+	
+	@Column(name="acnumber", length=99,unique = true)
 	private String acNumber;
 	
 	@Column(name="conirm_accnumber", length=99)

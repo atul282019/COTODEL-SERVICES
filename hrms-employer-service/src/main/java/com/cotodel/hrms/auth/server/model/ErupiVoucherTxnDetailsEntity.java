@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,7 +43,9 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	
 	@Column(name="workflowid")
 	private Long workFlowId;//bigint FK	Work FlowID 100001 for initiate reuest, 100002 for creation,100003 for fail,100004 for confirmationpending, 100005 for redemption
-	
+//	@ManyToOne
+//	@JoinColumn(name = "wokflowjoinid", referencedColumnName = "workflowid")  // foreign key column
+//	private WorkFlowMasterEntity wokflowId;//id_pk of vouchermaster
 //	@Column(name="voucher_id")
 //	private Long voucherId;//id_pk of vouchermaster
 	

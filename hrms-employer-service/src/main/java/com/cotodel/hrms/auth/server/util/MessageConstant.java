@@ -20,4 +20,6 @@ public class MessageConstant {
 	public static final String PROFILE_DELETE = "Data Delete Successfully.";
 	public static final String PROFILE_DELETE_FAILED = "Data Not Delete Successfully.";
 	public static final String ACC_MIS_MATCH = "Account no mismatch.";
+	public static final String ORG_ONBOARDING = "Organization is not onboarded.";
+	public static final String WORANG_WFID = "Worang work flow id.";
 }

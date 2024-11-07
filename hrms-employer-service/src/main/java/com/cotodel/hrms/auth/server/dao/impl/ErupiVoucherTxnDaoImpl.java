@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +18,12 @@ public class ErupiVoucherTxnDaoImpl implements ErupiVoucherTxnDao{
 	public ErupiVoucherTxnDetailsEntity saveDetails(ErupiVoucherTxnDetailsEntity erupiVoucherTxnEntity) {
 		// TODO Auto-generated method stub
 		return erupiVoucherTxnRepository.saveAndFlush(erupiVoucherTxnEntity);
+	}
+
+	@Override
+	public List<ErupiVoucherTxnDetailsEntity> getVoucherTxnDetails() {
+		// TODO Auto-generated method stub
+		return erupiVoucherTxnRepository.findAll();
 	}	
 	
 }

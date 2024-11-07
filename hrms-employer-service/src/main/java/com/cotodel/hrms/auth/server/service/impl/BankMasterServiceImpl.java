@@ -1,6 +1,8 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,6 @@ import com.cotodel.hrms.auth.server.dao.BankMasterDao;
 import com.cotodel.hrms.auth.server.dto.BankMasterRequest;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.model.ErupiBankNameMasterEntity;
-import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnDetailsEntity;
-import com.cotodel.hrms.auth.server.model.ExpenseReimbursementEntity;
 import com.cotodel.hrms.auth.server.repository.BankMasterRepository;
 import com.cotodel.hrms.auth.server.repository.ErupiBankNameRepository;
 import com.cotodel.hrms.auth.server.service.BankMasterService;
@@ -32,8 +32,14 @@ public class BankMasterServiceImpl implements BankMasterService{
 
 	@Override
 	public List<ErupiBankMasterEntity> getBankMaster() {
-		// TODO Auto-generated method stub
-		return bankMasterRepository.findAll();
+		
+		List<ErupiBankMasterEntity> eList=bankMasterRepository.findAll();
+		List<ErupiBankMasterEntity> eList2=new ArrayList<>();
+		for (ErupiBankMasterEntity erupiBankMasterEntity : eList) {
+			erupiBankMasterEntity.setBankLogo(null);
+			eList2.add(erupiBankMasterEntity);
+		}
+		return eList2;
 	}
 
 

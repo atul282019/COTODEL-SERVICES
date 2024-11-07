@@ -1,6 +1,8 @@
 package com.cotodel.hrms.auth.server.dto;
 
 import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
+import com.cotodel.hrms.auth.server.model.WorkFlowMasterEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,5 +19,6 @@ public class ErupiVoucherTxnRequest {
 	private Long accountId;	
 	private Long orgIdPk;
 	private String response;
+	private String responseMsg;
 
 }

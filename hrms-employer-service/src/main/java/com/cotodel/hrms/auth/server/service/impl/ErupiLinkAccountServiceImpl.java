@@ -1,6 +1,8 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -8,7 +10,9 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
+import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
+import com.cotodel.hrms.auth.server.repository.EmployeeOnboardingRepository;
 import com.cotodel.hrms.auth.server.service.ErupiLinkAccountService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -21,11 +25,23 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 	@Autowired
 	ErupiLinkAccountDao  erupiLinkAccountDao;
 	
+	@Autowired
+	EmployeeOnboardingRepository employeeOnboardingRepository;
+	
 	@Override
 	public ErupiLinkAccountRequest saveErupiAccountDetails(ErupiLinkAccountRequest request) {
 		String response="";
 		ErupiLinkAccountEntity linkAccountErupiEntity=null;
+		List<EmployeeOnboardingEntity> list=new ArrayList<>();
 		try {
+			
+			list=employeeOnboardingRepository.findByOnboardingList(request.getOrgId());
+			if(list==null || list.size()==0) {
+				response=MessageConstant.ORG_ONBOARDING;
+				request.setResponse(response);
+				return request;
+			}
+			
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);	
 			linkAccountErupiEntity=new ErupiLinkAccountEntity();
