@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.service;
 
+import java.util.List;
+
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
 
@@ -7,5 +9,5 @@ public interface ErupiLinkAccountService {
 	
 	public ErupiLinkAccountRequest  saveErupiAccountDetails(ErupiLinkAccountRequest request);
 	public ErupiLinkAccountWithOutResponse  getErupiAccountDetails(ErupiLinkAccountRequest request);
-	
+	public List<ErupiLinkAccountWithOutResponse>  getErupiAccountListDetails(ErupiLinkAccountRequest request);
 }

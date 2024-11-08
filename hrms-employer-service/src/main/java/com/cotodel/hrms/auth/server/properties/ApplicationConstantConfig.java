@@ -25,4 +25,8 @@ public class ApplicationConstantConfig {
 	@Value("${user.service.add.new.url}")
 	public String userServiceAddNewUrl;
 	
+	@Value("${user.service.api.url}")
+	public String userServiceApiUrl;
+	
+	
 }

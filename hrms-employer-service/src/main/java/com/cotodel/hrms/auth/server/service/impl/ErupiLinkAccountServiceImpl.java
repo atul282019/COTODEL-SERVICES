@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
@@ -56,7 +57,11 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			linkAccountErupiEntity=erupiLinkAccountDao.saveDetails(linkAccountErupiEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
-		}catch (Exception e) {
+		}catch (DataIntegrityViolationException e) {
+			response=MessageConstant.DUP_ACC;
+			request.setResponse(response);
+		}
+		catch (Exception e) {
 			log.error("Error in ErupiLinkAccountServiceImpl......."+e.getMessage());
 		}
 		return request;
@@ -71,11 +76,32 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			erupiLinkAccountEntity=erupiLinkAccountDao.findByOrgId(request.getOrgId());
 			CopyUtility.copyProperties(erupiLinkAccountEntity,erupiLinkAccountWithOutResponse);
 		} catch (Exception e) {
+			
 			response=MessageConstant.RESPONSE_FAILED;
 			//e.printStackTrace();
 			//request.setResponse(response);
 		}
 		return erupiLinkAccountWithOutResponse;
+	}
+
+	@Override
+	public List<ErupiLinkAccountWithOutResponse> getErupiAccountListDetails(ErupiLinkAccountRequest request) {
+		List<ErupiLinkAccountEntity> erupiLinkAccountEntity=null;
+		String response="";
+		ErupiLinkAccountWithOutResponse erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
+		List<ErupiLinkAccountWithOutResponse> erupiLinkList=new ArrayList<>();
+		try {
+			erupiLinkAccountEntity=erupiLinkAccountDao.findByErupiLinkOrgId(request.getOrgId());
+			for (ErupiLinkAccountEntity erupiLinkAccountWithOutResponse2 : erupiLinkAccountEntity) {
+				CopyUtility.copyProperties(erupiLinkAccountWithOutResponse2,erupiLinkAccountWithOutResponse);
+				erupiLinkList.add(erupiLinkAccountWithOutResponse);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+		return erupiLinkList;
 	}
 
 	

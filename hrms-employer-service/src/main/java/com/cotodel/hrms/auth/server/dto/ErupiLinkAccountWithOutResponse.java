@@ -2,7 +2,6 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDateTime;
 
-import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.util.AccountType;
 
 import lombok.AllArgsConstructor;

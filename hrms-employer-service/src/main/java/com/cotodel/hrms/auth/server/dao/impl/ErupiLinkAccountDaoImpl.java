@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
@@ -22,6 +24,12 @@ public class ErupiLinkAccountDaoImpl implements ErupiLinkAccountDao{
 	public ErupiLinkAccountEntity findByOrgId(Long orgid) {
 		// TODO Auto-generated method stub
 		return erupiLinkAccountRepository.findByOrgId(orgid);
+	}
+
+	@Override
+	public List<ErupiLinkAccountEntity> findByErupiLinkOrgId(Long orgid) {
+		// TODO Auto-generated method stub
+		return erupiLinkAccountRepository.findErupiListByOrgId(orgid);
 	}
 
 
