@@ -128,6 +128,7 @@ public class ErupiLinkAccountEntity implements Serializable{
 	@Column(name="payerva", length=99)
 	private String payerva;
 	
-
+	@Column(name="ps_flag", length=1)
+	private String psFlag;//Flag value P for primary and S for Secondry Default is null
 	
 }

@@ -42,6 +42,6 @@ public class ErupiLinkAccountRequest {
 	private String submurchentid;
 	private String payerva;
 	private String extra1;
-	
+	private String psFlag;
 	private String response;
 }

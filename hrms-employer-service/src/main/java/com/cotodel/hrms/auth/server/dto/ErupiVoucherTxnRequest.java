@@ -1,5 +1,11 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
 import com.cotodel.hrms.auth.server.model.WorkFlowMasterEntity;
 
@@ -21,4 +27,24 @@ public class ErupiVoucherTxnRequest {
 	private String response;
 	private String responseMsg;
 	private String type;
+	private String voucherType;	
+	private String uuid;
+	private String umn;	
+	private String merchanttxnId;	
+	private String resultCallApi;	
+	private String statusApi;	
+	private String smsResponse;	
+	private String smsActcode;	
+	private String smsDesc;	     
+	private String apiType;	
+	private String createdBy;	
+	private String mcc;	
+	private String bankrrn;	
+	private String txnstatus;	
+	private LocalDateTime txninitdate;	
+	private LocalDateTime txncompletiondate;	
+	private String extra;	
+	private String extra1;	
+	private String extra2;	
+	
 }

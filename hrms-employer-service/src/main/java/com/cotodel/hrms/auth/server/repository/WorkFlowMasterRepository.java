@@ -8,8 +8,10 @@ import com.cotodel.hrms.auth.server.model.WorkFlowMasterEntity;
 @Repository
 public interface WorkFlowMasterRepository extends JpaRepository<WorkFlowMasterEntity,Long>{
 		
-	@Query("select c from WorkFlowMasterEntity c where c.workflowId = ?1and c.type=?2 ")
-	WorkFlowMasterEntity  findByWorkFlowId(Long workflowId,String type);
+//	@Query("select c from WorkFlowMasterEntity c where c.workflowId = ?1and c.type=?2 ")
+//	WorkFlowMasterEntity  findByWorkFlowId(Long workflowId,String type);
 	
+	@Query("select s  from WorkFlowMasterEntity s where s.workflowId = ?1 and s.type = ?2")
+	public WorkFlowMasterEntity findByWorkFlowId(Long id,String  type);
 	
 }

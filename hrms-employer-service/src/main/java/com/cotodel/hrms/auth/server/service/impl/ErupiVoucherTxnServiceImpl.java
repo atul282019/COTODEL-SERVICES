@@ -21,9 +21,7 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 
 	@Autowired
 	ErupiVoucherTxnDao  erupiVoucherTxnDao;
-	
-	@Autowired
-	WorkFlowMasterRepository  workFlowMasterRepository;
+
 	
 	@Override
 	public ErupiVoucherTxnRequest saveErupiVoucherTxnDetails(ErupiVoucherTxnRequest request) {
@@ -33,12 +31,20 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 		WorkFlowMasterEntity workFlowMasterEntity=new WorkFlowMasterEntity();
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
-			workFlowMasterEntity=workFlowMasterRepository.findByWorkFlowId(request.getWorkFlowId(),request.getType());
-			if(workFlowMasterEntity==null) {
+			try {
+				workFlowMasterEntity=erupiVoucherTxnDao.getWorkFlowId(request.getWorkFlowId(),request.getType());
+				if(workFlowMasterEntity==null) {
+					response=MessageConstant.WORANG_WFID;
+					request.setResponseMsg(response);
+					return request;
+				}
+			} catch (Exception e) {
 				response=MessageConstant.WORANG_WFID;
 				request.setResponseMsg(response);
+				log.error("Error in fetching findByWorkFlowId::"+e.getMessage());
 				return request;
 			}
+			
 			erupiVoucherTxnEntity=new ErupiVoucherTxnDetailsEntity();
 			CopyUtility.copyProperties(request,erupiVoucherTxnEntity);
 			request.setResponseMsg(response);

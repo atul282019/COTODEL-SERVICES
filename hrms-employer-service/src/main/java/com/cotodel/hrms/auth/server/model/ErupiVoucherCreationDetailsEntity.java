@@ -85,11 +85,31 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
 //	private String entryModeId;//entrymode master id_pk value
 			
 	@ManyToOne
-	 @JoinColumn(name = "entrymode_id_pk", referencedColumnName = "id_pk")  // foreign key column
-	  private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster	
-	
-	
+	@JoinColumn(name = "entrymode_id_pk", referencedColumnName = "id_pk")  // foreign key column
+	private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		
 
+	@Column(name="merchanttxnid",length = 99)
+	private String merchanttxnid;
+	@Column(name="creationmode",length = 49)
+	private String creationmode;
+	
+	@Column(name="bulktbl_id")
+	private Long bulktblId;
+
+	@Column(name="redemtion_type")
+	private String redemtionType;
+	
+	@Column(name="mcc")
+	private String mcc;
+	
+	@Column(name="extra1")
+	private String extra1;
+	
+	@Column(name="extra2")
+	private String extra2;
+	
+	@Column(name="extra3")
+	private String extra3;
 	
 	
 }

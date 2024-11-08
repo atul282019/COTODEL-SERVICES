@@ -3,9 +3,11 @@ package com.cotodel.hrms.auth.server.dao;
 import java.util.List;
 
 import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnDetailsEntity;
+import com.cotodel.hrms.auth.server.model.WorkFlowMasterEntity;
 
 public interface ErupiVoucherTxnDao {
 	public ErupiVoucherTxnDetailsEntity saveDetails(ErupiVoucherTxnDetailsEntity erupiVoucherTxnEntity);
 	public List<ErupiVoucherTxnDetailsEntity> getVoucherTxnDetails();
+	public WorkFlowMasterEntity getWorkFlowId(Long workflowid,String type);
 	
 }
