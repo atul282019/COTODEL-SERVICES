@@ -33,7 +33,7 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 		WorkFlowMasterEntity workFlowMasterEntity=new WorkFlowMasterEntity();
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
-			workFlowMasterEntity=workFlowMasterRepository.findByWorkFlowId(request.getWorkFlowId());
+			workFlowMasterEntity=workFlowMasterRepository.findByWorkFlowId(request.getWorkFlowId(),request.getType());
 			if(workFlowMasterEntity==null) {
 				response=MessageConstant.WORANG_WFID;
 				request.setResponseMsg(response);

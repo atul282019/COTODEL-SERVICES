@@ -40,6 +40,15 @@ public class WorkFlowMasterEntity implements Serializable{
 	@Column(name="description", length=99)
 	private String description;
 	
+	@Column(name="type", length=9)
+	private String type;
+	
+	@Column(name="api_url", length=299)
+	private String apiurl;
+	
+	@Column(name="public_ip", length=29)
+	private String publicip;
+	
 	@Column(name="status")
 	private int status;	
 	

@@ -20,5 +20,5 @@ public class ErupiVoucherTxnRequest {
 	private Long orgIdPk;
 	private String response;
 	private String responseMsg;
-
+	private String type;
 }

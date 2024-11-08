@@ -88,11 +88,12 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 	public List<ErupiLinkAccountWithOutResponse> getErupiAccountListDetails(ErupiLinkAccountRequest request) {
 		List<ErupiLinkAccountEntity> erupiLinkAccountEntity=null;
 		String response="";
-		ErupiLinkAccountWithOutResponse erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
+		ErupiLinkAccountWithOutResponse erupiLinkAccountWithOutResponse=null;
 		List<ErupiLinkAccountWithOutResponse> erupiLinkList=new ArrayList<>();
 		try {
 			erupiLinkAccountEntity=erupiLinkAccountDao.findByErupiLinkOrgId(request.getOrgId());
 			for (ErupiLinkAccountEntity erupiLinkAccountWithOutResponse2 : erupiLinkAccountEntity) {
+				erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
 				CopyUtility.copyProperties(erupiLinkAccountWithOutResponse2,erupiLinkAccountWithOutResponse);
 				erupiLinkList.add(erupiLinkAccountWithOutResponse);
 			}
