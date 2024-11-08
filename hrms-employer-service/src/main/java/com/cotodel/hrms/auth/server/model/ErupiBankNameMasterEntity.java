@@ -42,6 +42,9 @@ public class ErupiBankNameMasterEntity implements Serializable{
 	@Column(name="bankcode", length=9)
 	private String bankcode;
 	
+	@Column(name="ifsc", length=4)
+	private String ifsc;
+	
 	private int status;
 	
 }

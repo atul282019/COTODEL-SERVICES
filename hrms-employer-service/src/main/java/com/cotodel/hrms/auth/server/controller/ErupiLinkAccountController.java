@@ -130,7 +130,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				response=erupiAccountService.getErupiAccountListDetails(erupiLinkAccountRequest);
 	    		
-				if(response!=null) {
+				if(response!=null && response.size()>0) {
 	    			return ResponseEntity.ok(new ErupiGetLinkAccountListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
 	    			return ResponseEntity.ok(new ErupiGetLinkAccountListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));

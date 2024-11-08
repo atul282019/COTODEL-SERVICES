@@ -96,10 +96,10 @@ public class BankMasterController {
 				
 				response=bankMasterService.saveBankMaster(bankMasterRequest);
 				
-	    		if(response!=null) {
-	    			return ResponseEntity.ok(new BankMasterSaveResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new BankMasterSaveResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new BankMasterSaveResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new BankMasterSaveResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
@@ -130,7 +130,7 @@ public class BankMasterController {
 				
 				response=bankMasterService.getBankNameMaster();
 				
-	    		if(response!=null) {
+	    		if(response!=null && response.size()>0) {
 	    			return ResponseEntity.ok(new BankNameMasterListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
 	    			return ResponseEntity.ok(new BankNameMasterListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));

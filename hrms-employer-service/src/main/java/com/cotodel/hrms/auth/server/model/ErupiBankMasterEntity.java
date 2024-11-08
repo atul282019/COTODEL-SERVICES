@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Type;
 
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="erupi_bankmaster")
+@Table(name="erupi_bankmaster", uniqueConstraints = @UniqueConstraint(columnNames = {"bankcode"}))
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="erupi_bankmaster_seq" , sequenceName="erupi_bankmaster_seq", allocationSize=1)
 public class ErupiBankMasterEntity implements Serializable{
@@ -38,7 +39,7 @@ public class ErupiBankMasterEntity implements Serializable{
 	@Column(name="id_pk")
 	private Long id;
 	
-	@Column(name="bankcode", length=99)
+	@Column(name="bankcode", length=99,unique = true)
 	private String bankCode;
 	
 	@Column(name="bankname", length=99)
@@ -49,6 +50,9 @@ public class ErupiBankMasterEntity implements Serializable{
 	
 	@Column(name = "creationdate")
     private LocalDateTime creationDate;
+	
+	@Column(name="ifsc", length=4)
+	private String ifsc;
 	
 	@Lob
 	@Type(type="org.hibernate.type.BinaryType")
