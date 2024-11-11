@@ -1,9 +1,9 @@
 package com.cotodel.hrms.auth.server.service;
 
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherInitiateDetailsRequest;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
 
 public interface ErupiVoucherInitiateDetailsService {
 	
-	public ErupiVoucherInitiateDetailsRequest  saveErupiVoucherInitiateDetails(ErupiVoucherInitiateDetailsRequest request);
+	public ErupiVoucherCreateDetailsRequest  saveErupiVoucherInitiateDetails(ErupiVoucherCreateDetailsRequest request);
 	
 }

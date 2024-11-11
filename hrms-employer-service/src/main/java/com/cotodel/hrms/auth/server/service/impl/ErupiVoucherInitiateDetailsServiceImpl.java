@@ -4,10 +4,16 @@ import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherInitiateDetailsRequest;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
+import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
+import com.cotodel.hrms.auth.server.repository.MerchantTranIdRepository;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherInitiateDetailsService;
+import com.cotodel.hrms.auth.server.util.CommonUtility;
+import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 
@@ -19,8 +25,14 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 	@Autowired
 	ErupiVoucherInitiateDetailsDao  erupiVoucherInitiateDetailsDao;
 	
+	@Autowired
+	MerchantTranIdRepository  merchantTranIdRepository;
+	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
+	
 	@Override
-	public ErupiVoucherInitiateDetailsRequest saveErupiVoucherInitiateDetails(ErupiVoucherInitiateDetailsRequest request) {
+	public ErupiVoucherCreateDetailsRequest saveErupiVoucherInitiateDetails(ErupiVoucherCreateDetailsRequest request) {
 		String response="";
 		log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... saveErupiVoucherInitiateDetails..");
 		ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
@@ -33,6 +45,16 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			LocalDate eventDate = LocalDate.now();	
 			erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
 			erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.saveDetails(erupiVoucherInitiateDetailsEntity);
+			if(erupiVoucherInitiateDetailsEntity!=null) {
+				VoucherCreateRequest voucherCreateRequest=new VoucherCreateRequest();
+				Long merchantTranId=fetchMerchantTranId();
+				log.info("Starting voucher create request ...."+merchantTranId);
+				String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
+						applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
+				
+				
+			}
+			
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
 		}catch (Exception e) {
@@ -41,6 +63,8 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 		}
 		return request;
 	}
-
+	public Long fetchMerchantTranId() {
+	    return merchantTranIdRepository.getMerchantTranId();
+	 }
 	
 }

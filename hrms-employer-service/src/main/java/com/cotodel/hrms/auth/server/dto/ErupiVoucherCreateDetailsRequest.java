@@ -1,6 +1,14 @@
 package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import com.cotodel.hrms.auth.server.model.EntryModeMasterEntity;
 import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
 import lombok.AllArgsConstructor;
@@ -10,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErupiVoucherInitiateDetailsRequest {
+public class ErupiVoucherCreateDetailsRequest {
 	
 	private VoucherTypeMasterEntity voucherId;//id_pk of vouchermaster	
 	private String name;	
@@ -28,4 +36,19 @@ public class ErupiVoucherInitiateDetailsRequest {
 	private String accountNumber;			
 	private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		
 	private String response;
+	
+	private String merchanttxnid;
+	private String creationmode;
+	
+	private Long bulktblId;
+
+	private String redemtionType;
+	
+	private String mcc;
+	
+	private String extra1;
+	
+	private String extra2;
+	
+	private String extra3;
 }

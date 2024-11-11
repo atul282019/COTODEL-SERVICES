@@ -28,5 +28,8 @@ public class ApplicationConstantConfig {
 	@Value("${user.service.api.url}")
 	public String userServiceApiUrl;
 	
+	@Value("${voucher.service.api.url}")
+	public String voucherServiceApiUrl;
+	
 	
 }
