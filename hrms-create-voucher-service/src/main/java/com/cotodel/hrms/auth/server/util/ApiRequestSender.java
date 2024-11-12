@@ -36,9 +36,7 @@ public class ApiRequestSender {
 	        String encrKey = Base64.getEncoder().encodeToString(encryptedKey);
 	        logger.info("createRequest :encrKey:"+encrKey);
 	        // Encrypt the request payload using AES
-//	        String stri="{\"subMerchantId\":\"610954\",\"amount\":\"2.00\",\"mobileNumber\":\"9971601042\",\"mcc\":\"5411\",\"type\":\"CREATE\",\"VoucherRedemptionType\":\"SINGLE\",\r\n"
-//	        		+ "\"PayerVA\":\"merchant@icici\",\"merchantId\":\"610954\",\r\n"
-//	        		+ "\"beneficiaryName\":\"Fakhruddeen\",\"purposeCode\":\"A3\",\"expiry\":\"2024-11-30\",\"merchantTranId\":\"55765765765757\",\"beneficiaryID\":\"8978653452\"}";
+
 	        String stri=request;
 	        logger.info("createRequest :request:"+stri);
 	       //System.out.println(stri);
@@ -51,19 +49,9 @@ public class ApiRequestSender {
 	        logger.info("createRequest :ivBase64:"+ivBase64);
 	        logger.info("createRequest :encryptedDataBase64:"+encryptedDataBase64);
 //	        // Create the JSON request
-//	        JSONObject requestJson = new JSONObject();
-//	        requestJson.put("requestId", "123456"); // Example request ID
-//	        requestJson.put("service", "AccountCreation");
-//	        requestJson.put("encryptedKey", encrKey);
-//	        requestJson.put("oaepHashingAlgorithm", "NONE");
-//	        requestJson.put("iv", ivBase64);
-//	        requestJson.put("encryptedData", encryptedDataBase64);
-//	        requestJson.put("clientInfo", ""); // Optional client info
-//	        requestJson.put("optionalParam", ""); // Optional parameters
 	        
 	        String requestId = UUID.randomUUID().toString();
 	        
-	       // logger.info("requestId...."+requestId);
 	        // Step 5: Prepare the complete request
 	        EncryptedRequest encryptedRequest = new EncryptedRequest();
 	        encryptedRequest.setRequestId(requestId);
@@ -78,22 +66,10 @@ public class ApiRequestSender {
 	        String jsonString=encriptRequest(encryptedRequest);
 	        //System.out.println(jsonString);
 	        logger.info("createRequest :jsonString:"+jsonString);
-//	        String jsonString1 = "{"
-//	                + "\"requestId\": \"" + "11111" + "\","
-//	                + "\"service\": \"" + "AccountCreation" + "\","
-//	                + "\"encryptedKey\": \"" + encrKey + "\","
-//	                + "\"oaepHashingAlgorithm\": \"" + "NONE" + "\","
-//	                + "\"iv\": \"" + ivBase64 + "\","
-//	                + "\"encryptedData\": \"" + encryptedDataBase64 + "\","
-//	                + "\"clientInfo\": \"" + "" + "\","
-//	                + "\"optionalParam\": \"" + "" + "\""
-//	                + "}";
-//	        System.out.println(jsonString1);
-	        // Send the request
-	        //sendRequest(jsonString, "https://apibankingonesandbox.icicibank.com/api/MerchantAPI/UPI2/v1/CreateVouchers"); // Replace with your API URL
+
+
 	        String message=sendRequest(jsonString, url,apiKey,privatePath); // Replace with your API URL
-	        //getPrivateKey(privatePath);
-	        //CommonUtility.decryptRequest(encryptedDataBase64, encryptedDataBase64, privatePath);
+	        logger.info("api request message :message:"+message);
 	        return message;
 	    }
 
@@ -159,7 +135,7 @@ public class ApiRequestSender {
 	                 }
 	                 Gson gson = new Gson();
 	                 EncryptedResponse apiResponse = gson.fromJson(response.toString(), EncryptedResponse.class);
-	                 message=ResponseDecryption.decriptResponse(apiResponse, privatePath);
+	                 message=ResponseDecryption.decriptResponse(apiResponse, privatePath,responseCode);
 	                 // Print the response
 	                 logger.info("Response: " + response.toString());
 	                return message;
@@ -168,6 +144,7 @@ public class ApiRequestSender {
 	             // Handle errors
 	        	 logger.info("Error in response: " + responseCode);
 	             message=String.valueOf(responseCode);
+	             message="{"+"\"responseCode\""+":"+"\""+responseCode+"\""+"}";
 	         }
 	        return message;
 	    }
@@ -185,29 +162,6 @@ public class ApiRequestSender {
 			return request.toString();
 		}
 	    
-//	    public static PrivateKey getPrivateKey(String keyPath) throws Exception {
-////	        try (FileInputStream fis = new FileInputStream(keyPath)) {
-////	            byte[] keyBytes = fis.readAllBytes();
-////	            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-////	            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-////	            return keyFactory.generatePrivate(spec);
-////	        }
-//	    	String privateKeyPEM = new String(Files.readAllBytes(Paths.get(keyPath)));
-//
-//	        // Remove the first and last lines
-//	    	privateKeyPEM = privateKeyPEM.replace("-----BEGIN RSA PRIVATE KEY-----\r\n", "");
-//	        privateKeyPEM = privateKeyPEM.replace("-----END RSA PRIVATE KEY-----", "");
-//	        privateKeyPEM = privateKeyPEM.replaceAll("\\s", "");
-//
-//	        // Decode the base64 encoded string
-//	        byte[] keyBytes = Base64.getDecoder().decode(privateKeyPEM);
-//
-//	        // Generate the private key
-//	        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-//	        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-//	        PrivateKey privKey=keyFactory.generatePrivate(keySpec);
-//	        System.out.println(privKey);
-//	        return privKey;
-//	    }
+
 	  
 }

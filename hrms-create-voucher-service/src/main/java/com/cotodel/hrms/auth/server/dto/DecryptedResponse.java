@@ -19,5 +19,6 @@ public class DecryptedResponse {
 	private String UMN;
 	private String expiryDate;
 	private String UUID;
+	private String responseCode;
 	
 }

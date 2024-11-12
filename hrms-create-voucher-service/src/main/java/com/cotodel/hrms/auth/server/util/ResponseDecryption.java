@@ -6,8 +6,12 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cotodel.hrms.auth.server.dto.EncryptedResponse;
 public class ResponseDecryption {
+	private static final Logger logger = LoggerFactory.getLogger(ResponseDecryption.class);
 //	 static {
 //	        // Add Bouncy Castle provider for RSA PKCS#1 decryption
 //	        Security.addProvider(new BouncyCastleProvider());
@@ -43,15 +47,15 @@ public class ResponseDecryption {
 //	    }
 	    
 	    
-	    public static String decriptResponse(EncryptedResponse encrResponse,String privatePath) throws Exception {
+	    public static String decriptResponse(EncryptedResponse encrResponse,String privatePath,int responseCode) throws Exception {
 	        // Example encrypted values (replace these with actual values)
 	        // encryptedKeyBase64 = "W1l+pdRoCoAcpmaJKvF70JBYdsC7IrxwOmymgxLU03LlAR5kjFigBp4P4vBoth61jJ66OB4Ag5ExIXx0nWAPKcXo7J9G+X4EJWzud/sRdJMYSkV0akfeITeytJdIZVVAmg2YgpHau3tbH97e8ivgDYSEn4QWUUgYO1BSzZVzWjWyXWp27Bq+BHXtZj8fwmNF5szMs3jGO+LtsWX6KTm2USw2y2iGR/MWp17R5Fih7YE+5TyWC5MRMppukUrMudHFruKFzJ0FcVP5XHfzvNJowKDcCIRJ54V8BnUWcnoLEP/OU3HNj3QnApo/b0TdPlR9dgz29iWVg7jAxkHCoRinzrW0fWd/X5hLcLLRlNmyr6gwKoIEGgSaPI8RARQLowtlsinboLlkcVDxfeLfqQXOvoENQkJUrx4Wv1/bcXXilFlIgI9MVGTgRVNG7gRW+1JgTp7s6imBHmenXPDWss2b76cThFcV/tHZlgu8e10qzQyLr834NDpUVOGJiBQNaCGIq8chvHUcRYto7WGRy2Ht6zXt7wdKuVTva3hlgHf4PPLdBfozYauBzY46XUc4MXB3XYK+EXlLLtAeMI7T9Sam3g6kacr8SNwIBEj/0YyR4yJZB3UJZd5365nvmCTBnHR0DT+Pl8iRrsJYRwHaKuNxywrizSLNG6yDBvHZfOrUc0g="; // Encrypted session key
 	       //  encryptedDataBase64 = "WlcVLCgTz8prp0UCM+w+LsY4TbTFDnlrfFb+o4w3wCEG6YOCrM0OGCtcrGcucDSOoMXvR5JF15uNJV7snHFJthE29vDbvbtoSrKEFcVrfnmn8a1a5j2mdpMlgNhzeYv0/N2NTle4QR7FnzicoGZmdvoIDYijXIFS++myYLHbfsArFfJTMfQOldX+LLvpSge963bdCyuXXPx2TzPbnO9CmyvsPfz/Vu17ZZc8BByB9w/Fo3vFCdwBp4UHF1fVO4giZM60NgLsduWw6tA8vk7GNBTPo/henD8OnSyZVow7FNSXxoTUNt7qxV61avKE65hc"; // Encrypted response
 	        
 	         String encryptedKeyBase64=encrResponse.getEncryptedKey();
 	         String encryptedDataBase64=encrResponse.getEncryptedData();
-	         System.out.println("encryptedKeyBase64:"+encryptedKeyBase64);
-	         System.out.println("encryptedDataBase64:"+encryptedDataBase64);
+	         logger.info("encryptedKeyBase64:"+encryptedKeyBase64);
+	         logger.info("encryptedDataBase64:"+encryptedDataBase64);
 	        // Step 1: Extract the IV from the encrypted data
 	        byte[] encryptedData = Base64.getDecoder().decode(encryptedDataBase64);
 	        byte[] IV = getFirst16Bytes(encryptedData);
@@ -71,9 +75,10 @@ public class ResponseDecryption {
 	        
 	        // Convert decrypted bytes to string (assuming UTF-8 encoding)
 	        String responseString = new String(decryptedResponse, "UTF-8");
-	        
+	        String responseCodevalue=","+"\"responseCode\""+":"+"\""+responseCode+"\""+"}";
+	        responseString=responseString.replace("}", responseCodevalue);
 	        // Print the decrypted response
-	        System.out.println("Decrypted Response: " + responseString);
+	        logger.info("Decrypted Response: " + responseString);
 	        return responseString;
 	    }
 

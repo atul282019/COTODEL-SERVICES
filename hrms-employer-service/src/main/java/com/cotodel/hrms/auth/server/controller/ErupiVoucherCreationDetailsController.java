@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/Api")
-public class ErupiVoucherInitiateDetailsController {
+public class ErupiVoucherCreationDetailsController {
 private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelController.class);
 	
 	@Autowired
