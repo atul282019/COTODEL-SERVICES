@@ -67,5 +67,11 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 		return erupiVoucherTxnDao.getVoucherTxnDetails();
 	}
 
+	@Override
+	public List<ErupiVoucherTxnDetailsEntity> getErupiVoucherTxnList(Long orgid) {
+		// TODO Auto-generated method stub
+		return erupiVoucherTxnDao.getVoucherTxnList(orgid);
+	}
+
 	
 }

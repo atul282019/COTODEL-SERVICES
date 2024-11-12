@@ -6,4 +6,6 @@ import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 public interface BankMasterRepository extends JpaRepository<ErupiBankMasterEntity,Long>{
 	
 	
+	
+	
 }

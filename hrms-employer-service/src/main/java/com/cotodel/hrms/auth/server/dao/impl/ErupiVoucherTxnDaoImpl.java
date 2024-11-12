@@ -35,6 +35,12 @@ public class ErupiVoucherTxnDaoImpl implements ErupiVoucherTxnDao{
 	public WorkFlowMasterEntity getWorkFlowId(Long workflowid, String type) {
 		// TODO Auto-generated method stub
 		return workFlowMasterRepository.findByWorkFlowId(workflowid, type);
+	}
+
+	@Override
+	public List<ErupiVoucherTxnDetailsEntity> getVoucherTxnList(Long orgID) {
+		// TODO Auto-generated method stub
+		return erupiVoucherTxnRepository.findByOrgId(orgID);
 	}	
 	
 	
