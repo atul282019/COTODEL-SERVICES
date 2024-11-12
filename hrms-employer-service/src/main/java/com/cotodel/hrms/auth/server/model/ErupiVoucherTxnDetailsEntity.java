@@ -57,7 +57,7 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	@Column(name = "creationdate")
 	private LocalDateTime creationDate;
 	
-	@Column(name="response", length=199)
+	@Column(name="response", length=599)
 	private String response;
 	
 	@Column(name="response_code", length=99)
@@ -67,7 +67,7 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	private Long accountId;
 	
 	@Column(name="org_id_pk")
-	private Long orgIdPk;
+	private Long orgId;
 	
 	@Column(name="voucher_type", length=49)
 	private String voucherType;
@@ -100,7 +100,7 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	private String apiType;
 	
 	@Column(name="createdby", length=99)
-	private String createdBy;
+	private String createdby;
 	
 	@Column(name="mcc", length=99)
 	private String mcc;

@@ -86,7 +86,7 @@ public class VoucherTypeMasterController {
 	    consumes = {"application/json","application/text"})
 	    public ResponseEntity<Object> voucherTypeList(HttpServletRequest request) {
 		 
-	    log.info("inside voucherTypeMasterList-------");
+	    log.info("inside voucherTypeList-------");
 	    	String message = "";
 	    	List<VoucherTypeDto> response=null;
 	    	try {	    		
@@ -102,7 +102,7 @@ public class VoucherTypeMasterController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		log.error("error in getBankMasterDetailsList====="+e);
+	    		log.error("error in voucherTypeList====="+e);
 	    		//message=e.getMessage();
 			}
 	        
@@ -120,7 +120,7 @@ public class VoucherTypeMasterController {
 	    consumes = {"application/json","application/text"})
 	    public ResponseEntity<Object> voucherTypeMaster(HttpServletRequest request,@Valid @RequestBody VoucherTypeDto voucherTypeDto) {
 		 
-	    log.info("inside voucherTypeMasterList-------");
+	    log.info("inside voucherTypeMaster-------");
 	    	String message = "";
 	    	VoucherTypeMasterEntity response=null;
 	    	try {	    		
@@ -136,7 +136,7 @@ public class VoucherTypeMasterController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		log.error("error in getBankMasterDetailsList====="+e);
+	    		log.error("error in voucherTypeMaster====="+e);
 	    		//message=e.getMessage();
 			}
 	        

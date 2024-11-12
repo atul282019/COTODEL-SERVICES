@@ -11,6 +11,7 @@ public class VoucherCreateRequest {
 	private String merchantTranId;
 	private String beneficiaryID;
 	private String mobileNumber;
+	private String beneficiaryName;
 	private String amount;
 	private String expiry;
 	private String purposeCode;

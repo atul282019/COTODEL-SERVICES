@@ -6,13 +6,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
+
 @Entity
 public class MerchantTranIdEntity {
-	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "merchant_tran_id")
-    @SequenceGenerator(name = "merchant_tran_id", sequenceName = "merchantTranId", allocationSize = 1)
-    private Long id;
 
-    private String name;
 
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "merchanttranid_seq")
+	    @SequenceGenerator(name = "merchanttranid_seq", sequenceName = "merchanttranid", allocationSize = 1)
+	    private Long id;
+	private String name;
 }

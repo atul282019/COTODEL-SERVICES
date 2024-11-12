@@ -1,6 +1,7 @@
 package com.cotodel.hrms.auth.server.util;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 /**
  * @author Vinay Kushwaha
  * @Email  vinaykushwaha85@gmail.com
@@ -12,19 +13,10 @@ public class TransactionManager {
 
 	public static String getTransactionId() {
 
-		return "NHA:"+UUID.randomUUID().toString();
+		return "COTO:"+UUID.randomUUID().toString();
 	}
 
-	public static String getKycTransactionId() {
-
-		return "UKC:"+UUID.randomUUID().toString();
-	}
 	
-	
-	public static String getFaceIdTransactionId() {
-
-		return "NHAFACEID:"+UUID.randomUUID().toString();
-	}
 
 
 	private static final String ALPHA_NUMERIC_STRING = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -70,7 +62,14 @@ public class TransactionManager {
 	
 	public static void main(String[] args) {
 		
-		System.out.println(TxnId(10));
+		//System.out.println(TxnId(10));
+		for(int i=0; i<=40;i++) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String uniqueId = sdf.format(new Date());
+        
+        System.out.println(uniqueId);
+		}
+        
 		
 	}
 	

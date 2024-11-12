@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
 
 import com.cotodel.hrms.auth.server.model.EntryModeMasterEntity;
 import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
@@ -34,21 +35,20 @@ public class ErupiVoucherCreateDetailsRequest {
 	private Long accountId;	
 	private Long orgId;	
 	private String accountNumber;			
-	private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		
-	private String response;
-	
+	//private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		discuss
+	private String response;	
 	private String merchanttxnid;
-	private String creationmode;
-	
+	private String creationmode;	
 	private Long bulktblId;
-
-	private String redemtionType;
-	
-	private String mcc;
-	
-	private String extra1;
-	
-	private String extra2;
-	
+	private String redemtionType;	
+	private String mcc;	
+	private String extra1;	
+	private String extra2;	
 	private String extra3;
+	private String beneficiaryID;
+	private String payerVA;
+	private String type;
+	@NotBlank(message = "bankCode cannot be blank")
+	private String bankcode;
+	//private String createResponse;
 }
