@@ -41,7 +41,9 @@ public class ErupiVoucherTxnDaoImpl implements ErupiVoucherTxnDao{
 	public List<ErupiVoucherTxnDetailsEntity> getVoucherTxnList(Long orgID) {
 		// TODO Auto-generated method stub
 		return erupiVoucherTxnRepository.findByOrgId(orgID);
-	}	
+	}
+
+
 	
 	
 }

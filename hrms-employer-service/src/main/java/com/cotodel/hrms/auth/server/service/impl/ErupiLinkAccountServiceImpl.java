@@ -105,5 +105,11 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 		return erupiLinkList;
 	}
 
+	@Override
+	public ErupiLinkAccountEntity getErupiAccountDetails(String accNumber) {
+		// TODO Auto-generated method stub
+		return erupiLinkAccountDao.findByErupiLinkAccNumber(accNumber);
+	}
+
 	
 }

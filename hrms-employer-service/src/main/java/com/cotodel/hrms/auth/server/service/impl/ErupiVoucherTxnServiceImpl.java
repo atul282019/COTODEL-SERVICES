@@ -73,5 +73,7 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 		return erupiVoucherTxnDao.getVoucherTxnList(orgid);
 	}
 
+
+
 	
 }
