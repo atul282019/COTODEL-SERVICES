@@ -81,6 +81,10 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
 	@Column(name="accountnumber",length = 49)
 	private String accountNumber;
 	
+	@Column(name="workflowid")
+	private Long workFlowId;
+	
+	
 //	@Column(name="entrymode_id_pk",length = 29)
 //	private String entryModeId;//entrymode master id_pk value
 			

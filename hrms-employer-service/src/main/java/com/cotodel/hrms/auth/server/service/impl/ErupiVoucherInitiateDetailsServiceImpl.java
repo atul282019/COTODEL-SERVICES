@@ -19,6 +19,8 @@ import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherTxnDao;
 import com.cotodel.hrms.auth.server.dto.DecryptedResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeRequest;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
@@ -67,6 +69,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
 			LocalDate eventDate = LocalDate.now();	
 			erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
+			erupiVoucherInitiateDetailsEntity.setWorkFlowId(100001l);
 			erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.saveDetails(erupiVoucherInitiateDetailsEntity);
 			if(erupiVoucherInitiateDetailsEntity!=null) {
 			VoucherCreateRequest voucherCreateRequest=new VoucherCreateRequest();
@@ -109,6 +112,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
 					//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 					erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
+					int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 					erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
 					erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
@@ -123,6 +127,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
 					//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 					erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+					int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
 					erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
 					logger.info("erupiVoucherTxnDetailsEntity"+erupiVoucherTxnDetailsEntity);
@@ -289,10 +294,10 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 
 
 		@Override
-		public ErupiVoucherCreateDetailsRequest getErupiVoucherCreateDetailsList(
-				ErupiVoucherCreateDetailsRequest request) {
+		public List<ErupiVoucherCreatedDto> getErupiVoucherCreateDetailsList(
+				ErupiVoucherCreatedRequest request) {
 			
-			return null;
+			return erupiVoucherInitiateDetailsDao.getVoucherCreationList(request.getOrgId());
 		}
 	    
 	    
