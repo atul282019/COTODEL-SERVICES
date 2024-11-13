@@ -420,6 +420,12 @@ public class UserServiceImpl implements UserService {
 		UserEntity userDetail = userDetailsDao.getUserNew(mobile,email);		
 			return userDetail;
 		
+	}
+
+	@Override
+	public UserEntity checkOrgExist(long id) {
+		// TODO Auto-generated method stub
+		return userDetailsDao.getOrgExist(id);
 	}	
 
 	

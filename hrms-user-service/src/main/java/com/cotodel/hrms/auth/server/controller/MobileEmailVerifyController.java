@@ -23,6 +23,7 @@ import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dto.UserNewOtpResponse;
 import com.cotodel.hrms.auth.server.dto.UserOtpResponse;
 import com.cotodel.hrms.auth.server.dto.UserOtpVerifyResponse;
+import com.cotodel.hrms.auth.server.dto.UserOtpVerifyWithoutUserResponse;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.UserSignUpResponse;
 import com.cotodel.hrms.auth.server.dto.UserVerifyResponse;
@@ -433,5 +434,62 @@ public class MobileEmailVerifyController {
 	        
 	    }
 
+	 
+	 @Operation(summary = "This API will provide the User Mobile Verify Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/verifyOtpWithoutUser",produces = {"application/json"}, consumes = {"application/json","application/text"},
+	    method = RequestMethod.POST)
+	    public ResponseEntity<Object> verifyOtpWithoutUser(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
+	    	logger.info("inside token verifyOtp+++");
+	    	String response="";
+	    	String message="";
+	    	boolean isValid=false;
+	    	try {
+	    		
+	    		// write code here
+	    		String authToken=request.getHeader("Authorization");
+	    			if(applicationConstantConfig.otpLessSenderClientEnable.equalsIgnoreCase("N")) {
+	    				response="{\"isOTPVerified\":true}";
+	    				
+	    			}else {
+	    			response=userService.verifySmsOtpNew(userReq.getOrderId(),userReq.getMobile(),userReq.getOtp());
+	    			}
+	    			if(!ObjectUtils.isEmpty(response)) {
+
+						JSONObject demoRes= new JSONObject(response);
+						if(demoRes.has("isOTPVerified")) {
+							isValid=demoRes.isNull("isOTPVerified")?false: demoRes.getBoolean("isOTPVerified");
+							if(isValid) {
+								return ResponseEntity.ok(new UserOtpVerifyWithoutUserResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+							}else {
+								message=demoRes.has("reason")?demoRes.getString("reason"):demoRes.getString("reason");
+								return ResponseEntity.ok(new UserOtpVerifyWithoutUserResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+							}
+						}else {
+								message=demoRes.isNull("message")?"": demoRes.getString("message");
+								return ResponseEntity.ok(new UserOtpVerifyWithoutUserResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+						}
+
+					}else {
+						return ResponseEntity.ok(new UserOtpVerifyWithoutUserResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+					}
+	    	
+	    	 
+	    	 
+	    	}catch (Exception e) {
+				
+	    		// TODO: handle exception
+	    		logger.error("error in verifyOtp====="+e);
+			}
+	        
+	    	return ResponseEntity.ok(new UserOtpVerifyWithoutUserResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	          
+	        
+	    }
 
 }

@@ -69,5 +69,11 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		return userRepository.findByMobileAndEmail(mobile, email, email);
 	}
 
+	@Override
+	public UserEntity getOrgExist(Long id) {
+		// TODO Auto-generated method stub
+		return userRepository.findByEmployerExist(id);
+	}
+
 	
 }
