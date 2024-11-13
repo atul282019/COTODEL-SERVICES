@@ -213,21 +213,21 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
 				LocalDate eventDate = LocalDate.now();	
 				erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
-				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.saveDetails(erupiVoucherInitiateDetailsEntity);
-				if(erupiVoucherInitiateDetailsEntity!=null) {
+//				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.saveDetails(erupiVoucherInitiateDetailsEntity);
+//				if(erupiVoucherInitiateDetailsEntity!=null) {
 				VoucherCreateRequest voucherCreateRequest=new VoucherCreateRequest();
 					
-				String merchantTranId=getMerTranId(request.getBankcode());
-				voucherCreateRequest.setMerchantTranId(merchantTranId);
+				//String merchantTranId=getMerTranId(request.getBankcode());
+				voucherCreateRequest.setMerchantTranId(request.getMerchanttxnid());
 				voucherCreateRequest.setAmount(request.getAmount().toString());
 				voucherCreateRequest.setBeneficiaryID(request.getBeneficiaryID());
 				voucherCreateRequest.setMobileNumber(request.getMobile());
 				voucherCreateRequest.setBeneficiaryName(request.getName());
 				String formattedValue = String.format("%.2f", request.getAmount());
 				voucherCreateRequest.setAmount(formattedValue);
-				String expdate=request.getExpDate().toString();
+				String expdate=request.getExpDate()==null?"":request.getExpDate().toString();
 				voucherCreateRequest.setExpiry(expdate);
-				voucherCreateRequest.setPurposeCode(request.getPurposeCode());
+				voucherCreateRequest.setPurposeCode(request.getPurposeCode()==null?"":request.getPurposeCode());
 				voucherCreateRequest.setMcc(request.getMcc());
 				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
 				voucherCreateRequest.setPayerVA(request.getPayerVA());
@@ -235,7 +235,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 
 				
 				
-				log.info("Starting voucher create request ...."+merchantTranId);	
+				log.info("Starting voucher create request ...."+request.getMerchanttxnid());	
 				erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 					
 					String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
@@ -255,7 +255,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
 						erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
-						erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
+						erupiVoucherTxnDetailsEntity.setWorkFlowId(100005l);
 						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
 						logger.info("erupiVoucherTxnDetailsEntity"+erupiVoucherTxnDetailsEntity);
@@ -267,14 +267,14 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
 						JSONObject data = profileJsonRes.getJSONObject("data");
 						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
-						erupiVoucherTxnDetailsEntity.setResponse(data.toString());
+						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 						erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
 						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
 						logger.info("erupiVoucherTxnDetailsEntity"+erupiVoucherTxnDetailsEntity);
 					}
 					
-				}
+			//	}
 				}
 				
 				
@@ -284,6 +284,15 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				log.error("Error in ErupiVoucherInitiateDetailsServiceImpl......."+e.getMessage());
 			}
 			return erupiVoucherRevokeDetailsRequest;
+		}
+
+
+
+		@Override
+		public ErupiVoucherCreateDetailsRequest getErupiVoucherCreateDetailsList(
+				ErupiVoucherCreateDetailsRequest request) {
+			
+			return null;
 		}
 	    
 	    

@@ -24,4 +24,5 @@ public class MessageConstant {
 	public static final String WORANG_WFID = "Worang work flow id.";
 	public static final String DUP_ACC = "Account already exist.";
 	public static final String DUP_BANK_CODE = "Bank already exist.";
+	public static final String DUP_VR_CODE = "Voucher code already exist.";
 }

@@ -7,4 +7,5 @@ public interface ErupiVoucherInitiateDetailsService {
 	
 	public ErupiVoucherCreateDetailsRequest  saveErupiVoucherInitiateDetails(ErupiVoucherCreateDetailsRequest request);
 	public ErupiVoucherRevokeDetailsRequest  erupiVoucherRevokeDetails(ErupiVoucherRevokeDetailsRequest request);
+	public ErupiVoucherCreateDetailsRequest  getErupiVoucherCreateDetailsList(ErupiVoucherCreateDetailsRequest request);
 }

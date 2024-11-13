@@ -16,4 +16,7 @@ public interface VoucherTypeMasterRepository extends JpaRepository<VoucherTypeMa
 	
 	@Query("SELECT s FROM VoucherTypeMasterEntity s where s.voucherCode = ?1 and s.status='1' ")
     VoucherTypeMasterEntity findVoucherTypeMasterDetail(String voucherCode);
+	
+	@Query("SELECT s FROM VoucherTypeMasterEntity s where  s.activeStatus='1' ")
+    List<VoucherTypeMasterEntity> findVoucherTypeMasterList();
 }

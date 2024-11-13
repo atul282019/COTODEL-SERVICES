@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="voucher_type_master")
+@Table(name="voucher_type_master", uniqueConstraints = @UniqueConstraint(columnNames = {"vouchercode"}))
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="voucher_type_master_seq" , sequenceName="voucher_type_master_seq", allocationSize=1)
 public class VoucherTypeMasterEntity implements Serializable{
@@ -35,7 +36,7 @@ public class VoucherTypeMasterEntity implements Serializable{
 	@Column(name="id_pk")
 	private Long id;
 	
-	@Column(name="vouchercode", length=19)
+	@Column(name="vouchercode", length=19,unique = true)
 	private String voucherCode;
 	
 	@Column(name="vouchertype", length=99)
