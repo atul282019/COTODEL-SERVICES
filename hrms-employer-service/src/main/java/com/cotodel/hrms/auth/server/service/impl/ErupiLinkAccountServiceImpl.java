@@ -14,6 +14,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
 import com.cotodel.hrms.auth.server.repository.EmployeeOnboardingRepository;
+import com.cotodel.hrms.auth.server.repository.ErupiLinkAccountRepository;
 import com.cotodel.hrms.auth.server.service.ErupiLinkAccountService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -28,6 +29,9 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 	
 	@Autowired
 	EmployeeOnboardingRepository employeeOnboardingRepository;
+	
+	@Autowired
+	ErupiLinkAccountRepository erupiLinkAccountRepository;
 	
 	@Override
 	public ErupiLinkAccountRequest saveErupiAccountDetails(ErupiLinkAccountRequest request) {
@@ -109,6 +113,26 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 	public ErupiLinkAccountEntity getErupiAccountDetails(String accNumber) {
 		// TODO Auto-generated method stub
 		return erupiLinkAccountDao.findByErupiLinkAccNumber(accNumber);
+	}
+
+	@Override
+	public ErupiLinkAccountRequest updateErupiAccountPSFlag(ErupiLinkAccountRequest request) {
+		String response="";
+		try {			
+			int updateAll=erupiLinkAccountRepository.updateAllAsSecondry(request.getOrgId());
+			int updateAcctP=erupiLinkAccountRepository.updateAccAsPrimary(request.getOrgId(),request.getAcNumber());
+			if(updateAll>0 && updateAcctP>0) {
+				response=MessageConstant.RESPONSE_SUCCESS;
+			}
+			request.setResponse(response);
+		}catch (DataIntegrityViolationException e) {
+			response=MessageConstant.DUP_ACC;
+			request.setResponse(response);
+		}
+		catch (Exception e) {
+			log.error("Error in ErupiLinkAccountServiceImpl......."+e.getMessage());
+		}
+		return request;
 	}
 
 	

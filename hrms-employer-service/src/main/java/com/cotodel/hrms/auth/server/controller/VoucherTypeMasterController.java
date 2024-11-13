@@ -198,10 +198,10 @@ public class VoucherTypeMasterController {
 				
 				response=voucherTypeMasterService.saveVoucherTypeMaster(voucherTypeMasterRequest);
 				
-	    		if(response!=null) {
+	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 	    			return ResponseEntity.ok(new VoucherTypeMasterResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new VoucherTypeMasterResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new VoucherTypeMasterResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();

@@ -11,5 +11,6 @@ public interface ErupiLinkAccountService {
 	public ErupiLinkAccountRequest  saveErupiAccountDetails(ErupiLinkAccountRequest request);
 	public ErupiLinkAccountWithOutResponse  getErupiAccountDetails(ErupiLinkAccountRequest request);
 	public List<ErupiLinkAccountWithOutResponse>  getErupiAccountListDetails(ErupiLinkAccountRequest request);
-	public ErupiLinkAccountEntity  getErupiAccountDetails(String accNumber);
+	public ErupiLinkAccountEntity  getErupiAccountDetails(String accNumber);	
+	public ErupiLinkAccountRequest  updateErupiAccountPSFlag(ErupiLinkAccountRequest request);
 }
