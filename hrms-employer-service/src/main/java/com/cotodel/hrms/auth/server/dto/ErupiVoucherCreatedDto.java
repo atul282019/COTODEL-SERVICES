@@ -1,6 +1,6 @@
 package com.cotodel.hrms.auth.server.dto;
 
-import javax.persistence.Column;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +18,7 @@ public class ErupiVoucherCreatedDto {
 	private String purposeCode;
 	private String mcc;
 	private String redemtionType;
-	
+	private LocalDate creationDate;
+	private LocalDate expDate;
+	private String type;
 }

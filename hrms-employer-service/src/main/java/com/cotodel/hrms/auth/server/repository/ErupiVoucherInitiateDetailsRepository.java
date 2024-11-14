@@ -21,9 +21,9 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
     public int updateWorkflowId(@Param("id") Long id,@Param("workflowid") Long workflowid);
 	
 	@Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
-			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType) "
+			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type) "
 			+ "from ErupiVoucherCreationDetailsEntity c"
-			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId where   c.orgId =?1 ")
+			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId join WorkFlowMasterEntity w on c.workFlowId=w.workflowId where   c.orgId =?1 ")
 	public List<ErupiVoucherCreatedDto> findVoucherCreateList(Long orgId);
 	
 	

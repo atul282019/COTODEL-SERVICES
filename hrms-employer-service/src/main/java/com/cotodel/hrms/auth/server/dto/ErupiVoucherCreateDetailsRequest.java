@@ -32,7 +32,8 @@ public class ErupiVoucherCreateDetailsRequest {
     private String otpValidationStatus;		 	
     private LocalDate creationDate;
 	private String createdby;	
-	private Long accountId;	
+	private Long accountId;
+	@NotBlank(message = "Organization cannot be blank")
 	private Long orgId;	
 	private String accountNumber;			
 	//private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		discuss
