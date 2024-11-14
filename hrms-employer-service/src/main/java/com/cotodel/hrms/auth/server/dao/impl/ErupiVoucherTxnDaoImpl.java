@@ -43,6 +43,8 @@ public class ErupiVoucherTxnDaoImpl implements ErupiVoucherTxnDao{
 		return erupiVoucherTxnRepository.findByOrgId(orgID);
 	}
 
+	
+
 
 	
 	

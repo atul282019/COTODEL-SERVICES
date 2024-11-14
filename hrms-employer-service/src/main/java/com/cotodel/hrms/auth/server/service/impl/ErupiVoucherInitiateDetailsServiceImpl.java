@@ -1,8 +1,10 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,9 +26,11 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeRequest;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnDetailsEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
+import com.cotodel.hrms.auth.server.repository.ErupiVoucherInitiateDetailsRepository;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherInitiateDetailsService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CommonUtils;
@@ -43,6 +47,8 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 	private static final Logger logger = LoggerFactory.getLogger(ErupiVoucherInitiateDetailsServiceImpl.class);
 	@Autowired
 	ErupiVoucherInitiateDetailsDao  erupiVoucherInitiateDetailsDao;
+	
+	
 	
 	@Autowired
 	ErupiVoucherTxnDao  erupiVoucherTxnDao;
@@ -318,9 +324,33 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 		public List<ErupiVoucherCreatedDto> getErupiVoucherCreateDetailsList(
 				ErupiVoucherCreatedRequest request) {
 			
+					
 			return erupiVoucherInitiateDetailsDao.getVoucherCreationList(request.getOrgId());
 		}
+
+
+
+		@Override
+		public List<ErupiVoucherSummaryDto> getErupiVoucherSummaryList(ErupiVoucherCreatedRequest request) {
+			 List<ErupiVoucherSummaryDto> voucherSummaryDTOList = new ArrayList<>();
+			try {
+				List<Object[]> resultList = erupiVoucherInitiateDetailsDao.getVoucherSummary(request.getWorkflowid(),request.getOrgId());
+				 
+
+			        for (Object[] row : resultList) {
+			            Long count = ((BigInteger) row[0]).longValue();          // count(1)
+			            Float totalAmount = (Float) row[1]; // SUM(amount)
+			            String voucherName = (String) row[2]; // voucherdesc
+
+			            voucherSummaryDTOList.add(new ErupiVoucherSummaryDto(count, totalAmount, voucherName));
+			        }
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return voucherSummaryDTOList;
+		}
 	    
-	    
+		
 	   
 }

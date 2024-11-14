@@ -26,6 +26,11 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId join WorkFlowMasterEntity w on c.workFlowId=w.workflowId where   c.orgId =?1 ")
 	public List<ErupiVoucherCreatedDto> findVoucherCreateList(Long orgId);
 	
-	
+	 @Query(value = "SELECT count(1), SUM(amount), " +
+             "(SELECT voucherdesc FROM voucher_type_master c WHERE c.id_pk = a.voucher_id_pk) AS vname " +
+             "FROM erupi_voucher_creation_details a, erupi_voucher_txn_details b " +
+             "WHERE a.id_pk = b.details_id AND b.workflowid =:workflowid AND a.org_id =:orgId " +
+             "GROUP BY a.voucher_id_pk", nativeQuery = true)
+	public List<Object[]> getVoucherSummary(@Param("workflowid") Long workflowid, @Param("orgId") Long orgId);
 	
 }

@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErupiVoucherCreatedRequest {
-	private Long orgId;
-	private Long workflowid;
+public class ErupiVoucherSummaryDto {
+	private Long count;
+    private Float totalAmount;
+    private String voucherName;
 }

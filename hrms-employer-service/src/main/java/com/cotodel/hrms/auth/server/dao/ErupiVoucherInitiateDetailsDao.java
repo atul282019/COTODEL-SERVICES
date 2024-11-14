@@ -10,4 +10,5 @@ public interface ErupiVoucherInitiateDetailsDao {
 	public int updateWorkflowId(Long id ,Long WorkflowId);		
 	public List<ErupiVoucherCreatedDto> getVoucherCreationList(Long orgid);
 	public ErupiVoucherCreationDetailsEntity getErupiVoucherCreationDetails(Long id);
+	public List<Object []> getVoucherSummary(Long workflowid,Long orgID);
 }

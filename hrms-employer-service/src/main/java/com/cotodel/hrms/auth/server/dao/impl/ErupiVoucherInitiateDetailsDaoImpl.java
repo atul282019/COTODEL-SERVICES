@@ -37,6 +37,13 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 	public ErupiVoucherCreationDetailsEntity getErupiVoucherCreationDetails(Long id) {
 		// TODO Auto-generated method stub
 		return erupiVoucherInitiateDetailsRepository.getById(id);
+	}
+
+	@Override
+	public List<Object[]> getVoucherSummary(Long workflowid, Long orgID) {
+		// TODO Auto-generated method stub
+		List<Object[]> result=erupiVoucherInitiateDetailsRepository.getVoucherSummary(workflowid, orgID);
+		return result;
 	}	
 	
 	
