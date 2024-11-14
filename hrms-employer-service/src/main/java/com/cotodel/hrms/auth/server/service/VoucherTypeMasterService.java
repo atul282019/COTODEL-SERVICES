@@ -13,4 +13,5 @@ public interface VoucherTypeMasterService {
 	public List<VoucherTypeDto>  getVoucherTypeList();
 	public VoucherTypeMasterEntity  getVoucherTypeMasterDetail(String voucherCode);
 	public VoucherTypeMasterRequest saveVoucherTypeMaster(VoucherTypeMasterRequest voucherTypeMasterRequest);
+	public VoucherTypeMasterRequest updateVoucherTypeMaster(VoucherTypeMasterRequest voucherTypeMasterRequest);
 }

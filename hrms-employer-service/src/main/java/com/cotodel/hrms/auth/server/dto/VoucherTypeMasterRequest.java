@@ -10,11 +10,12 @@ import lombok.NoArgsConstructor;
 
 public class VoucherTypeMasterRequest {
 	
+	private Long id;
 	private String voucherCode;	
 	private String voucherType;	
 	private String voucherSubType;	
 	private String voucherDesc;
 	private String purposeCode;
-	private String createdby;
+	private String createdby;	
 	private String response;
 }

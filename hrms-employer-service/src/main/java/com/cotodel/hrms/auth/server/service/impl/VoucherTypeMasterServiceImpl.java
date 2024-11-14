@@ -76,6 +76,26 @@ public class VoucherTypeMasterServiceImpl implements VoucherTypeMasterService{
 		}
 		return request;
 	}
+
+	@Override
+	public VoucherTypeMasterRequest updateVoucherTypeMaster(VoucherTypeMasterRequest request) {
+		String response="";
+		try {			
+			response=MessageConstant.RESPONSE_FAILED;
+			int updateAll=voucherTypeMasterRepository.updateActiveStatus(request.getId());
+			if(updateAll>0) {
+				response=MessageConstant.RESPONSE_SUCCESS;
+			}
+			request.setResponse(response);
+		}catch (DataIntegrityViolationException e) {
+			response=MessageConstant.DUP_ACC;
+			request.setResponse(response);
+		}
+		catch (Exception e) {
+			logger.error("Error in updateVoucherTypeMaster......."+e.getMessage());
+		}
+		return request;
+	}
 	
 	
 	
