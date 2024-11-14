@@ -2,16 +2,12 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-import com.cotodel.hrms.auth.server.model.EntryModeMasterEntity;
 import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,11 +29,13 @@ public class ErupiVoucherCreateDetailsRequest {
     private LocalDate creationDate;
 	private String createdby;	
 	private Long accountId;
-	@NotBlank(message = "Organization cannot be blank")
+	@NotNull(message = "Organization cannot be null")
+    @Min(value = 1, message = "Organization ID must be greater than or equal to 1")
 	private Long orgId;	
 	private String accountNumber;			
 	//private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		discuss
-	private String response;	
+	private String response;
+	private String responseApi;
 	private String merchanttxnid;
 	private String creationmode;	
 	private Long bulktblId;
