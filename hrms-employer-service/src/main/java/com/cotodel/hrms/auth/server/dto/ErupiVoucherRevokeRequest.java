@@ -39,7 +39,8 @@ public class ErupiVoucherRevokeRequest {
 	//private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		discuss
 	@NotBlank(message = "Details id cannot be blank")
 	private Long detailsId;
-	private String response;	
+	private String response;
+	private String responseApi;
 	private String merchanttxnid;
 	private String creationmode;	
 	private Long bulktblId;

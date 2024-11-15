@@ -283,28 +283,52 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						//request.setCreateResponse(response1);
 						response=MessageConstant.RESPONSE_SUCCESS;
 						request.setResponse(response);
-						//REVOKE-SUCCESS
+						erupiVoucherRevokeDetailsRequest.setResponse(response);
+						//
 						JSONObject data = profileJsonRes.getJSONObject("data");
 						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
-						erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
-						erupiVoucherTxnDetailsEntity.setWorkFlowId(100005l);
-						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-						logger.info("erupiVoucherTxnDetailsEntity"+erupiVoucherTxnDetailsEntity);
+						
+						if(decryptedResponse.getStatus().equalsIgnoreCase("REVOKE-SUCCESS")) {
+							//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
+							request.setResponseApi(decryptedResponse.getMessage());
+							erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
+							int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
+							erupiVoucherTxnDetailsEntity.setWorkFlowId(100005l);
+							erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
+							erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+							}else {
+								response=MessageConstant.RESPONSE_FAILED;
+								request.setResponse(response);
+								erupiVoucherRevokeDetailsRequest.setResponse(decryptedResponse.getMessage());
+								request.setResponseApi(decryptedResponse.getMessage());
+								//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
+								//erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
+								erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
+								erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+							}
+						
+						
+						
+//						erupiVoucherTxnDetailsEntity.setResponse(data.toString());
+//						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
+//						erupiVoucherTxnDetailsEntity.setWorkFlowId(100005l);
+//						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
+//						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
 					}else {
 						//loginservice.sendEmailVerificationCompletion(userForm);
 						//request.setCreateResponse(response1);
 						response=MessageConstant.RESPONSE_FAILED;
 						request.setResponse(response);
+						erupiVoucherRevokeDetailsRequest.setResponse(response);
 						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
 						JSONObject data = profileJsonRes.getJSONObject("data");
 						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
 						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-						erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+						//erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
 						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-						logger.info("erupiVoucherTxnDetailsEntity"+erupiVoucherTxnDetailsEntity);
+						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
 					}
 					
 			//	}
@@ -314,7 +338,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				
 			}catch (Exception e) {
 				e.printStackTrace();
-				log.error("Error in ErupiVoucherInitiateDetailsServiceImpl......."+e.getMessage());
+				log.error("Error in ErupiVoucherInitiateDetailsServiceImpl. Revoke:......"+e.getMessage());
 			}
 			return erupiVoucherRevokeDetailsRequest;
 		}

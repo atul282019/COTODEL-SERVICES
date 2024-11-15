@@ -202,9 +202,9 @@ public class BankMasterController {
 				response=bankMasterService.updateBankMaster(bankMasterStatusRequest);
 				
 	    		if(response!=null) {
-	    			return ResponseEntity.ok(new BankMasterStatusResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new BankMasterStatusResponse(MessageConstant.TRUE,MessageConstant.PROFILE_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new BankMasterStatusResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new BankMasterStatusResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
