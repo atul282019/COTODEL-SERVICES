@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cotodel.hrms.auth.server.dto.BankMasterListResponse;
 import com.cotodel.hrms.auth.server.dto.BankMasterRequest;
 import com.cotodel.hrms.auth.server.dto.BankMasterSaveResponse;
+import com.cotodel.hrms.auth.server.dto.BankMasterStatusRequest;
+import com.cotodel.hrms.auth.server.dto.BankMasterStatusResponse;
 import com.cotodel.hrms.auth.server.dto.BankNameMasterListResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
@@ -176,5 +178,40 @@ public class BankMasterController {
 			}
 	        
 	        return ResponseEntity.ok(new BankNameMasterListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @PostMapping(value = "/update/bankMasterDetailStatus",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"})
+	    public ResponseEntity<Object> bankMasterDetailStatus(HttpServletRequest request,@Valid @RequestBody BankMasterStatusRequest bankMasterStatusRequest ) {
+		 
+	    log.info("inside bank master-------");	 
+	    
+	    	String message = "";
+	    	BankMasterStatusRequest response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=bankMasterService.updateBankMaster(bankMasterStatusRequest);
+				
+	    		if(response!=null) {
+	    			return ResponseEntity.ok(new BankMasterStatusResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new BankMasterStatusResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		log.error("error in getBankMasterDetailsList====="+e);
+	    		//message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new BankMasterStatusResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	}

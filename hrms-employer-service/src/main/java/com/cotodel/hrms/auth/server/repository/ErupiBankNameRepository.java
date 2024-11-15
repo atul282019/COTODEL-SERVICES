@@ -11,4 +11,6 @@ import com.cotodel.hrms.auth.server.model.ErupiBankNameMasterEntity;
 public interface ErupiBankNameRepository  extends JpaRepository<ErupiBankNameMasterEntity, Long>{
 	@Query("select s  from ErupiBankNameMasterEntity s where s.status='1'")
 	public List<ErupiBankNameMasterEntity> getErupiBankNameMaster();
+	
+	
 }

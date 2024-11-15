@@ -22,6 +22,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherInitiateDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryListDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryListResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
@@ -163,14 +164,14 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    	
 	    
 	    	String message = "";
-	    	List<ErupiVoucherSummaryDto> response=null;
+	    	ErupiVoucherSummaryListDto response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherSummaryList(erupiLinkAccountRequest);
 	    		
-				if(response!=null && response.size()>0) {
+				if(response!=null ) {
 	    			return ResponseEntity.ok(new ErupiVoucherSummaryListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
 	    			return ResponseEntity.ok(new ErupiVoucherSummaryListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));

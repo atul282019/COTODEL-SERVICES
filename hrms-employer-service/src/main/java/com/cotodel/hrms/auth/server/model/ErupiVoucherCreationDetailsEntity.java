@@ -121,4 +121,6 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
 	@Column(name="payer_va")
 	private String payerVA;
 	
+	@Column(name="vouchercode", length=19)
+	private String voucherCode;
 }

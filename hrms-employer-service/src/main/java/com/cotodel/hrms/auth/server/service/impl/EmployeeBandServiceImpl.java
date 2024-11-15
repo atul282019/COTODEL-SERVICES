@@ -1,15 +1,10 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder.Case;
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.cotodel.hrms.auth.server.dao.BandDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeBandAddTierDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeBandAddTierReviewDao;

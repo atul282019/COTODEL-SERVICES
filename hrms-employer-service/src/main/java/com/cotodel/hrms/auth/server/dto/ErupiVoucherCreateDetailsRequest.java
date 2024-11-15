@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -49,5 +50,6 @@ public class ErupiVoucherCreateDetailsRequest {
 	private String type;
 	@NotBlank(message = "bankCode cannot be blank")
 	private String bankcode;
+	private String voucherCode;
 	//private String createResponse;
 }

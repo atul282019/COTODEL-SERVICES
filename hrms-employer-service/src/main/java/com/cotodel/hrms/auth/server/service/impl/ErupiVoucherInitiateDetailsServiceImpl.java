@@ -25,12 +25,12 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeRequest;
-import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryListDto;
+import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnDetailsEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
-import com.cotodel.hrms.auth.server.repository.ErupiVoucherInitiateDetailsRepository;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherInitiateDetailsService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CommonUtils;
@@ -237,7 +237,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
 				
 				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.getErupiVoucherCreationDetails(request.getDetailsId());
-				if(erupiVoucherInitiateDetailsEntity!=null) {
+				if(erupiVoucherInitiateDetailsEntity==null) {
 					response=MessageConstant.DETAIL_ID;
 					erupiVoucherRevokeDetailsRequest.setResponse(response);
 					return erupiVoucherRevokeDetailsRequest;
@@ -283,6 +283,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						//request.setCreateResponse(response1);
 						response=MessageConstant.RESPONSE_SUCCESS;
 						request.setResponse(response);
+						//REVOKE-SUCCESS
 						JSONObject data = profileJsonRes.getJSONObject("data");
 						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
 						erupiVoucherTxnDetailsEntity.setResponse(data.toString());
@@ -319,36 +320,38 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 		}
 
 
-
 		@Override
 		public List<ErupiVoucherCreatedDto> getErupiVoucherCreateDetailsList(
 				ErupiVoucherCreatedRequest request) {
-			
 					
 			return erupiVoucherInitiateDetailsDao.getVoucherCreationList(request.getOrgId());
 		}
 
-
-
 		@Override
-		public List<ErupiVoucherSummaryDto> getErupiVoucherSummaryList(ErupiVoucherCreatedRequest request) {
+		public ErupiVoucherSummaryListDto getErupiVoucherSummaryList(ErupiVoucherCreatedRequest request) {
 			 List<ErupiVoucherSummaryDto> voucherSummaryDTOList = new ArrayList<>();
+			 ErupiVoucherSummaryListDto erupiVoucherSummaryListDto=new ErupiVoucherSummaryListDto();
 			try {
 				List<Object[]> resultList = erupiVoucherInitiateDetailsDao.getVoucherSummary(request.getOrgId());
-				 
-
+				  Long totalCount=0l;
+				  Long totAmount=0l;
 			        for (Object[] row : resultList) {
 			            Long count = ((BigInteger) row[0]).longValue();          // count(1)
 			            Float totalAmount = (Float) row[1]; // SUM(amount)
 			            String voucherName = (String) row[2]; // voucherdesc
 			            Long totalAmt =totalAmount.longValue(); 
+			            totalCount=totalCount+count;
+			            totAmount=totAmount+totalAmt;
 			            voucherSummaryDTOList.add(new ErupiVoucherSummaryDto(count, totalAmt, voucherName));
 			        }
-				
+			        erupiVoucherSummaryListDto.setData(voucherSummaryDTOList);
+			        erupiVoucherSummaryListDto.setTotalCount(totalCount);
+			        erupiVoucherSummaryListDto.setTotalAmount(totAmount);
+			        
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return voucherSummaryDTOList;
+			return erupiVoucherSummaryListDto;
 		}
 	    
 		
