@@ -21,16 +21,17 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
     public int updateWorkflowId(@Param("id") Long id,@Param("workflowid") Long workflowid);
 	
 	@Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
-			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type) "
+			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,w.description) "
 			+ "from ErupiVoucherCreationDetailsEntity c"
-			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId join WorkFlowMasterEntity w on c.workFlowId=w.workflowId where   c.orgId =?1 ")
+			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
+			+ "join WorkFlowMasterEntity w on c.workFlowId=w.workflowId  where   c.orgId =?1 ")
 	public List<ErupiVoucherCreatedDto> findVoucherCreateList(Long orgId);
 	
 	 @Query(value = "SELECT count(1), SUM(amount), " +
              "(SELECT voucherdesc FROM voucher_type_master c WHERE c.id_pk = a.voucher_id_pk) AS vname " +
              "FROM erupi_voucher_creation_details a, erupi_voucher_txn_details b " +
-             "WHERE a.id_pk = b.details_id AND b.workflowid =:workflowid AND a.org_id =:orgId " +
+             "WHERE a.id_pk = b.details_id AND b.workflowid ='100003' AND a.org_id =:orgId " +
              "GROUP BY a.voucher_id_pk", nativeQuery = true)
-	public List<Object[]> getVoucherSummary(@Param("workflowid") Long workflowid, @Param("orgId") Long orgId);
+	public List<Object[]> getVoucherSummary(@Param("orgId") Long orgId);
 	
 }

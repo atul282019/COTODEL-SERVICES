@@ -18,4 +18,5 @@ public class VoucherTypeMasterRequest {
 	private String purposeCode;
 	private String createdby;	
 	private String response;
+	private Long status;
 }

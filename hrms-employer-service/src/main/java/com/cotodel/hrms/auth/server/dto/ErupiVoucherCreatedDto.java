@@ -21,5 +21,5 @@ public class ErupiVoucherCreatedDto {
 	private LocalDate creationDate;
 	private LocalDate expDate;
 	private String type;
-	
+	private String voucherName;
 }

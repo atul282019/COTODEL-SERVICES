@@ -9,4 +9,5 @@ public interface ErupiLinkAccountDao {
 	public ErupiLinkAccountEntity findByOrgId(Long orgid);
 	public List<ErupiLinkAccountEntity> findByErupiLinkOrgId(Long orgid);
 	public ErupiLinkAccountEntity findByErupiLinkAccNumber(String accNo);
+	public ErupiLinkAccountEntity findByErupiPrimaryAccDetails(Long orgid);
 }

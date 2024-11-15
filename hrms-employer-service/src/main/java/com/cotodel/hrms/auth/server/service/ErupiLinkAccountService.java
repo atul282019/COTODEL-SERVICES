@@ -13,4 +13,5 @@ public interface ErupiLinkAccountService {
 	public List<ErupiLinkAccountWithOutResponse>  getErupiAccountListDetails(ErupiLinkAccountRequest request);
 	public ErupiLinkAccountEntity  getErupiAccountDetails(String accNumber);	
 	public ErupiLinkAccountRequest  updateErupiAccountPSFlag(ErupiLinkAccountRequest request);
+	public ErupiLinkAccountRequest  getErupiPrimaryAccountDetails(Long orgId);
 }

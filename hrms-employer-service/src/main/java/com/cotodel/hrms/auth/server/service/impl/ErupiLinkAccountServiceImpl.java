@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dao.BankMasterDao;
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
+import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
 import com.cotodel.hrms.auth.server.repository.EmployeeOnboardingRepository;
 import com.cotodel.hrms.auth.server.repository.ErupiLinkAccountRepository;
@@ -26,6 +28,9 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 
 	@Autowired
 	ErupiLinkAccountDao  erupiLinkAccountDao;
+	
+	@Autowired
+	BankMasterDao  bankMasterDao;
 	
 	@Autowired
 	EmployeeOnboardingRepository employeeOnboardingRepository;
@@ -133,6 +138,28 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			log.error("Error in ErupiLinkAccountServiceImpl......."+e.getMessage());
 		}
 		return request;
+	}
+
+	@Override
+	public ErupiLinkAccountRequest getErupiPrimaryAccountDetails(Long orgId) {
+		
+		String response="";
+		ErupiLinkAccountEntity erupiLinkAccountEntity=new ErupiLinkAccountEntity();
+		ErupiLinkAccountRequest erupiLinkAccountRequest=new ErupiLinkAccountRequest();
+		try {
+			erupiLinkAccountEntity=erupiLinkAccountDao.findByErupiPrimaryAccDetails(orgId);
+			CopyUtility.copyProperties(erupiLinkAccountEntity,erupiLinkAccountRequest);
+			
+			ErupiBankMasterEntity erupiBankMasterEntity=bankMasterDao.getDetails(erupiLinkAccountRequest.getBankCode());
+			if(erupiBankMasterEntity!=null) {
+				erupiLinkAccountRequest.setBankLogo(erupiBankMasterEntity.getBankLogo());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+		return erupiLinkAccountRequest;
 	}
 
 	

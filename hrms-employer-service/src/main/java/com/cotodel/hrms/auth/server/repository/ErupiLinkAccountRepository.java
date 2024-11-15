@@ -33,11 +33,9 @@ public interface ErupiLinkAccountRepository extends JpaRepository<ErupiLinkAccou
 	    @Query(value = "UPDATE erupi_linkaccount  SET ps_flag ='P' WHERE org_id =:orgId and acnumber=:acNumber", nativeQuery = true)
 		public int updateAccAsPrimary(@Param("orgId") Long orgId,@Param("acNumber") String acNumber);
 		
+		@Query("select s  from ErupiLinkAccountEntity s where s.psFlag='P' and s.orgId = ?1")
+		public ErupiLinkAccountEntity findPrimaryAccountByOrgId(Long orgId);
 		
-//		@Modifying
-//	    @Query(value = "UPDATE expense_category SET expense_category = :expenseCategory,expense_code = :expenseCode,day_to_expiry=:expirydays, expense_limit=:expenseLimit WHERE id = :id ", nativeQuery = true)
-//		public int updateAmountById(@Param(value = "expenseCategory") String expenseCategory,@Param(value = "expenseCode") String expenseCode,@Param(value = "expirydays") String expirydays,@Param(value = "expenseLimit") String expenseLimit,@Param(value = "id") Long id);
-//		
 		
 	
 }

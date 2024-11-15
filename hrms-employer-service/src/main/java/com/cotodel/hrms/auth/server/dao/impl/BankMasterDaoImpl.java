@@ -24,4 +24,16 @@ public class BankMasterDaoImpl implements BankMasterDao{
 	}
 
 
+
+	@Override
+	public ErupiBankMasterEntity getDetails(String bankCode) {
+		// TODO Auto-generated method stub
+		return bankMasterRepository.findByBankCode(bankCode);
+	}
+	
+	
+	
+	
+	
+
 }

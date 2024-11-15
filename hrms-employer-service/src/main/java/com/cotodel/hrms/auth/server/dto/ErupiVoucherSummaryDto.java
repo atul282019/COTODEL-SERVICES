@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ErupiVoucherSummaryDto {
 	private Long count;
-    private Float totalAmount;
+    private Long totalAmount;
     private String voucherName;
 }

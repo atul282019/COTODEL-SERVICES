@@ -334,15 +334,15 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 		public List<ErupiVoucherSummaryDto> getErupiVoucherSummaryList(ErupiVoucherCreatedRequest request) {
 			 List<ErupiVoucherSummaryDto> voucherSummaryDTOList = new ArrayList<>();
 			try {
-				List<Object[]> resultList = erupiVoucherInitiateDetailsDao.getVoucherSummary(request.getWorkflowid(),request.getOrgId());
+				List<Object[]> resultList = erupiVoucherInitiateDetailsDao.getVoucherSummary(request.getOrgId());
 				 
 
 			        for (Object[] row : resultList) {
 			            Long count = ((BigInteger) row[0]).longValue();          // count(1)
 			            Float totalAmount = (Float) row[1]; // SUM(amount)
 			            String voucherName = (String) row[2]; // voucherdesc
-
-			            voucherSummaryDTOList.add(new ErupiVoucherSummaryDto(count, totalAmount, voucherName));
+			            Long totalAmt =totalAmount.longValue(); 
+			            voucherSummaryDTOList.add(new ErupiVoucherSummaryDto(count, totalAmt, voucherName));
 			        }
 				
 			} catch (Exception e) {

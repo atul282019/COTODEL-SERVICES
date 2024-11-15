@@ -4,4 +4,5 @@ import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 
 public interface BankMasterDao {
 	public ErupiBankMasterEntity saveDetails(ErupiBankMasterEntity erupiBankMasterEntity);
+	public ErupiBankMasterEntity getDetails(String bankCode);
 }

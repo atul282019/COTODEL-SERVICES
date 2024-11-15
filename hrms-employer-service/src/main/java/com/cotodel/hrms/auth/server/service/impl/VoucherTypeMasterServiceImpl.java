@@ -82,7 +82,12 @@ public class VoucherTypeMasterServiceImpl implements VoucherTypeMasterService{
 		String response="";
 		try {			
 			response=MessageConstant.RESPONSE_FAILED;
-			int updateAll=voucherTypeMasterRepository.updateActiveStatus(request.getId());
+			int updateAll=0;
+			if(request.getStatus()==1) {
+				updateAll=voucherTypeMasterRepository.updateActiveStatus(request.getId(),"0",0l);
+			}else {
+				updateAll=voucherTypeMasterRepository.updateActiveStatus(request.getId(),"1",1l);
+			}
 			if(updateAll>0) {
 				response=MessageConstant.RESPONSE_SUCCESS;
 			}
