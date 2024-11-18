@@ -10,5 +10,6 @@ public interface ErupiVoucherTxnDao {
 	public List<ErupiVoucherTxnDetailsEntity> getVoucherTxnDetails();
 	public WorkFlowMasterEntity getWorkFlowId(Long workflowid,String type);
 	public List<ErupiVoucherTxnDetailsEntity> getVoucherTxnList(Long orgID);
+	public ErupiVoucherTxnDetailsEntity findByDetailId(Long id,Long workflowid);
 	
 }

@@ -39,7 +39,7 @@ public class BankMasterServiceImpl implements BankMasterService{
 		List<ErupiBankMasterEntity> eList=bankMasterRepository.findAll();
 		List<ErupiBankMasterEntity> eList2=new ArrayList<>();
 		for (ErupiBankMasterEntity erupiBankMasterEntity : eList) {
-			erupiBankMasterEntity.setBankLogo(null);
+			//erupiBankMasterEntity.setBankLogo(null);
 			eList2.add(erupiBankMasterEntity);
 		}
 		return eList2;

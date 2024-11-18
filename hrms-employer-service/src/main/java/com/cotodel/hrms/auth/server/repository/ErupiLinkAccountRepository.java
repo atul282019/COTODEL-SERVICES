@@ -25,15 +25,15 @@ public interface ErupiLinkAccountRepository extends JpaRepository<ErupiLinkAccou
 	
 		@Modifying
 	    @Transactional
-	    @Query(value = "UPDATE erupi_linkaccount  SET ps_flag ='S' WHERE org_id =:orgId", nativeQuery = true)
+	    @Query(value = "UPDATE erupi_linkaccount  SET ps_flag ='Secondary' WHERE org_id =:orgId", nativeQuery = true)
 	    public int updateAllAsSecondry(@Param("orgId") Long orgId);
 		
 		@Modifying
 	    @Transactional
-	    @Query(value = "UPDATE erupi_linkaccount  SET ps_flag ='P' WHERE org_id =:orgId and acnumber=:acNumber", nativeQuery = true)
+	    @Query(value = "UPDATE erupi_linkaccount  SET ps_flag ='Primary' WHERE org_id =:orgId and acnumber=:acNumber", nativeQuery = true)
 		public int updateAccAsPrimary(@Param("orgId") Long orgId,@Param("acNumber") String acNumber);
 		
-		@Query("select s  from ErupiLinkAccountEntity s where s.psFlag='P' and s.orgId = ?1")
+		@Query("select s  from ErupiLinkAccountEntity s where s.psFlag='Primary' and s.orgId = ?1")
 		public ErupiLinkAccountEntity findPrimaryAccountByOrgId(Long orgId);
 		
 		
