@@ -352,9 +352,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 		}
 
 		@Override
-		public ErupiVoucherSummaryListDto getErupiVoucherSummaryList(ErupiVoucherCreatedRequest request) {
+		public List<ErupiVoucherSummaryDto> getErupiVoucherSummaryList(ErupiVoucherCreatedRequest request) {
 			 List<ErupiVoucherSummaryDto> voucherSummaryDTOList = new ArrayList<>();
-			 ErupiVoucherSummaryListDto erupiVoucherSummaryListDto=new ErupiVoucherSummaryListDto();
+			 //ErupiVoucherSummaryListDto erupiVoucherSummaryListDto=new ErupiVoucherSummaryListDto();
 			try {
 				List<Object[]> resultList = erupiVoucherInitiateDetailsDao.getVoucherSummary(request.getOrgId());
 				  Long totalCount=0l;
@@ -368,14 +368,14 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			            totAmount=totAmount+totalAmt;
 			            voucherSummaryDTOList.add(new ErupiVoucherSummaryDto(count, totalAmt, voucherName));
 			        }
-			        erupiVoucherSummaryListDto.setData(voucherSummaryDTOList);
-			        erupiVoucherSummaryListDto.setTotalCount(totalCount);
-			        erupiVoucherSummaryListDto.setTotalAmount(totAmount);
+//			        erupiVoucherSummaryListDto.setData(voucherSummaryDTOList);
+//			        erupiVoucherSummaryListDto.setTotalCount(totalCount);
+//			        erupiVoucherSummaryListDto.setTotalAmount(totAmount);
 			        
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return erupiVoucherSummaryListDto;
+			return voucherSummaryDTOList;
 		}
 	    
 		

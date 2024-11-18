@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.repository;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,7 +22,7 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
     public int updateWorkflowId(@Param("id") Long id,@Param("workflowid") Long workflowid);
 	
 	@Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
-			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,w.description) "
+			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,c.voucherCode,c.voucherType,c.voucherDesc) "
 			+ "from ErupiVoucherCreationDetailsEntity c"
 			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
 			+ "join WorkFlowMasterEntity w on c.workFlowId=w.workflowId  where   c.orgId =?1 ")

@@ -22,11 +22,11 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherInitiateDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryListDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryListResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherInitiateDetailsService;
+import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -164,7 +164,9 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    	
 	    
 	    	String message = "";
-	    	ErupiVoucherSummaryListDto response=null;
+	    	Long count=0l;
+	    	Long amount=0l;
+	    	List<ErupiVoucherSummaryDto> response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
@@ -172,14 +174,18 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherSummaryList(erupiLinkAccountRequest);
 	    		
 				if(response!=null ) {
-	    			return ResponseEntity.ok(new ErupiVoucherSummaryListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+					count=CommonUtility.getCount(response);
+					amount=CommonUtility.getAmount(response);
+	    			return ResponseEntity.ok(new ErupiVoucherSummaryListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,count,amount,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new ErupiVoucherSummaryListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ErupiVoucherSummaryListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,count,amount,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		logger.error("error in erupiVoucherInitiateDetails====="+e);
 			}
 	        
-	        return ResponseEntity.ok(new ErupiVoucherSummaryListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new ErupiVoucherSummaryListResponse(MessageConstant.FALSE,message,count,amount,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
+	 
+	 
 }

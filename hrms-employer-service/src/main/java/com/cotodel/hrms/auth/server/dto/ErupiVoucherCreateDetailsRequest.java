@@ -51,5 +51,7 @@ public class ErupiVoucherCreateDetailsRequest {
 	@NotBlank(message = "bankCode cannot be blank")
 	private String bankcode;
 	private String voucherCode;
+	private String voucherType;
+	private String voucherDesc;
 	//private String createResponse;
 }

@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.util;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpEntity;
@@ -9,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 
 
 
@@ -73,6 +77,22 @@ public class CommonUtility {
 		}		
 	}
 
-	
+	public static Long getCount(List<ErupiVoucherSummaryDto> list) {
+		 Long totolCount=0l;
+		  for(ErupiVoucherSummaryDto dto:list) {
+			  Long count=dto.getCount();
+			  totolCount=totolCount+count;
+		  }
+		 return totolCount;
+	}
+		 public static Long getAmount(List<ErupiVoucherSummaryDto> list) {
+			 Long totolAmount=0l;
+			  for(ErupiVoucherSummaryDto dto:list) {
+				  Long amount=dto.getTotalAmount();
+				  totolAmount=totolAmount+amount;
+			  }
+			 return totolAmount;
+		 
+	 }
 	
 }
