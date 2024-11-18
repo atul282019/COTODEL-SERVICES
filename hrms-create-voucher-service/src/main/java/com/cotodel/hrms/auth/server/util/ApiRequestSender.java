@@ -67,7 +67,7 @@ public class ApiRequestSender {
 	        //System.out.println(jsonString);
 	        logger.info("createRequest :jsonString:"+jsonString);
 
-
+	        logger.info("api request :url:"+url);
 	        String message=sendRequest(jsonString, url,apiKey,privatePath); // Replace with your API URL
 	        logger.info("api request message :message:"+message);
 	        return message;

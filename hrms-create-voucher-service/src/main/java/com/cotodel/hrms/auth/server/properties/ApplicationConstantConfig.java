@@ -94,4 +94,9 @@ public class ApplicationConstantConfig {
         String clientIp = request.getRemoteAddr();
         return whitelistedIps.contains(clientIp);
     }
+    @Value("${erupi.voucher.status.url}")
+	public String getVoucherStatusUrl;
+    
+    @Value("${erupi.voucher.resend.url}")
+	public String getVoucherSmsUrl;
 }
