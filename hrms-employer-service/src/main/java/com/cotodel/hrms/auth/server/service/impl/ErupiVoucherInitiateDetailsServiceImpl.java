@@ -144,6 +144,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
 					JSONObject data = profileJsonRes.getJSONObject("data");
 					DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+					//decryptedResponse.getResponseCode()
 					//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 					erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
 					int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
