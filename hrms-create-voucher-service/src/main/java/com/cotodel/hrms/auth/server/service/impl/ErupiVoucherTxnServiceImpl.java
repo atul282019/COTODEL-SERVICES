@@ -48,9 +48,9 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 
 	public  String createVoucherRequest(ErupiVoucherCreateRequest req) {
 		JSONObject request= new JSONObject();		
-		request.put("merchantId", applicationConstantConfig.getCreateVouchersMid);
+		request.put("merchantId", req.getMerchantId());
 		request.put("merchantTranId", req.getMerchantTranId());
-		request.put("subMerchantId", applicationConstantConfig.getCreateVouchersMid);
+		request.put("subMerchantId", req.getSubMerchantId());
 		request.put("beneficiaryID", req.getBeneficiaryID());
 		request.put("mobileNumber", req.getMobileNumber());
 		request.put("beneficiaryName", req.getBeneficiaryName());
@@ -67,9 +67,9 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 	
 	public  String voucherStatusRequest(ErupiVoucherStatusRequest req) {
 		JSONObject request= new JSONObject();		
-		request.put("merchantId", applicationConstantConfig.getCreateVouchersMid);
+		request.put("merchantId", req.getMerchantId());
 		request.put("merchantTranId", req.getMerchantTranId());
-		request.put("subMerchantId", applicationConstantConfig.getCreateVouchersMid);
+		request.put("subMerchantId", req.getSubMerchantId());
 		request.put("transactionType", "V");
 		request.put("terminalId", req.getMcc());
 		request.put("UMN", req.getUmn());		
@@ -129,7 +129,7 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 	
 	public  String voucherSmsRequest(ErupiVoucherSmsRequest req) {
 		JSONObject request= new JSONObject();		
-		request.put("merchantId", applicationConstantConfig.getCreateVouchersMid);
+		request.put("merchantId", req.getMerchantId());
 		request.put("merchantTranId", req.getMerchantTranId());
 		request.put("mobileNumber", req.getMobile());
 		request.put("beneficiaryID", req.getBeneficiaryId());

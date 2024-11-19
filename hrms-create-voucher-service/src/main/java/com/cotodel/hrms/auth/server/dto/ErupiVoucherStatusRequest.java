@@ -12,4 +12,6 @@ public class ErupiVoucherStatusRequest {
 	private String merchantTranId;
 	private String mcc;	
 	private String umn;
+	private String merchantId;
+	private String subMerchantId;
 }
