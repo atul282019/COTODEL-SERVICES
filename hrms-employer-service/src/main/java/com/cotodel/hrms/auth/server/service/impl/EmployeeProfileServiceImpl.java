@@ -8,6 +8,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeDao;
@@ -106,6 +107,9 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 
 		response=MessageConstant.RESPONSE_SUCCESS;
 		user.setResponse(response);
+		}catch (DataIntegrityViolationException e) {
+			response=MessageConstant.DUP_PAN;
+			user.setResponse(response);
 		} catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
 			user.setResponse(response);

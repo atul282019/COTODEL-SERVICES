@@ -202,7 +202,7 @@ public class EmployeeOnboardingController {
 	    		
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in tryBulkEmplOnboarding====="+e);
 	    		//message=e.getMessage();
 			}
 	        
@@ -235,7 +235,7 @@ public class EmployeeOnboardingController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in tryBulkEmplOnboarding====="+e);
 	    		//message=e.getMessage();
 			}
 	        

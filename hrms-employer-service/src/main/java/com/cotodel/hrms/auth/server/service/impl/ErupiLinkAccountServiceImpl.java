@@ -4,20 +4,26 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dao.BankMasterDao;
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
+import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.repository.EmployeeOnboardingRepository;
 import com.cotodel.hrms.auth.server.repository.ErupiLinkAccountRepository;
 import com.cotodel.hrms.auth.server.service.ErupiLinkAccountService;
+import com.cotodel.hrms.auth.server.util.CommonUtility;
+import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 
@@ -38,20 +44,45 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 	@Autowired
 	ErupiLinkAccountRepository erupiLinkAccountRepository;
 	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
+	
 	@Override
 	public ErupiLinkAccountRequest saveErupiAccountDetails(ErupiLinkAccountRequest request) {
 		String response="";
+		String response1="";
+		String tokenvalue="";
 		ErupiLinkAccountEntity linkAccountErupiEntity=null;
 		List<EmployeeOnboardingEntity> list=new ArrayList<>();
 		try {
 			
-			list=employeeOnboardingRepository.findByOnboardingList(request.getOrgId());
-			if(list==null || list.size()==0) {
+//			list=employeeOnboardingRepository.findByOnboardingList(request.getOrgId());
+//			if(list==null || list.size()==0) {
+//				response=MessageConstant.ORG_ONBOARDING;
+//				request.setResponse(response);
+//				return request;
+//			}
+			
+			TokenGeneration token=new TokenGeneration();
+			UserRequest userRequest=new UserRequest();
+			userRequest.setId(request.getOrgId());
+				tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			 response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.existOrgid);
+			if (!ObjectUtils.isEmpty(response1)) {
+				JSONObject demoRes = new JSONObject(response1);
+				boolean status = demoRes.getBoolean("status");
+				if (!status) {
+					response=MessageConstant.ORG_ONBOARDING;
+					request.setResponse(response);
+					return request;
+						
+					}
+			}else {
 				response=MessageConstant.ORG_ONBOARDING;
 				request.setResponse(response);
 				return request;
 			}
-			
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);	
 			linkAccountErupiEntity=new ErupiLinkAccountEntity();

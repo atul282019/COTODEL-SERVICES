@@ -28,4 +28,5 @@ public class MessageConstant {
 	public static final String DUP_BANK_CODE = "Bank already exist.";
 	public static final String DUP_VR_CODE = "Voucher code already exist.";
 	public static final String DETAIL_ID = "Worang detail id.";
+	public static final String DUP_PAN = "PanCard already exist.";
 }

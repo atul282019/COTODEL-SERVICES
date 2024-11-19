@@ -63,7 +63,7 @@ public class EmployeePayrollController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in payrollDetails====="+e);
 	    		//message=e.getMessage();
 			}
 	        
@@ -80,7 +80,7 @@ public class EmployeePayrollController {
 	    @RequestMapping(value = "/add/savePayrollTaxDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> savePayrollTaxDetails(HttpServletRequest request,@Valid @RequestBody EmployeePayrollTaxRequest empolyeeRequest) {
-	    logger.info("inside saveDetails");	    	
+	    logger.info("inside savePayrollTaxDetails");	    	
 	    	
 	    	String message = "";
 	    	EmployeePayrollTaxRequest response=null;
@@ -95,7 +95,7 @@ public class EmployeePayrollController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in savePayrollTaxDetails====="+e);
 	    		//message=e.getMessage();
 			}
 	        
@@ -126,7 +126,7 @@ public class EmployeePayrollController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in payrollDetailsNew====="+e);
 	    		//message=e.getMessage();
 			}
 	        

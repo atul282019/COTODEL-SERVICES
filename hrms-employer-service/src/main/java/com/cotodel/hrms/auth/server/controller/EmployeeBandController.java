@@ -74,7 +74,7 @@ public class EmployeeBandController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in employeeBand====="+e);
 	    		//message=e.getMessage();
 			}
 	        
@@ -109,7 +109,7 @@ public class EmployeeBandController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in employeeBandAddTier====="+e);
 	    		//message=e.getMessage();
 			}
 	        
@@ -144,7 +144,7 @@ public class EmployeeBandController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in employeeBandAddTierReview====="+e);
 	    		//message=e.getMessage();
 			}
 	        

@@ -13,6 +13,7 @@ import com.cotodel.hrms.auth.server.dao.ErupiVoucherTxnDao;
 import com.cotodel.hrms.auth.server.dto.DecryptedResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTxnRequest;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.DecryptedSmsResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherSmsRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusSmsRequest;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
@@ -45,12 +46,12 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 	ApplicationConstantConfig applicationConstantConfig;
 		   
 	    
-	    public  DecryptedResponse jsonToPOJO(String json) {
+	    public  DecryptedSmsResponse jsonToPOJO(String json) {
 			
 			Gson gson = new Gson();
-			DecryptedResponse decryptedResponse =new DecryptedResponse();
+			DecryptedSmsResponse decryptedResponse =new DecryptedSmsResponse();
 			try {
-				decryptedResponse = gson.fromJson(json, DecryptedResponse.class);
+				decryptedResponse = gson.fromJson(json, DecryptedSmsResponse.class);
 			} catch (Exception e) {
 				logger.error("error in CallApiVoucherCreateResponse..."+e.getMessage());
 			}
@@ -66,15 +67,18 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 	    	return erupiVoucherTxnDetailsEntity;
 	    }
 	    
-	    private ErupiVoucherTxnDetailsEntity setResponseValue(DecryptedResponse decryptedResponse,ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity) {
-	    	erupiVoucherTxnDetailsEntity.setUuid(decryptedResponse.getUuid()==null?"":decryptedResponse.getUuid());
-	    	erupiVoucherTxnDetailsEntity.setUmn(decryptedResponse.getUmn()==null?"":decryptedResponse.getUmn());
+	    private ErupiVoucherTxnDetailsEntity setResponseValue(DecryptedSmsResponse decryptedResponse,ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity) {
+	    	//erupiVoucherTxnDetailsEntity.setUuid(decryptedResponse.getUuid()==null?"":decryptedResponse.getUuid());
+	    	//erupiVoucherTxnDetailsEntity.setUmn(decryptedResponse.getUmn()==null?"":decryptedResponse.getUmn());
 	    	LocalDateTime eventDateTime = LocalDateTime.now();	
 	    	erupiVoucherTxnDetailsEntity.setCreationDate(eventDateTime);
-	    	erupiVoucherTxnDetailsEntity.setStatusApi(decryptedResponse.getStatus()==null?"":decryptedResponse.getStatus());
+	    	erupiVoucherTxnDetailsEntity.setSmsResponse(decryptedResponse.getResponse_Status());
+	    	erupiVoucherTxnDetailsEntity.setSmsActcode(decryptedResponse.getActCode());
+	    	erupiVoucherTxnDetailsEntity.setSmsDesc(decryptedResponse.getDescription());
+	    	//erupiVoucherTxnDetailsEntity.setStatusApi(decryptedResponse.getStatus()==null?"":decryptedResponse.getStatus());
 	    	erupiVoucherTxnDetailsEntity.setResponseCode(decryptedResponse.getResponseCode());
-	    	erupiVoucherTxnDetailsEntity.setResultCallApi(decryptedResponse.getMessage()==null?"":decryptedResponse.getMessage());
-	    	erupiVoucherTxnDetailsEntity.setResponse(decryptedResponse.getResponse()==null?"":decryptedResponse.getResponse());
+	    	//erupiVoucherTxnDetailsEntity.setResultCallApi(decryptedResponse.getDescription()==null?"":decryptedResponse.getDescription());
+	    	//erupiVoucherTxnDetailsEntity.setResponse(decryptedResponse.getResponse_Status()==null?"":decryptedResponse.getResponse_Status());
 	    	return erupiVoucherTxnDetailsEntity;
 	    }
 
@@ -116,8 +120,12 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 				voucherCreateRequest.setBeneficiaryId(erupiVoucherInitiateDetailsEntity.getBeneficiaryID());
 				voucherCreateRequest.setUmn(erupiVoucherTxnDetailsEntity.getUmn());
 				voucherCreateRequest.setUuid(erupiVoucherTxnDetailsEntity.getUuid());
-				voucherCreateRequest.setSmsCategory(erupiVoucherTxnDetailsEntity.getVoucherType());				
-				
+				String sms=erupiVoucherTxnDetailsEntity.getVoucherType();
+				if(erupiVoucherTxnDetailsEntity.getVoucherType().equalsIgnoreCase("CREATE")) {
+					sms="Creation";
+				}
+				voucherCreateRequest.setSmsCategory(sms);				
+				voucherCreateRequest.setMerchantId(erupiVoucherInitiateDetailsEntity.getMerchantId());
 				log.info("Starting voucher create request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());
 				
 				//erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
@@ -141,11 +149,11 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 						//erupiVoucherRevokeDetailsRequest.setResponse(response);
 						//
 						JSONObject data = profileJsonRes.getJSONObject("data");
-						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+						DecryptedSmsResponse decryptedResponse= jsonToPOJO(data.toString());
 						
-						if(decryptedResponse.getStatus().equalsIgnoreCase("REVOKE-SUCCESS")) {
+						if(decryptedResponse.getResponse_Status().equalsIgnoreCase("Success")) {
 							//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-							request.setResponseApi(decryptedResponse.getMessage());
+							request.setResponseApi(decryptedResponse.getDescription());
 							//erupiVoucherTxnDetailsEntity.setId(null);
 							//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 							erupiVoucherTxnDetailsEntity2.setWorkFlowId(100006l);
@@ -154,9 +162,9 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 							}else {
 								response=MessageConstant.RESPONSE_FAILED;
 								request.setResponse(response);
-								erupiVoucherTxnDetailsEntity.setId(null);
+								//erupiVoucherTxnDetailsEntity.setId(null);
 								//erupiVoucherRevokeDetailsRequest.setResponse(decryptedResponse.getMessage());
-								request.setResponseApi(decryptedResponse.getMessage());
+								request.setResponseApi(decryptedResponse.getDescription());
 								erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 								erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}
@@ -169,7 +177,7 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 						//erupiVoucherRevokeDetailsRequest.setResponse(response);
 						//erupiVoucherTxnDetailsEntity.setId(null);
 						JSONObject data = profileJsonRes.getJSONObject("data");
-						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+						DecryptedSmsResponse decryptedResponse= jsonToPOJO(data.toString());
 						erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 						erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity2);

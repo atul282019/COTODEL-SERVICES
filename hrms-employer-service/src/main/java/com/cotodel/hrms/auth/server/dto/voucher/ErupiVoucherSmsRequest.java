@@ -15,5 +15,6 @@ public class ErupiVoucherSmsRequest {
 	private String umn;
 	private String uuid;
 	private String smsCategory;
+	private String merchantId;
 }
 

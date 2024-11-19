@@ -64,7 +64,7 @@ public class EmployeeProfileController {
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 	    			return ResponseEntity.ok(new EmployeeProfileResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new EmployeeProfileResponse(false,MessageConstant.PROFILE_FAILED,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new EmployeeProfileResponse(false,response.getResponse(),empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
@@ -84,7 +84,7 @@ public class EmployeeProfileController {
 	    @RequestMapping(value = "/get/updateProfileDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> updateProfileDetails(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest empolyeeProfileRequest) {
-	    logger.info("inside saveProfileDetails");	    	
+	    logger.info("inside updateProfileDetails");	    	
 	    	
 	    	SignUpEntity userEntity=null;
 	    	String message = "";
@@ -100,7 +100,7 @@ public class EmployeeProfileController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in updateProfileDetails====="+e);
 	    		//message=e.getMessage();
 			}
 	        
@@ -149,7 +149,7 @@ public class EmployeeProfileController {
 	    @RequestMapping(value = "/get/getEmpComplete",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getEmpComplete(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest employeeProfileRequest) {
-	    logger.info("inside empAllDetails.....+++");	    	
+	    logger.info("inside getEmpComplete.....+++");	    	
 	    	
 	    
 	    	String message = "";
@@ -166,7 +166,7 @@ public class EmployeeProfileController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in empAllDetails====="+e);
+	    		logger.error("error in getEmpComplete====="+e);
 	    		//message=e.getMessage();
 			}
 	        

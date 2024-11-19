@@ -67,7 +67,7 @@ public class EmployeeOnboardingFailController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in saveBulkFail====="+e);
 	    		//message=e.getMessage();
 			}
 	        
@@ -100,7 +100,7 @@ public class EmployeeOnboardingFailController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in saveProfileDetails====="+e);
+	    		logger.error("error in empOnboardingFailList====="+e);
 	    		//message=e.getMessage();
 			}
 	        

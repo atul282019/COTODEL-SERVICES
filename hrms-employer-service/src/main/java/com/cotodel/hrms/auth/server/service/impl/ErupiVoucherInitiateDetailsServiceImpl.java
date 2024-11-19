@@ -26,7 +26,6 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryListDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTxnRequest;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
@@ -145,6 +144,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					JSONObject data = profileJsonRes.getJSONObject("data");
 					DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
 					//decryptedResponse.getResponseCode()
+					request.setResponseApi("Bad request some field are missing");
 					//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 					erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
 					int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
@@ -434,7 +434,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				voucherCreateRequest.setSubMerchantId(erupiVoucherInitiateDetailsEntity.getSubMerchantId());
 				
 				log.info("Starting voucher revoking single request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());	
-				erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
+				//erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 					
 					String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
 							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
