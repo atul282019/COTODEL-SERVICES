@@ -55,4 +55,6 @@ public class ErupiVoucherRevokeRequest {
 	@NotBlank(message = "bankCode cannot be blank")
 	private String bankcode;
 	//private String createResponse;
+	private String merchantId;
+	private String subMerchantId;
 }

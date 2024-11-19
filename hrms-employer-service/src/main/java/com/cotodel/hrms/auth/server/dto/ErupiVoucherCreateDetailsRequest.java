@@ -54,4 +54,6 @@ public class ErupiVoucherCreateDetailsRequest {
 	private String voucherType;
 	private String voucherDesc;
 	//private String createResponse;
+	private String merchantId;
+	private String subMerchantId;
 }

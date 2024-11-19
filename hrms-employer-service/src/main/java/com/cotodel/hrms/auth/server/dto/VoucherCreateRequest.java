@@ -19,4 +19,6 @@ public class VoucherCreateRequest {
 	private String voucherRedemptionType;
 	private String payerVA;
 	private String type;
+	private String merchantId;
+	private String subMerchantId;
 }

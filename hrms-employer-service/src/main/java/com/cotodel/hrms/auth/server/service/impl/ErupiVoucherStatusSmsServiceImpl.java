@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherTxnDao;
 import com.cotodel.hrms.auth.server.dto.DecryptedResponse;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherTxnRequest;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherSmsRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusSmsRequest;
@@ -20,6 +21,7 @@ import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherStatusSmsService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CommonUtils;
+import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.google.gson.Gson;
 
@@ -128,7 +130,10 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 					
 					
 					profileJsonRes= new JSONObject(response1);
-					
+					ErupiVoucherTxnRequest erupi=new ErupiVoucherTxnRequest();
+					CopyUtility.copyProperties(erupiVoucherTxnDetailsEntity,erupi);
+					ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity2=new ErupiVoucherTxnDetailsEntity();
+					CopyUtility.copyProperties(erupi,erupiVoucherTxnDetailsEntity2);
 					if(profileJsonRes.getBoolean("status")) { 
 						//request.setCreateResponse(response1);
 						response=MessageConstant.RESPONSE_SUCCESS;
@@ -141,33 +146,33 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 						if(decryptedResponse.getStatus().equalsIgnoreCase("REVOKE-SUCCESS")) {
 							//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 							request.setResponseApi(decryptedResponse.getMessage());
-							erupiVoucherTxnDetailsEntity.setId(null);
+							//erupiVoucherTxnDetailsEntity.setId(null);
 							//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
-							erupiVoucherTxnDetailsEntity.setWorkFlowId(100006l);
-							erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-							erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+							erupiVoucherTxnDetailsEntity2.setWorkFlowId(100006l);
+							erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
+							erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}else {
 								response=MessageConstant.RESPONSE_FAILED;
 								request.setResponse(response);
 								erupiVoucherTxnDetailsEntity.setId(null);
 								//erupiVoucherRevokeDetailsRequest.setResponse(decryptedResponse.getMessage());
 								request.setResponseApi(decryptedResponse.getMessage());
-								erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-								erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+								erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
+								erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}
 						
-						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
+						logger.info("erupiVoucherTxnDetailsEntity Sms:"+erupiVoucherTxnDetailsEntity);
 					}else {
 
 						response=MessageConstant.RESPONSE_FAILED;
 						request.setResponse(response);
 						//erupiVoucherRevokeDetailsRequest.setResponse(response);
-						erupiVoucherTxnDetailsEntity.setId(null);
+						//erupiVoucherTxnDetailsEntity.setId(null);
 						JSONObject data = profileJsonRes.getJSONObject("data");
 						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
-						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
+						erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
+						erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
+						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity2);
 					}
 					
 			//	}
