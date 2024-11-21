@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BankMasterRequest {
+	private Long id;
 	@NotBlank(message = "bankCode cannot be blank")
 	 private String bankCode;
 	@NotBlank(message = "bankName cannot be blank")
