@@ -61,6 +61,7 @@ public class EmployeeProfileController {
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				response=employeeProfileService.saveProfileDetails(empolyeeProfileRequest);
+				//System.out.println("HHHHHHHHHHHHHHHHHHH");
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 	    			return ResponseEntity.ok(new EmployeeProfileResponse(true,MessageConstant.PROFILE_SUCCESS,empolyeeProfileRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {

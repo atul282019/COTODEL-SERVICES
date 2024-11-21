@@ -5,11 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
@@ -23,7 +22,7 @@ import com.cotodel.hrms.auth.server.model.SignUpEntity;
 import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
-@Transactional
+
 @Repository
 public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	
@@ -110,9 +109,11 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		}catch (DataIntegrityViolationException e) {
 			response=MessageConstant.DUP_PAN;
 			user.setResponse(response);
-		} catch (Exception e) {
-			response=MessageConstant.RESPONSE_FAILED;
-			user.setResponse(response);
+		}
+		 catch (Exception e) {
+			//response=MessageConstant.RESPONSE_FAILED;
+			//user.setResponse(response);
+			 
 		}
 		return user;
 	}

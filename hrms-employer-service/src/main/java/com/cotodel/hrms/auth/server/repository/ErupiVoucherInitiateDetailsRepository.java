@@ -28,11 +28,15 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ "join WorkFlowMasterEntity w on c.workFlowId=w.workflowId  where   c.orgId =?1 ")
 	public List<ErupiVoucherCreatedDto> findVoucherCreateList(Long orgId);
 	
-	 @Query(value = "SELECT count(1), SUM(amount), " +
-             "(SELECT voucherdesc FROM voucher_type_master c WHERE c.id_pk = a.voucher_id_pk) AS vname " +
-             "FROM erupi_voucher_creation_details a, erupi_voucher_txn_details b " +
-             "WHERE a.id_pk = b.details_id AND b.workflowid ='100003' AND a.org_id =:orgId " +
-             "GROUP BY a.voucher_id_pk", nativeQuery = true)
+//	 @Query(value = "SELECT count(1), SUM(amount), " +
+//             "(SELECT voucherdesc FROM voucher_type_master c WHERE c.id_pk = a.voucher_id_pk) AS vname " +
+//             "FROM erupi_voucher_creation_details a, erupi_voucher_txn_details b " +
+//             "WHERE a.id_pk = b.details_id AND b.workflowid ='100003' AND a.org_id =:orgId " +
+//             "GROUP BY a.voucher_id_pk", nativeQuery = true)
+	@Query(value = "SELECT count (1),(SELECT type FROM hrms1.workflowmaster w WHERE w.workflowid=b.workflowid) as type ,"
+			+ " SUM(amount),(SELECT voucherdesc FROM hrms1.voucher_type_master c WHERE c.id_pk=a.voucher_id_pk) as vname FROM hrms1.erupi_voucher_creation_details a, hrms1.erupi_voucher_txn_details b "
+			+ "WHERE a.id_pk=b.details_id  and a.org_id=:orgId "
+			+ "GROUP BY a.voucher_id_pk,b.workflowid ", nativeQuery = true)
 	public List<Object[]> getVoucherSummary(@Param("orgId") Long orgId);
 	
 }

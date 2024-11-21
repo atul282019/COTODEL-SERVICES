@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ErupiVoucherSummaryDto {
 	private Long count;
+	private String type;
     private Long totalAmount;
     private String voucherName;
 }

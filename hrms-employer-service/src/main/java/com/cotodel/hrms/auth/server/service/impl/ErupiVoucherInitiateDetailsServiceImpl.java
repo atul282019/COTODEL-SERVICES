@@ -364,12 +364,13 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				  Long totAmount=0l;
 			        for (Object[] row : resultList) {
 			            Long count = ((BigInteger) row[0]).longValue();          // count(1)
-			            Float totalAmount = (Float) row[1]; // SUM(amount)
-			            String voucherName = (String) row[2]; // voucherdesc
+			            String type = (String) row[1];
+			            Float totalAmount = (Float) row[2]; // SUM(amount)
+			            String voucherName = (String) row[3]; // voucherdesc
 			            Long totalAmt =totalAmount.longValue(); 
 			            totalCount=totalCount+count;
 			            totAmount=totAmount+totalAmt;
-			            voucherSummaryDTOList.add(new ErupiVoucherSummaryDto(count, totalAmt, voucherName));
+			            voucherSummaryDTOList.add(new ErupiVoucherSummaryDto(count,type,totalAmt, voucherName));
 			        }
 //			        erupiVoucherSummaryListDto.setData(voucherSummaryDTOList);
 //			        erupiVoucherSummaryListDto.setTotalCount(totalCount);

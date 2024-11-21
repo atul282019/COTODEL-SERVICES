@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherSmsResponse;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusSmsRequest;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
@@ -50,7 +51,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> erupiVoucherSms(HttpServletRequest request,@Valid @RequestBody ErupiVoucherStatusSmsRequest erupiVoucherStatusSmsRequest) {
 		 
-	    logger.info("inside erupiVoucherRevoke....");	    	
+	    logger.info("inside erupiVoucherSms....");	    	
 	    	
 	    
 	    	String message = "";
@@ -60,21 +61,54 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=erupiVoucherStatusSmsService.erupiVoucherStatusSmsDetails(erupiVoucherStatusSmsRequest);
+				response=erupiVoucherStatusSmsService.erupiVoucherSmsDetails(erupiVoucherStatusSmsRequest);
 	    		
 				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new ErupiVoucherSmsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ErupiVoucherSmsResponse(MessageConstant.TRUE,response.getResponseApi(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
 	    			return ResponseEntity.ok(new ErupiVoucherSmsResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		logger.error("error in erupiVoucherRevokeDetails====="+e);
+	    		logger.error("error in erupiVoucherSms====="+e);
 			}
 	        
 	        return ResponseEntity.ok(new ErupiVoucherSmsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	 
-	
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/erupiVoucherStatus",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> erupiVoucherStatus(HttpServletRequest request,@Valid @RequestBody ErupiVoucherStatusRequest erupiVoucherStatusRequest) {
+		 
+	    logger.info("inside erupiVoucherStatus....");	    	
+	    	
+	    
+	    	String message = "";
+	    	ErupiVoucherStatusRequest response=null;
+	    	try {
+	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=erupiVoucherStatusSmsService.erupiVoucherStatusDetails(erupiVoucherStatusRequest);
+	    		
+				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new ErupiVoucherStatusResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new ErupiVoucherStatusResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		logger.error("error in erupiVoucherStatus====="+e);
+			}
+	        
+	        return ResponseEntity.ok(new ErupiVoucherStatusResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
 	 
 	 
 }
