@@ -66,7 +66,7 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			TokenGeneration token=new TokenGeneration();
 			UserRequest userRequest=new UserRequest();
 			userRequest.setId(request.getOrgId());
-				tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+				tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			 response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
 					applicationConstantConfig.userServiceApiUrl+CommonUtils.existOrgid);
 			if (!ObjectUtils.isEmpty(response1)) {

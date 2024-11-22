@@ -11,4 +11,5 @@ public interface ErupiVoucherInitiateDetailsDao {
 	public List<ErupiVoucherCreatedDto> getVoucherCreationList(Long orgid);
 	public ErupiVoucherCreationDetailsEntity getErupiVoucherCreationDetails(Long id);
 	public List<Object []> getVoucherSummary(Long orgID);
+	public List<Object []> getVoucherCreateSummary(Long orgID);
 }

@@ -16,6 +16,7 @@ import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.EmployeeOnboardingService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
+import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 @Repository
@@ -36,13 +37,13 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		TokenGeneration token=new TokenGeneration();
 		UserRequest userRequest=new UserRequest();
 		try {
-			tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			userRequest.setUsername(request.getName());
 			userRequest.setMobile(request.getMobile());
 			userRequest.setEmail(request.getEmail());
 			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceAddUrl);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMail);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
@@ -99,7 +100,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		TokenGeneration token=new TokenGeneration();
 		UserRequest userRequest=new UserRequest();
 		try {
-			tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			userRequest.setUsername(request.getName());
 			userRequest.setMobile(request.getMobile());
 			userRequest.setEmail(request.getEmail());
@@ -108,7 +109,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			userRequest.setUpdateStatus(request.isEmailStatus());
 			
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceAddBulkUrl);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersBulk);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
@@ -152,7 +153,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		TokenGeneration token=new TokenGeneration();
 		UserRequest userRequest=new UserRequest();
 		try {
-			tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			for (EmployeeOnboardingRequest employeeOnboardingRequest : request) {
 				
 			
@@ -161,7 +162,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			userRequest.setEmail(employeeOnboardingRequest.getEmail());
 			userRequest.setEmployerid(employeeOnboardingRequest.getEmployerId()==null?0:employeeOnboardingRequest.getEmployerId().intValue());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceUpdateBulkUrl);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.updateUser);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
@@ -215,14 +216,14 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		List<EmployeeOnboardingRequest> emList=new ArrayList<EmployeeOnboardingRequest>();
 		for (EmployeeOnboardingRequest employeeOnboardingRequest : request) {
 		try {
-			tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			
 			userRequest.setUsername(employeeOnboardingRequest.getName());
 			userRequest.setMobile(employeeOnboardingRequest.getMobile());
 			userRequest.setEmail(employeeOnboardingRequest.getEmail());
 			userRequest.setEmployerid(employeeOnboardingRequest.getEmployerId()==null?0:employeeOnboardingRequest.getEmployerId().intValue());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceAddUrl);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMail);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
@@ -282,13 +283,13 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		TokenGeneration token=new TokenGeneration();
 		UserRequest userRequest=new UserRequest();
 		try {
-			tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			userRequest.setUsername(request.getName());
 			userRequest.setMobile(request.getMobile());
 			userRequest.setEmail(request.getEmail());
 			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceAddNewUrl);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMailNew);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");

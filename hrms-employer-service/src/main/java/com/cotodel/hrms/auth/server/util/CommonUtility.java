@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
 
 
 
@@ -94,5 +95,23 @@ public class CommonUtility {
 			 return totolAmount;
 		 
 	 }
+		 
+		 public static Long getCreateCount(List<ErupiVoucherCreateSummaryDto> list) {
+			 Long totolCount=0l;
+			  for(ErupiVoucherCreateSummaryDto dto:list) {
+				  Long count=dto.getCount();
+				  totolCount=totolCount+count;
+			  }
+			 return totolCount;
+		}
+			 public static Long getCreateAmount(List<ErupiVoucherCreateSummaryDto> list) {
+				 Long totolAmount=0l;
+				  for(ErupiVoucherCreateSummaryDto dto:list) {
+					  Long amount=dto.getTotalAmount();
+					  totolAmount=totolAmount+amount;
+				  }
+				 return totolAmount;
+			 
+		 }
 	
 }
