@@ -133,24 +133,10 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					message += name == false ? "Invalid name" : "";
 					message += amountValid == false ? "Invalid amount" : "";
 					
-					if (mob && name && amountValid) {
-						VoucherBulkUploadSuccessEntity voucherBulkUploadSuccessEntity = new VoucherBulkUploadSuccessEntity();
+					if (mob && name && amountValid) {		
 						
-						CopyUtility.copyProperties(request, voucherBulkUploadSuccessEntity);
-						voucherBulkUploadSuccessEntity.setBulktblId(voucherBulkUploadEntity.getId());
-						
-						voucherBulkUploadSuccessEntity.setFileName(uniqueFileName);
-						voucherBulkUploadSuccessEntity.setVoucherType(voucherType);
-						voucherBulkUploadSuccessEntity.setBeneficiaryName(benName);
-						voucherBulkUploadSuccessEntity.setMobile(mobile);
-						voucherBulkUploadSuccessEntity.setAmount(amount);
-						voucherBulkUploadSuccessEntity.setStartDate(stDate);
-						voucherBulkUploadSuccessEntity.setExpDate(etDate);
-						voucherBulkUploadSuccessEntity.setStatus(1l);
-						LocalDate curDate = LocalDate.now();
-						voucherBulkUploadSuccessEntity.setCreationDate(curDate);
-						voucherBulkUploadSuccessEntity.setOrgId(orgId);
-						erupiVoucherBulkDao.saveSuccessDetails(voucherBulkUploadSuccessEntity);
+						saveSuccess(request,voucherBulkUploadEntity.getId(),uniqueFileName,voucherType,
+								benName,mobile,amount,stDate,etDate,orgId);
 						successCount++;
 
 					} else {
@@ -229,7 +215,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 			logger.error("Error :: " + e.getMessage());
 		}
 		
-		return null;
+		return erupiList;
 	}
 	public long getMerchantTranId() {
         Query query = entityManager.createNativeQuery("SELECT nextval('merchanttranid')");
@@ -256,6 +242,26 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 			// TODO: handle exception
 		}
 		return result;
+	}
+	
+	public void saveSuccess(ErupiVoucherBulkUploadRequest request,Long id,String uniqueFileName,
+			String voucherType,String benName,String mobile,String amount,LocalDate stDate,LocalDate etDate,Long orgId) {
+		VoucherBulkUploadSuccessEntity voucherBulkUploadSuccessEntity = new VoucherBulkUploadSuccessEntity();
+		CopyUtility.copyProperties(request, voucherBulkUploadSuccessEntity);
+		voucherBulkUploadSuccessEntity.setBulktblId(id);
+		
+		voucherBulkUploadSuccessEntity.setFileName(uniqueFileName);
+		voucherBulkUploadSuccessEntity.setVoucherType(voucherType);
+		voucherBulkUploadSuccessEntity.setBeneficiaryName(benName);
+		voucherBulkUploadSuccessEntity.setMobile(mobile);
+		voucherBulkUploadSuccessEntity.setAmount(amount);
+		voucherBulkUploadSuccessEntity.setStartDate(stDate);
+		voucherBulkUploadSuccessEntity.setExpDate(etDate);
+		voucherBulkUploadSuccessEntity.setStatus(1l);
+		LocalDate curDate = LocalDate.now();
+		voucherBulkUploadSuccessEntity.setCreationDate(curDate);
+		voucherBulkUploadSuccessEntity.setOrgId(orgId);
+		erupiVoucherBulkDao.saveSuccessDetails(voucherBulkUploadSuccessEntity);
 	}
 
 }
