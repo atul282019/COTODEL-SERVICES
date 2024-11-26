@@ -12,4 +12,8 @@ public interface ErupiVoucherBulkDao {
 	public VoucherBulkUploadFailEntity saveFailDetails(VoucherBulkUploadFailEntity erBulkUploadEntity);
 	public List<VoucherBulkUploadSuccessEntity> findSuccessList(Long orgId, String fileName);
 	public List<VoucherBulkUploadFailEntity> findFailList(Long orgId, String fileName);
+	public VoucherBulkUploadSuccessEntity findSuccessDetails(Long id);
+	public int updateSuccessFlag(Long id);
+	public int updateSuccessStatus(Long id);
+	
 }

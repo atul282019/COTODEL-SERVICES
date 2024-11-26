@@ -35,9 +35,6 @@ public class VoucherBulkUploadSuccessEntity implements Serializable{
 	@Column(name="file_name")
 	private String fileName;
 	
-	@Column(name = "creation_date")
-    private LocalDate creationDate;
-	
 	@Column(name="voucher_type")
 	private String voucherType;
 	
@@ -62,5 +59,54 @@ public class VoucherBulkUploadSuccessEntity implements Serializable{
 	@Column(name = "org_id")
     private Long orgId;
 	
+	@Column(name = "purposecode", length =29 )
+    private String purposeCode;
 	
+	@Column(name = "creation_date")
+    private LocalDate creationDate;
+	
+	@Column(name="createdby", length=49)
+	private String createdby;
+	
+	@Column(name="account_id")
+	private Long accountId;
+	
+	@Column(name="accountnumber",length = 49)
+	private String accountNumber;
+		
+	@Column(name="bulktbl_id")
+	private Long bulktblId;
+
+	@Column(name="redemtion_type")
+	private String redemtionType;
+	
+	@Column(name="mcc")
+	private String mcc;
+	
+	@Column(name="beneficiary_id")
+	private String beneficiaryID;
+	
+	@Column(name="payer_va")
+	private String payerVA;
+	
+	@Column(name="vouchercode", length=19)
+	private String voucherCode;
+	
+	@Column(name="voucherdesc", length=19)
+	private String voucherDesc;
+	
+	@Column(name="merchantid", length=19)
+	private String merchantId;
+	
+	@Column(name="submerchantid", length=19)
+	private String subMerchantId;
+	
+	@Column(name="type", length=19)
+	private String type;
+	
+	@Column(name="bankcode")
+	private String bankcode;
+	
+	@Column(name="status")
+	private Long status;
 }

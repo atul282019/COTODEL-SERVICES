@@ -12,4 +12,6 @@ public interface VoucherBulkUploadFailRepository extends JpaRepository<VoucherBu
 	@Query("select s  from VoucherBulkUploadFailEntity s where s.orgId =:orgId and s.fileName=:fileName ")
 	public List<VoucherBulkUploadFailEntity> findByOrgIdAndFileName(@Param("orgId") Long orgId,
 		    @Param("fileName") String fileName);
+	
+	
 }

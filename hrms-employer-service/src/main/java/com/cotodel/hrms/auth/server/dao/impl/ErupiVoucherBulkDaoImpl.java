@@ -53,6 +53,24 @@ public class ErupiVoucherBulkDaoImpl implements ErupiVoucherBulkDao{
 		// TODO Auto-generated method stub
 		return voucherBulkUploadFailRepository.findByOrgIdAndFileName(orgId, fileName);
 	}
+
+	@Override
+	public VoucherBulkUploadSuccessEntity findSuccessDetails(Long id) {
+		// TODO Auto-generated method stub
+		return voucherBulkUploadSuccessRepository.findByIdWithFlagN(id);
+	}
+
+	@Override
+	public int updateSuccessFlag(Long id) {
+		// TODO Auto-generated method stub
+		return voucherBulkUploadSuccessRepository.updateSuccessFlag(id);
+	}
+
+	@Override
+	public int updateSuccessStatus(Long id) {
+		// TODO Auto-generated method stub
+		return voucherBulkUploadSuccessRepository.updateSuccessStatus(id);
+	}
 	
 	
 

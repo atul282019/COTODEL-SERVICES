@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.util;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -169,4 +170,18 @@ public class CommonUtility {
 	        // Combine the date string with the file extension to create a unique file name
 	        return fileName;
 	    }
+		
+		public static boolean isValidAmount(String amount) {
+	        // Ensure it's positive
+			boolean result=false;
+			try {
+				BigDecimal amountDeci = new BigDecimal(amount);
+				result=amountDeci.compareTo(BigDecimal.ZERO) > 0;
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+	        return result;
+	    }
+		
 }

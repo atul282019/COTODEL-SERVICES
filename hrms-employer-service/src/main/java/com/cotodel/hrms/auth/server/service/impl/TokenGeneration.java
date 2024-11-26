@@ -1,5 +1,11 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
+import com.cotodel.hrms.auth.server.util.CommonHelper;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 
 @Service
@@ -18,7 +25,10 @@ public class TokenGeneration {
 
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
-
+	
+	@Autowired
+    private EntityManager entityManager;
+	
 	public String getToken(String url) {
 			
 			logger.info("opening getInTouch");
@@ -45,4 +55,19 @@ public class TokenGeneration {
 		//System.out.println("url:"+url);
 		return CommonUtility.getTokenRequest(null,"",companyId,url);
 	}
+	 public static String getMerTranId(String bankcode) {
+	    	bankcode=bankcode==null?"":bankcode;
+	    	TokenGeneration helper=new TokenGeneration();
+	    	Long value=helper.getMerchantTranId();
+	    	SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHH");
+	        String date = sdf.format(new Date());
+	        String uniqueId=bankcode+date+value;
+	        System.out.println(uniqueId);
+	    	return uniqueId;
+	    }
+	    
+	    public long getMerchantTranId() {
+	        Query query = entityManager.createNativeQuery("SELECT nextval('merchanttranid')");
+	        return ((Number) query.getSingleResult()).longValue();
+	    }
 }
