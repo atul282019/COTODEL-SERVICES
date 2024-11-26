@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -146,6 +147,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 						voucherBulkUploadFailEntity.setBulktblId(voucherBulkUploadEntity.getId());
 						voucherBulkUploadFailEntity.setFileName(uniqueFileName);
 						voucherBulkUploadFailEntity.setVoucherType(voucherType);
+						voucherBulkUploadFailEntity.setRedemtionType(voucherType);
 						voucherBulkUploadFailEntity.setBeneficiaryName(benName);
 						voucherBulkUploadFailEntity.setMobile(mobile);
 						voucherBulkUploadFailEntity.setAmount(amount);
@@ -192,21 +194,25 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		ErupiVoucherCreateDetailsRequest erRequest=new ErupiVoucherCreateDetailsRequest();
 		List<ErupiVoucherCreateDetailsRequest> erupiList=new ArrayList<ErupiVoucherCreateDetailsRequest>();
 		try {
-			for (ErupiBulkIdRequest erupiBulkIdRequest : request.getData()) {
+	        List<String> idList = Arrays.asList(request.getArrayofid());
+	        
+			for (String id : idList) {
 				
+			Long idValue=Long.valueOf(id);
 			
-			voEntity=erupiVoucherBulkDao.findSuccessDetails(erupiBulkIdRequest.getId());
+			voEntity=erupiVoucherBulkDao.findSuccessDetails(idValue);
 			if(voEntity!=null) {
 				CopyUtility.copyProperties(voEntity, erRequest);
+				//CopyUtility.copyProperties(request, erRequest);
 				erRequest.setName(voEntity.getBeneficiaryName());
 				erRequest.setAmount(Float.valueOf(voEntity.getAmount()));
 				erRequest.setRedemtionType(voEntity.getVoucherType());
-				erRequest.setBulktblId(erupiBulkIdRequest.getId());
+				erRequest.setBulktblId(idValue);
 				//ErupiVoucherInitiateDetailsServiceImpl help=new ErupiVoucherInitiateDetailsServiceImpl();
 				//String merTranId=help.getMerTranId(voEntity.getBankcode());
 				erRequest=erupiVoucherInitiateDetailsService.saveErupiVoucherInitiateDetails(erRequest);
 				//if(erRequest.getResponse().equalsIgnoreCase("SUCCESS")){
-					erupiVoucherBulkDao.updateSuccessFlag(erupiBulkIdRequest.getId());
+					erupiVoucherBulkDao.updateSuccessFlag(idValue);
 				//}
 			}
 			erupiList.add(erRequest);
@@ -252,6 +258,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		
 		voucherBulkUploadSuccessEntity.setFileName(uniqueFileName);
 		voucherBulkUploadSuccessEntity.setVoucherType(voucherType);
+		voucherBulkUploadSuccessEntity.setRedemtionType(voucherType);
 		voucherBulkUploadSuccessEntity.setBeneficiaryName(benName);
 		voucherBulkUploadSuccessEntity.setMobile(mobile);
 		voucherBulkUploadSuccessEntity.setAmount(amount);
