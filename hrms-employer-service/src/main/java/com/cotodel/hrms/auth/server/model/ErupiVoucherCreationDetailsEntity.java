@@ -135,4 +135,10 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
 	@Column(name="submerchantid", length=19)
 	private String subMerchantId;
 	
+	@Column(name="mandate_type")
+	private String MandateType;
+	
+	@Column(name="payee_vpa")
+	private String PayeeVPA;
+	
 }

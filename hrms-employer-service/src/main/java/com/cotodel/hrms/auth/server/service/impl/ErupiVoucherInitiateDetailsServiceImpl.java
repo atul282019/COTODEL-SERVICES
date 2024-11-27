@@ -99,7 +99,8 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			voucherCreateRequest.setType(request.getType());
 			voucherCreateRequest.setMerchantId(request.getMerchantId());
 			voucherCreateRequest.setSubMerchantId(request.getSubMerchantId());
-			
+			voucherCreateRequest.setMandateType(request.getMandateType());
+			voucherCreateRequest.setPayeeVPA(request.getPayeeVPA());
 			log.info("Starting voucher create request ...."+merchantTranId);	
 			erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 				
@@ -271,6 +272,8 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
 				voucherCreateRequest.setPayerVA(request.getPayerVA());
 				voucherCreateRequest.setType("Revoke");
+				voucherCreateRequest.setMandateType(request.getMandateType());
+				voucherCreateRequest.setPayeeVPA(request.getPayeeVPA());
 				//voucherCreateRequest.setMerchantId(request.getm);
 				
 				
@@ -436,7 +439,8 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				voucherCreateRequest.setType("Revoke");
 				voucherCreateRequest.setMerchantId(erupiVoucherInitiateDetailsEntity.getMerchantId());
 				voucherCreateRequest.setSubMerchantId(erupiVoucherInitiateDetailsEntity.getSubMerchantId());
-				
+				voucherCreateRequest.setMandateType(erupiVoucherInitiateDetailsEntity.getMandateType());
+				voucherCreateRequest.setPayeeVPA(erupiVoucherInitiateDetailsEntity.getPayeeVPA());
 				log.info("Starting voucher revoking single request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());	
 				//erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 					
@@ -561,7 +565,8 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				voucherCreateRequest.setType("Revoke");
 				voucherCreateRequest.setMerchantId(erupiVoucherInitiateDetailsEntity.getMerchantId());
 				voucherCreateRequest.setSubMerchantId(erupiVoucherInitiateDetailsEntity.getSubMerchantId());
-				
+				voucherCreateRequest.setMandateType(erupiVoucherInitiateDetailsEntity.getMandateType());
+				voucherCreateRequest.setPayeeVPA(erupiVoucherInitiateDetailsEntity.getPayeeVPA());
 				log.info("Starting voucher revoking single request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());	
 				//erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 					

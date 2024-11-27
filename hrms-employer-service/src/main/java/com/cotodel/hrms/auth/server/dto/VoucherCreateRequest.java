@@ -21,4 +21,6 @@ public class VoucherCreateRequest {
 	private String type;
 	private String merchantId;
 	private String subMerchantId;
+	private String MandateType;
+	private String PayeeVPA;
 }
