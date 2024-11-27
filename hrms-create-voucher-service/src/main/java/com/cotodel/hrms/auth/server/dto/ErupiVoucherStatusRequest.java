@@ -14,4 +14,5 @@ public class ErupiVoucherStatusRequest {
 	private String umn;
 	private String merchantId;
 	private String subMerchantId;
+	private String transactionType;
 }

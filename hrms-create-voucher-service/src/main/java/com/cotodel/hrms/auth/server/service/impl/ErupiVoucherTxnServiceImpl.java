@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dto.DecryptedResponse;
 import com.cotodel.hrms.auth.server.dto.DecryptedSmsResponse;
+import com.cotodel.hrms.auth.server.dto.DecryptedStatusResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSmsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherStatusRequest;
@@ -61,6 +62,8 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 		request.put("VoucherRedemptionType", req.getVoucherRedemptionType());
 		request.put("PayerVA", req.getPayerVA());
 		request.put("type", req.getType());
+		request.put("MandateType", req.getMandateType());
+		request.put("PayeeVPA", req.getPayeeVPA());
 		
 		return request.toString();
 	}
@@ -70,7 +73,7 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 		request.put("merchantId", req.getMerchantId());
 		request.put("merchantTranId", req.getMerchantTranId());
 		request.put("subMerchantId", req.getSubMerchantId());
-		request.put("transactionType", "V");
+		request.put("transactionType", req.getTransactionType());
 		request.put("terminalId", req.getMcc());
 		request.put("UMN", req.getUmn());		
 		return request.toString();
@@ -89,17 +92,30 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 		
         return decryptedResponse;
 	}
+public  DecryptedStatusResponse jsonToPojoStatus(String json) {
+		
+		Gson gson = new Gson();
+		DecryptedStatusResponse decryptedResponse =new DecryptedStatusResponse();
+		try {
+			decryptedResponse = gson.fromJson(json, DecryptedStatusResponse.class);
+	        //System.out.println("decryptedResponse Name: " + user.isSuccess());
+		} catch (Exception e) {
+			logger.error("error in CallApiVoucherCreateResponse..."+e.getMessage());
+		}
+		
+        return decryptedResponse;
+	}
 
 
 	@Override
-	public DecryptedResponse calApiErupiVoucherStatusDetails(ErupiVoucherStatusRequest request) {
+	public DecryptedStatusResponse calApiErupiVoucherStatusDetails(ErupiVoucherStatusRequest request) {
 		String message="";
-		DecryptedResponse decryptedResponse=null;
+		DecryptedStatusResponse decryptedResponse=null;
 		try {
 			logger.info("In side calApiErupiVoucherStatusDetails:::"+request);
 			
 			message=ApiRequestSender.createRequest(voucherStatusRequest(request),applicationConstantConfig.getVoucherStatusUrl,applicationConstantConfig.getSignaturePublicPath,applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getSignaturePrivatePath);
-			decryptedResponse=message==""?null:jsonToPOJO(message);
+			decryptedResponse=message==""?null:jsonToPojoStatus(message);
 			
 		} catch (Exception e) {
 			logger.error("error Exception ...."+e.getMessage());

@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.CallApiResponse;
 import com.cotodel.hrms.auth.server.dto.CallApiSmsResponse;
+import com.cotodel.hrms.auth.server.dto.CallApiStatusResponse;
 import com.cotodel.hrms.auth.server.dto.DecryptedResponse;
 import com.cotodel.hrms.auth.server.dto.DecryptedSmsResponse;
+import com.cotodel.hrms.auth.server.dto.DecryptedStatusResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSmsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherStatusRequest;
@@ -82,25 +84,25 @@ public class ErupiVoucherCreateApiController extends CotoDelBaseController{
 
     		@RequestMapping(value = "/callapi/voucherstatus",produces = {"application/json"}, 
     			    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-    			    public ResponseEntity<Object> voucherStatus(@RequestBody ErupiVoucherStatusRequest erupiVoucherCreateRequest) {
+    			    public ResponseEntity<Object> voucherStatus(@RequestBody ErupiVoucherStatusRequest erupiVoucherStatusRequest) {
     			
-    	    	DecryptedResponse decryptedResponse=null; 
+    	DecryptedStatusResponse decryptedResponse=null; 
     			
     			try {
     				
-    			    logger.info("inside /callapi/voucherStatus...respString."+erupiVoucherCreateRequest);
+    			    logger.info("inside /callapi/voucherStatus...respString."+erupiVoucherStatusRequest);
     			    
-    			    decryptedResponse= erupiVoucherTxnService.calApiErupiVoucherStatusDetails(erupiVoucherCreateRequest);
+    			    decryptedResponse= erupiVoucherTxnService.calApiErupiVoucherStatusDetails(erupiVoucherStatusRequest);
     			    if(decryptedResponse!=null && decryptedResponse.getSuccess().equalsIgnoreCase("true")) {
-    			    	return ResponseEntity.ok(new CallApiResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,decryptedResponse,TransactionManager.getCurrentTimeStamp()));
+    			    	return ResponseEntity.ok(new CallApiStatusResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,decryptedResponse,TransactionManager.getCurrentTimeStamp()));
     			    }else {
-    			    	return ResponseEntity.ok(new CallApiResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,decryptedResponse,TransactionManager.getCurrentTimeStamp()));
+    			    	return ResponseEntity.ok(new CallApiStatusResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,decryptedResponse,TransactionManager.getCurrentTimeStamp()));
     			    }
     					 
     			} catch (Exception e) {
     				e.printStackTrace();
     				
-    				return ResponseEntity.ok(new CallApiResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,decryptedResponse,TransactionManager.getCurrentTimeStamp()));
+    				return ResponseEntity.ok(new CallApiStatusResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,decryptedResponse,TransactionManager.getCurrentTimeStamp()));
     			}
     			
     		}

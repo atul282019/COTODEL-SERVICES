@@ -21,10 +21,11 @@ public class ApplicationConstantConfig {
 	@Value("${erupi.signature.keystore.private.path}")
 	public String getSignaturePrivatePath;
 	
-	@Value("${erupi.signature.keystore.password}")
-	public String getSignaturePassword;
+	@Value("${emp.service.api.url}")
+	public String empServiceApiUrl;
 	
-	
+	@Value("${auth.token.api.url}")
+	public String authTokenApiUrl;
 	
 	@Value("${erupi.create.vouchers.url}")
 	public String getCreateVouchersUrl;
@@ -36,20 +37,21 @@ public class ApplicationConstantConfig {
 //	public String getCreateVouchersMid;
 	
 	
-	@Value("${api.key}")
-    private String apiKey;
-
-    @Value("#{'${whitelisted.ips}'.split(',')}")
-    private Set<String> whitelistedIps;
-
-    public boolean isValidApiKey(String key) {
-        return apiKey.equals(key);
-    }
-
-    public boolean isIpWhitelisted(HttpServletRequest request) {
-        String clientIp = request.getRemoteAddr();
-        return whitelistedIps.contains(clientIp);
-    }
+//	@Value("${api.key}")
+//    private String apiKey;
+//
+//    @Value("#{'${whitelisted.ips}'.split(',')}")
+//    private Set<String> whitelistedIps;
+//
+//    public boolean isValidApiKey(String key) {
+//        return apiKey.equals(key);
+//    }
+//
+//    public boolean isIpWhitelisted(HttpServletRequest request) {
+//        String clientIp = request.getRemoteAddr();
+//        return whitelistedIps.contains(clientIp);
+//    }
+    
     @Value("${erupi.voucher.status.url}")
 	public String getVoucherStatusUrl;
     

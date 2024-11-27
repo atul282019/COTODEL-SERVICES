@@ -22,5 +22,7 @@ public class ErupiVoucherCreateRequest {
 	private String type;
 	private String voucherRedemptionType;
 	private String payerVA;
+	private String MandateType;
+	private String PayeeVPA;
 	
 }
