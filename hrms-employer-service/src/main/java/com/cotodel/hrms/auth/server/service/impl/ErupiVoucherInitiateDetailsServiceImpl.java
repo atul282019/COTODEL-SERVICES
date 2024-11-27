@@ -124,6 +124,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
 					int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 					erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
+					erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
 					erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
 					}else {
@@ -132,6 +133,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						request.setResponseApi(decryptedResponse.getMessage());
 						int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
 						erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+						erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
 						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
 					}
@@ -148,6 +150,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					request.setResponseApi("Bad request some field are missing");
 					//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 					erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+					erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
 					int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
 					erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
@@ -298,6 +301,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 							erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
 							int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 							erupiVoucherTxnDetailsEntity.setWorkFlowId(100005l);
+							erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
 							erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 							erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
 							}else {
@@ -307,6 +311,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 								request.setResponseApi(decryptedResponse.getMessage());
 								//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 								//erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
+								erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
 								erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 								erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
 							}
@@ -330,6 +335,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
 						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 						//erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+						erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
 						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
 						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
@@ -373,9 +379,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			            totAmount=totAmount+totalAmt;
 			            voucherSummaryDTOList.add(new ErupiVoucherSummaryDto(count,type,totalAmt, voucherName));
 			        }
-//			        erupiVoucherSummaryListDto.setData(voucherSummaryDTOList);
-//			        erupiVoucherSummaryListDto.setTotalCount(totalCount);
-//			        erupiVoucherSummaryListDto.setTotalAmount(totAmount);
+
 			        
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -395,8 +399,6 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			JSONObject profileJsonRes=null;
 			try {
 				
-				
-
 				response=MessageConstant.RESPONSE_FAILED;
 				request.setResponse(response);	
 				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
@@ -463,6 +465,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 							//erupiVoucherTxnDetailsEntity.setId(null);
 							int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100005l);
 							erupiVoucherTxnDetailsEntity2.setWorkFlowId(100005l);
+							erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
 							erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 							erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}else {
@@ -473,6 +476,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 								//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 								//erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
 								//erupiVoucherTxnDetailsEntity.setId(null);
+								erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
 								erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 								erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}
@@ -490,6 +494,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
 						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 						//erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+						erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
 						erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 						//erupiVoucherTxnDetailsEntity
 						erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
@@ -519,8 +524,6 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			JSONObject profileJsonRes=null;
 			try {
 				
-				
-
 				response=MessageConstant.RESPONSE_FAILED;
 				request.setResponse(response);	
 				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
@@ -587,6 +590,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 							//erupiVoucherTxnDetailsEntity.setId(null);
 							int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100005l);
 							erupiVoucherTxnDetailsEntity2.setWorkFlowId(100005l);
+							erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
 							erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 							erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}else {
@@ -597,6 +601,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 								//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 								//erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
 								//erupiVoucherTxnDetailsEntity.setId(null);
+								erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
 								erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 								erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}
@@ -616,6 +621,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						//erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
 						erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 						//erupiVoucherTxnDetailsEntity
+						erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
 						erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 						logger.info("erupiVoucherTxnDetailsEntity Redem:"+erupiVoucherTxnDetailsEntity2);
 					}

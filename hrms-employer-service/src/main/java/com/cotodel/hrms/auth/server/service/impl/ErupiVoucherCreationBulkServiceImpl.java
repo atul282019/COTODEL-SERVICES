@@ -206,7 +206,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 				//CopyUtility.copyProperties(request, erRequest);
 				erRequest.setName(voEntity.getBeneficiaryName());
 				erRequest.setAmount(Float.valueOf(voEntity.getAmount()));
-				erRequest.setRedemtionType(voEntity.getVoucherType());
+				erRequest.setRedemtionType(request.getRedemtionType());
 				erRequest.setBulktblId(idValue);
 				//ErupiVoucherInitiateDetailsServiceImpl help=new ErupiVoucherInitiateDetailsServiceImpl();
 				//String merTranId=help.getMerTranId(voEntity.getBankcode());
@@ -258,7 +258,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		
 		voucherBulkUploadSuccessEntity.setFileName(uniqueFileName);
 		voucherBulkUploadSuccessEntity.setVoucherType(voucherType);
-		voucherBulkUploadSuccessEntity.setRedemtionType(voucherType);
+		//voucherBulkUploadSuccessEntity.setRedemtionType("SINGLE");
 		voucherBulkUploadSuccessEntity.setBeneficiaryName(benName);
 		voucherBulkUploadSuccessEntity.setMobile(mobile);
 		voucherBulkUploadSuccessEntity.setAmount(amount);

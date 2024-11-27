@@ -20,5 +20,5 @@ public class DecryptedResponse {
 	private String expiryDate;
 	private String uuid;
 	private String responseCode;
-	
+	private String apiResponse;
 }

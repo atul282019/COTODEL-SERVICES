@@ -56,4 +56,6 @@ public class ErupiVoucherCreateDetailsRequest {
 	//private String createResponse;
 	private String merchantId;
 	private String subMerchantId;
+	private String MandateType;
+	private String PayeeVPA;
 }

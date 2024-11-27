@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.dto.bulk;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +18,7 @@ public class ErupiVoucherBulkUploadRequest {
 	@NotNull(message = "file cannot be null")
 	private byte[] file;
 	private String fileName;
-	private String response;
+	private String response;	
 	private String purposeCode;	
 	private Long accountId;
 	@NotNull(message = "mcc cannot be null")
@@ -37,4 +38,5 @@ public class ErupiVoucherBulkUploadRequest {
 	@NotNull(message = "sub merchant id cannot be null")
 	private String subMerchantId;
 	private String createdby;
+	
 }
