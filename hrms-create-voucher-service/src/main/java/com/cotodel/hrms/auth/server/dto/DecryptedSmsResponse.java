@@ -18,7 +18,7 @@ public class DecryptedSmsResponse {
 	private String merchantTranId;
 	private String UUID;
 	private String responseCode;
-	
+	private String apiResponse;
 }
 
 

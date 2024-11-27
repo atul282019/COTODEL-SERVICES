@@ -38,7 +38,7 @@ public class ErupiVoucherTxnServiceImpl implements ErupiVoucherTxnService{
 			//message=CommonUtility.userRequestForCreateVoucher(applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getCreateVouchersMid,createVoucherRequest(request), applicationConstantConfig.getCreateVouchersUrl,applicationConstantConfig.getSignaturePublicPath,applicationConstantConfig.getSignaturePrivatePath);
 			message=ApiRequestSender.createRequest(createVoucherRequest(request),applicationConstantConfig.getCreateVouchersUrl,applicationConstantConfig.getSignaturePublicPath,applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getSignaturePrivatePath);
 			decryptedResponse=message==""?null:jsonToPOJO(message);
-			
+			decryptedResponse.setApiResponse(message);
 		} catch (Exception e) {
 			logger.error("error Exception ...."+e.getMessage());
 			//callApiVoucherCreateResponse.setMessage(e.getMessage());
@@ -116,7 +116,7 @@ public  DecryptedStatusResponse jsonToPojoStatus(String json) {
 			
 			message=ApiRequestSender.createRequest(voucherStatusRequest(request),applicationConstantConfig.getVoucherStatusUrl,applicationConstantConfig.getSignaturePublicPath,applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getSignaturePrivatePath);
 			decryptedResponse=message==""?null:jsonToPojoStatus(message);
-			
+			decryptedResponse.setApiResponse(message);
 		} catch (Exception e) {
 			logger.error("error Exception ...."+e.getMessage());
 			//callApiVoucherCreateResponse.setMessage(e.getMessage());
@@ -135,7 +135,7 @@ public  DecryptedStatusResponse jsonToPojoStatus(String json) {
 			
 			message=ApiRequestSender.createRequest(voucherSmsRequest(request),applicationConstantConfig.getVoucherSmsUrl,applicationConstantConfig.getSignaturePublicPath,applicationConstantConfig.getCreateVouchersToken,applicationConstantConfig.getSignaturePrivatePath);
 			decryptedResponse=message==""?null:jsonToPOJOSms(message);
-			
+			decryptedResponse.setApiResponse(message);
 		} catch (Exception e) {
 			logger.error("error Exception ...."+e.getMessage());
 			//callApiVoucherCreateResponse.setMessage(e.getMessage());

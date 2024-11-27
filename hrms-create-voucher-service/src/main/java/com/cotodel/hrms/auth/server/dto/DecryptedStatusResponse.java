@@ -23,7 +23,7 @@ public class DecryptedStatusResponse {
 	private String UMN;
 	private String response;
 	private String responseCode;
-	
+	private String apiResponse;
 	
 }
 
