@@ -285,8 +285,6 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					log.info("Ending voucher create response1 ...."+response1);
 					
 					
-					
-					
 					profileJsonRes= new JSONObject(response1);
 					
 					if(profileJsonRes.getBoolean("status")) { 
@@ -659,8 +657,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			            voucherSummaryDTOList.add(new ErupiVoucherCreateSummaryDto(count,totalAmt, voucherName));
 			        }
 //			        erupiVoucherSummaryListDto.setData(voucherSummaryDTOList);
-//			        erupiVoucherSummaryListDto.setTotalCount(totalCount);
-//			        erupiVoucherSummaryListDto.setTotalAmount(totAmount);
+
 			        
 			} catch (Exception e) {
 				e.printStackTrace();

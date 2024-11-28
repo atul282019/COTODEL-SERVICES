@@ -129,4 +129,13 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	@Column(name="response_json", length=500)
 	private String responseJson;
 	
+	@Column(name="mandate_type")
+	private String MandateType;
+	
+	@Column(name="payee_vpa")
+	private String PayeeVPA;
+	
+	@Column(name="resp_code_description")
+	private String RespCodeDescription;
+	
 }
