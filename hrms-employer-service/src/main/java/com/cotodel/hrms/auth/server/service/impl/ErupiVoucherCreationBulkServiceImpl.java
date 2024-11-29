@@ -28,6 +28,7 @@ import com.cotodel.hrms.auth.server.dto.bulk.ErupiBulkIdRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadSFListResponse;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkVoucherCreateRequest;
+import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadFailEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadSuccessEntity;
@@ -60,6 +61,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 
 			response = MessageConstant.RESPONSE_FAILED;
 			Long orgId = request.getOrgId();
+			Long voucherId=request.getVoucherId();
 			String filename = request.getFileName();
 			String extn = CommonUtility.getFileExtension(filename);
 			String fileNameWithout = filename.substring(0, filename.lastIndexOf("."));
@@ -128,16 +130,17 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					boolean name = CommonUtility.isValidName(benName);
 					
 					boolean amountValid = CommonUtility.isValidAmount(amount);
+					boolean expDateValid = CommonUtility.checkDate(etDate.toString());
 					String message = "";
 					message = mob == false ? "Invalid Mobile " : "";
 					// message=message==""?""
 					message += name == false ? "Invalid name" : "";
-					message += amountValid == false ? "Invalid amount" : "";
+					message += expDateValid == false ? "Invalid Date" : "";
 					
-					if (mob && name && amountValid) {		
+					if (mob && name && amountValid && expDateValid) {		
 						
 						saveSuccess(request,voucherBulkUploadEntity.getId(),uniqueFileName,voucherType,
-								benName,mobile,amount,stDate,etDate,orgId);
+								benName,mobile,amount,stDate,etDate,orgId,voucherId);
 						successCount++;
 
 					} else {
@@ -204,10 +207,13 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 			if(voEntity!=null) {
 				CopyUtility.copyProperties(voEntity, erRequest);
 				//CopyUtility.copyProperties(request, erRequest);
+				VoucherTypeMasterEntity vtme=new VoucherTypeMasterEntity();
+				vtme.setId(voEntity.getVoucherId());
 				erRequest.setName(voEntity.getBeneficiaryName());
 				erRequest.setAmount(Float.valueOf(voEntity.getAmount()));
 				erRequest.setRedemtionType(request.getRedemtionType());
 				erRequest.setBulktblId(idValue);
+				erRequest.setVoucherId(vtme);
 				//ErupiVoucherInitiateDetailsServiceImpl help=new ErupiVoucherInitiateDetailsServiceImpl();
 				//String merTranId=help.getMerTranId(voEntity.getBankcode());
 				erRequest=erupiVoucherInitiateDetailsService.saveErupiVoucherInitiateDetails(erRequest);
@@ -251,7 +257,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 	}
 	
 	public void saveSuccess(ErupiVoucherBulkUploadRequest request,Long id,String uniqueFileName,
-			String voucherType,String benName,String mobile,String amount,LocalDate stDate,LocalDate etDate,Long orgId) {
+			String voucherType,String benName,String mobile,String amount,LocalDate stDate,LocalDate etDate,Long orgId,Long voucherId) {
 		VoucherBulkUploadSuccessEntity voucherBulkUploadSuccessEntity = new VoucherBulkUploadSuccessEntity();
 		CopyUtility.copyProperties(request, voucherBulkUploadSuccessEntity);
 		voucherBulkUploadSuccessEntity.setBulktblId(id);
@@ -262,12 +268,15 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		voucherBulkUploadSuccessEntity.setBeneficiaryName(benName);
 		voucherBulkUploadSuccessEntity.setMobile(mobile);
 		voucherBulkUploadSuccessEntity.setAmount(amount);
-		voucherBulkUploadSuccessEntity.setStartDate(stDate);
+		voucherBulkUploadSuccessEntity.setStartDate(stDate);		
 		voucherBulkUploadSuccessEntity.setExpDate(etDate);
 		voucherBulkUploadSuccessEntity.setStatus(1l);
 		LocalDate curDate = LocalDate.now();
 		voucherBulkUploadSuccessEntity.setCreationDate(curDate);
+		String benid=mobile+curDate.getDayOfMonth();
+		voucherBulkUploadSuccessEntity.setBeneficiaryID(benid);
 		voucherBulkUploadSuccessEntity.setOrgId(orgId);
+		voucherBulkUploadSuccessEntity.setVoucherId(voucherId);
 		erupiVoucherBulkDao.saveSuccessDetails(voucherBulkUploadSuccessEntity);
 	}
 

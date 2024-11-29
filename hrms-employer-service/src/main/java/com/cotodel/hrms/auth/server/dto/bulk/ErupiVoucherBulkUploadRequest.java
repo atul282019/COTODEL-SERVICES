@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,6 +39,7 @@ public class ErupiVoucherBulkUploadRequest {
 	private String merchantId;
 	@NotNull(message = "sub merchant id cannot be null")
 	private String subMerchantId;
-	private String createdby;
+	private String createdby;	
+	private Long voucherId;
 	
 }

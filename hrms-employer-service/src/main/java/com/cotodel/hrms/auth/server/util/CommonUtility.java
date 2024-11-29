@@ -184,4 +184,24 @@ public class CommonUtility {
 	        return result;
 	    }
 		
+		public static  boolean checkDate(String targetDate) {
+			boolean result=false;
+				try {			
+				
+			    LocalDate target = LocalDate.parse(targetDate);
+			    LocalDate currentDate = LocalDate.now();
+			    LocalDate dateAfterTwoDays = currentDate.plusDays(2);
+			    LocalDate oneYearLater = currentDate.plusYears(1);
+			    
+				if (target.isAfter(dateAfterTwoDays) && target.isBefore(oneYearLater)) {
+					result=true;
+				} else {
+					result=false;
+				}
+				
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return result;
+			}
 }
