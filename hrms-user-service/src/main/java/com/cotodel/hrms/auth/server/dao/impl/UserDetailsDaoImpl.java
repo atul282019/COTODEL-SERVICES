@@ -75,5 +75,11 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		return userRepository.findByEmployerExist(id);
 	}
 
+	@Override
+	public UserEntity getUserDetails(String mobile, String email) {
+		// TODO Auto-generated method stub
+		return userRepository.findUserByMobileAndEmail(mobile, email);
+	}
+
 	
 }

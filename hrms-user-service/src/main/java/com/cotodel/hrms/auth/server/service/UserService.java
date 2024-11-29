@@ -33,4 +33,6 @@ public interface UserService {
 	public UserEntity confirmUsersBulk(UserRequest user);
 	UserEntity userExistNew(String mobile,String email);
 	public UserEntity checkOrgExist(long id);
+	
+	public UserEntity userDetails(String mobile,String email);
 }

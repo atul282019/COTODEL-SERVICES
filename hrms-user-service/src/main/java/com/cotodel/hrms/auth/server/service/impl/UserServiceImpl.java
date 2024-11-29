@@ -19,6 +19,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.xml.bind.DatatypeConverter;
 
@@ -26,7 +27,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
@@ -35,29 +36,33 @@ import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
+import com.cotodel.hrms.auth.server.repository.UserRepository;
 import com.cotodel.hrms.auth.server.service.UserService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 
-@Repository
+@Service
 public class UserServiceImpl implements UserService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	@Autowired
 	UserDetailsDao userDetailsDao;
 	
+	
+	
 	@Autowired
 	SignUpDao signUpDao;
 	
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
+	@Autowired
+	EntityManager entityManager;
 	
 	@Override
 	@Transactional
 	public UserEntity saveUserDetails(UserRequest user) {
 		// TODO Auto-generated method stub
-		
 		
 		
 		UserEntity userDetails= new UserEntity();
@@ -70,15 +75,43 @@ public class UserServiceImpl implements UserService {
 		userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
 		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
 		//userEmpEntity.setUser_id(UserEntity1.getId());
-		//userEmpEntity.setUserDetails(UserEntity1);
+		userEmpEntity.setUser_id(UserEntity1.getId());
 		userEmpEntity.setStatus(UserEntity1.getStatus());
-		
+		userEmpEntity.setCreated_by(UserEntity1.getMobile());
 		userEmpEntity.setCreated_date(localDate);
-		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
 		
 		return UserEntity1;
 	}
+
+	
+	
+
+//	public UserEntity saveUserDetails1(UserRequest user) {
+//		// TODO Auto-generated method stub
+//		
+//		
+//		
+//		UserEntity userDetails= new UserEntity();
+//		UserEmpEntity userEmpEntity= new UserEmpEntity();
+//		//CopyUtility.copyProperties(userDetails, user);
+//		CopyUtility.copyProperties(user,userDetails);
+//		Date date = new Date();
+//		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//		userDetails.setCreated_date(localDate);
+//		userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+//		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
+//		//userEmpEntity.setUser_id(UserEntity1.getId());
+////		userEmpEntity.setUser(UserEntity1);
+////		userEmpEntity.setStatus(UserEntity1.getStatus());
+////		
+////		userEmpEntity.setCreated_date(localDate);
+////		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+//		
+//		
+//		return UserEntity1;
+//	}
 
 	@Override
 	public UserEmpEntity saveUserEmpEntity(UserEmpEntity userEmpEntity) {
@@ -312,12 +345,12 @@ public class UserServiceImpl implements UserService {
 		userDetails.setCreated_date(localDate);
 		userDetails.setRole_id(MessageConstant.USER_ROLE);
 		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
-		//userEmpEntity.setUser_id(UserEntity1.getId());
-		//userEmpEntity.setUserDetails(UserEntity1);
+		userEmpEntity.setUser_id(UserEntity1.getId());
+		//userEmpEntity.setUser(UserEntity1);
 		userEmpEntity.setStatus(UserEntity1.getStatus());
-		
+		userEmpEntity.setCreated_by(UserEntity1.getMobile());
 		userEmpEntity.setCreated_date(localDate);
-		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
 		return UserEntity1;
 
@@ -339,14 +372,14 @@ public class UserServiceImpl implements UserService {
 		
 		Date date = new Date();
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		//userEmpEntity.setUser_id(UserEntity1.getId());
+		userEmpEntity.setUser_id(UserEntity1.getId());
 		//userEmpEntity.setUserDetails(UserEntity1);
 		userEmpEntity.setStatus(UserEntity1.getStatus());
 		
 		userEmpEntity.setCreated_date(localDate);
 		userEmpEntity.setUpdated_date(localDate);
 		userEmpEntity.setUpdated_by(""+UserEntity1.getEmployerid());
-		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		return UserEntity1;
 	}
 
@@ -375,12 +408,12 @@ public class UserServiceImpl implements UserService {
 			userDetails.setRole_id(MessageConstant.USER_ROLE);
 			
 			UserEntity1=userDetailsDao.saveUserDetails(userDetails);
-			//userEmpEntity.setUser_id(UserEntity1.getId());
+			userEmpEntity.setUser_id(UserEntity1.getId());
 			//userEmpEntity.setUserDetails(UserEntity1);
 			userEmpEntity.setStatus(UserEntity1.getStatus());
 			
 			userEmpEntity.setCreated_date(localDate);
-			//userDetailsDao.saveUserEmpEntity(userEmpEntity);
+			userDetailsDao.saveUserEmpEntity(userEmpEntity);
 			if(user.isEmailStatus()) {
 				CommonUtility.sendEmail(user);
 			}
@@ -403,12 +436,12 @@ public class UserServiceImpl implements UserService {
 		//userDetails.setRole_id(MessageConstant.USER_ROLE);
 		userDetails.setStatus(1);
 		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
-		//userEmpEntity.setUser_id(UserEntity1.getId());
+		userEmpEntity.setUser_id(UserEntity1.getId());
 		//userEmpEntity.setUserDetails(UserEntity1);
 		userEmpEntity.setStatus(UserEntity1.getStatus());
-		
+		userEmpEntity.setCreated_by(UserEntity1.getMobile());
 		userEmpEntity.setCreated_date(localDate);
-		//userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
 		return UserEntity1;
 
@@ -426,6 +459,15 @@ public class UserServiceImpl implements UserService {
 	public UserEntity checkOrgExist(long id) {
 		// TODO Auto-generated method stub
 		return userDetailsDao.getOrgExist(id);
+	}
+
+
+
+
+	@Override
+	public UserEntity userDetails(String mobile, String email) {
+		// TODO Auto-generated method stub
+		return userDetailsDao.getUserDetails(mobile, email);
 	}	
 
 	

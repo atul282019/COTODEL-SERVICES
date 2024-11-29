@@ -20,4 +20,5 @@ public interface UserDetailsDao {
 	UserEntity getUserNew(String mobile, String email);
 	
 	public UserEntity getOrgExist(Long id);
+	UserEntity getUserDetails(String mobile, String email);
 }

@@ -35,7 +35,7 @@ public class UserEmpEntity implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="h_user_empid_seq")
 	private Long id ;
-  // private Long  user_id;
+    private Long  user_id;
 	private String employer_code;
 	private Long employer_id ;
 	private Integer status;
@@ -43,11 +43,12 @@ public class UserEmpEntity implements Serializable{
 	private LocalDate created_date;
 	private String created_by ;
     private LocalDate updated_date;
-    private String  updated_by;
+    private String  updated_by;  
     
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
 //    private UserEntity userDetails;
+    
 //    @ManyToOne
 //    @JoinColumn(name = "user_id")
 //    private UserEntity user;
