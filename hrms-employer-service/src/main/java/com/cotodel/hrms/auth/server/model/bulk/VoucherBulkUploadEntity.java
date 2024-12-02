@@ -104,4 +104,10 @@ public class VoucherBulkUploadEntity implements Serializable{
 	
 	@Column(name="bankcode")
 	private String bankcode;
+	
+	@Column(name="mandate_type")
+	private String MandateType;
+	
+	@Column(name="payee_vpa")
+	private String PayeeVPA;
 }

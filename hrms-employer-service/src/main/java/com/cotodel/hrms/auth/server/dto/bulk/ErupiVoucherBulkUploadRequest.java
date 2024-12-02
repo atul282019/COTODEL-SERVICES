@@ -1,10 +1,7 @@
 package com.cotodel.hrms.auth.server.dto.bulk;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,5 +38,6 @@ public class ErupiVoucherBulkUploadRequest {
 	private String subMerchantId;
 	private String createdby;	
 	private Long voucherId;
-	
+	private String MandateType;
+	private String PayeeVPA;
 }

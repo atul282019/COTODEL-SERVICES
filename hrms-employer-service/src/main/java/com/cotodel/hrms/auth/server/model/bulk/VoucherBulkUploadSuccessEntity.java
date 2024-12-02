@@ -116,4 +116,10 @@ public class VoucherBulkUploadSuccessEntity implements Serializable{
 	
 	@Column(name = "voucher_id_pk")  
 	private Long voucherId;
+	
+	@Column(name="mandate_type")
+	private String MandateType;
+	
+	@Column(name="payee_vpa")
+	private String PayeeVPA;
 }
