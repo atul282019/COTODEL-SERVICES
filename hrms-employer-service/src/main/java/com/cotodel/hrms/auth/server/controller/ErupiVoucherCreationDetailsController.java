@@ -25,6 +25,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryListResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryListResponse;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeSingleDetailsResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
@@ -233,30 +234,34 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/update/erupiVoucherRedem",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> erupiVoucherRedem(HttpServletRequest request,@Valid @RequestBody ErupiVoucherRevokeDetailsSingleRequest erupiVoucherRevokeSingleDetailsRequest) {
+	    public ResponseEntity<Object> erupiVoucherRedem(HttpServletRequest request,@Valid @RequestBody ErupiVoucherRedemeRequest erupiVoucherRedemeRequest) {
 		 
 	    logger.info("inside erupiVoucherRevoke....");	    	
 	    	
 	    
 	    	String message = "";
-	    	ErupiVoucherRevokeDetailsSingleRequest response=null;
+	    	ErupiVoucherRedemeRequest response=null;
 	    	try {
 	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=erupiVoucherInitiateDetailsService.erupiVoucherRevokeSingleDetails(erupiVoucherRevokeSingleDetailsRequest);
-	    		
-				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new ErupiVoucherRevokeSingleDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new ErupiVoucherRevokeSingleDetailsResponse(MessageConstant.FALSE,response.getResponseApi(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
+				response=erupiVoucherInitiateDetailsService.erupiVoucherRedemDetails(erupiVoucherRedemeRequest);
+	    		//return null;
 	    	}catch (Exception e) {				
 	    		logger.error("error in erupiVoucherRevokeDetails====="+e);
 			}
-	        
-	        return ResponseEntity.ok(new ErupiVoucherRevokeSingleDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//				if(response!=null) {
+//	    			return ResponseEntity.ok(new ErupiVoucherRevokeSingleDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new ErupiVoucherRevokeSingleDetailsResponse(MessageConstant.FALSE,response.getResponseApi(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		logger.error("error in erupiVoucherRevokeDetails====="+e);
+//			}
+//	        
+//	        return ResponseEntity.ok(new ErupiVoucherRevokeSingleDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+			return null;
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})

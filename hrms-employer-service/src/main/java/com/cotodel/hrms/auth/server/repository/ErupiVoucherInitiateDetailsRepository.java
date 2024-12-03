@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
+import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 @Repository
 public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<ErupiVoucherCreationDetailsEntity,Long>{
@@ -43,5 +44,9 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ "WHERE a.id_pk=b.details_id and b.workflowid='100003' and a.org_id=:orgId "
 			+ "GROUP BY a.voucher_id_pk", nativeQuery = true)
 	public List<Object[]> getVoucherCreateSummary(@Param("orgId") Long orgId);
+	
+	
+	@Query("select s  from ErupiVoucherCreationDetailsEntity s where s.merchanttxnid = ?1")
+	public ErupiVoucherCreationDetailsEntity findByTransactionId(String tranId);
 	
 }

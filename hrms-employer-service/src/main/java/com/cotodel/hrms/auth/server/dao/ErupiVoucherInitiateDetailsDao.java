@@ -12,4 +12,7 @@ public interface ErupiVoucherInitiateDetailsDao {
 	public ErupiVoucherCreationDetailsEntity getErupiVoucherCreationDetails(Long id);
 	public List<Object []> getVoucherSummary(Long orgID);
 	public List<Object []> getVoucherCreateSummary(Long orgID);
+	
+	public ErupiVoucherCreationDetailsEntity getCreationDetailsByTransactionId(String transactionid);
+	
 }
