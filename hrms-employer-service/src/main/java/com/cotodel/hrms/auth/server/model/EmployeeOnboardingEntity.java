@@ -80,5 +80,14 @@ public class EmployeeOnboardingEntity  implements Serializable{
 	@Column(name="beneficiary_name")
     private String beneficiaryName;
 	
+	@Column(name="manager_id")
+	private Long managerId;
+	
+	@Column(name="manager_lbl")
+	private String managerLbl;
+	
+	@Column(name="job_title_id")
+	private Long jobTitleId;
+	
 	//change
 }

@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -534,116 +535,29 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
 				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
 				
-				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.getCreationDetailsByTransactionId(request.getMerchantId());
+				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.getCreationDetailsByTransactionId(request.getMerchantTranId());
 				
 				
-				if(erupiVoucherInitiateDetailsEntity==null) {
+				if(erupiVoucherInitiateDetailsEntity!=null) {
 					if(request.getTxnStatus().equalsIgnoreCase("SUCCESS")) {
 						int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100007l);
 					}
 				}
 				CopyUtility.copyProperties(erupiVoucherInitiateDetailsEntity,erupiVoucherTxnDetailsEntity);
-				 
+				erupiVoucherTxnDetailsEntity.setId(null);
+				erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
 				erupiVoucherTxnDetailsEntity.setResponseJson(MessageConstant.gson.toJson(request));
 				
 				if(request.getTxnStatus().equalsIgnoreCase("SUCCESS")) {
-					
+					erupiVoucherTxnDetailsEntity=setResponseRedemValue(request,erupiVoucherTxnDetailsEntity);
+					erupiVoucherTxnDetailsEntity.setWorkFlowId(100007l);
+					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+				}else {
+					erupiVoucherTxnDetailsEntity=setResponseRedemValue(request,erupiVoucherTxnDetailsEntity);
+					erupiVoucherTxnDetailsEntity.setWorkFlowId(100011l);
+					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
 				}
-//				erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.findByDetailId(erupiVoucherInitiateDetailsEntity.getId(), erupiVoucherInitiateDetailsEntity.getWorkFlowId());
-//				if(erupiVoucherTxnDetailsEntity==null) {
-//					response=MessageConstant.DETAIL_ID;
-//					request.setResponse(response);
-//					return request;
-//				}
 
-//				VoucherCreateRequest voucherCreateRequest=new VoucherCreateRequest();
-//					
-//				//String merchantTranId=getMerTranId(request.getBankcode());
-//				voucherCreateRequest.setMerchantTranId(erupiVoucherTxnDetailsEntity.getMerchanttxnId());
-//				//voucherCreateRequest.setAmount(erupiVoucherInitiateDetailsEntity.getAmount().toString());
-//				voucherCreateRequest.setBeneficiaryID(erupiVoucherInitiateDetailsEntity.getBeneficiaryID());
-//				voucherCreateRequest.setMobileNumber(erupiVoucherInitiateDetailsEntity.getMobile());
-//				voucherCreateRequest.setBeneficiaryName(erupiVoucherInitiateDetailsEntity.getName());
-//				String formattedValue = String.format("%.2f", erupiVoucherInitiateDetailsEntity.getAmount());
-//				voucherCreateRequest.setAmount(formattedValue);
-//				String expdate=erupiVoucherInitiateDetailsEntity.getExpDate()==null?"":erupiVoucherInitiateDetailsEntity.getExpDate().toString();
-//				voucherCreateRequest.setExpiry(expdate);
-//				voucherCreateRequest.setPurposeCode(erupiVoucherInitiateDetailsEntity.getPurposeCode()==null?"":erupiVoucherInitiateDetailsEntity.getPurposeCode());
-//				voucherCreateRequest.setMcc(erupiVoucherInitiateDetailsEntity.getMcc());
-//				voucherCreateRequest.setVoucherRedemptionType(erupiVoucherInitiateDetailsEntity.getRedemtionType());
-//				voucherCreateRequest.setPayerVA(erupiVoucherInitiateDetailsEntity.getPayerVA());
-//				voucherCreateRequest.setType("Revoke");
-//				voucherCreateRequest.setMerchantId(erupiVoucherInitiateDetailsEntity.getMerchantId());
-//				voucherCreateRequest.setSubMerchantId(erupiVoucherInitiateDetailsEntity.getSubMerchantId());
-//				voucherCreateRequest.setMandateType(erupiVoucherInitiateDetailsEntity.getMandateType());
-//				voucherCreateRequest.setPayeeVPA(erupiVoucherInitiateDetailsEntity.getPayeeVPA());
-				//log.info("Starting voucher revoking single request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());	
-				//erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
-					
-//					String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
-//							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
-//					log.info("Ending voucher revoking response1 ...."+response1);
-					
-					
-					profileJsonRes= new JSONObject("");
-					ErupiVoucherTxnRequest erupi=new ErupiVoucherTxnRequest();
-					CopyUtility.copyProperties(erupiVoucherTxnDetailsEntity,erupi);
-					ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity2=new ErupiVoucherTxnDetailsEntity();
-					CopyUtility.copyProperties(erupi,erupiVoucherTxnDetailsEntity2);
-					if(profileJsonRes.getBoolean("status")) { 
-						//request.setCreateResponse(response1);
-						response=MessageConstant.RESPONSE_SUCCESS;
-						//request.setResponse(response);
-						
-						JSONObject data = profileJsonRes.getJSONObject("data");
-						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
-						
-						
-						if(decryptedResponse.getStatus().equalsIgnoreCase("REVOKE-SUCCESS")) {
-							//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-							//request.setResponseApi(decryptedResponse.getMessage());
-							//erupiVoucherTxnDetailsEntity.setId(null);
-							int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100005l);
-							erupiVoucherTxnDetailsEntity2.setWorkFlowId(100005l);
-							erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
-							erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
-							erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
-							}else {
-								response=MessageConstant.RESPONSE_FAILED;
-								//request.setResponse(response);
-								//erupiVoucherRevokeDetailsRequest.setResponse(decryptedResponse.getMessage());
-								//request.setResponseApi(decryptedResponse.getMessage());
-								//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
-								//erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
-								//erupiVoucherTxnDetailsEntity.setId(null);
-								erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
-								erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
-								erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
-							}
-						
-						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
-					}else {
-						//loginservice.sendEmailVerificationCompletion(userForm);
-						//request.setCreateResponse(response1);
-						response=MessageConstant.RESPONSE_FAILED;
-						//request.setResponse(response);
-						//erupiVoucherRevokeDetailsRequest.setResponse(response);
-						//erupiVoucherTxnDetailsEntity.setId(null);
-						
-						JSONObject data = profileJsonRes.getJSONObject("data");
-						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
-						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-						//erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
-						erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
-						//erupiVoucherTxnDetailsEntity
-						erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
-						erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
-						logger.info("erupiVoucherTxnDetailsEntity Redem:"+erupiVoucherTxnDetailsEntity2);
-					}
-					
-		
-				
-				
 				
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -676,5 +590,34 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			}
 			return voucherSummaryDTOList;
 		}
-	   
+		private ErupiVoucherTxnDetailsEntity setResponseRedemValue(ErupiVoucherRedemeRequest decryptedResponse,ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity) {
+
+			erupiVoucherTxnDetailsEntity.setUmn(decryptedResponse.getUmn());
+	    	LocalDateTime eventDateTime = LocalDateTime.now();	
+	    	erupiVoucherTxnDetailsEntity.setCreationDate(eventDateTime);
+	    	erupiVoucherTxnDetailsEntity.setResponseCode(decryptedResponse.getResponseCode());
+	    	erupiVoucherTxnDetailsEntity.setBankrrn(decryptedResponse.getBankRRN());
+	    	String txnInitDate=decryptedResponse.getTxnInitDate();
+	    	txnInitDate = txnInitDate.split("\\.")[0];
+	    	String txnCompletionDate=decryptedResponse.getTxnCompletionDate();
+	    	txnCompletionDate = txnCompletionDate.split("\\.")[0];
+	    	 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");	         
+	         LocalDateTime localIniDateTime = LocalDateTime.parse(txnInitDate, formatter);
+	         LocalDateTime localCompleteDateTime = LocalDateTime.parse(txnCompletionDate, formatter);
+	         erupiVoucherTxnDetailsEntity.setTxninitdate(localIniDateTime);
+	         erupiVoucherTxnDetailsEntity.setTxncompletiondate(localCompleteDateTime);
+	         erupiVoucherTxnDetailsEntity.setStatusApi(decryptedResponse.getTxnStatus());
+	         erupiVoucherTxnDetailsEntity.setMerchantId(decryptedResponse.getMerchantId());
+	         erupiVoucherTxnDetailsEntity.setSubMerchantId(decryptedResponse.getSubMerchantId());
+	         erupiVoucherTxnDetailsEntity.setMerchanttxnId(decryptedResponse.getMerchantTranId());
+	         erupiVoucherTxnDetailsEntity.setTerminalId(decryptedResponse.getTerminalId());
+	         erupiVoucherTxnDetailsEntity.setPayerName(decryptedResponse.getPayerName());
+	         erupiVoucherTxnDetailsEntity.setPayerMobile(decryptedResponse.getPayerMobile());
+	         erupiVoucherTxnDetailsEntity.setPayerVA(decryptedResponse.getPayerVA());
+	         erupiVoucherTxnDetailsEntity.setPayerAmount(decryptedResponse.getPayerAmount());
+	         erupiVoucherTxnDetailsEntity.setPayeeName(decryptedResponse.getPayeeName());
+	         
+	         
+	    	return erupiVoucherTxnDetailsEntity;
+	    }
 }

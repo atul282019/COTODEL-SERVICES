@@ -236,7 +236,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> erupiVoucherRedem(HttpServletRequest request,@Valid @RequestBody ErupiVoucherRedemeRequest erupiVoucherRedemeRequest) {
 		 
-	    logger.info("inside erupiVoucherRevoke....");	    	
+	    logger.info("inside erupiVoucherRedem....");	    	
 	    	
 	    
 	    	String message = "";
@@ -249,7 +249,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				response=erupiVoucherInitiateDetailsService.erupiVoucherRedemDetails(erupiVoucherRedemeRequest);
 	    		//return null;
 	    	}catch (Exception e) {				
-	    		logger.error("error in erupiVoucherRevokeDetails====="+e);
+	    		logger.error("error in erupiVoucherRedem====="+e);
 			}
 //				if(response!=null) {
 //	    			return ResponseEntity.ok(new ErupiVoucherRevokeSingleDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));

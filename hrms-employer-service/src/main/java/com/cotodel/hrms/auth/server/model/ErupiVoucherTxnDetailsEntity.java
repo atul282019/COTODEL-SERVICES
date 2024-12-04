@@ -44,12 +44,7 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	@Column(name="workflowid")
 	private Long workFlowId;//bigint FK	Work FlowID 100001 for initiate reuest, 100002 for creation,100003 for fail,100004 for confirmationpending, 100005 for redemption
 
-	//	@ManyToOne
-//	@JoinColumn(name = "wokflowjoinid", referencedColumnName = "workflowid")  // foreign key column
-//	private WorkFlowMasterEntity wokflowId;//id_pk of vouchermaster
-//	@Column(name="voucher_id")
-//	private Long voucherId;//id_pk of vouchermaster
-	
+
 	@ManyToOne
 	@JoinColumn(name = "voucher_id_pk", referencedColumnName = "id_pk")  // foreign key column
 	private VoucherTypeMasterEntity voucherId;//id_pk of vouchermaster
@@ -137,5 +132,29 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	
 	@Column(name="resp_code_description")
 	private String RespCodeDescription;
+	
+	@Column(name="merchantid", length=19)
+	private String merchantId;
+	
+	@Column(name="submerchantid", length=19)
+	private String subMerchantId;
+	
+	@Column(name="terminal_id")
+	private String terminalId;
+	
+	@Column(name="payer_name")
+	private String payerName;
+	
+	@Column(name="payer_mobile")
+	private String payerMobile;
+	
+	@Column(name="payer_va")
+	private String payerVA;
+	
+	@Column(name="payer_amount")
+	private String payerAmount;
+	
+	@Column(name="payee_name")
+	private String payeeName;
 	
 }

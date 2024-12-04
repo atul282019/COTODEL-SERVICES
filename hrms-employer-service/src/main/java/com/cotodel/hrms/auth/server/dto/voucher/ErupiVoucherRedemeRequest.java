@@ -11,18 +11,16 @@ public class ErupiVoucherRedemeRequest {
 	private String merchantId;
 	private String subMerchantId;	
 	private String terminalId;	
-	private String BankRRN;	
+	private String bankRRN;	
 	private String merchantTranId;	
-	private String PayerName;
-	private String PayerMobile;	
-	private String PayerVA;
-	private String PayerAmount;	
-	private String TxnStatus;
+	private String payerName;
+	private String payerMobile;	
+	private String payerVA;
+	private String payerAmount;	
+	private String txnStatus;
 	private String responseCode;
-	private String TxnInitDate;
-	private String TxnCompletionDate;
-	private String UMN;
-	private String PayeeVPA;
-	private String PayeeName;
-	private String RespCodeDescription;
+	private String txnInitDate;
+	private String txnCompletionDate;
+	private String umn;
+	private String payeeName;
 }
