@@ -130,7 +130,8 @@ public class CommonUtility {
 				Session session = Session.getInstance(properties, new Authenticator() {
 					@Override
 					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication("dkawal73@gmail.com", "jaygeajbqvinwacz");
+						return new PasswordAuthentication("cotodel.info@gmail.com", "zxvg tryo uhdh akgf");
+						//return new PasswordAuthentication("cotodel917@gmail.com", "CotoDel@123");
 					}
 				});
 
