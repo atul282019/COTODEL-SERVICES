@@ -9,6 +9,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dto.DecryptedRedemResponse;
 import com.cotodel.hrms.auth.server.dto.EncryptedResponse;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherRedemService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
@@ -37,12 +38,18 @@ public class ErupiVoucherRedemServiceImpl implements ErupiVoucherRedemService{
 			Gson gson = new Gson();
 //			 EncryptedResponse apiResponse = gson.fromJson(response.toString(), EncryptedResponse.class);
 //             message=ResponseDecryption.decriptResponse(apiResponse, applicationConstantConfig.getSignaturePrivatePath,200);
-			message=response;
+			//message=response;
+			//Gson gson = new Gson();
+            EncryptedResponse apiResponse = gson.fromJson(response.toString(), EncryptedResponse.class);
+            message=ResponseDecryption.decriptResponse(apiResponse, applicationConstantConfig.getSignaturePrivatePath,200);
 			decryptedRedemResponse=message==""?null:jsonToPojoRedem(message);
+			
+			String request= getRequestRedem(decryptedRedemResponse);
+			
              String tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
  			
  			
- 			String response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(decryptedRedemResponse),
+ 			String response1 = CommonUtility.userRequest(tokenvalue, request,
  					applicationConstantConfig.empServiceApiUrl+CommonUtils.erupiVoucherRedem);
  			if (!ObjectUtils.isEmpty(response1)) {
  				JSONObject demoRes = new JSONObject(response1);
@@ -80,5 +87,26 @@ public class ErupiVoucherRedemServiceImpl implements ErupiVoucherRedemService{
 		}
 		
         return decryptedResponse;
+	}
+	
+	
+	public  String getRequestRedem(DecryptedRedemResponse req) {
+		JSONObject request= new JSONObject();		
+		request.put("merchantId", req.getMerchantId());
+		request.put("subMerchantId", req.getSubMerchantId());
+		request.put("terminalId", req.getTerminalId());
+		request.put("bankRRN", req.getBankRRN());
+		request.put("merchantTranId", req.getMerchantTranId());
+		request.put("payerName", req.getPayerName());
+		request.put("payerMobile", req.getPayerMobile());
+		request.put("payerVA", req.getPayerVA());
+		request.put("payerAmount", req.getPayerAmount());
+		request.put("txnStatus", req.getTxnStatus());
+		request.put("responseCode", req.getResponseCode());
+		request.put("txnInitDate", req.getTxnInitDate());
+		request.put("txnCompletionDate", req.getTxnCompletionDate());
+		request.put("umn", req.getUMN());
+		request.put("payeeName", req.getPayeeName());
+		return request.toString();
 	}
 }
