@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.cotodel.hrms.auth.server.model.master.MccMasterEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,8 +48,8 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 
 
 	@ManyToOne
-	@JoinColumn(name = "voucher_id_pk", referencedColumnName = "id_pk")  // foreign key column
-	private VoucherTypeMasterEntity voucherId;//id_pk of vouchermaster
+	@JoinColumn(name = "mcc_id_pk", referencedColumnName = "id_pk")  // foreign key column
+	private MccMasterEntity voucherId;//id_pk of mccmaster
 	
 	@Column(name = "creationdate")
 	private LocalDateTime creationDate;

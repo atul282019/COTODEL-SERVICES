@@ -28,10 +28,10 @@ import com.cotodel.hrms.auth.server.dto.bulk.ErupiBulkIdRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadSFListResponse;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkVoucherCreateRequest;
-import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadFailEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadSuccessEntity;
+import com.cotodel.hrms.auth.server.model.master.MccMasterEntity;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherCreationBulkService;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherInitiateDetailsService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
@@ -207,7 +207,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 			if(voEntity!=null) {
 				CopyUtility.copyProperties(voEntity, erRequest);
 				//CopyUtility.copyProperties(request, erRequest);
-				VoucherTypeMasterEntity vtme=new VoucherTypeMasterEntity();
+				MccMasterEntity vtme=new MccMasterEntity();
 				vtme.setId(voEntity.getVoucherId());
 				erRequest.setName(voEntity.getBeneficiaryName());
 				erRequest.setAmount(Float.valueOf(voEntity.getAmount()));

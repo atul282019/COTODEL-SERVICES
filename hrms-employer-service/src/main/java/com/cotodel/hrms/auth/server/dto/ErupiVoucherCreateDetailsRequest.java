@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
+import com.cotodel.hrms.auth.server.model.master.MccMasterEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ErupiVoucherCreateDetailsRequest {
 	
-	private VoucherTypeMasterEntity voucherId;//id_pk of vouchermaster	
+	private MccMasterEntity voucherId;//id_pk of vouchermaster	
 	private String name;	
 	private String mobile;			
 	private Float amount;	

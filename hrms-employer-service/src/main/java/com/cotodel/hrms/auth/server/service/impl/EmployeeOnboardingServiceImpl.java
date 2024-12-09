@@ -3,6 +3,9 @@ package com.cotodel.hrms.auth.server.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,6 +30,9 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 	
 	@Autowired
 	ApplicationConstantConfig  applicationConstantConfig;
+	
+	@Autowired
+    private EntityManager entityManager;
 	
 	@Override
 	public EmployeeOnboardingRequest saveEmployeeDetails(EmployeeOnboardingRequest request) {
@@ -62,6 +68,8 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 					CopyUtility.copyProperties(request, employeeOnboarding);
 					employeeOnboarding.setUserDetailsId(id);
 					employeeOnboarding.setMode(1l);
+					//employeeOnboarding.setEmpCode();
+					String empcode=request.getEmployerId()+"";
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					response = MessageConstant.RESPONSE_SUCCESS;
 					request.setResponse(response);
@@ -336,5 +344,44 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		return request;
 
 	}
+	
+	public long generateId() {
+        Query query = entityManager.createNativeQuery("SELECT nextval('empcode')");
+        return ((Number) query.getSingleResult()).longValue();
+    }
+    
+    public String getEmpCode(Long orgid) {
+    	orgid=orgid==null?0:orgid;
+    	String value=getEmpNo();
+    	
+        String uniqueId=orgid+value;
+        System.out.println(uniqueId);
+    	return uniqueId;
+    }
+    public String getEmpNo() {
+    	
+    	String value=String.valueOf(generateId());
+    	int len =value.length();
+    	String finalValue="";
+        switch (len) {
+            case 1:
+            	finalValue="0000"+value;
+                break;
+            case 2:
+            	finalValue="000"+value;
+                break;
+            case 3:
+            	finalValue="00"+value;
+                break;
+            case 4:
+            	finalValue="0"+value;
+                break;
+            default:
+            	finalValue=value;
+        }
+    	
+        System.out.println(finalValue);
+    	return finalValue;
+    }
 	
 }

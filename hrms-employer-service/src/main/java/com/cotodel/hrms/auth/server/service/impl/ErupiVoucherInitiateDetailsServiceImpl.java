@@ -29,6 +29,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTxnRequest;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
@@ -141,6 +142,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						request.setResponseApi(decryptedResponse.getMessage());
 						int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
 						erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
 						erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
 						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
@@ -522,12 +524,13 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 
 
 		@Override
-		public ErupiVoucherRedemeRequest erupiVoucherRedemDetails(ErupiVoucherRedemeRequest request) {
+		public String erupiVoucherRedemDetails(ErupiVoucherRedemeRequest request) {
 			String response="";
 			log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... erupiVoucherRedemDetails..");
 			ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
 			ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=null;
 			JSONObject profileJsonRes=null;
+			//String response=""
 			try {
 				
 				response=MessageConstant.RESPONSE_FAILED;
@@ -552,10 +555,12 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					erupiVoucherTxnDetailsEntity=setResponseRedemValue(request,erupiVoucherTxnDetailsEntity);
 					erupiVoucherTxnDetailsEntity.setWorkFlowId(100007l);
 					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+					response=MessageConstant.RESPONSE_SUCCESS;
 				}else {
 					erupiVoucherTxnDetailsEntity=setResponseRedemValue(request,erupiVoucherTxnDetailsEntity);
 					erupiVoucherTxnDetailsEntity.setWorkFlowId(100011l);
 					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+					response=MessageConstant.RESPONSE_FAILED;
 				}
 
 				
@@ -563,7 +568,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				e.printStackTrace();
 				log.error("Error in erupiVoucherRedemDetails.:......"+e.getMessage());
 			}
-			return request;
+			return response;
 		}
 	    
 		@Override
@@ -620,4 +625,22 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 	         
 	    	return erupiVoucherTxnDetailsEntity;
 	    }
+
+
+
+		@Override
+		public ErupiVoucherCreateListRequest saveErupiVoucherCreateListDetails(ErupiVoucherCreateListRequest request) {
+			// TODO Auto-generated method stub
+			ErupiVoucherCreateListRequest erupiVoucherCreateListRequest=new ErupiVoucherCreateListRequest();
+			List<ErupiVoucherCreateDetailsRequest> response= new ArrayList<ErupiVoucherCreateDetailsRequest>();
+			List<ErupiVoucherCreateDetailsRequest> erupiVoucherCreateDetailsRequests=request.getData();
+			for (ErupiVoucherCreateDetailsRequest erupiVoucherCreateDetailsRequest : erupiVoucherCreateDetailsRequests) {
+				erupiVoucherCreateDetailsRequest=saveErupiVoucherInitiateDetails(erupiVoucherCreateDetailsRequest);
+				response.add(erupiVoucherCreateDetailsRequest);
+			}
+			erupiVoucherCreateListRequest.setData(response);
+			return erupiVoucherCreateListRequest;
+		}
+		
+		
 }

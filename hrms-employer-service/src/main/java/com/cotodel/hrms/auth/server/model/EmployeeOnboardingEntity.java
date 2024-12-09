@@ -89,5 +89,8 @@ public class EmployeeOnboardingEntity  implements Serializable{
 	@Column(name="job_title_id")
 	private Long jobTitleId;
 	
+	@Column(name="emp_code")
+	private String empCode;
+	
 	//change
 }
