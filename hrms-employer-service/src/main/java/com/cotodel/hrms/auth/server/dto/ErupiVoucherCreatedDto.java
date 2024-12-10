@@ -24,6 +24,7 @@ public class ErupiVoucherCreatedDto {
 	private LocalDate expDate;
 	private String type;
 	private String voucherCode;	
-	private String voucherType;	
-	private String voucherDesc;
+	private String purposeDesc;
+	private String mccDesc;
+	
 }

@@ -3,6 +3,7 @@ package com.cotodel.hrms.auth.server.dao;
 import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 
 public interface ErupiVoucherInitiateDetailsDao {
@@ -14,5 +15,5 @@ public interface ErupiVoucherInitiateDetailsDao {
 	public List<Object []> getVoucherCreateSummary(Long orgID);
 	
 	public ErupiVoucherCreationDetailsEntity getCreationDetailsByTransactionId(String transactionid);
-	
+	public List<Object[]> getVoucherCreateNameList(Long orgid);
 }

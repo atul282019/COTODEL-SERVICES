@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
@@ -30,6 +31,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTxnRequest;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
@@ -169,9 +171,13 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				
 				
 			}
-			
+		}catch (DataIntegrityViolationException ex) {
+	            // Handle the specific exception here
+	           // throw new CustomVoucherException("Voucher creation failed: " + ex.getMessage(), ex);
+	        request.setResponseApi("exception DataException");
 		}catch (Exception e) {
 			e.printStackTrace();
+			request.setResponseApi("exception:Bad request some field are missing");
 			log.error("Error in ErupiVoucherInitiateDetailsServiceImpl......."+e.getMessage());
 		}
 		return request;
@@ -640,6 +646,27 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			}
 			erupiVoucherCreateListRequest.setData(response);
 			return erupiVoucherCreateListRequest;
+		}
+
+
+
+		@Override
+		public List<ErupiVoucherCreateOldDto> getErupiVoucherCreateOldList(ErupiVoucherCreatedRequest request) {
+			List<ErupiVoucherCreateOldDto> voucherDTOList = new ArrayList<>();
+			try {
+				List<Object[]> resultList = erupiVoucherInitiateDetailsDao.getVoucherCreateNameList(request.getOrgId());
+				  Long totalCount=0l;
+				  Long totAmount=0l;
+			        for (Object[] row : resultList) {
+			            String name = (String) row[0];
+			            String mobile = (String) row[1];
+			            voucherDTOList.add(new ErupiVoucherCreateOldDto(name,mobile));
+			        }
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			return voucherDTOList;
 		}
 		
 		

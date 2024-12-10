@@ -2,7 +2,6 @@ package com.cotodel.hrms.auth.server.repository;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
-import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 @Repository
 public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<ErupiVoucherCreationDetailsEntity,Long>{
@@ -23,10 +22,12 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
     public int updateWorkflowId(@Param("id") Long id,@Param("workflowid") Long workflowid);
 	
 	@Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
-			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,c.voucherCode,c.voucherType,c.voucherDesc) "
+			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
+			+ "c.voucherCode,m.purposeDesc,m.mccDesc) "
 			+ "from ErupiVoucherCreationDetailsEntity c"
 			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
-			+ "join WorkFlowMasterEntity w on c.workFlowId=w.workflowId  where   c.orgId =?1  order by c.creationDate desc")
+			+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
+			+ " join MccMasterEntity m on m.mcc=c.mcc   where   c.orgId =?1  order by c.creationDate desc")
 	public List<ErupiVoucherCreatedDto> findVoucherCreateList(Long orgId);
 	
 //	 @Query(value = "SELECT count(1), SUM(amount), " +
@@ -48,5 +49,8 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 	
 	@Query("select s  from ErupiVoucherCreationDetailsEntity s where s.merchanttxnid = ?1")
 	public ErupiVoucherCreationDetailsEntity findByTransactionId(String tranId);
+	
+	@Query(value = "select Distinct Upper(c.name) name,c.mobile mobile from hrms1.erupi_voucher_creation_details c where c.org_id=:orgId ", nativeQuery = true)
+	public List<Object[]> findByNameByOrgId(@Param("orgId") Long orgId);
 	
 }
