@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.RoleMasterNewResponse;
 import com.cotodel.hrms.auth.server.dto.RoleMasterResponse;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.entity.RoleMaster;
+import com.cotodel.hrms.auth.server.entity.RoleMasterEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.service.RolesMasterService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -68,6 +70,32 @@ public class RolesController {
 	        
 	    }
 
-	
+	 @Operation(summary = "This API will provide the User Roles Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/roleMaster",produces = {"application/json"}, consumes = {"application/json","application/text"},
+	    method = RequestMethod.POST)
+	    public ResponseEntity<Object> roleMaster(@Valid @RequestBody UserRequest userReq) {
+	    	logger.info("inside get roleMaster+++");
+	    	List<RoleMasterEntity> roleMaster=null;
+	    	try {
+	    		
+	    		roleMaster=	rolesMasterService.getRoleMaster();
+	    		 if(roleMaster!=null && roleMaster.size()>0 )
+		    		 return ResponseEntity.ok(new RoleMasterNewResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,roleMaster,TransactionManager.getCurrentTimeStamp()));
+		    	 
+	    	 
+	    	}catch (Exception e) {
+				
+	    		logger.error("error in Roles====="+e);
+			}
+	        
+	    	return ResponseEntity.ok(new RoleMasterNewResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,roleMaster,TransactionManager.getCurrentTimeStamp()));
+	        
+	    }
 
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.cotodel.hrms.auth.server.entity.PayrollMasterEntity;
 import com.cotodel.hrms.auth.server.entity.PayrollMasterNewEntity;
 
 public interface PayrollMasterNewRepository extends JpaRepository<PayrollMasterNewEntity, Long> {

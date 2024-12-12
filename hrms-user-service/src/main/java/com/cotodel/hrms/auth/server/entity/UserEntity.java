@@ -3,20 +3,17 @@ package com.cotodel.hrms.auth.server.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="user_details")
+@Table(name="user_details", uniqueConstraints = @UniqueConstraint(columnNames = "mobile"))
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="user_details_id_seq" , sequenceName="user_details_id_seq", allocationSize=1)
 public class UserEntity implements Serializable{
@@ -47,7 +44,7 @@ public class UserEntity implements Serializable{
     private String address ;
     private String org_type;
     private String  org_name;
-    @Column(unique=true)
+    @Column(unique=true,nullable = false)
     private String  mobile ;
     private LocalDate  created_date ;
     private int  email_verify_status;

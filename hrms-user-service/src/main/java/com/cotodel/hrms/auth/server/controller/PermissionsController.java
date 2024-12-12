@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.PermissionsMasterResponse;
-import com.cotodel.hrms.auth.server.dto.RoleMasterResponse;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.entity.PermissionsMaster;
 import com.cotodel.hrms.auth.server.exception.ApiError;

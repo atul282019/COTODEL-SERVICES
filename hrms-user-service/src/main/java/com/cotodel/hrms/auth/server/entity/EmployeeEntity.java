@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;

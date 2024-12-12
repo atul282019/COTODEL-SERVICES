@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.service.impl;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -31,12 +32,13 @@ import org.springframework.stereotype.Service;
 
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
+import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
+import com.cotodel.hrms.auth.server.entity.UserRoleMapperEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
-import com.cotodel.hrms.auth.server.repository.UserRepository;
 import com.cotodel.hrms.auth.server.service.UserService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
@@ -59,6 +61,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	EntityManager entityManager;
 	
+	@Autowired
+	UserRoleMapperDao userRoleMapperDao;
+	
 	@Override
 	@Transactional
 	public UserEntity saveUserDetails(UserRequest user) {
@@ -72,7 +77,12 @@ public class UserServiceImpl implements UserService {
 		Date date = new Date();
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		userDetails.setCreated_date(localDate);
-		userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+		if(user.isERupiStatus()) {
+			userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
+		}else {
+			userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+		}
+		userDetails.setStatus(1);
 		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
 		//userEmpEntity.setUser_id(UserEntity1.getId());
 		userEmpEntity.setUser_id(UserEntity1.getId());
@@ -81,6 +91,14 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setCreated_date(localDate);
 		userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
+		UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
+		userRoleMapperEntity.setMobile(UserEntity1.getMobile());
+		userRoleMapperEntity.setOrgId(UserEntity1.getId());
+		userRoleMapperEntity.setStatus(1);
+		userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
+		userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
+		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+		userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
 		
 		return UserEntity1;
 	}
@@ -354,6 +372,16 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setCreated_date(localDate);
 		userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
+		UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
+		userRoleMapperEntity.setMobile(UserEntity1.getMobile());
+		long empid = UserEntity1.getEmployerid();
+		userRoleMapperEntity.setOrgId(empid);
+		userRoleMapperEntity.setStatus(1);
+		userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
+		userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
+		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+		userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
+		
 		return UserEntity1;
 
 	}
@@ -416,6 +444,17 @@ public class UserServiceImpl implements UserService {
 			
 			userEmpEntity.setCreated_date(localDate);
 			userDetailsDao.saveUserEmpEntity(userEmpEntity);
+			
+			UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
+			userRoleMapperEntity.setMobile(UserEntity1.getMobile());
+			long empid = UserEntity1.getEmployerid();
+			userRoleMapperEntity.setOrgId(empid);
+			userRoleMapperEntity.setStatus(1);
+			userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
+			userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
+			userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+			userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
+			
 			if(user.isEmailStatus()) {
 				CommonUtility.sendEmail(user);
 			}

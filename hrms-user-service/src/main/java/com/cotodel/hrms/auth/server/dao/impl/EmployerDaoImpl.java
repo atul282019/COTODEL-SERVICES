@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.EmployerDao;
 import com.cotodel.hrms.auth.server.entity.EmployerEntity;
 import com.cotodel.hrms.auth.server.repository.EmployerRepository;
-import com.cotodel.hrms.auth.server.repository.SignUpRepository;
 @Repository
 public class EmployerDaoImpl implements EmployerDao{
 

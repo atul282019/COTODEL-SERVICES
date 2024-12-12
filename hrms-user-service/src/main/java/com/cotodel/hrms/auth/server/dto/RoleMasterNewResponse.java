@@ -1,5 +1,9 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import java.util.List;
+
+import com.cotodel.hrms.auth.server.entity.RoleMasterEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanySaveResponse {
+public class RoleMasterNewResponse {
 	
 	  private boolean status;
 	  private String message;
-	  private String txnId;
+	  List<RoleMasterEntity> data;
 	  private String timestamp;
 }

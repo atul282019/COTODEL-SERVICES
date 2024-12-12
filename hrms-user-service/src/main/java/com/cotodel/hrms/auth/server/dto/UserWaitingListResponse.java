@@ -1,6 +1,5 @@
 package com.cotodel.hrms.auth.server.dto;
 
-import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.entity.UserWaitingListEntity;
 
 import lombok.AllArgsConstructor;

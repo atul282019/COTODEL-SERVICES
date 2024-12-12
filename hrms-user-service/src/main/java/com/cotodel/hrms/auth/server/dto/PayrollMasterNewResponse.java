@@ -2,7 +2,6 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.util.List;
 
-import com.cotodel.hrms.auth.server.entity.PayrollMasterEntity;
 import com.cotodel.hrms.auth.server.entity.PayrollMasterNewEntity;
 
 import lombok.AllArgsConstructor;

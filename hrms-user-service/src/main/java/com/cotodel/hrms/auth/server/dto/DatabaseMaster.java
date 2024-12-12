@@ -1,13 +1,5 @@
 package com.cotodel.hrms.auth.server.dto;
 
-/**
- * @author vinay
- */
-import java.io.Serializable;
-import java.time.LocalDate;
-
-import javax.persistence.Entity;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

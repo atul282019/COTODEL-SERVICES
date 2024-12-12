@@ -10,12 +10,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.cotodel.hrms.auth.server.dao.PayrollMasterDao;
 import com.cotodel.hrms.auth.server.dao.PayrollMasterNewDao;
-import com.cotodel.hrms.auth.server.entity.PayrollMasterEntity;
 import com.cotodel.hrms.auth.server.entity.PayrollMasterNewEntity;
 import com.cotodel.hrms.auth.server.repository.PayrollMasterNewRepository;
-import com.cotodel.hrms.auth.server.repository.PayrollMasterRepository;
 
 /**
  * 
