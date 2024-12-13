@@ -80,5 +80,10 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		return userRepository.findUserByMobileAndEmail(mobile, email);
 	}
 
+	@Override
+	public List<UserEntity> getUserList(int employerid) {
+		return userRepository.findByUserList(employerid);
+	}
+
 	
 }

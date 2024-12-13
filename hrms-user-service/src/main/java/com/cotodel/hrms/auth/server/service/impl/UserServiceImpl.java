@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -33,8 +34,10 @@ import org.springframework.stereotype.Service;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
+import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
+import com.cotodel.hrms.auth.server.dto.UserRoleMapperDto;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.entity.UserRoleMapperEntity;
@@ -63,6 +66,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UserRoleMapperDao userRoleMapperDao;
+	
+	
 	
 	@Override
 	@Transactional
@@ -509,6 +514,43 @@ public class UserServiceImpl implements UserService {
 	public UserEntity userDetails(String mobile, String email) {
 		// TODO Auto-generated method stub
 		return userDetailsDao.getUserDetails(mobile, email);
+	}
+
+
+
+
+	@Override
+	public List<ExistUserResponse> getUsersListWithRole(int employerid) {
+		List<ExistUserResponse> existUserList=new ArrayList<ExistUserResponse>();
+		try {
+			List<UserEntity>  userEntities=userDetailsDao.getUserList(employerid);
+			if(userEntities!=null) {
+				for (UserEntity userEntity : userEntities) {
+					ExistUserResponse existUserResponse=new ExistUserResponse();
+					CopyUtility.copyProperties(userEntity, existUserResponse);
+					//CopyUtility.copyProperties
+					List<UserRoleMapperDto> userRoleMapperEntities=userRoleMapperDao.getUserRoleList(existUserResponse.getMobile());
+					
+					existUserResponse.setUserRole(userRoleMapperEntities);
+					existUserList.add(existUserResponse);
+				}
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return existUserList;
+	}
+
+
+
+
+	@Override
+	public String saveUsersRole(ExistUserResponse existUserResponse) {
+		
+		
+		return null;
 	}	
 
 	

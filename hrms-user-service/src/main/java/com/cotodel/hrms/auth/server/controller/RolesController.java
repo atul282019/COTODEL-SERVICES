@@ -86,15 +86,15 @@ public class RolesController {
 	    		
 	    		roleMaster=	rolesMasterService.getRoleMaster();
 	    		 if(roleMaster!=null && roleMaster.size()>0 )
-		    		 return ResponseEntity.ok(new RoleMasterNewResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,roleMaster,TransactionManager.getCurrentTimeStamp()));
+		    		 return ResponseEntity.ok(new RoleMasterNewResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,roleMaster,TransactionManager.getCurrentTimeStamp()));
 		    	 
 	    	 
 	    	}catch (Exception e) {
 				
-	    		logger.error("error in Roles====="+e);
+	    		logger.error("Error in roleMaster====="+e);
 			}
 	        
-	    	return ResponseEntity.ok(new RoleMasterNewResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,roleMaster,TransactionManager.getCurrentTimeStamp()));
+	    	return ResponseEntity.ok(new RoleMasterNewResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,roleMaster,TransactionManager.getCurrentTimeStamp()));
 	        
 	    }
 

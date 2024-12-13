@@ -1,4 +1,4 @@
-package com.cotodel.hrms.auth.server.entity;
+package com.cotodel.hrms.auth.server.dto;
 
 
 import java.io.Serializable;
@@ -21,44 +21,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="user_role_mapper")
-@Access(value=AccessType.FIELD)
-@SequenceGenerator(name="user_role_mapper_id_pk_seq" , sequenceName="user_role_mapper_id_pk_seq", allocationSize=1)
-public class UserRoleMapperEntity implements Serializable{
+
+public class UserRoleMapperDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="user_role_mapper_id_pk_seq")
-	@Column(name="id_pk")
 	private Long id ;
-	
-	@Column(name="mobile")
-	private String mobile ;
-	
-	@Column(name="role_id")
-	private int roleId ;
-	
-	@Column(name="org_id")
+	private String mobile ;	
+	private int roleId ;	
 	private Long orgId ;
-
-	@Column(name="creation_date")
 	private LocalDateTime creationDate ;
-	
-	@Column(name="created_by")
 	private String createdBy ;
-	
-	@Column(name="status")
 	private int status ;
-	
-	@Column(name="status_desc")
 	private String statusDesc ;
-	
-	@Transient
     private String roleDesc;
-	
 
 }

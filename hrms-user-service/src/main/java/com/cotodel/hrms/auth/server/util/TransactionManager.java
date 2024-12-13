@@ -12,7 +12,7 @@ public class TransactionManager {
 
 	public static String getTransactionId() {
 
-		return "NHA:"+UUID.randomUUID().toString();
+		return "COTODEL:"+UUID.randomUUID().toString();
 	}
 
 	public static String getKycTransactionId() {
@@ -21,10 +21,7 @@ public class TransactionManager {
 	}
 	
 	
-	public static String getFaceIdTransactionId() {
 
-		return "NHAFACEID:"+UUID.randomUUID().toString();
-	}
 
 
 	private static final String ALPHA_NUMERIC_STRING = "abcdefghijklmnopqrstuvwxyz0123456789";

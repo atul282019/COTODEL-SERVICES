@@ -37,7 +37,7 @@ public class RoleMasterEntity implements Serializable{
 	private Long roleId;
 	
 	@Column(name="role_desc")
-	private String role_desc;
+	private String roleDesc;
 	
 	@Column(name="status")
 	private int status;	

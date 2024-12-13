@@ -20,4 +20,6 @@ public class MessageConstant {
 	public static final Integer USER_ROLE =2;
 	public static final Integer STATUS =1;
 	public static final Integer ERUPI_ADMIN_ROLE =9;
+	public static final String DATA_NOT_FOUND = "No Data Found .";
+	public static final String DATA_FOUND = "Data Found .";
 }

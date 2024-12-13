@@ -345,10 +345,18 @@ public class MobileEmailVerifyController {
 	    				
 	    			}else {
 	    			response=userService.verifySmsOtpNew(userReq.getOrderId(),userReq.getMobile(),userReq.getOtp());
+	    			//response="422 Unprocessable Entity: \"{\"message\":\"Link expired\"}\"";
 	    			//response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";	
 	    			}
 	    			if(!ObjectUtils.isEmpty(response)) {
-
+	    				if(!response.startsWith("{")) {
+	    					if(response.contains("Link expired")) {
+	    						response="Link expired";
+	    						return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
+	    					}else {
+	    						return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
+	    					}
+	    				}else {
 						JSONObject demoRes= new JSONObject(response);
 						if(demoRes.has("isOTPVerified")) {
 							isValid=demoRes.isNull("isOTPVerified")?false: demoRes.getBoolean("isOTPVerified");
@@ -362,7 +370,7 @@ public class MobileEmailVerifyController {
 								message=demoRes.isNull("message")?"": demoRes.getString("message");
 								return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
 						}
-
+	    			}
 					}else {
 						return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
 					}

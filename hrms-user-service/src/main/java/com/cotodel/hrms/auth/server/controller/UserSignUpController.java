@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.UserResponse;
+import com.cotodel.hrms.auth.server.dto.UserRoleRequest;
+import com.cotodel.hrms.auth.server.dto.UserRoleResponse;
 import com.cotodel.hrms.auth.server.dto.UserSignUpResponse;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
@@ -459,6 +462,74 @@ public class UserSignUpController {
 			}
 	        
 	        return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	          
+	        
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/userListWithRole",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> userListWithRole(HttpServletRequest request,@Valid @RequestBody UserRoleRequest userRoleRequest) {
+	    	logger.info("inside get userListWithRole+++");
+	    	List<ExistUserResponse>  list=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				list=userService.getUsersListWithRole(userRoleRequest.getOrgId());
+				System.out.println(list);
+				if(list!=null && list.size()>0) {
+					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+				}else {
+					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
+	    	   
+			}
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in userListWithRole====="+e);
+			}
+	        
+	        return ResponseEntity.ok(new UserRoleResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	          
+	        
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/userRole",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> userRole(HttpServletRequest request,@Valid @RequestBody UserRoleRequest userRoleRequest) {
+	    	logger.info("inside add userRole+++");
+	    	List<ExistUserResponse>  list=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				list=userService.getUsersListWithRole(userRoleRequest.getOrgId());
+				//System.out.println(list);
+				if(list!=null && list.size()>0) {
+					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+				}else {
+					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
+	    	   
+			}
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in userListWithRole====="+e);
+			}
+	        
+	        return ResponseEntity.ok(new UserRoleResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	          
 	        
 	    }
