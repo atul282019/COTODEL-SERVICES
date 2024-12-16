@@ -56,7 +56,7 @@ public class UserEntity implements Serializable{
     private int status ;
     private int employerid ;
     private int role_id ;
-    
+    private String createdBy ;
    
 //    @OneToMany
 //   	@JoinTable(name = "h_user_emp", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user"))

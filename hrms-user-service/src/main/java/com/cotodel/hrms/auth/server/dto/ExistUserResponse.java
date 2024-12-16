@@ -38,5 +38,6 @@ public class ExistUserResponse {
     private int status ;
     private int employerid ;
     private int role_id ;
+    private String createdBy;
     List<UserRoleMapperDto> userRole;
 }

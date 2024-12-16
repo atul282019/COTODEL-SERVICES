@@ -39,6 +39,8 @@ public interface UserService {
 	
 	public List<ExistUserResponse> getUsersListWithRole(int  employerid);
 	
-	public String saveUsersRole(ExistUserResponse  existUserResponse);
+	public ExistUserResponse saveUsersRole(ExistUserResponse  existUserResponse);
+	
+	//public List<ExistUserResponse> saveUsersListWithRole(ExistUserResponse  existUserResponse);
 
 }

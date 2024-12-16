@@ -18,6 +18,7 @@ import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.UserResponse;
+import com.cotodel.hrms.auth.server.dto.UserRoleEditResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.UserRoleResponse;
 import com.cotodel.hrms.auth.server.dto.UserSignUpResponse;
@@ -507,20 +508,20 @@ public class UserSignUpController {
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/add/userRole",produces = {"application/json"}, 
+	    @RequestMapping(value = "/update/editUserRole",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> userRole(HttpServletRequest request,@Valid @RequestBody UserRoleRequest userRoleRequest) {
-	    	logger.info("inside add userRole+++");
-	    	List<ExistUserResponse>  list=null;
+	    public ResponseEntity<Object> editUserRole(HttpServletRequest request,@Valid @RequestBody ExistUserResponse existUserResponse) {
+	    	logger.info("inside add editUserRole+++");
+	    	ExistUserResponse existResponse=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
-				list=userService.getUsersListWithRole(userRoleRequest.getOrgId());
-				//System.out.println(list);
-				if(list!=null && list.size()>0) {
-					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+				existResponse=userService.saveUsersRole(existUserResponse);
+				
+				if(existResponse!=null) {
+					return ResponseEntity.ok(new UserRoleEditResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 				}else {
-					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
+					return ResponseEntity.ok(new UserRoleEditResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
 	    	   
 			}
 	    	}catch (Exception e) {
@@ -529,7 +530,7 @@ public class UserSignUpController {
 	    		logger.error("error in userListWithRole====="+e);
 			}
 	        
-	        return ResponseEntity.ok(new UserRoleResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	        return ResponseEntity.ok(new UserRoleEditResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	          
 	        
 	    }

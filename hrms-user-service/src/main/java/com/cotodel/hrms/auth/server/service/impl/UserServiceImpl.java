@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
+import com.cotodel.hrms.auth.server.dao.UserRoleMapperHistoryDao;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
@@ -41,6 +42,7 @@ import com.cotodel.hrms.auth.server.dto.UserRoleMapperDto;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.entity.UserRoleMapperEntity;
+import com.cotodel.hrms.auth.server.entity.UserRoleMapperHistoryEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.UserService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
@@ -67,6 +69,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRoleMapperDao userRoleMapperDao;
 	
+	@Autowired
+	UserRoleMapperHistoryDao userRoleMapperHistoryDao;
 	
 	
 	@Override
@@ -547,12 +551,54 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public String saveUsersRole(ExistUserResponse existUserResponse) {
+	public ExistUserResponse saveUsersRole(ExistUserResponse existUserResponses) {
+		try {
+				String mobile=existUserResponses.getMobile();
+				Long employerid=0l;
+				if(existUserResponses.getRole_id()==1) {
+				employerid=existUserResponses.getId();
+				}else {
+					int empid=existUserResponses.getEmployerid();
+					employerid=(long)empid;
+				}
+				Long orgId=employerid;
+				
+				List<UserRoleMapperDto> userRoleMapperDtos =existUserResponses.getUserRole();
+				for (UserRoleMapperDto userRoleMapperDto : userRoleMapperDtos) {
+					int role=userRoleMapperDto.getRoleId();
+					UserRoleMapperEntity userRoleMapperEntity=userRoleMapperDao.getUserRoleMapper(mobile, orgId, role);
+					UserRoleMapperHistoryEntity historyEntity=new UserRoleMapperHistoryEntity();
+					UserRoleMapperEntity userMapperEntity=new UserRoleMapperEntity();
+					
+					if(userRoleMapperEntity!=null) {
+						
+						CopyUtility.copyProperties(userRoleMapperEntity, historyEntity);
+						historyEntity=userRoleMapperHistoryDao.saveUserRoleDetails(historyEntity);
+						userRoleMapperDao.deleteUserRoleMapper(userRoleMapperEntity.getId());
+						userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile);
+
+					}else {
+						userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile);
+						
+					}
+				}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		
-		return null;
+		return existUserResponses;
 	}	
 
 	
-	
+	public UserRoleMapperEntity setMapper(UserRoleMapperEntity userRoleMapperEntity,String mobile,Long orgId,int role,String createdBy) {
+		userRoleMapperEntity.setMobile(mobile);
+		userRoleMapperEntity.setOrgId(orgId);
+		userRoleMapperEntity.setRoleId(role);
+		userRoleMapperEntity.setStatus(1);
+		userRoleMapperEntity.setCreatedBy(createdBy);
+		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+		userRoleMapperEntity=userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
+		return userRoleMapperEntity;
+	}
 }

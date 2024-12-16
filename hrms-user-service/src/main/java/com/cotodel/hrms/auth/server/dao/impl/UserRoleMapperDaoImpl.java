@@ -27,6 +27,24 @@ public class UserRoleMapperDaoImpl implements UserRoleMapperDao {
 		// TODO Auto-generated method stub
 		return userRoleMapperRepository.getByMobile(mobile);
 	}
+
+	@Override
+	public UserRoleMapperEntity getUserRoleMapper(String mobile, Long orgId, int roleId) {
+		// TODO Auto-generated method stub
+		return userRoleMapperRepository.getMapperMobileValue(mobile,orgId,roleId);
+	}
+
+	@Override
+	public void deleteUserRoleMapper(Long id) {
+		// TODO Auto-generated method stub
+		userRoleMapperRepository.deleteById(id);
+	}
+
+	@Override
+	public UserRoleMapperEntity getUserRoleMapperById(Long id) {
+		// TODO Auto-generated method stub
+		return userRoleMapperRepository.getById(id);
+	}
 	
 
 	

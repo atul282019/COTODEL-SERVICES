@@ -36,7 +36,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	  @Query("select c from UserEntity c where (c.mobile = ?1 or c.email = ?2  and c.role_id='1')")
 	   UserEntity findUserByMobileAndEmail(String mobile,String email);
 	  
-	  @Query("select c from UserEntity c where c.employerid = ?1")
+	  @Query("select c from UserEntity c where (c.employerid = ?1) or (c.id=?1and c.role_id='1') ")
 	  List<UserEntity> findByUserList(int employerid);
 	  
 } 

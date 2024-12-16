@@ -9,5 +9,7 @@ public interface UserRoleMapperDao {
 	
 	public UserRoleMapperEntity saveUserRoleDetails(UserRoleMapperEntity userRoleMapper);
 	public List<UserRoleMapperDto> getUserRoleList(String mobile);
-	
+	public UserRoleMapperEntity getUserRoleMapper(String mobile,Long orgId,int roleId);
+	public void deleteUserRoleMapper(Long id);
+	public UserRoleMapperEntity getUserRoleMapperById(Long id);
 }
