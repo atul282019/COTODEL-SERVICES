@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
@@ -130,7 +129,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		//LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		
 		SignUpEntity signUpEntity=signUpDao.getUser(user.getSignupId());
-		signUpEntity.setOrgType(user.getOrganizationType());
+		signUpEntity.setOrgType(user.getOrgType());
 		signUpDao.saveUserDetails(signUpEntity);
 		user.setSignupId(signUpEntity.getSignupId());
 		EmployerEntity employer=employerDao.getUser(user.getEmployerId());
@@ -157,7 +156,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		return user;
 	}
 	public EmployerEntity getEmployerDeails(EmployerEntity employer,EmployeeProfileRequest user) {
-		employer.setOrgType(user.getOrganizationType());
+		employer.setOrgType(user.getOrgType());
 		employer.setGstin(user.getGstnNo());
 		employer.setPan(user.getPan());
 		employer.setPanDetails(user.getPanDetails());

@@ -22,7 +22,7 @@ public interface ErupiVoucherInitiateDetailsService {
 	public ErupiVoucherRevokeDetailsSingleRequest  erupiVoucherRevokeSingleDetails(ErupiVoucherRevokeDetailsSingleRequest request);
 	public String  erupiVoucherRedemDetails(ErupiVoucherRedemeRequest request);
 	public List<ErupiVoucherCreateSummaryDto>  getErupiVoucherCreateSummaryList(ErupiVoucherCreatedRequest request);
-	public ErupiVoucherCreateListRequest  saveErupiVoucherCreateListDetails(ErupiVoucherCreateListRequest request);
+	public List<ErupiVoucherCreateDetailsRequest>  saveErupiVoucherCreateListDetails(ErupiVoucherCreateListRequest request);
 	public List<ErupiVoucherCreateOldDto>  getErupiVoucherCreateOldList(ErupiVoucherCreatedRequest request);
 	
 }

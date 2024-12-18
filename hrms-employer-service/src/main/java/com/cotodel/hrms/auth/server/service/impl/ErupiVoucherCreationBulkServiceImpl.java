@@ -1,7 +1,9 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,9 +30,12 @@ import com.cotodel.hrms.auth.server.dto.bulk.ErupiBulkIdRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadSFListResponse;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkVoucherCreateRequest;
+import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherMasterUploadRequest;
+import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherMasterUploadSFResponse;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadFailEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadSuccessEntity;
+import com.cotodel.hrms.auth.server.model.bulk.VoucherMasterUploadEntity;
 import com.cotodel.hrms.auth.server.model.master.MccMasterEntity;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherCreationBulkService;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherInitiateDetailsService;
@@ -211,7 +216,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 				vtme.setId(voEntity.getVoucherId());
 				erRequest.setName(voEntity.getBeneficiaryName());
 				erRequest.setAmount(Float.valueOf(voEntity.getAmount()));
-				erRequest.setRedemtionType(request.getRedemtionType());
+				//erRequest.setRedemtionType(request.getRedemtionType());
 				erRequest.setBulktblId(idValue);
 				erRequest.setVoucherId(vtme);
 				//ErupiVoucherInitiateDetailsServiceImpl help=new ErupiVoucherInitiateDetailsServiceImpl();
@@ -264,7 +269,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		
 		voucherBulkUploadSuccessEntity.setFileName(uniqueFileName);
 		voucherBulkUploadSuccessEntity.setVoucherType(voucherType);
-		//voucherBulkUploadSuccessEntity.setRedemtionType("SINGLE");
+		voucherBulkUploadSuccessEntity.setRedemtionType(voucherType);
 		voucherBulkUploadSuccessEntity.setBeneficiaryName(benName);
 		voucherBulkUploadSuccessEntity.setMobile(mobile);
 		voucherBulkUploadSuccessEntity.setAmount(amount);
@@ -279,5 +284,113 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		voucherBulkUploadSuccessEntity.setVoucherId(voucherId);
 		erupiVoucherBulkDao.saveSuccessDetails(voucherBulkUploadSuccessEntity);
 	}
+
+	@Override
+	public ErupiVoucherMasterUploadSFResponse saveErupiVoucherMasterFile(
+			ErupiVoucherMasterUploadRequest request) {
+		VoucherMasterUploadEntity voucherMasterUploadEntity = new VoucherMasterUploadEntity();
+		ErupiVoucherMasterUploadSFResponse bulkupload = new ErupiVoucherMasterUploadSFResponse();
+		String response = "";
+		try {
+
+			response = MessageConstant.RESPONSE_FAILED;
+			//Long orgId = request.getOrgId();
+			Long voucherId=request.getVoucherId();
+			String filename = request.getFileName();
+			String extn = CommonUtility.getFileExtension(filename);
+			String fileNameWithout = filename.substring(0, filename.lastIndexOf("."));
+			String uniqueFileName = CommonUtility.generateUniqueFileNameWithoutOrg(fileNameWithout, extn);
+			LocalDate eventDate = LocalDate.now();
+			CopyUtility.copyProperties(request, voucherMasterUploadEntity);
+			voucherMasterUploadEntity.setCreationDate(eventDate);
+			voucherMasterUploadEntity.setFile(request.getFile());
+			voucherMasterUploadEntity.setFileName(uniqueFileName);
+			//voucherBulkUploadEntity.setRedemtionType(re);
+			voucherMasterUploadEntity = erupiVoucherBulkDao.saveDetails(voucherMasterUploadEntity);
+
+			byte[] decodedBytes = request.getFile();
+			// Convert byte[] to InputStream
+//			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
+//			// Read Excel file using Apache POI
+//			XSSFWorkbook workbook = null;
+//			try {
+//				workbook = new XSSFWorkbook(byteArrayInputStream);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
+
+	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(byteArrayInputStream))) {
+	        	String header = reader.readLine(); // Discard header
+	            String line;
+	            while ((line = reader.readLine()) != null) {
+	                String[] values = line.split(","); // Split by commas for CSV format
+	                String  purposeCode=values[0];
+	                String  purposeDesc=values[1];
+	                String  mcc=values[2];
+	                String  mccDescription=values[3];	                  
+	               
+	                System.out.println();
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+
+//			Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
+//			Iterator<Row> rowIterator = sheet.iterator();
+//			boolean isHeaderRow = true;
+//			int totalCount = 0;
+//			int successCount = 0;
+//			int failCount = 0;
+//			while (rowIterator.hasNext()) {
+//				Row row = rowIterator.next();
+//				if (isHeaderRow) {
+//					// Process the header row
+//					String benName = row.getCell(1).getStringCellValue();
+//					String mobile = row.getCell(2).getStringCellValue();
+//					String amount = row.getCell(3).getStringCellValue();
+//					String starDate = row.getCell(4).getStringCellValue();
+//					String expDate = row.getCell(5).getStringCellValue();
+//					totalCount = 0;
+//					isHeaderRow = false;
+//				} else {
+//					// Process data row
+//					totalCount++;
+//					String voucherType = row.getCell(1).getStringCellValue();
+//					String benName = row.getCell(2).getStringCellValue();
+//					String mobile = "";
+//					if (row.getCell(3).getCellType() == CellType.STRING) {
+//						mobile = row.getCell(3).getStringCellValue();
+//					} else {
+//						mobile = String.valueOf((long) row.getCell(3).getNumericCellValue());
+//					}
+//					String amount = "";
+//					if (row.getCell(4).getCellType() == CellType.STRING) {
+//						amount = row.getCell(4).getStringCellValue();
+//					} else {
+//						amount = String.valueOf(row.getCell(4).getNumericCellValue());
+//					}
+//					Date starDate = row.getCell(5).getDateCellValue();
+//					LocalDate stDate = CommonUtility.convertToLocalDate(starDate);
+//					Date endDate = row.getCell(6).getDateCellValue();
+//					LocalDate etDate = CommonUtility.convertToLocalDate(endDate);
+//					//System.out.println(etDate);
+//
+//					
+//				}
+
+				
+			//}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = MessageConstant.RESPONSE_FAILED;
+			logger.error("Error :: " + e.getMessage());
+
+		}
+		return bulkupload;
+	}
+	
+	
 
 }

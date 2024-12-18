@@ -27,7 +27,7 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ "from ErupiVoucherCreationDetailsEntity c"
 			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
 			+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
-			+ " join MccMasterEntity m on m.mcc=c.mcc   where   c.orgId =?1  order by c.creationDate desc")
+			+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =?1  order by c.creationDate desc")
 	public List<ErupiVoucherCreatedDto> findVoucherCreateList(Long orgId);
 	
 //	 @Query(value = "SELECT count(1), SUM(amount), " +

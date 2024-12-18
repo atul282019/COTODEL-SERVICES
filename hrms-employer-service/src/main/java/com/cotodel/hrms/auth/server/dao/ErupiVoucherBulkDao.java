@@ -5,6 +5,7 @@ import java.util.List;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadFailEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadSuccessEntity;
+import com.cotodel.hrms.auth.server.model.bulk.VoucherMasterUploadEntity;
 
 public interface ErupiVoucherBulkDao {
 	public VoucherBulkUploadEntity saveDetails(VoucherBulkUploadEntity erBulkUploadEntity);
@@ -15,5 +16,6 @@ public interface ErupiVoucherBulkDao {
 	public VoucherBulkUploadSuccessEntity findSuccessDetails(Long id);
 	public int updateSuccessFlag(Long id);
 	public int updateSuccessStatus(Long id);
+	public VoucherMasterUploadEntity saveDetails(VoucherMasterUploadEntity voucherMasterUploadEntity);
 	
 }

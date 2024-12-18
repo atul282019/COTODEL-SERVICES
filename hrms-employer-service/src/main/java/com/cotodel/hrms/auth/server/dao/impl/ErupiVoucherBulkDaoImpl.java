@@ -9,9 +9,11 @@ import com.cotodel.hrms.auth.server.dao.ErupiVoucherBulkDao;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadFailEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadSuccessEntity;
+import com.cotodel.hrms.auth.server.model.bulk.VoucherMasterUploadEntity;
 import com.cotodel.hrms.auth.server.repository.bulk.VoucherBulkUploadFailRepository;
 import com.cotodel.hrms.auth.server.repository.bulk.VoucherBulkUploadRepository;
 import com.cotodel.hrms.auth.server.repository.bulk.VoucherBulkUploadSuccessRepository;
+import com.cotodel.hrms.auth.server.repository.bulk.VoucherMasterUploadRepository;
 @Service
 public class ErupiVoucherBulkDaoImpl implements ErupiVoucherBulkDao{
 
@@ -23,6 +25,9 @@ public class ErupiVoucherBulkDaoImpl implements ErupiVoucherBulkDao{
 	
 	@Autowired
 	VoucherBulkUploadFailRepository voucherBulkUploadFailRepository;
+	
+	@Autowired
+	VoucherMasterUploadRepository voucherMasterUploadRepository;
 	
 	@Override
 	public VoucherBulkUploadEntity saveDetails(VoucherBulkUploadEntity erBulkUploadEntity) {
@@ -70,6 +75,12 @@ public class ErupiVoucherBulkDaoImpl implements ErupiVoucherBulkDao{
 	public int updateSuccessStatus(Long id) {
 		// TODO Auto-generated method stub
 		return voucherBulkUploadSuccessRepository.updateSuccessStatus(id);
+	}
+
+	@Override
+	public VoucherMasterUploadEntity saveDetails(VoucherMasterUploadEntity voucherMasterUploadEntity) {
+		// TODO Auto-generated method stub
+		return voucherMasterUploadRepository.saveAndFlush(voucherMasterUploadEntity);
 	}
 	
 	

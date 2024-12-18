@@ -23,8 +23,8 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryListResponse;
-import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateNameResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
@@ -316,11 +316,11 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> erupiVoucherCreateList(HttpServletRequest request,@Valid @RequestBody ErupiVoucherCreateListRequest erupiVoucherCreateListRequest) {
 		 
-	    logger.info("inside erupiVoucherCreateList....");	    	
+	    logger.info("inside erupiVoucherCreateList...."+erupiVoucherCreateListRequest);	    	
 	    	
 	    
 	    	String message = "";
-	    	ErupiVoucherCreateListRequest response=null;
+	    	List<ErupiVoucherCreateDetailsRequest> response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
@@ -328,15 +328,15 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				response=erupiVoucherInitiateDetailsService.saveErupiVoucherCreateListDetails(erupiVoucherCreateListRequest);
 	    		
 				if(response!=null) {
-	    			return ResponseEntity.ok(new ErupiVoucherCreateListDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ErupiVoucherCreateListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {
-	    			return ResponseEntity.ok(new ErupiVoucherCreateListDetailsResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			return ResponseEntity.ok(new ErupiVoucherCreateListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
 	    		logger.error("error in erupiVoucherInitiateDetails====="+e);
 			}
 	        
-	        return ResponseEntity.ok(new ErupiVoucherCreateListDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	        return ResponseEntity.ok(new ErupiVoucherCreateListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {

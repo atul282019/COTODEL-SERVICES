@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErupiVoucherBulkUploadResponse {
+public class ErupiVoucherMasterUploadResponse {
 	private boolean status;
 	 private String message;
-	 ErupiVoucherBulkUploadSFListResponse data;
+	 ErupiVoucherMasterUploadSFResponse data;
 	 private String txnId;
 	 private String timestamp;
 	

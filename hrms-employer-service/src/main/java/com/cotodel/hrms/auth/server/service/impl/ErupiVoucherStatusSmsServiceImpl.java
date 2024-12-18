@@ -92,7 +92,7 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 	    	erupiVoucherTxnDetailsEntity.setStatusApi(decryptedResponse.getResponse_Status()==null?"":decryptedResponse.getResponse_Status());
 	    	erupiVoucherTxnDetailsEntity.setResponseCode(decryptedResponse.getResponseCode());
 	    	erupiVoucherTxnDetailsEntity.setResultCallApi(decryptedResponse.getDescription()==null?"":decryptedResponse.getDescription());
-	    	erupiVoucherTxnDetailsEntity.setResponse(decryptedResponse.getResponse_Status()==null?"":decryptedResponse.getResponse_Status());
+	    	erupiVoucherTxnDetailsEntity.setResponse(decryptedResponse.getActCode()==null?"":decryptedResponse.getActCode());
 	    	return erupiVoucherTxnDetailsEntity;
 	    }
 	    
@@ -185,6 +185,7 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 							//erupiVoucherTxnDetailsEntity.setId(null);
 							//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 							erupiVoucherTxnDetailsEntity2.setWorkFlowId(100006l);
+							erupiVoucherTxnDetailsEntity2.setOrgId(erupiVoucherInitiateDetailsEntity.getOrgId());
 							erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 							erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}else {
@@ -194,6 +195,7 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 								//erupiVoucherRevokeDetailsRequest.setResponse(decryptedResponse.getMessage());
 								request.setResponseApi(decryptedResponse.getDescription());
 								erupiVoucherTxnDetailsEntity2.setWorkFlowId(100009l);
+								erupiVoucherTxnDetailsEntity2.setOrgId(erupiVoucherInitiateDetailsEntity.getOrgId());
 								erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 								erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}

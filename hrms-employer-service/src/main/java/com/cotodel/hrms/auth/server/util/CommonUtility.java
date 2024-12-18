@@ -171,6 +171,18 @@ public class CommonUtility {
 	        return fileName;
 	    }
 		
+		public static String generateUniqueFileNameWithoutOrg(String filename,String ext) {
+	        // Get the current date and time
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+	        String dateString = dateFormat.format(new Date());
+	        
+	        // Add file extension (example: .txt, .jpg, .xlsx)
+	        String fileName =filename+"_"+dateString+"."+ext;
+	        
+	        // Combine the date string with the file extension to create a unique file name
+	        return fileName;
+	    }
+		
 		public static boolean isValidAmount(String amount) {
 	        // Ensure it's positive
 			boolean result=false;

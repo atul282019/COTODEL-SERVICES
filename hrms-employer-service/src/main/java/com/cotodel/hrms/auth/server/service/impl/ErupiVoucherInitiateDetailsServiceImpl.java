@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -482,6 +483,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 							erupiVoucherTxnDetailsEntity2.setWorkFlowId(100005l);
 							erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
 							erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
+							erupiVoucherTxnDetailsEntity2.setOrgId(erupiVoucherInitiateDetailsEntity.getOrgId());
 							erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							}else {
 								response=MessageConstant.RESPONSE_FAILED;
@@ -491,6 +493,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 								//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 								//erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
 								//erupiVoucherTxnDetailsEntity.setId(null);
+								erupiVoucherTxnDetailsEntity2.setWorkFlowId(100012l);
+								erupiVoucherTxnDetailsEntity2.setVoucherType("Revoke");
+								erupiVoucherTxnDetailsEntity2.setOrgId(erupiVoucherInitiateDetailsEntity.getOrgId());
 								erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
 								erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 								erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
@@ -635,17 +640,29 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 
 
 		@Override
-		public ErupiVoucherCreateListRequest saveErupiVoucherCreateListDetails(ErupiVoucherCreateListRequest request) {
+		public List<ErupiVoucherCreateDetailsRequest> saveErupiVoucherCreateListDetails(ErupiVoucherCreateListRequest request) {
 			// TODO Auto-generated method stub
-			ErupiVoucherCreateListRequest erupiVoucherCreateListRequest=new ErupiVoucherCreateListRequest();
+			//ErupiVoucherCreateListRequest erupiVoucherCreateListRequest=new ErupiVoucherCreateListRequest();
+			
 			List<ErupiVoucherCreateDetailsRequest> response= new ArrayList<ErupiVoucherCreateDetailsRequest>();
-			List<ErupiVoucherCreateDetailsRequest> erupiVoucherCreateDetailsRequests=request.getData();
-			for (ErupiVoucherCreateDetailsRequest erupiVoucherCreateDetailsRequest : erupiVoucherCreateDetailsRequests) {
-				erupiVoucherCreateDetailsRequest=saveErupiVoucherInitiateDetails(erupiVoucherCreateDetailsRequest);
-				response.add(erupiVoucherCreateDetailsRequest);
+			
+			List<String> idList = Arrays.asList(request.getArrayofnamemobile());
+			for (String namemobile : idList) {
+				String[] value=namemobile.split("\\|");
+				String name=value[0];
+				String mobile=value[1];
+				ErupiVoucherCreateDetailsRequest erupiVoucherCreateDetailsRequest=new ErupiVoucherCreateDetailsRequest();
+				CopyUtility.copyProperties(request,erupiVoucherCreateDetailsRequest);
+				erupiVoucherCreateDetailsRequest.setName(name);
+				erupiVoucherCreateDetailsRequest.setMobile(mobile);
+				erupiVoucherCreateDetailsRequest.setBeneficiaryID(mobile+"1");
+				ErupiVoucherCreateDetailsRequest erupi=saveErupiVoucherInitiateDetails(erupiVoucherCreateDetailsRequest);
+				response.add(erupi);
 			}
-			erupiVoucherCreateListRequest.setData(response);
-			return erupiVoucherCreateListRequest;
+			
+				
+				
+			return response;
 		}
 
 
