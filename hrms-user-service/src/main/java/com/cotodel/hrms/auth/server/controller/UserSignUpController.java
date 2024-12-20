@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
+import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.UserResponse;
+import com.cotodel.hrms.auth.server.dto.UserRoleEditListResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleEditResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.UserRoleResponse;
@@ -510,8 +512,41 @@ public class UserSignUpController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/update/editUserRole",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> editUserRole(HttpServletRequest request,@Valid @RequestBody ExistUserResponse existUserResponse) {
+	    public ResponseEntity<Object> editUserRole(HttpServletRequest request,@Valid @RequestBody ExistUserRoleRequest existUserRoleRequest) {
 	    	logger.info("inside add editUserRole+++");
+	    	ExistUserRoleRequest existResponse=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				existResponse=userService.updateUsersRoleList(existUserRoleRequest);
+				
+				if(existResponse!=null && existResponse.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+					return ResponseEntity.ok(new UserRoleEditListResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+				}else {
+					return ResponseEntity.ok(new UserRoleEditListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
+	    	   
+			}
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in editUserRole====="+e);
+			}
+	        
+	        return ResponseEntity.ok(new UserRoleEditListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	          
+	        
+	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/saveUserRole",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> saveUserRole(HttpServletRequest request,@Valid @RequestBody ExistUserResponse existUserResponse) {
+	    	logger.info("inside add saveUserRole+++");
 	    	ExistUserResponse existResponse=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
@@ -534,5 +569,72 @@ public class UserSignUpController {
 	          
 	        
 	    }
-
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/delete/deleteUserRole",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> deleteUserRole(HttpServletRequest request,@Valid @RequestBody ExistUserResponse existUserResponse) {
+	    	logger.info("inside add deleteUserRole+++");
+	    	ExistUserResponse existResponse=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				existResponse=userService.deleteUsersRole(existUserResponse);
+				
+				if(existResponse!=null && existResponse.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+					return ResponseEntity.ok(new UserRoleEditResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+				}else {
+					return ResponseEntity.ok(new UserRoleEditResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
+	    	   
+			}
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in deleteUserRole====="+e);
+			}
+	        
+	        return ResponseEntity.ok(new UserRoleEditResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	          
+	        
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/userSearch",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> userSearch(HttpServletRequest request,@Valid @RequestBody UserRoleRequest userRoleRequest) {
+	    	logger.info("inside get userSearch+++");
+	    	List<ExistUserResponse>  list=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				list=userService.searchUsers(userRoleRequest.getOrgId(),userRoleRequest.getUserName());
+				System.out.println(list);
+				if(list!=null && list.size()>0) {
+					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+				}else {
+					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
+	    	   
+			}
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in userSearch====="+e);
+			}
+	        
+	        return ResponseEntity.ok(new UserRoleResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	          
+	        
+	    }
 }

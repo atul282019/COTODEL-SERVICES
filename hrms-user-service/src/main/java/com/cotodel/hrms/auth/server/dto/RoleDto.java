@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleRequest {
-	private int orgId;
-	private String userName;
+public class RoleDto {
+	 private Long roleId;
+	 private String roleDesc;
 }

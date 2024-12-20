@@ -35,10 +35,16 @@ import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperHistoryDao;
+import com.cotodel.hrms.auth.server.dao.UserRoleMasterDao;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
+import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
+import com.cotodel.hrms.auth.server.dto.RoleDto;
+import com.cotodel.hrms.auth.server.dto.UserDetailsDto;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
+import com.cotodel.hrms.auth.server.dto.UserRoleDto;
 import com.cotodel.hrms.auth.server.dto.UserRoleMapperDto;
+import com.cotodel.hrms.auth.server.entity.RoleMasterEntity;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.entity.UserRoleMapperEntity;
@@ -56,13 +62,12 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserDetailsDao userDetailsDao;
 	
-	
-	
 	@Autowired
 	SignUpDao signUpDao;
 	
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
+	
 	@Autowired
 	EntityManager entityManager;
 	
@@ -72,6 +77,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRoleMapperHistoryDao userRoleMapperHistoryDao;
 	
+	@Autowired
+	UserRoleMasterDao userRoleMasterDao;
 	
 	@Override
 	@Transactional
@@ -100,14 +107,14 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setCreated_date(localDate);
 		userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
-		UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
-		userRoleMapperEntity.setMobile(UserEntity1.getMobile());
-		userRoleMapperEntity.setOrgId(UserEntity1.getId());
-		userRoleMapperEntity.setStatus(1);
-		userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
-		userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
-		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
-		userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
+//		UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
+//		userRoleMapperEntity.setMobile(UserEntity1.getMobile());
+//		userRoleMapperEntity.setOrgId(UserEntity1.getId());
+//		userRoleMapperEntity.setStatus(1);
+//		userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
+//		userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
+//		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+//		userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
 		
 		return UserEntity1;
 	}
@@ -373,6 +380,7 @@ public class UserServiceImpl implements UserService {
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		userDetails.setCreated_date(localDate);
 		userDetails.setRole_id(MessageConstant.USER_ROLE);
+		//userDetails.setMapperFlag("Y");
 		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
 		userEmpEntity.setUser_id(UserEntity1.getId());
 		//userEmpEntity.setUser(UserEntity1);
@@ -381,15 +389,15 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setCreated_date(localDate);
 		userDetailsDao.saveUserEmpEntity(userEmpEntity);
 		
-		UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
-		userRoleMapperEntity.setMobile(UserEntity1.getMobile());
-		long empid = UserEntity1.getEmployerid();
-		userRoleMapperEntity.setOrgId(empid);
-		userRoleMapperEntity.setStatus(1);
-		userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
-		userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
-		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
-		userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
+//		UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
+//		userRoleMapperEntity.setMobile(UserEntity1.getMobile());
+//		long empid = UserEntity1.getEmployerid();
+//		userRoleMapperEntity.setOrgId(empid);
+//		userRoleMapperEntity.setStatus(1);
+//		userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
+//		userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
+//		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+//		userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
 		
 		return UserEntity1;
 
@@ -445,7 +453,7 @@ public class UserServiceImpl implements UserService {
 			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			userDetails.setCreated_date(localDate);
 			userDetails.setRole_id(MessageConstant.USER_ROLE);
-			
+			userDetails.setMapperFlag("Y");
 			UserEntity1=userDetailsDao.saveUserDetails(userDetails);
 			userEmpEntity.setUser_id(UserEntity1.getId());
 			//userEmpEntity.setUserDetails(UserEntity1);
@@ -454,15 +462,15 @@ public class UserServiceImpl implements UserService {
 			userEmpEntity.setCreated_date(localDate);
 			userDetailsDao.saveUserEmpEntity(userEmpEntity);
 			
-			UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
-			userRoleMapperEntity.setMobile(UserEntity1.getMobile());
-			long empid = UserEntity1.getEmployerid();
-			userRoleMapperEntity.setOrgId(empid);
-			userRoleMapperEntity.setStatus(1);
-			userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
-			userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
-			userRoleMapperEntity.setCreationDate(LocalDateTime.now());
-			userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
+//			UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
+//			userRoleMapperEntity.setMobile(UserEntity1.getMobile());
+//			long empid = UserEntity1.getEmployerid();
+//			userRoleMapperEntity.setOrgId(empid);
+//			userRoleMapperEntity.setStatus(1);
+//			userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
+//			userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
+//			userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+//			userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
 			
 			if(user.isEmailStatus()) {
 				CommonUtility.sendEmail(user);
@@ -534,7 +542,20 @@ public class UserServiceImpl implements UserService {
 					CopyUtility.copyProperties(userEntity, existUserResponse);
 					//CopyUtility.copyProperties
 					List<UserRoleMapperDto> userRoleMapperEntities=userRoleMapperDao.getUserRoleList(existUserResponse.getMobile());
-					
+					List<RoleDto> userrolelist=userRoleMapperDao.getUserRoleMaster(existUserResponse.getMobile());
+					if(userrolelist!=null) {
+						if(userRoleMapperEntities!=null && userRoleMapperEntities.size()>0) {
+							
+						}else {
+							userRoleMapperEntities=new ArrayList<UserRoleMapperDto>();
+						}
+					for (RoleDto roledto : userrolelist) {
+						UserRoleMapperDto userRoleMapperDto=new UserRoleMapperDto();
+						userRoleMapperDto.setRoleId(roledto.getRoleId().intValue());
+						userRoleMapperDto.setRoleDesc(roledto.getRoleDesc());
+						userRoleMapperEntities.add(userRoleMapperDto);
+					}
+					}
 					existUserResponse.setUserRole(userRoleMapperEntities);
 					existUserList.add(existUserResponse);
 				}
@@ -542,7 +563,7 @@ public class UserServiceImpl implements UserService {
 			
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return existUserList;
 	}
@@ -554,51 +575,242 @@ public class UserServiceImpl implements UserService {
 	public ExistUserResponse saveUsersRole(ExistUserResponse existUserResponses) {
 		try {
 				String mobile=existUserResponses.getMobile();
-				Long employerid=0l;
-				if(existUserResponses.getRole_id()==1) {
-				employerid=existUserResponses.getId();
-				}else {
-					int empid=existUserResponses.getEmployerid();
-					employerid=(long)empid;
-				}
-				Long orgId=employerid;
+				String consent="";
+//				Long employerid=0l;
+//				if(existUserResponses.getRole_id()==1) {
+//				employerid=existUserResponses.getId();
+//				}else {
+//					int empid=existUserResponses.getEmployerid();
+//					employerid=(long)empid;
+//				}
+				Long orgId=existUserResponses.getOrgId();
 				
-				List<UserRoleMapperDto> userRoleMapperDtos =existUserResponses.getUserRole();
-				for (UserRoleMapperDto userRoleMapperDto : userRoleMapperDtos) {
-					int role=userRoleMapperDto.getRoleId();
-					UserRoleMapperEntity userRoleMapperEntity=userRoleMapperDao.getUserRoleMapper(mobile, orgId, role);
-					UserRoleMapperHistoryEntity historyEntity=new UserRoleMapperHistoryEntity();
-					UserRoleMapperEntity userMapperEntity=new UserRoleMapperEntity();
-					
-					if(userRoleMapperEntity!=null) {
-						
+				//
+				List<UserRoleMapperHistoryEntity> historyEntityList=new ArrayList<UserRoleMapperHistoryEntity>();
+				List<UserRoleMapperEntity> userRoleMapperList=userRoleMapperDao.getUserRoleMapperList(mobile,orgId);
+				if(userRoleMapperList!=null) {
+					for (UserRoleMapperEntity userRoleMapperEntity : userRoleMapperList) {
+						UserRoleMapperHistoryEntity historyEntity=new UserRoleMapperHistoryEntity();
 						CopyUtility.copyProperties(userRoleMapperEntity, historyEntity);
-						historyEntity=userRoleMapperHistoryDao.saveUserRoleDetails(historyEntity);
-						userRoleMapperDao.deleteUserRoleMapper(userRoleMapperEntity.getId());
-						userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile);
+						historyEntityList.add(historyEntity);
+					}					
+					historyEntityList=userRoleMapperHistoryDao.saveUserRoleList(historyEntityList);
+					userRoleMapperDao.deleteUserRoleMapper(mobile,orgId);
 
-					}else {
-						userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile);
-						
-					}
 				}
+				
+				String[] roleList =existUserResponses.getRoleDesc();
+				for (String roleDesc : roleList) {
+					RoleMasterEntity roleMasterEntity=userRoleMasterDao.getUserRoleList(roleDesc);
+					int role=roleMasterEntity.getRoleId().intValue();
+					UserRoleMapperEntity userMapperEntity=new UserRoleMapperEntity();
+					userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile,consent);					
+				}
+				existUserResponses.setResponse(MessageConstant.RESPONSE_SUCCESS);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			existUserResponses.setResponse(MessageConstant.RESPONSE_FAILED);
 		}
 		
 		return existUserResponses;
 	}	
 
 	
-	public UserRoleMapperEntity setMapper(UserRoleMapperEntity userRoleMapperEntity,String mobile,Long orgId,int role,String createdBy) {
+	public UserRoleMapperEntity setMapper(UserRoleMapperEntity userRoleMapperEntity,String mobile,Long orgId,int role,String createdBy,String consent) {
 		userRoleMapperEntity.setMobile(mobile);
 		userRoleMapperEntity.setOrgId(orgId);
 		userRoleMapperEntity.setRoleId(role);
 		userRoleMapperEntity.setStatus(1);
 		userRoleMapperEntity.setCreatedBy(createdBy);
+		userRoleMapperEntity.setConsent(consent);
 		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
 		userRoleMapperEntity=userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
 		return userRoleMapperEntity;
 	}
+
+
+
+
+	@Override
+	public ExistUserResponse updateUsersRole(ExistUserResponse existUserResponses) {
+		try {
+			String mobile=existUserResponses.getMobile();
+//			Long employerid=0l;
+//			if(existUserResponses.getRole_id()==1) {
+//			employerid=existUserResponses.getId();
+//			}else {
+//				int empid=existUserResponses.getEmployerid();
+//				employerid=(long)empid;
+//			}
+			Long orgId=existUserResponses.getOrgId();
+			
+			//
+			List<UserRoleMapperHistoryEntity> historyEntityList=new ArrayList<UserRoleMapperHistoryEntity>();
+			List<UserRoleMapperEntity> userRoleMapperList=userRoleMapperDao.getUserRoleMapperList(mobile,orgId);
+			if(userRoleMapperList!=null) {
+				for (UserRoleMapperEntity userRoleMapperEntity : userRoleMapperList) {
+					UserRoleMapperHistoryEntity historyEntity=new UserRoleMapperHistoryEntity();
+					CopyUtility.copyProperties(userRoleMapperEntity, historyEntity);
+					historyEntityList.add(historyEntity);
+				}					
+				historyEntityList=userRoleMapperHistoryDao.saveUserRoleList(historyEntityList);
+				userRoleMapperDao.deleteUserRoleMapper(mobile,orgId);
+
+			}
+			
+			String[] roleList =existUserResponses.getRoleDesc();
+			for (String roleDesc : roleList) {
+				RoleMasterEntity roleMasterEntity=userRoleMasterDao.getUserRoleList(roleDesc);
+				int role=roleMasterEntity.getRoleId().intValue();
+				UserRoleMapperEntity userMapperEntity=new UserRoleMapperEntity();
+				userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile);					
+			}
+			if(roleList.length>0) {
+			userDetailsDao.updateMapperFlag(mobile, "Y");
+			}
+			existUserResponses.setResponse(MessageConstant.RESPONSE_SUCCESS);
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		existUserResponses.setResponse(MessageConstant.RESPONSE_FAILED);
+	}
+	
+	return existUserResponses;
+	}
+
+
+
+
+	@Override
+	public ExistUserResponse deleteUsersRole(ExistUserResponse existUserResponse) {
+		try {
+			String mobile=existUserResponse.getMobile();
+			
+			Long orgId=existUserResponse.getOrgId();			
+			//
+			List<UserRoleMapperHistoryEntity> historyEntityList=new ArrayList<UserRoleMapperHistoryEntity>();
+			List<UserRoleMapperEntity> userRoleMapperList=userRoleMapperDao.getUserRoleMapperList(mobile,orgId);
+			if(userRoleMapperList!=null) {
+				for (UserRoleMapperEntity userRoleMapperEntity : userRoleMapperList) {
+					UserRoleMapperHistoryEntity historyEntity=new UserRoleMapperHistoryEntity();
+					CopyUtility.copyProperties(userRoleMapperEntity, historyEntity);
+					historyEntityList.add(historyEntity);
+				}					
+				historyEntityList=userRoleMapperHistoryDao.saveUserRoleList(historyEntityList);
+				userRoleMapperDao.deleteUserRoleMapper(mobile,orgId);
+				userDetailsDao.updateMapperFlag(mobile, "N");
+			}
+			
+			existUserResponse.setResponse(MessageConstant.RESPONSE_SUCCESS);
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		existUserResponse.setResponse(MessageConstant.RESPONSE_FAILED);
+	}
+	
+	return existUserResponse;
+	}
+
+
+
+
+	@Override
+	public List<ExistUserResponse> searchUsers(int orgId, String userName) {
+		
+		
+		List<ExistUserResponse> existUserList=new ArrayList<ExistUserResponse>();
+		try {
+			
+			List<UserEntity>  userEntities=userDetailsDao.getSearchUser(orgId, userName);
+			if(userEntities!=null) {
+				for (UserEntity userEntity : userEntities) {
+					ExistUserResponse existUserResponse=new ExistUserResponse();
+					CopyUtility.copyProperties(userEntity, existUserResponse);
+					//CopyUtility.copyProperties
+					List<RoleMasterEntity> roleMasterEntities=userRoleMasterDao.getUserRoleMaster();
+					List<UserRoleMapperDto> userRoleMapperDtoList=new ArrayList<UserRoleMapperDto>();
+					for (RoleMasterEntity roleMasterEntity : roleMasterEntities) {
+						UserRoleMapperDto userRoleMapperDto=new UserRoleMapperDto();
+						userRoleMapperDto.setRoleId(roleMasterEntity.getRoleId().intValue());
+						userRoleMapperDto.setRoleDesc(roleMasterEntity.getRoleDesc());
+						//CopyUtility.copyProperties(roleMasterEntity, userRoleMapperDto);
+						userRoleMapperDtoList.add(userRoleMapperDto);
+					}
+					
+					
+					existUserResponse.setUserRole(userRoleMapperDtoList);
+					existUserList.add(existUserResponse);
+				}
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return existUserList;
+		// TODO Auto-generated method stub
+		
+		
+		
+//		List<UserRoleMapperDto> userRoleMapperEntities=userRoleMapperDao.getUserRoleList(existUserResponse.getMobile());
+//		
+//		existUserResponse.setUserRole(userRoleMapperEntities);
+//		
+//		return userDetailsDao.getSearchUser(orgId, userName);
+		
+	}
+
+
+
+
+	@Override
+	public ExistUserRoleRequest updateUsersRoleList(ExistUserRoleRequest existUserRoleRequest) {
+		try {
+			Long orgId=existUserRoleRequest.getOrgId();
+			int employerid=existUserRoleRequest.getEmployerid();
+			String consent=existUserRoleRequest.getConsent();
+			String createdBy=existUserRoleRequest.getCreatedBy();
+			List<UserDetailsDto> userDTO=existUserRoleRequest.getUserDTO();
+			
+			for (UserDetailsDto userDetailsDto : userDTO) {
+				List<UserRoleMapperHistoryEntity> historyEntityList=new ArrayList<UserRoleMapperHistoryEntity>();
+				String mobile=userDetailsDto.getMobile();
+				List<UserRoleMapperEntity> userRoleMapperList=userRoleMapperDao.getUserRoleMapperList(mobile,orgId);
+				if(userRoleMapperList!=null) {
+					for (UserRoleMapperEntity userRoleMapperEntity : userRoleMapperList) {
+						UserRoleMapperHistoryEntity historyEntity=new UserRoleMapperHistoryEntity();
+						CopyUtility.copyProperties(userRoleMapperEntity, historyEntity);
+						historyEntityList.add(historyEntity);
+					}					
+					historyEntityList=userRoleMapperHistoryDao.saveUserRoleList(historyEntityList);
+					userRoleMapperDao.deleteUserRoleMapper(mobile,orgId);
+
+				}
+				List<UserRoleDto> userRole=userDetailsDto.getUserRole();
+				for (UserRoleDto roleDesc : userRole) {
+					RoleMasterEntity roleMasterEntity=userRoleMasterDao.getUserRoleList(roleDesc.getRoleDesc());
+						if(roleMasterEntity!=null) {
+						int role=roleMasterEntity.getRoleId().intValue();
+						UserRoleMapperEntity userMapperEntity=new UserRoleMapperEntity();
+						userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, createdBy,consent);	
+						}
+				}
+				if(userRole.size()>0) {
+					userDetailsDao.updateMapperFlag(mobile, "Y");
+				}
+				
+			}			
+			existUserRoleRequest.setResponse(MessageConstant.RESPONSE_SUCCESS);
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		existUserRoleRequest.setResponse(MessageConstant.RESPONSE_FAILED);
+	}
+	
+	return existUserRoleRequest;
+	}
+
+	
+	
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
+import com.cotodel.hrms.auth.server.dto.RoleDto;
 import com.cotodel.hrms.auth.server.dto.UserRoleMapperDto;
 import com.cotodel.hrms.auth.server.entity.UserRoleMapperEntity;
 import com.cotodel.hrms.auth.server.repository.UserRoleMapperRepository;
@@ -35,9 +36,9 @@ public class UserRoleMapperDaoImpl implements UserRoleMapperDao {
 	}
 
 	@Override
-	public void deleteUserRoleMapper(Long id) {
+	public void deleteUserRoleMapper(String mobile, Long orgId) {
 		// TODO Auto-generated method stub
-		userRoleMapperRepository.deleteById(id);
+		userRoleMapperRepository.getMapperMobilDelete(mobile,orgId);
 	}
 
 	@Override
@@ -45,7 +46,20 @@ public class UserRoleMapperDaoImpl implements UserRoleMapperDao {
 		// TODO Auto-generated method stub
 		return userRoleMapperRepository.getById(id);
 	}
-	
 
+	@Override
+	public List<UserRoleMapperEntity> getUserRoleMapperList(String mobile, Long orgId) {
+		// TODO Auto-generated method stub
+		return userRoleMapperRepository.getMapperMobileandOrgValue(mobile, orgId);
+	}
+
+	@Override
+	public List<RoleDto> getUserRoleMaster(String mobile) {
+		// TODO Auto-generated method stub
+		return userRoleMapperRepository.getByMobileRoleMaster(mobile);
+	}
+	
+	
+	
 	
 }

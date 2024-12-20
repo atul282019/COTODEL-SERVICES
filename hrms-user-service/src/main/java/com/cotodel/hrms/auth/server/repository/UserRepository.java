@@ -2,8 +2,12 @@ package com.cotodel.hrms.auth.server.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.entity.UserEntity;
@@ -36,8 +40,16 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	  @Query("select c from UserEntity c where (c.mobile = ?1 or c.email = ?2  and c.role_id='1')")
 	   UserEntity findUserByMobileAndEmail(String mobile,String email);
 	  
-	  @Query("select c from UserEntity c where (c.employerid = ?1) or (c.id=?1and c.role_id='1') ")
+	  @Query("select c from UserEntity c where c.mapperFlag='Y' and ((c.employerid = ?1) or (c.id=?1and c.role_id='1') )")
 	  List<UserEntity> findByUserList(int employerid);
+	  
+	  @Query("select c from UserEntity c where (c.mapperFlag='N' OR c.mapperFlag IS NULL) and LOWER(c.username) LIKE LOWER(CONCAT('%', ?2, '%')) and ((c.employerid = ?1) or (c.id=?1and c.role_id='1')) ")
+	  List<UserEntity> findByUserSearchList(int orgId,String userName); 
+	  
+	    @Modifying
+	    @Transactional
+	    @Query(value = "UPDATE user_details  SET mapper_flag=:mapperFlag WHERE mobile =:mobile", nativeQuery = true)
+	    public int updateMapperFlag(@Param("mobile") String mobile,@Param("mapperFlag") String mapperFlag);
 	  
 } 
 

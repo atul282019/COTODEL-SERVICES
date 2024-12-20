@@ -57,7 +57,9 @@ public class UserEntity implements Serializable{
     private int employerid ;
     private int role_id ;
     private String createdBy ;
-   
+    @Column(name="mapper_flag",length =1)
+	private String mapperFlag ;
+    
 //    @OneToMany
 //   	@JoinTable(name = "h_user_emp", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user"))
 //    private List<UserEmpEntity> userEmpEntity ;

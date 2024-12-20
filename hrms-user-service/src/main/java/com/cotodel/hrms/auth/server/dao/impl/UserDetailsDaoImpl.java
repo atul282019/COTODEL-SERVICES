@@ -85,5 +85,18 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		return userRepository.findByUserList(employerid);
 	}
 
+	@Override
+	public List<UserEntity> getSearchUser(int orgId, String userName) {
+		// TODO Auto-generated method stub
+		return userRepository.findByUserSearchList(orgId, userName);
+	}
+
+	@Override
+	public int updateMapperFlag(String mobile, String mapperFlag) {
+		// TODO Auto-generated method stub
+		return userRepository.updateMapperFlag(mobile, mapperFlag);
+	}
+	
+	
 	
 }

@@ -9,4 +9,5 @@ public interface SignUpDao {
 	
 	public SignUpEntity saveUserDetails(SignUpEntity user);
 	List<UserDto> getUser(int employerID);
+	
 }

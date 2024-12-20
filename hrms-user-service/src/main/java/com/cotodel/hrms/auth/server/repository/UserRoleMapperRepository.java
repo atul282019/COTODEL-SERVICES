@@ -2,12 +2,17 @@ package com.cotodel.hrms.auth.server.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dto.RoleDto;
 import com.cotodel.hrms.auth.server.dto.UserRoleMapperDto;
+import com.cotodel.hrms.auth.server.entity.RoleMasterEntity;
 import com.cotodel.hrms.auth.server.entity.UserRoleMapperEntity;
 
 @Repository
@@ -20,5 +25,21 @@ public interface UserRoleMapperRepository extends JpaRepository<UserRoleMapperEn
 	@Query("select s from UserRoleMapperEntity s where s.mobile =:mobile and s.orgId=:orgId and s.roleId=:roleId")
 	  public UserRoleMapperEntity getMapperMobileValue(@Param("mobile") String mobile, @Param("orgId") Long orgId, @Param("roleId") int roleId);
 	
+	@Query("select s from UserRoleMapperEntity s where s.mobile =:mobile and s.orgId=:orgId")
+	  public List<UserRoleMapperEntity> getMapperMobileandOrgValue(@Param("mobile") String mobile, @Param("orgId") Long orgId);
+	
+//	@Query("delete from UserRoleMapperEntity s where s.mobile =:mobile and s.orgId=:orgId")
+//	  public void getMapperMobilDelete(@Param("mobile") String mobile, @Param("orgId") Long orgId);
+	
+	 	@Modifying
+	    @Transactional
+	    @Query("DELETE FROM UserRoleMapperEntity s WHERE s.mobile = :mobile AND s.orgId = :orgId")
+	    void getMapperMobilDelete(@Param("mobile") String mobile, @Param("orgId") Long orgId);
 
+		
+	 	
+	 	@Query("SELECT new com.cotodel.hrms.auth.server.dto.RoleDto(r.roleId, r.roleDesc) " +
+	 	       "FROM RoleMasterEntity r WHERE r.roleId >= 9 AND r.roleId NOT IN " +
+	 	       "(SELECT urm.roleId FROM UserRoleMapperEntity urm WHERE urm.mobile = :mobile)")
+	 	public List<RoleDto> getByMobileRoleMaster(@Param("mobile") String mobile);
 } 

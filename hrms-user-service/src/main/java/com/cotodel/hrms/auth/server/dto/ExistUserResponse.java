@@ -40,4 +40,7 @@ public class ExistUserResponse {
     private int role_id ;
     private String createdBy;
     List<UserRoleMapperDto> userRole;
+    private Long orgId;
+    private String[] roleDesc;
+    private String response;
 }

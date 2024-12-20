@@ -23,4 +23,8 @@ public interface UserDetailsDao {
 	UserEntity getUserDetails(String mobile, String email);
 	
 	List<UserEntity> getUserList(int employerid);
+	
+	List<UserEntity> getSearchUser(int orgId, String userName);
+	
+	public int updateMapperFlag(String mobile,String mapperFlag);
 }

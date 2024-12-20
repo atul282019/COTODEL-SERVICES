@@ -3,6 +3,7 @@ package com.cotodel.hrms.auth.server.service;
 import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
+import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
@@ -39,8 +40,13 @@ public interface UserService {
 	
 	public List<ExistUserResponse> getUsersListWithRole(int  employerid);
 	
-	public ExistUserResponse saveUsersRole(ExistUserResponse  existUserResponse);
+	public ExistUserResponse updateUsersRole(ExistUserResponse  existUserResponse);
 	
-	//public List<ExistUserResponse> saveUsersListWithRole(ExistUserResponse  existUserResponse);
+	public ExistUserResponse saveUsersRole(ExistUserResponse  existUserResponse);
 
+	public ExistUserResponse deleteUsersRole(ExistUserResponse  existUserResponse);
+	public List<ExistUserResponse> searchUsers(int  orgId,String userName);
+	public ExistUserRoleRequest updateUsersRoleList(ExistUserRoleRequest  existUserRoleRequest);
+	//public List<ExistUserResponse> saveUsersListWithRole(ExistUserResponse  existUserResponse);
+	//public List<UserDto> getUsersList(Long  orgId,String userName);
 }

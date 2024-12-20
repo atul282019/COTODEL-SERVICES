@@ -57,6 +57,9 @@ public class UserRoleMapperEntity implements Serializable{
 	@Column(name="status_desc")
 	private String statusDesc ;
 	
+	@Column(name="consent")
+	private String consent ;
+	
 	@Transient
     private String roleDesc;
 	
