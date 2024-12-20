@@ -24,5 +24,6 @@ public interface ErupiVoucherInitiateDetailsService {
 	public List<ErupiVoucherCreateSummaryDto>  getErupiVoucherCreateSummaryList(ErupiVoucherCreatedRequest request);
 	public List<ErupiVoucherCreateDetailsRequest>  saveErupiVoucherCreateListDetails(ErupiVoucherCreateListRequest request);
 	public List<ErupiVoucherCreateOldDto>  getErupiVoucherCreateOldList(ErupiVoucherCreatedRequest request);
+	public ErupiVoucherCreateDetailsRequest  saveErupiMultipleVoucherCreation(ErupiVoucherCreateDetailsRequest request);
 	
 }

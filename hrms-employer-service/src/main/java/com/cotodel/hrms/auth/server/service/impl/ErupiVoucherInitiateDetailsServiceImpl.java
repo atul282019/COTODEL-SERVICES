@@ -685,6 +685,15 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			
 			return voucherDTOList;
 		}
+
+
+
+		@Override
+		public ErupiVoucherCreateDetailsRequest saveErupiMultipleVoucherCreation(
+				ErupiVoucherCreateDetailsRequest request) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 		
 		
 }
