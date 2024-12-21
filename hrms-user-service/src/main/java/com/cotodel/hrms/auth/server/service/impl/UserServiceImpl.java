@@ -436,7 +436,7 @@ public class UserServiceImpl implements UserService {
 		userEmpEntity.setUser_id(UserEntity1.getId());
 		//userEmpEntity.setUserDetails(UserEntity1);
 		userEmpEntity.setStatus(UserEntity1.getStatus());
-		
+		userEmpEntity.setEmployer_id(Long.valueOf(UserEntity1.getEmployerid()));
 		userEmpEntity.setCreated_date(localDate);
 		userEmpEntity.setUpdated_date(localDate);
 		userEmpEntity.setUpdated_by(""+UserEntity1.getEmployerid());
