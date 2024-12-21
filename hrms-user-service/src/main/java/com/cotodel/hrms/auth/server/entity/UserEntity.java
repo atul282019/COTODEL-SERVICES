@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
@@ -59,6 +60,8 @@ public class UserEntity implements Serializable{
     private String createdBy ;
     @Column(name="mapper_flag",length =1)
 	private String mapperFlag ;
+    @Transient
+    private String response;
     
 //    @OneToMany
 //   	@JoinTable(name = "h_user_emp", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user"))

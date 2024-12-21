@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
+import com.cotodel.hrms.auth.server.dto.UserManagerDto;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.repository.UserEmpRepository;
@@ -81,20 +82,32 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	}
 
 	@Override
-	public List<UserEntity> getUserList(int employerid) {
-		return userRepository.findByUserList(employerid);
+	public List<UserEntity> getUserList(int employerid,String mobile) {
+		return userRepository.findByUserList(employerid,mobile);
 	}
 
 	@Override
-	public List<UserEntity> getSearchUser(int orgId, String userName) {
+	public List<UserEntity> getSearchUser(int orgId, String userName,String mobile) {
 		// TODO Auto-generated method stub
-		return userRepository.findByUserSearchList(orgId, userName);
+		return userRepository.findByUserSearchList(orgId, userName,mobile);
 	}
 
 	@Override
 	public int updateMapperFlag(String mobile, String mapperFlag) {
 		// TODO Auto-generated method stub
 		return userRepository.updateMapperFlag(mobile, mapperFlag);
+	}
+
+	@Override
+	public List<UserManagerDto> getUserManagerList(int orgId) {
+		// TODO Auto-generated method stub
+		return userRepository.getUserManagerList(orgId);
+	}
+
+	@Override
+	public UserEntity checkUserEligible(String mobile) {
+		// TODO Auto-generated method stub
+		return userRepository.userEligible(mobile);
 	}
 	
 	

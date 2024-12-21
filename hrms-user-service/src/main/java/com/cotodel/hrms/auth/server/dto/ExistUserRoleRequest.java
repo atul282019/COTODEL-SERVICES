@@ -14,9 +14,9 @@ public class ExistUserRoleRequest {
 	
     private int employerid ;
     private Long orgId;
-    List<UserDetailsDto> userDTO;    
-    //private String[] roleDesc;
+    List<UserDetailsDto> userDTO;
     private String createdBy;
     private String response;   
     private String consent;
+    private String userMobile;
 }

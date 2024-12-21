@@ -5,6 +5,7 @@ import java.util.List;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.UserDto;
+import com.cotodel.hrms.auth.server.dto.UserManagerDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
@@ -38,15 +39,17 @@ public interface UserService {
 	
 	public UserEntity userDetails(String mobile,String email);
 	
-	public List<ExistUserResponse> getUsersListWithRole(int  employerid);
+	public List<ExistUserResponse> getUsersListWithRole(int  employerid,String mobile);
 	
 	public ExistUserResponse updateUsersRole(ExistUserResponse  existUserResponse);
 	
 	public ExistUserResponse saveUsersRole(ExistUserResponse  existUserResponse);
 
 	public ExistUserResponse deleteUsersRole(ExistUserResponse  existUserResponse);
-	public List<ExistUserResponse> searchUsers(int  orgId,String userName);
+	public List<ExistUserResponse> searchUsers(int  orgId,String userName,String mobile);
 	public ExistUserRoleRequest updateUsersRoleList(ExistUserRoleRequest  existUserRoleRequest);
+	public List<UserManagerDto> userManagerList(int  orgId);
+	
 	//public List<ExistUserResponse> saveUsersListWithRole(ExistUserResponse  existUserResponse);
 	//public List<UserDto> getUsersList(Long  orgId,String userName);
 }

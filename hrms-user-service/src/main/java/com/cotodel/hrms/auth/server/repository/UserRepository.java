@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dto.UserManagerDto;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 
 @Repository
@@ -40,16 +41,22 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	  @Query("select c from UserEntity c where (c.mobile = ?1 or c.email = ?2  and c.role_id='1')")
 	   UserEntity findUserByMobileAndEmail(String mobile,String email);
 	  
-	  @Query("select c from UserEntity c where c.mapperFlag='Y' and ((c.employerid = ?1) or (c.id=?1and c.role_id='1') )")
-	  List<UserEntity> findByUserList(int employerid);
+	  @Query("select c from UserEntity c where c.mapperFlag='Y' and ((c.employerid = ?1) or (c.id=?1and c.role_id='1') ) and c.mobile not in (?2)")
+	  List<UserEntity> findByUserList(int employerid,String mobile);
 	  
-	  @Query("select c from UserEntity c where (c.mapperFlag='N' OR c.mapperFlag IS NULL) and LOWER(c.username) LIKE LOWER(CONCAT('%', ?2, '%')) and ((c.employerid = ?1) or (c.id=?1and c.role_id='1')) ")
-	  List<UserEntity> findByUserSearchList(int orgId,String userName); 
+	  @Query("select c from UserEntity c where (c.mapperFlag='N' OR c.mapperFlag IS NULL) and c.mobile not in (?3) and LOWER(c.username) LIKE LOWER(CONCAT('%', ?2, '%')) and ((c.employerid = ?1) or (c.id=?1and c.role_id='1')) ")
+	  List<UserEntity> findByUserSearchList(int orgId,String userName,String mobile); 
 	  
 	    @Modifying
 	    @Transactional
 	    @Query(value = "UPDATE user_details  SET mapper_flag=:mapperFlag WHERE mobile =:mobile", nativeQuery = true)
 	    public int updateMapperFlag(@Param("mobile") String mobile,@Param("mapperFlag") String mapperFlag);
-	  
+	    
+	    @Query("select new com.cotodel.hrms.auth.server.dto.UserManagerDto(c.id,c.email,c.mobile,c.username) from UserEntity c where  ((c.employerid = ?1) or (c.id=?1and c.role_id='1')) ")
+		List<UserManagerDto> getUserManagerList(int orgId);
+	    
+	    @Query("select c from UserEntity c where   c.mobile=:mobile and c.role_id in ('1','9','10','12') ")
+		UserEntity userEligible(@Param("mobile") String mobile);
+	    
 } 
 

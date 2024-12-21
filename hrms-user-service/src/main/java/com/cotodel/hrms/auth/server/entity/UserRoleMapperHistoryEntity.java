@@ -60,6 +60,12 @@ public class UserRoleMapperHistoryEntity implements Serializable{
 	@Column(name="status_desc")
 	private String statusDesc ;
 	
+	@Column(name="consent")
+	private String consent ;
+	
+	@Column(name="login_user_mobile")
+	private String loginUserMobile ;
+	
 	@Transient
     private String roleDesc;
 	

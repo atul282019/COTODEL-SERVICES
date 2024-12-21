@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.UserDto;
+import com.cotodel.hrms.auth.server.dto.UserManagerDto;
+import com.cotodel.hrms.auth.server.dto.UserManagerResponse;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.UserResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleEditListResponse;
@@ -169,7 +171,7 @@ public class UserSignUpController {
 	    		logger.error("error in saveUserDetails====="+e);
 			}
 	        
-	        return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	        return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,userEntity.getResponse(),userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	          
 	        
 	    }
@@ -484,7 +486,7 @@ public class UserSignUpController {
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
-				list=userService.getUsersListWithRole(userRoleRequest.getOrgId());
+				list=userService.getUsersListWithRole(userRoleRequest.getOrgId(),userRoleRequest.getMobile());
 				System.out.println(list);
 				if(list!=null && list.size()>0) {
 					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
@@ -523,7 +525,7 @@ public class UserSignUpController {
 				if(existResponse!=null && existResponse.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 					return ResponseEntity.ok(new UserRoleEditListResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 				}else {
-					return ResponseEntity.ok(new UserRoleEditListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
+					return ResponseEntity.ok(new UserRoleEditListResponse(MessageConstant.FALSE,existResponse.getResponse(),existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
 	    	   
 			}
 	    	}catch (Exception e) {
@@ -619,7 +621,7 @@ public class UserSignUpController {
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
-				list=userService.searchUsers(userRoleRequest.getOrgId(),userRoleRequest.getUserName());
+				list=userService.searchUsers(userRoleRequest.getOrgId(),userRoleRequest.getUserName(),userRoleRequest.getMobile());
 				System.out.println(list);
 				if(list!=null && list.size()>0) {
 					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
@@ -634,6 +636,40 @@ public class UserSignUpController {
 			}
 	        
 	        return ResponseEntity.ok(new UserRoleResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	          
+	        
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/userManagerList",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> userManagerList(HttpServletRequest request,@Valid @RequestBody UserRoleRequest userRoleRequest) {
+	    	logger.info("inside get userManagerList+++");
+	    	List<UserManagerDto>  list=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				list=userService.userManagerList(userRoleRequest.getOrgId());
+				//System.out.println(list);
+				if(list!=null && list.size()>0) {
+					return ResponseEntity.ok(new UserManagerResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+				}else {
+					return ResponseEntity.ok(new UserManagerResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
+	    	   
+			}
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in userManagerList====="+e);
+			}
+	        
+	        return ResponseEntity.ok(new UserManagerResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	          
 	        
 	    }

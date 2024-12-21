@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
@@ -41,6 +42,7 @@ import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.RoleDto;
 import com.cotodel.hrms.auth.server.dto.UserDetailsDto;
 import com.cotodel.hrms.auth.server.dto.UserDto;
+import com.cotodel.hrms.auth.server.dto.UserManagerDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.UserRoleDto;
 import com.cotodel.hrms.auth.server.dto.UserRoleMapperDto;
@@ -373,31 +375,43 @@ public class UserServiceImpl implements UserService {
 		
 		UserEntity userDetails= new UserEntity();
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
-			
-		//userDetails=userDetailsDao.checkUserMobile(user.getMobile());
-		CopyUtility.copyProperties(user,userDetails);
-		Date date = new Date();
-		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		userDetails.setCreated_date(localDate);
-		userDetails.setRole_id(MessageConstant.USER_ROLE);
-		//userDetails.setMapperFlag("Y");
-		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
-		userEmpEntity.setUser_id(UserEntity1.getId());
-		//userEmpEntity.setUser(UserEntity1);
-		userEmpEntity.setStatus(UserEntity1.getStatus());
-		userEmpEntity.setCreated_by(UserEntity1.getMobile());
-		userEmpEntity.setCreated_date(localDate);
-		userDetailsDao.saveUserEmpEntity(userEmpEntity);
+		UserEntity UserEntity1=null;
+		String response=MessageConstant.RESPONSE_FAILED;
+			try {
+				//userDetails=userDetailsDao.checkUserMobile(user.getMobile());
+				CopyUtility.copyProperties(user,userDetails);
+				Date date = new Date();
+				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				userDetails.setCreated_date(localDate);
+				userDetails.setRole_id(MessageConstant.USER_ROLE);
+				//userDetails.setMapperFlag("Y");
+				UserEntity1=userDetailsDao.saveUserDetails(userDetails);
+				userEmpEntity.setUser_id(UserEntity1.getId());
+				//userEmpEntity.setUser(UserEntity1);
+				userEmpEntity.setStatus(UserEntity1.getStatus());
+				userEmpEntity.setCreated_by(UserEntity1.getMobile());
+				userEmpEntity.setCreated_date(localDate);
+				userDetailsDao.saveUserEmpEntity(userEmpEntity);
+				response=MessageConstant.RESPONSE_SUCCESS;
+//				UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
+//				userRoleMapperEntity.setMobile(UserEntity1.getMobile());
+//				long empid = UserEntity1.getEmployerid();
+//				userRoleMapperEntity.setOrgId(empid);
+//				userRoleMapperEntity.setStatus(1);
+//				userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
+//				userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
+//				userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+//				userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
+			}catch (DataIntegrityViolationException e) {
+				response=MessageConstant.USER_BULK_EXIST;
+				UserEntity1.setResponse(response);
+				logger.error("Error in saveBankMaster :DataIntegrityViolationException:"+e.getMessage());
+			}
+			catch (Exception e) {
+				response=MessageConstant.RESPONSE_FAILED;
+				UserEntity1.setResponse(response);
+			}
 		
-//		UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
-//		userRoleMapperEntity.setMobile(UserEntity1.getMobile());
-//		long empid = UserEntity1.getEmployerid();
-//		userRoleMapperEntity.setOrgId(empid);
-//		userRoleMapperEntity.setStatus(1);
-//		userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
-//		userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
-//		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
-//		userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
 		
 		return UserEntity1;
 
@@ -453,7 +467,7 @@ public class UserServiceImpl implements UserService {
 			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			userDetails.setCreated_date(localDate);
 			userDetails.setRole_id(MessageConstant.USER_ROLE);
-			userDetails.setMapperFlag("Y");
+			//userDetails.setMapperFlag("Y");
 			UserEntity1=userDetailsDao.saveUserDetails(userDetails);
 			userEmpEntity.setUser_id(UserEntity1.getId());
 			//userEmpEntity.setUserDetails(UserEntity1);
@@ -532,10 +546,15 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public List<ExistUserResponse> getUsersListWithRole(int employerid) {
+	public List<ExistUserResponse> getUsersListWithRole(int employerid,String mobile) {
 		List<ExistUserResponse> existUserList=new ArrayList<ExistUserResponse>();
 		try {
-			List<UserEntity>  userEntities=userDetailsDao.getUserList(employerid);
+			UserEntity uEntity=userDetailsDao.checkUserEligible(mobile);
+			if(uEntity==null) {
+				return existUserList;
+			}
+			//userEligible
+			List<UserEntity>  userEntities=userDetailsDao.getUserList(employerid,mobile);
 			if(userEntities!=null) {
 				for (UserEntity userEntity : userEntities) {
 					ExistUserResponse existUserResponse=new ExistUserResponse();
@@ -604,7 +623,7 @@ public class UserServiceImpl implements UserService {
 					RoleMasterEntity roleMasterEntity=userRoleMasterDao.getUserRoleList(roleDesc);
 					int role=roleMasterEntity.getRoleId().intValue();
 					UserRoleMapperEntity userMapperEntity=new UserRoleMapperEntity();
-					userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile,consent);					
+					userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile,consent,"");					
 				}
 				existUserResponses.setResponse(MessageConstant.RESPONSE_SUCCESS);
 			
@@ -617,7 +636,8 @@ public class UserServiceImpl implements UserService {
 	}	
 
 	
-	public UserRoleMapperEntity setMapper(UserRoleMapperEntity userRoleMapperEntity,String mobile,Long orgId,int role,String createdBy,String consent) {
+	public UserRoleMapperEntity setMapper(UserRoleMapperEntity userRoleMapperEntity,String mobile,Long orgId,int role,
+			String createdBy,String consent,String userMobile) {
 		userRoleMapperEntity.setMobile(mobile);
 		userRoleMapperEntity.setOrgId(orgId);
 		userRoleMapperEntity.setRoleId(role);
@@ -625,6 +645,7 @@ public class UserServiceImpl implements UserService {
 		userRoleMapperEntity.setCreatedBy(createdBy);
 		userRoleMapperEntity.setConsent(consent);
 		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+		userRoleMapperEntity.setLoginUserMobile(userMobile);		
 		userRoleMapperEntity=userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
 		return userRoleMapperEntity;
 	}
@@ -636,6 +657,7 @@ public class UserServiceImpl implements UserService {
 	public ExistUserResponse updateUsersRole(ExistUserResponse existUserResponses) {
 		try {
 			String mobile=existUserResponses.getMobile();
+			//String consent=existUserResponses.getc
 //			Long employerid=0l;
 //			if(existUserResponses.getRole_id()==1) {
 //			employerid=existUserResponses.getId();
@@ -664,10 +686,10 @@ public class UserServiceImpl implements UserService {
 				RoleMasterEntity roleMasterEntity=userRoleMasterDao.getUserRoleList(roleDesc);
 				int role=roleMasterEntity.getRoleId().intValue();
 				UserRoleMapperEntity userMapperEntity=new UserRoleMapperEntity();
-				userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile);					
+				userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, mobile,"Y","");					
 			}
 			if(roleList.length>0) {
-			userDetailsDao.updateMapperFlag(mobile, "Y");
+				userDetailsDao.updateMapperFlag(mobile, "Y");
 			}
 			existUserResponses.setResponse(MessageConstant.RESPONSE_SUCCESS);
 		
@@ -716,13 +738,13 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public List<ExistUserResponse> searchUsers(int orgId, String userName) {
+	public List<ExistUserResponse> searchUsers(int orgId, String userName,String mobile) {
 		
 		
 		List<ExistUserResponse> existUserList=new ArrayList<ExistUserResponse>();
 		try {
 			
-			List<UserEntity>  userEntities=userDetailsDao.getSearchUser(orgId, userName);
+			List<UserEntity>  userEntities=userDetailsDao.getSearchUser(orgId, userName,mobile);
 			if(userEntities!=null) {
 				for (UserEntity userEntity : userEntities) {
 					ExistUserResponse existUserResponse=new ExistUserResponse();
@@ -771,6 +793,14 @@ public class UserServiceImpl implements UserService {
 			int employerid=existUserRoleRequest.getEmployerid();
 			String consent=existUserRoleRequest.getConsent();
 			String createdBy=existUserRoleRequest.getCreatedBy();
+			String userMobile=existUserRoleRequest.getUserMobile();
+			if(consent==null || consent.equalsIgnoreCase("") || createdBy==null || createdBy.equalsIgnoreCase("") ) {				
+				String response=MessageConstant.CONSENT_CREATED_BY;
+				existUserRoleRequest.setResponse(response);
+				return existUserRoleRequest;
+			}
+			
+			
 			List<UserDetailsDto> userDTO=existUserRoleRequest.getUserDTO();
 			
 			for (UserDetailsDto userDetailsDto : userDTO) {
@@ -793,7 +823,7 @@ public class UserServiceImpl implements UserService {
 						if(roleMasterEntity!=null) {
 						int role=roleMasterEntity.getRoleId().intValue();
 						UserRoleMapperEntity userMapperEntity=new UserRoleMapperEntity();
-						userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, createdBy,consent);	
+						userMapperEntity=setMapper(userMapperEntity, mobile, orgId, role, createdBy,consent,userMobile);	
 						}
 				}
 				if(userRole.size()>0) {
@@ -811,6 +841,21 @@ public class UserServiceImpl implements UserService {
 	return existUserRoleRequest;
 	}
 
-	
-	
+
+
+
+	@Override
+	public List<UserManagerDto> userManagerList(int orgId) {
+		List<UserManagerDto> existUserList=new ArrayList<UserManagerDto>();
+		try {
+			
+			existUserList=userDetailsDao.getUserManagerList(orgId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return existUserList;
+		
+	}
+
 }
