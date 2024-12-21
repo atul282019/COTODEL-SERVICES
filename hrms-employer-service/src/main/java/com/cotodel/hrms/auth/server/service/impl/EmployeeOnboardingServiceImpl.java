@@ -134,6 +134,8 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 					CopyUtility.copyProperties(request, employeeOnboarding);
 					employeeOnboarding.setUserDetailsId(id);
 					employeeOnboarding.setMode(2l);
+					String empCode=getEmpCode(request.getEmployerId());
+					employeeOnboarding.setEmpCode(empCode);
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					response = MessageConstant.RESPONSE_SUCCESS;
 					request.setResponse(response);
@@ -248,6 +250,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 					CopyUtility.copyProperties(request, employeeOnboarding);
 					employeeOnboarding.setUserDetailsId(id);
 					employeeOnboarding.setMode(1l);
+					
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					response = MessageConstant.RESPONSE_SUCCESS;
 					employeeOnboardingRequest.setResponse(response);
