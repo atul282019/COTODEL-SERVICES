@@ -13,6 +13,7 @@ import com.cotodel.hrms.auth.server.dao.EmployeeDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
 import com.cotodel.hrms.auth.server.dao.EmployerDao;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
+import com.cotodel.hrms.auth.server.dto.EmployeeProfileAddress;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
@@ -191,5 +192,13 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		// TODO Auto-generated method stub
 		return emplProfileDao.getEmplDetails( employerid);
 	}
+
+	@Override
+	public List<EmployeeProfileAddress> getCompProfileAddress(Long empid) {
+		// TODO Auto-generated method stub
+		return emplProfileDao.getCompAddress(empid);
+	}
+	
+	
 	
 }

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeCompleteResponse;
+import com.cotodel.hrms.auth.server.dto.EmployeeProfileAddress;
+import com.cotodel.hrms.auth.server.dto.EmployeeProfileAddressResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileGetResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileResponse;
@@ -174,5 +176,37 @@ public class EmployeeProfileController {
 	        return ResponseEntity.ok(new EmployeeCompleteResponse(false,message,0,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 
-
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/getCompaneyAddress",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> getCompaneyAddress(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest employeeProfileRequest) {
+	    logger.info("inside getEmpComplete.....+++");	    	
+	    	
+	    
+	    	String message = "";
+	    	List<EmployeeProfileAddress> response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=employeeProfileService.getCompProfileAddress(employeeProfileRequest.getEmployerId());
+	    		if(response!=null) {
+	    			return ResponseEntity.ok(new EmployeeProfileAddressResponse(true,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new EmployeeProfileAddressResponse(false,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		logger.error("error in getEmpComplete====="+e);
+	    		//message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new EmployeeProfileAddressResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
 }
