@@ -446,11 +446,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserEntity saveUsersBulk(UserRequest user) {
-		
+		String response=MessageConstant.RESPONSE_FAILED;
 		UserEntity userDetails= new UserEntity();
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
-		UserEntity UserEntity1=null;
+		UserEntity UserEntity1=new UserEntity();
 		try {
+			UserEntity1.setResponse(response);
 			if(user.isUpdateStatus()) {
 			userDetails=userDetailsDao.checkUserMobile(user.getMobile());
 			if(userDetails!=null)
@@ -489,8 +490,19 @@ public class UserServiceImpl implements UserService {
 			if(user.isEmailStatus()) {
 				CommonUtility.sendEmail(user);
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
+			response=MessageConstant.PROFILE_SUCCESS;
+			
+			UserEntity1.setResponse(response);
+		} catch (DataIntegrityViolationException e) {
+			response=MessageConstant.USER_BULK_EXIST;
+			UserEntity1.setResponse(response);
+			//logger.error("Error in saveBankMaster :DataIntegrityViolationException:"+e.getMessage());
+		}
+		catch (Exception e) {
+			response=MessageConstant.PROFILE_FAILED;
+			UserEntity1.setResponse(response);
+			//response=MessageConstant.RESPONSE_FAILED;
+			//UserEntity1.setResponse(response);
 		}
 		
 		return UserEntity1;

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.BulkInviteRequest;
+import com.cotodel.hrms.auth.server.dto.UserBulkUploadRequest;
+import com.cotodel.hrms.auth.server.dto.UserBulkUploadResponse;
 import com.cotodel.hrms.auth.server.dto.UserSignUpResponse;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
@@ -72,6 +74,39 @@ public class BulkInviteController {
 	        
 	    }
 
-	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/userBulkUpload",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> userBulkUpload(HttpServletRequest request,@Valid @RequestBody UserBulkUploadRequest userBulkUploadRequest) {
+	    	logger.info("inside get userBulkUpload+++");
+	    	UserBulkUploadRequest response=null;
+	    	String responseToken="";
+	    	String authToken = "";
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=bulkInviteService.saveBulkUpload(userBulkUploadRequest);
+				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+					return ResponseEntity.ok(new UserBulkUploadResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+				}else {
+					return ResponseEntity.ok(new UserBulkUploadResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+				}
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in userBulkUpload====="+e);
+			}
+	        
+	        return ResponseEntity.ok(new UserBulkUploadResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	          
+	        
+	    }
 	 
 }

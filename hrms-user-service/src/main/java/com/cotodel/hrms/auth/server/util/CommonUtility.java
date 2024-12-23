@@ -1,6 +1,7 @@
 package com.cotodel.hrms.auth.server.util;
 
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -187,5 +188,36 @@ public class CommonUtility {
 	     Pattern pattern = Pattern.compile(regex);  
 	     Matcher matcher = pattern.matcher(email);
 	     return matcher.matches();
+    }
+	
+	public static String generateUniqueFileName(String filename,Long orgId,String ext) {
+        // Get the current date and time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String dateString = dateFormat.format(new Date());
+        
+        // Add file extension (example: .txt, .jpg, .xlsx)
+        String fileName =filename+"_"+orgId+"_"+dateString+"."+ext;
+        
+        // Combine the date string with the file extension to create a unique file name
+        return fileName;
+    }
+	
+	public static String generateUniqueFileNameWithoutOrg(String filename,String ext) {
+        // Get the current date and time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String dateString = dateFormat.format(new Date());
+        
+        // Add file extension (example: .txt, .jpg, .xlsx)
+        String fileName =filename+"_"+dateString+"."+ext;
+        
+        // Combine the date string with the file extension to create a unique file name
+        return fileName;
+    }
+	public static String getFileExtension(String fileName) {
+        int lastIndexOfDot = fileName.lastIndexOf(".");
+        if (lastIndexOfDot == -1) {
+            return ""; // No extension
+        }
+        return fileName.substring(lastIndexOfDot + 1);
     }
 }

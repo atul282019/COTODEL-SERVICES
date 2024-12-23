@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -258,16 +259,17 @@ public class UserSignUpController {
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
+	    	String response=MessageConstant.PROFILE_FAILED;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				//responseToken=userService.userExist(userReq.getMobile(), userReq.getEmail());
 				
 				userEntity=	userService.saveUsersBulk(userReq);	    	    
-	    	    if(userEntity!=null) {	 
+	    	    if(userEntity!=null && userEntity.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {	 
 	    	    	return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	    	    }else {
-	    	    	return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,userEntity.getResponse(),userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	    	    }
 //				if(!responseToken.equalsIgnoreCase("")) {
 //					return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
@@ -278,13 +280,14 @@ public class UserSignUpController {
 //	    		 return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 //	    	    }
 //			}
-	    	}catch (Exception e) {
-				
+	    	}
+	    	catch (Exception e) {
+	    		response=MessageConstant.RESPONSE_FAILED;
 	    		e.printStackTrace();
 	    		logger.error("error in saveUserDetails====="+e);
 			}
 	        
-	        return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	        return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,response,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	          
 	        
 	    }
