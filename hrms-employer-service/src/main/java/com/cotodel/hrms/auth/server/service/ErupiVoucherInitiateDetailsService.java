@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.service;
 
 import java.util.List;
 
+import com.cotodel.hrms.auth.server.dto.ErupiMultipleVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
@@ -24,6 +25,6 @@ public interface ErupiVoucherInitiateDetailsService {
 	public List<ErupiVoucherCreateSummaryDto>  getErupiVoucherCreateSummaryList(ErupiVoucherCreatedRequest request);
 	public List<ErupiVoucherCreateDetailsRequest>  saveErupiVoucherCreateListDetails(ErupiVoucherCreateListRequest request);
 	public List<ErupiVoucherCreateOldDto>  getErupiVoucherCreateOldList(ErupiVoucherCreatedRequest request);
-	public ErupiVoucherCreateDetailsRequest  saveErupiMultipleVoucherCreation(ErupiVoucherCreateDetailsRequest request);
+	public ErupiMultipleVoucherCreateRequest  saveErupiMultipleVoucherCreation(ErupiMultipleVoucherCreateRequest request);
 	
 }
