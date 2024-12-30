@@ -1,4 +1,4 @@
-package com.cotodel.hrms.auth.server.dto.voucher;
+package com.cotodel.hrms.auth.server.dto;
 
 import java.util.List;
 
@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErupiVoucherCreateSummaryListResponse {
+public class ErupiVoucherSummaryTotalCountResponse {
 	
 	 private boolean status;
-	 private String message;	
-	 List<ErupiVoucherCreateSummaryDto> data;
+	 private String message;
+	 private Long totalCount;
+	 private Long totalAmount; 
 	 private String txnId;
 	 private String timestamp;
 }

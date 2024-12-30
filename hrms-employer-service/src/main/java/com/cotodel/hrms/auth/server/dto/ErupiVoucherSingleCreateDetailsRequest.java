@@ -17,14 +17,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErupiVoucherCreateDetailsRequest {
+public class ErupiVoucherSingleCreateDetailsRequest {
 	
 	private MccMasterEntity voucherId;//id_pk of vouchermaster	
 	private String name;	
 	private String mobile;			
 	private Float amount;	
     private LocalDate startDate;			
-    private LocalDate expDate;	
+    //private LocalDate expDate;	
     private String purposeCode;	
     private String consent;	
     private String otpValidationStatus;		 	
@@ -35,7 +35,6 @@ public class ErupiVoucherCreateDetailsRequest {
     @Min(value = 1, message = "Organization ID must be greater than or equal to 1")
 	private Long orgId;	
 	private String accountNumber;			
-	//private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		discuss
 	private String response;
 	private String responseApi;
 	private String merchanttxnid;
@@ -59,5 +58,5 @@ public class ErupiVoucherCreateDetailsRequest {
 	private String subMerchantId;
 	private String mandateType;
 	private String payeeVPA;
-	private String validity;
+	private Long validity;
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ErupiMultipleVoucherCreateRequest {
 	
-	private List<ErupiVoucherCreateDetailsRequest> list;
+	private List<ErupiVoucherSingleCreateDetailsRequest> list;
 	
 	
 }

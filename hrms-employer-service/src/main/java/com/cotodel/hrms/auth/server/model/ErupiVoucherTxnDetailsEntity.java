@@ -47,9 +47,9 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	private Long workFlowId;//bigint FK	Work FlowID 100001 for initiate reuest, 100002 for creation,100003 for fail,100004 for confirmationpending, 100005 for redemption
 
 
-	@ManyToOne
-	@JoinColumn(name = "mcc_id_pk", referencedColumnName = "id_pk")  // foreign key column
-	private MccMasterEntity voucherId;//id_pk of mccmaster
+//	@ManyToOne
+//	@JoinColumn(name = "mcc_id_pk", referencedColumnName = "id_pk")  // foreign key column
+//	private MccMasterEntity voucherId;//id_pk of mccmaster
 	
 	@Column(name = "creationdate")
 	private LocalDateTime creationDate;

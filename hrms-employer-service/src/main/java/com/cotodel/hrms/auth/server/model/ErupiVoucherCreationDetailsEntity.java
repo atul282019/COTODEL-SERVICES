@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -43,9 +44,10 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
 //	 @JoinColumn(name = "voucher_id_pk", referencedColumnName = "id_pk")  // foreign key column
 //	  private VoucherTypeMasterEntity voucherId;//id_pk of vouchermaster
 
-	 @ManyToOne
-	 @JoinColumn(name = "mcc_id_pk", referencedColumnName = "id_pk")  // foreign key column
-	  private MccMasterEntity voucherId;//id_pk of vouchermaster
+//	 @ManyToOne
+//	 @JoinColumn(name = "mcc_id_pk", referencedColumnName = "id_pk")  // foreign key column
+//	 @Column(name="name", length=9)
+//	  private Long voucherId;//id_pk of vouchermaster
 	
 	
 	@Column(name="name", length=99)
@@ -73,7 +75,7 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
     private String otpValidationStatus;
 		 	
 	@Column(name = "creationdate")
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 	
 
 	@Column(name="createdby", length=49)
@@ -95,9 +97,9 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
 //	@Column(name="entrymode_id_pk",length = 29)
 //	private String entryModeId;//entrymode master id_pk value
 			
-	@ManyToOne
-	@JoinColumn(name = "entrymode_id_pk", referencedColumnName = "id_pk")  // foreign key column
-	private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		
+//	@ManyToOne
+//	@JoinColumn(name = "entrymode_id_pk", referencedColumnName = "id_pk")  // foreign key column
+//	private EntryModeMasterEntity entrymodeIdPk;//id_pk of vouchermaster		
 
 	@Column(name="merchanttxnid",length = 99)
 	private String merchanttxnid;

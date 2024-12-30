@@ -11,4 +11,5 @@ public class ErupiVoucherCreateSummaryDto {
 	private Long count;
     private Long totalAmount;
     private String voucherName;
+    private byte[] voucherIcon;
 }

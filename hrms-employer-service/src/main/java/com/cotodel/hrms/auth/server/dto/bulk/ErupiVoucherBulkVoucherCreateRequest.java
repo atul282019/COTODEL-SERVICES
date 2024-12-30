@@ -44,7 +44,8 @@ public class ErupiVoucherBulkVoucherCreateRequest {
 	private String creationmode;	
 	private Long bulktblId;
 	private String beneficiaryID;
-	
+	private String mandateType;
+	private String payeeVPA;
 	
 	
 	 

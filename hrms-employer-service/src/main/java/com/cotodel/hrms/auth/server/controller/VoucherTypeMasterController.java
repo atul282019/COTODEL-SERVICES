@@ -226,7 +226,8 @@ public class VoucherTypeMasterController {
 	    	String message = "";
 	    	VoucherTypeMasterRequest response=null;
 	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
+	    		String companyId = request.getHeader("4re"
+	    				+ "");
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				response=voucherTypeMasterService.updateVoucherTypeMaster(voucherTypeMasterRequest);
