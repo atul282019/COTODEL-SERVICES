@@ -31,4 +31,6 @@ public interface UserDetailsDao {
 	
 	List<UserManagerDto> getUserManagerList(int orgId);
 	public UserEntity checkUserEligible(String mobile);
+	
+	List<UserEntity> getSearchUserWithOutMobile(int orgId, String userName);
 }

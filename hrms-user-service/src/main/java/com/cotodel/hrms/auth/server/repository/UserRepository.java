@@ -58,5 +58,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	    @Query("select c from UserEntity c where   c.mobile=:mobile and c.role_id in ('1','9','10','12') ")
 		UserEntity userEligible(@Param("mobile") String mobile);
 	    
+	    @Query("select c from UserEntity c where  LOWER(c.username) LIKE LOWER(CONCAT('%', ?2, '%')) and ((c.employerid = ?1) or (c.id=?1and c.role_id='1')) ")
+		List<UserEntity> findByUserSearchWithoutMobile(int orgId,String userName);
+	    
 } 
 

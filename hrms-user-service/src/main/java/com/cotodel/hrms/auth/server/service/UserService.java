@@ -49,7 +49,7 @@ public interface UserService {
 	public List<ExistUserResponse> searchUsers(int  orgId,String userName,String mobile);
 	public ExistUserRoleRequest updateUsersRoleList(ExistUserRoleRequest  existUserRoleRequest);
 	public List<UserManagerDto> userManagerList(int  orgId);
-	
+	public List<UserManagerDto> searchUsersWithOutMobile(int  orgId,String userName);
 	//public List<ExistUserResponse> saveUsersListWithRole(ExistUserResponse  existUserResponse);
 	//public List<UserDto> getUsersList(Long  orgId,String userName);
 }

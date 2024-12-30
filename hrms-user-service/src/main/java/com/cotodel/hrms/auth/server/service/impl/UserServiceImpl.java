@@ -869,5 +869,44 @@ public class UserServiceImpl implements UserService {
 		return existUserList;
 		
 	}
+	
+	
+	@Override
+	public List<UserManagerDto> searchUsersWithOutMobile(int orgId, String userName) {
+		
+		
+		List<UserManagerDto> existUserList=new ArrayList<UserManagerDto>();
+		try {
+			
+			List<UserEntity>  userEntities=userDetailsDao.getSearchUserWithOutMobile(orgId, userName);
+			if(userEntities!=null) {
+				for (UserEntity userEntity : userEntities) {
+					UserManagerDto userManagerDto=new UserManagerDto();
+					CopyUtility.copyProperties(userEntity, userManagerDto);
+					//CopyUtility.copyProperties
+					//List<RoleMasterEntity> roleMasterEntities=userRoleMasterDao.getUserRoleMaster();
+					//List<UserRoleMapperDto> userRoleMapperDtoList=new ArrayList<UserRoleMapperDto>();
+//					for (RoleMasterEntity roleMasterEntity : roleMasterEntities) {
+//						UserRoleMapperDto userRoleMapperDto=new UserRoleMapperDto();
+//						userRoleMapperDto.setRoleId(roleMasterEntity.getRoleId().intValue());
+//						userRoleMapperDto.setRoleDesc(roleMasterEntity.getRoleDesc());
+//						//CopyUtility.copyProperties(roleMasterEntity, userRoleMapperDto);
+//						userRoleMapperDtoList.add(userRoleMapperDto);
+//					}
+					
+					
+					//existUserResponse.setUserRole(userRoleMapperDtoList);
+					existUserList.add(userManagerDto);
+				}
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return existUserList;
+		
+	}
+	
 
 }
