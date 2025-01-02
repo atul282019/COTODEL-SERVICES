@@ -75,7 +75,7 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
     private String otpValidationStatus;
 		 	
 	@Column(name = "creationdate")
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 	
 
 	@Column(name="createdby", length=49)

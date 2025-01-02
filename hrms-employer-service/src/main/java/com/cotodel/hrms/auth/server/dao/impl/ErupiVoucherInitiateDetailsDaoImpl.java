@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 	}
 
 	@Override
-	public List<ErupiVoucherCreatedDto> getVoucherCreationList(Long orgid) {
+	public List<ErupiVoucherCreatedDto> getVoucherCreationList(Long orgId,LocalDate startDate,LocalDate endDate) {
 		// TODO Auto-generated method stub
-		return erupiVoucherInitiateDetailsRepository.findVoucherCreateList(orgid);
+		return erupiVoucherInitiateDetailsRepository.findVoucherCreateList(orgId,startDate,endDate);
 	}
 
 	@Override
@@ -64,6 +65,27 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 		// TODO Auto-generated method stub
 		//return erupiVoucherInitiateDetailsRepository.findByNameByOrgId(orgid);
 		List<Object[]> result=erupiVoucherInitiateDetailsRepository.findByNameByOrgId(orgid);
+		return result;
+	}
+
+	@Override
+	public List<Object[]> getVoucherCreateStatus(Long orgID) {
+		// TODO Auto-generated method stub
+		List<Object[]> result=erupiVoucherInitiateDetailsRepository.getVoucherCreateStatus(orgID);
+		return result;
+	}
+
+	@Override
+	public List<Object[]> getVoucherCreateBankNameList(Long orgid) {
+		// TODO Auto-generated method stub
+		List<Object[]> result=erupiVoucherInitiateDetailsRepository.getVoucherCreateBankList(orgid);
+		return result;
+	}
+
+	@Override
+	public List<Object[]> getVoucherCreateSummaryWithAccNo(Long orgid,String accNumber) {
+		// TODO Auto-generated method stub
+		List<Object[]> result=erupiVoucherInitiateDetailsRepository.getVoucherCreateSummaryWithAccNo(orgid, accNumber);
 		return result;
 	}	
 	

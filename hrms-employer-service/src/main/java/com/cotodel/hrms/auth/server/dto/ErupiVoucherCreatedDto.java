@@ -21,11 +21,13 @@ public class ErupiVoucherCreatedDto {
 	private String purposeCode;
 	private String mcc;
 	private String redemtionType;
-	private LocalDateTime creationDate;
+	private LocalDate creationDate;
 	private LocalDate expDate;
 	private String type;
 	private String voucherCode;	
 	private String purposeDesc;
 	private String mccDesc;
-	
+	private String accountNumber;
+	private String bankcode;
+	private byte[] bankIcon;
 }

@@ -197,7 +197,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> erupiVoucherBulkVoucherUploadNew(HttpServletRequest request,@Valid @RequestBody ErupiVoucherBulkUploadRequest erupiBulkUploadRequest) {
 		 
-	    logger.info("inside erupiVoucherBulkUload....");	    	
+	    logger.info("inside erupiVoucherBulkVoucherUploadNew....");	    	
 	    	
 	    
 	    	String message = "";
@@ -214,7 +214,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    			return ResponseEntity.ok(new ErupiVoucherBulkUploadResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}
 	    	}catch (Exception e) {				
-	    		logger.error("error in erupiVoucherBulkUload====="+e);
+	    		logger.error("error in erupiVoucherBulkVoucherUploadNew====="+e);
 			}
 	        
 	        return ResponseEntity.ok(new ErupiVoucherBulkUploadResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        

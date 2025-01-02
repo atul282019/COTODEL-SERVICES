@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -11,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
-import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 @Repository
 public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<ErupiVoucherCreationDetailsEntity,Long>{
@@ -23,12 +23,15 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 	
 	@Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
 			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
-			+ "c.voucherCode,m.purposeDesc,m.mccDesc) "
+			+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon) "
 			+ "from ErupiVoucherCreationDetailsEntity c"
 			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
 			+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
-			+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =?1  order by c.creationDate desc")
-	public List<ErupiVoucherCreatedDto> findVoucherCreateList(Long orgId);
+			+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId "
+			+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc")
+	public List<ErupiVoucherCreatedDto> findVoucherCreateList( @Param("orgId") Long orgId,    
+	        @Param("startDate") LocalDate startDate, 
+	        @Param("endDate") LocalDate endDate);
 	
 //	 @Query(value = "SELECT count(1), SUM(amount), " +
 //             "(SELECT voucherdesc FROM voucher_type_master c WHERE c.id_pk = a.voucher_id_pk) AS vname " +
@@ -54,13 +57,31 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 	public List<Object[]> getVoucherCreateSummary(@Param("orgId") Long orgId);
 	
 	
-	
-	
+	@Query(value = "SELECT COUNT(1) AS record_count,SUM(a.amount) AS total_amount,b.workflowid,(SELECT w.type "
+			+ "FROM hrms1.workflowmaster w WHERE w.workflowid = b.workflowid) AS type,CASE WHEN a.expdate < CURRENT_DATE THEN 'expire' "
+			+ "ELSE 'active' END AS status FROM hrms1.erupi_voucher_creation_details a JOIN "
+			+ "hrms1.erupi_voucher_txn_details b ON a.id_pk = b.details_id "
+			+ "WHERE a.org_id =:orgId and b.workflowid!=100004 GROUP BY b.workflowid,status", nativeQuery = true)
+	public List<Object[]> getVoucherCreateStatus(@Param("orgId") Long orgId);	
 	
 	@Query("select s  from ErupiVoucherCreationDetailsEntity s where s.merchanttxnid = ?1")
 	public ErupiVoucherCreationDetailsEntity findByTransactionId(String tranId);
 	
 	@Query(value = "select Distinct Upper(c.name) name,c.mobile mobile from hrms1.erupi_voucher_creation_details c where c.org_id=:orgId ", nativeQuery = true)
 	public List<Object[]> findByNameByOrgId(@Param("orgId") Long orgId);
+	
+	@Query(value = "SELECT DISTINCT a.accountnumber,b.bankname,b.banklogo FROM hrms1.erupi_voucher_creation_details a JOIN "
+			+ "	hrms1.erupi_bankmaster b ON a.bankcode = b.bankcode 	WHERE a.org_id =:orgId ", nativeQuery = true)
+	public List<Object[]> getVoucherCreateBankList(@Param("orgId") Long orgId);
+	
+	@Query(value = "SELECT COUNT(1) AS record_count,SUM(a.amount) AS total_amount,b.workflowid,(SELECT w.type "
+			+ "FROM hrms1.workflowmaster w WHERE w.workflowid = b.workflowid) AS type,CASE WHEN a.expdate < CURRENT_DATE THEN 'expire' "
+			+ "ELSE 'active' END AS status FROM hrms1.erupi_voucher_creation_details a JOIN "
+			+ "hrms1.erupi_voucher_txn_details b ON a.id_pk = b.details_id "
+			+ "WHERE a.org_id =:orgId and b.workflowid!=100004 and a.accountnumber=:accNumber GROUP BY b.workflowid,status", nativeQuery = true)
+	public List<Object[]> getVoucherCreateSummaryWithAccNo(@Param("orgId") Long orgId,@Param("accNumber") String accNumber);
+	
+	
+
 	
 }

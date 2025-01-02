@@ -10,8 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,6 +51,24 @@ public class MccMasterEntity implements Serializable{
 	
 	@Column(name="status")
 	private int status;
+	
+	@Column(name="voucher_name")
+	private String voucherName;
+	
+	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
+	@Column(name = "voucher_icon")
+    private byte[] voucherIcon;
+	
+	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
+	@Column(name = "mcc_icon")
+    private byte[] mccIcon;
+	
+	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
+	@Column(name = "mcc_main_icon")
+    private byte[] mccMainIcon;
 	
 	
 }
