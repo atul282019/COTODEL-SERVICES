@@ -395,8 +395,11 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			//LM--Last Month
 			//CFY--Current Financial Year
 			//LFY--Last Financial Year
-			
-			if(request.getTimePeriod().equalsIgnoreCase("CM")) {				 
+			//AH-All History
+			if(request.getTimePeriod()==null) {
+				startDate = today;
+			    endDate = today;
+			}else if(request.getTimePeriod().equalsIgnoreCase("CM")) {				 
 			    startDate = today.with(TemporalAdjusters.firstDayOfMonth());
 			    endDate = today.with(TemporalAdjusters.lastDayOfMonth());
 			}else if(request.getTimePeriod().equalsIgnoreCase("LM")) {				 
@@ -414,24 +417,32 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 		            endDate = LocalDate.of(currentYear + 1, Month.MARCH, 31);
 		        }
 			}else if(request.getTimePeriod().equalsIgnoreCase("LFY")) {
-				int currentYear = today.getYear();		        
+				int currentYear = today.getYear();   
 		       		        
 		        // Check if today is before April 1st, if yes, the last financial year is the previous year's start to end
 		        if (today.isBefore(LocalDate.of(currentYear, Month.APRIL, 1))) {
-		        	startDate = LocalDate.of(currentYear - 1, Month.APRIL, 1);
+		        	startDate = LocalDate.of(currentYear - 2, Month.APRIL, 1);
 		        	endDate = LocalDate.of(currentYear - 1, Month.MARCH, 31);
 		        } else {
 		            // Otherwise, the last financial year was from the previous year (April to March)
 		        	startDate = LocalDate.of(currentYear - 1, Month.APRIL, 1);
 		        	endDate = LocalDate.of(currentYear - 1, Month.MARCH, 31);
 		        }
+			}else if(request.getTimePeriod().equalsIgnoreCase("AH")) {
+				int currentYear = today.getYear();		        
+		       		        
+		        
+		            // Otherwise, the last financial year was from the previous year (April to March)
+		        	startDate =LocalDate.of(2024 - 1, Month.APRIL, 1);
+		        	endDate =today  ;
+		        
 			}
 			else {
 				startDate = today;
 			    endDate = today;
 			}
-			log.info("startDate:"+startDate);
-			log.info("endDate:"+endDate);
+			System.out.println("startDate:"+startDate);
+			System.out.println("endDate:"+endDate);
 			List<ErupiVoucherCreatedDto> erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationList(request.getOrgId(),startDate,endDate);
 			for (ErupiVoucherCreatedDto erupiVoucherCreatedDto : erupiVoucherCreatedDtos) {
 				ErupiBankMasterEntity erBankMasterEntity=bankMasterDao.getDetails(erupiVoucherCreatedDto.getBankcode());
@@ -598,6 +609,8 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
 						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 						//erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+						erupiVoucherTxnDetailsEntity2.setWorkFlowId(100012l);
+						erupiVoucherTxnDetailsEntity2.setOrgId(erupiVoucherInitiateDetailsEntity.getOrgId());
 						erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
 						erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 						//erupiVoucherTxnDetailsEntity
@@ -1199,6 +1212,26 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			}
 			
 			return erupiVoucherTotalDetailDto;
+		}
+
+
+
+		@Override
+		public ErupiVoucherCreatedDto getErupiVoucherCreateDetailsById(ErupiVoucherCreatedRequest request) {
+			String query="";						
+			ErupiVoucherCreatedDto erupiVoucherCreatedDto= erupiVoucherInitiateDetailsDao.getVoucherCreationById(request.getId());
+			if(erupiVoucherCreatedDto!=null) {
+				ErupiBankMasterEntity erBankMasterEntity=bankMasterDao.getDetails(erupiVoucherCreatedDto.getBankcode());
+				String accNumber=replaceExceptLastFour(erupiVoucherCreatedDto.getAccountNumber());
+				erupiVoucherCreatedDto.setAccountNumber(accNumber);
+				if(erBankMasterEntity==null) {
+					erupiVoucherCreatedDto.setBankIcon(null);
+				}else {
+					erupiVoucherCreatedDto.setBankIcon(erBankMasterEntity.getBankLogo());
+				}
+				
+			}
+			return erupiVoucherCreatedDto;
 		}
 		
 }

@@ -32,6 +32,6 @@ public interface ErupiVoucherInitiateDetailsService {
 	public ErupiVoucherTotalDetailDto  getErupiVoucherCreateStatus(ErupiVoucherCreatedRequest request);
 	public List<ErupiVoucherBankListDto>  getErupiVoucherCreateBAnkList(ErupiVoucherCreatedRequest request);
 	public ErupiVoucherTotalDetailDto  getErupiVoucherCreateDetailByAccount(ErupiVoucherCreatedRequest request);
-	
+	public ErupiVoucherCreatedDto  getErupiVoucherCreateDetailsById(ErupiVoucherCreatedRequest request);
 	
 }

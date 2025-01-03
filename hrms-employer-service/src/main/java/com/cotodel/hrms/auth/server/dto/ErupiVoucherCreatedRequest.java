@@ -12,4 +12,5 @@ public class ErupiVoucherCreatedRequest {
 	private Long workflowid;
 	private String accNumber;
 	private String timePeriod;
+	private Long id;
 }

@@ -28,8 +28,8 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
 			+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
 			+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId "
-			+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc")
-	public List<ErupiVoucherCreatedDto> findVoucherCreateList( @Param("orgId") Long orgId,    
+			+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc ")
+	public List<ErupiVoucherCreatedDto> findVoucherCreateList(@Param("orgId") Long orgId,    
 	        @Param("startDate") LocalDate startDate, 
 	        @Param("endDate") LocalDate endDate);
 	
@@ -81,7 +81,14 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ "WHERE a.org_id =:orgId and b.workflowid!=100004 and a.accountnumber=:accNumber GROUP BY b.workflowid,status", nativeQuery = true)
 	public List<Object[]> getVoucherCreateSummaryWithAccNo(@Param("orgId") Long orgId,@Param("accNumber") String accNumber);
 	
-	
+	@Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
+			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
+			+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon) "
+			+ "from ErupiVoucherCreationDetailsEntity c"
+			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
+			+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
+			+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.id =:id ")
+	public ErupiVoucherCreatedDto findVoucherCreateById(@Param("id") Long id);
 
 	
 }

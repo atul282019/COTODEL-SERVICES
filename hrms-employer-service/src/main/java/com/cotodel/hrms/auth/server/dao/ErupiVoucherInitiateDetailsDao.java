@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
-import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 
 public interface ErupiVoucherInitiateDetailsDao {
@@ -19,4 +18,5 @@ public interface ErupiVoucherInitiateDetailsDao {
 	public List<Object[]> getVoucherCreateNameList(Long orgid);
 	public List<Object[]> getVoucherCreateBankNameList(Long orgid);
 	public List<Object[]> getVoucherCreateSummaryWithAccNo(Long orgid,String accNumber);
+	public ErupiVoucherCreatedDto getVoucherCreationById(Long id);
 }
