@@ -76,7 +76,7 @@ public class CompanyMasterController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/company",produces = {"application/json"}, consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveCompany(HttpServletRequest request,@Valid @RequestBody CompanyRequest companyRequest) {
-	    	logger.info("inside get state-list");
+	    	logger.info("inside get company");
 	    	String response="";
 	    	try {
 	    		response=companyMasterService.saveCompanyDetails(companyRequest);
