@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.CompanyMasterDao;
 import com.cotodel.hrms.auth.server.dto.CompanyRequest;
 import com.cotodel.hrms.auth.server.entity.CompanyMaster;
-import com.cotodel.hrms.auth.server.entity.EmployerEntity;
 import com.cotodel.hrms.auth.server.service.CompanyMasterService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -42,7 +41,7 @@ public class CompanyMasterServiceImpl implements CompanyMasterService {
 	public String saveCompanyDetails(CompanyRequest company) {
 		
 		CompanyMaster companyMaster= new CompanyMaster();
-		EmployerEntity employerEntity=null;
+		//EmployerEntity employerEntity=null;
 		String response="";
 		try {			
 			CopyUtility.copyProperties(company,companyMaster);

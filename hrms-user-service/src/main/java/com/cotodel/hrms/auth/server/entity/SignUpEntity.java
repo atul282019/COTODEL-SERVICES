@@ -5,13 +5,11 @@ import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -91,8 +89,8 @@ public class SignUpEntity implements Serializable{
 	private String freetext;
 	private String remarks;
 	
-	 @OneToOne(mappedBy = "signup", cascade = CascadeType.ALL)
-	 private EmployerEntity employer;
+//	 @OneToOne(mappedBy = "signup", cascade = CascadeType.ALL)
+//	 private EmployerEntity employer;
 	
 	
 }

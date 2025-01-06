@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.exception.ApiError;
-import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,8 +39,7 @@ public class CaptchaController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserSignUpController.class);
 	
-	@Autowired
-	EmployeeProfileService employeeProfileService;
+	
 	
 	public static final String FILE_TYPE = "jpeg";
 
