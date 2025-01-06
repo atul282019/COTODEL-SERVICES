@@ -16,7 +16,9 @@ import com.cotodel.hrms.auth.server.dto.EmployeePayrollRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeePayrollResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeePayrollTaxRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeePayrollTaxResponse;
+import com.cotodel.hrms.auth.server.dto.EmployerDetailsResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
+import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.EmployeePayrollService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -131,6 +133,39 @@ public class EmployeePayrollController {
 			}
 	        
 	        return ResponseEntity.ok(new EmployeePayrollResponse(false,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/payrollDetails",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> getPayrollDetails(HttpServletRequest request,@Valid @RequestBody EmployeePayrollRequest empolyeeRequest) {
+	    
+		 logger.info("inside getPayrollDetails+++");	    	
+	    	
+	    	String message = "";
+	    	EmployeeProfileEntity response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				response=employeePayrollService.getEmployerPayRollDetail(empolyeeRequest.getEmployerId());
+	    		if(response!=null) {
+	    			return ResponseEntity.ok(new EmployerDetailsResponse(true,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new EmployerDetailsResponse(false,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		logger.error("error in getPayrollDetails====="+e);
+	    		//message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new EmployerDetailsResponse(false,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 	
 }

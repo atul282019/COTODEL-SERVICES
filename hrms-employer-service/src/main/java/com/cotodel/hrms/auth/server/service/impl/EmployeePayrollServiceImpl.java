@@ -113,5 +113,20 @@ public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 		return request;
 
 	}
+
+	@Override
+	public EmployeeProfileEntity getEmployerPayRollDetail(Long employerId) {
+		// TODO Auto-generated method stub
+		EmployeeProfileEntity employeeProfileEntity = new EmployeeProfileEntity();
+		try {
+			employeeProfileEntity = employeeProfileDao.getEmplDetails(employerId);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return employeeProfileEntity;
+	}
+	
+	
 	
 }

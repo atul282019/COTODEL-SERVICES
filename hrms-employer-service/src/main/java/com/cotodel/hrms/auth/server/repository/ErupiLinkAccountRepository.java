@@ -17,7 +17,7 @@ public interface ErupiLinkAccountRepository extends JpaRepository<ErupiLinkAccou
 	@Query("select s  from ErupiLinkAccountEntity s where s.orgId = ?1")
 	  public ErupiLinkAccountEntity findByOrgId(Long orgId);
 	
-	@Query("select s  from ErupiLinkAccountEntity s where s.orgId =:orgId and s.accstatus='1' ")
+	@Query("select s  from ErupiLinkAccountEntity s where s.orgId =:orgId ")
 	  public List<ErupiLinkAccountEntity> findErupiListByOrgId(@Param("orgId") Long orgId);
 	
 	@Query("select s  from ErupiLinkAccountEntity s where s.acNumber = ?1")
@@ -41,5 +41,10 @@ public interface ErupiLinkAccountRepository extends JpaRepository<ErupiLinkAccou
 	    @Transactional
 	    @Query(value = "UPDATE erupi_linkaccount  SET accstatus ='0' WHERE org_id =:orgId and acnumber=:acNumber", nativeQuery = true)
 		public int updateAccDisable(@Param("orgId") Long orgId,@Param("acNumber") String acNumber);
+		
+		@Modifying
+	    @Transactional
+	    @Query(value = "UPDATE erupi_linkaccount  SET accstatus ='1' WHERE org_id =:orgId and acnumber=:acNumber", nativeQuery = true)
+		public int updateAccEnable(@Param("orgId") Long orgId,@Param("acNumber") String acNumber);
 		
 }

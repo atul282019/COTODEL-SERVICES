@@ -19,13 +19,16 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherBulkDao;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
+import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiBulkIdRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadSFListResponse;
@@ -37,9 +40,11 @@ import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadFailEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadSuccessEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherMasterUploadEntity;
 import com.cotodel.hrms.auth.server.model.master.MccMasterEntity;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherCreationBulkService;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherInitiateDetailsService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
+import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 @Service
@@ -54,6 +59,9 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 	
 	@Autowired
     private EntityManager entityManager;
+	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
 	
 	@Override
 	public ErupiVoucherBulkUploadSFListResponse saveErupiVoucherBulkFile(
@@ -493,8 +501,32 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					// message=message==""?""
 					message += name == false ? "Invalid name" : "";
 					message += expDateValid == false ? "Invalid Date" : "";
-					
-					if (mob && name && amountValid && expDateValid) {		
+					boolean empexit =false;
+					if (mob) {
+						String username ="";
+						UserRequest userRequest = new UserRequest();
+						TokenGeneration token = new TokenGeneration();
+						String tokenvalue = token
+								.getToken(applicationConstantConfig.authTokenApiUrl + CommonUtils.getToken);
+						String response1 = CommonUtility.userRequest(tokenvalue,
+								MessageConstant.gson.toJson(userRequest),
+								applicationConstantConfig.userServiceApiUrl + CommonUtils.userDetailsWithMobile);
+						if (!ObjectUtils.isEmpty(response1)) {
+							JSONObject demoRes = new JSONObject(response1);
+							boolean status = demoRes.getBoolean("status");
+							if (status) {
+								//String username ="";
+								if (demoRes.has("userEntity")) {
+									JSONObject userEntity = demoRes.getJSONObject("userEntity");
+									username = userEntity.getString("username");
+									empexit=true;
+								}
+							}
+						}
+						//check
+						message += empexit == false ? "User does not exist" : "";
+					}
+					if (mob && name && amountValid && expDateValid && empexit) {		
 						
 						saveSuccess(request,voucherBulkUploadEntity.getId(),uniqueFileName,voucherType,
 								benName,mobile,amount,stDate,etDate,orgId,voucherId,createdBy);

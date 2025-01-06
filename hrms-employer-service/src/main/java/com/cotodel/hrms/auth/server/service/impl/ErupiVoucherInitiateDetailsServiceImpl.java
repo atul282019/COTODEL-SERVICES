@@ -91,8 +91,17 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			String merchantTranId=getMerTranId(request.getBankcode());
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);	
-			request.setMandateType("04");
-			request.setPayeeVPA("invaciauat@prepaidicici");
+			if(request.getMandateType()!=null && request.getMandateType().equalsIgnoreCase("04")) {
+				if(request.getPayeeVPA()==null || request.getPayeeVPA().equalsIgnoreCase("")) {
+					response=MessageConstant.RESPONSE_FAILED;
+					request.setResponse(response);
+					request.setResponseApi(MessageConstant.PAYEEVPA);
+					return request;
+				}
+				
+			}
+			//request.setMandateType("01");
+			//request.setPayeeVPA("invaciauat@prepaidicici");
 			erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
 			erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
 			CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
@@ -920,9 +929,18 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				//
 				String merchantTranId=getMerTranId(request.getBankcode());
 				response=MessageConstant.RESPONSE_FAILED;
-				request.setResponse(response);	
-				request.setMandateType("04");
-				request.setPayeeVPA("invaciauat@prepaidicici");
+				request.setResponse(response);
+				if(request.getMandateType()!=null && request.getMandateType().equalsIgnoreCase("04")) {
+					if(request.getPayeeVPA()==null || request.getPayeeVPA().equalsIgnoreCase("")) {
+						response=MessageConstant.RESPONSE_FAILED;
+						request.setResponse(response);
+						request.setResponseApi(MessageConstant.PAYEEVPA);
+						return request;
+					}
+					
+				}
+				//request.setMandateType("04");
+				//request.setPayeeVPA("invaciauat@prepaidicici");
 				LocalDate stDate =request.getStartDate();
 				String validity = request.getValidity();
 				String[] daysArray=validity.split(" ");

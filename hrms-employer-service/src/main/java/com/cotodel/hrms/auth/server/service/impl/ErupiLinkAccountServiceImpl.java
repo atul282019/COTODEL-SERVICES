@@ -213,5 +213,24 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 		return request;
 	}
 
+	@Override
+	public ErupiLinkAccountRequest updateErupiAccountEnable(ErupiLinkAccountRequest request) {
+		String response="";
+		try {			
+			int updateAcctP=erupiLinkAccountRepository.updateAccEnable(request.getOrgId(),request.getAcNumber());
+			if( updateAcctP>0) {
+				response=MessageConstant.RESPONSE_SUCCESS;
+			}
+			request.setResponse(response);
+		}catch (DataIntegrityViolationException e) {
+			response=MessageConstant.DUP_ACC;
+			request.setResponse(response);
+		}
+		catch (Exception e) {
+			log.error("Error in updateErupiAccountEnable......."+e.getMessage());
+		}
+		return request;
+	}
+
 	
 }
