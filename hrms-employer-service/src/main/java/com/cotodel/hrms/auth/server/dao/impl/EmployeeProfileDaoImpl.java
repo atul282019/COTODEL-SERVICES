@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
-import com.cotodel.hrms.auth.server.dto.EmployeeProfileAddress;
 import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
 import com.cotodel.hrms.auth.server.repository.EmployeeProfileRepository;
 @Repository
@@ -34,7 +33,7 @@ public class EmployeeProfileDaoImpl implements EmployeeProfileDao{
 	}
 
 	@Override
-	public List<EmployeeProfileAddress> getCompAddress(Long emplrid) {
+	public List<Object[]> getCompAddress(Long emplrid) {
 		// TODO Auto-generated method stub
 		return employeeProfileRepository.findEmployerAddress(emplrid);
 	}

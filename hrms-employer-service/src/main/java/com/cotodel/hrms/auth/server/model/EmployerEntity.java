@@ -38,9 +38,9 @@ public class EmployerEntity implements Serializable{
 	@Column(name="employer_id")
 	private Long employerId;
 		
-	@OneToOne
-    @JoinColumn(name = "signup_id")
-    private SignUpEntity signup;
+//	@OneToOne
+//    @JoinColumn(name = "signup_id")
+//    private SignUpEntity signup;
 	
 	@Column(name="org_name")
 	private String orgName;

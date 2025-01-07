@@ -26,5 +26,6 @@ public class EmployeeProfileRequest {
     private String response;
     private Long employerId;
     private Long employeeId;
-   
+    private Long orgId;
+    private Long id;
 }

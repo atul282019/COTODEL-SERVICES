@@ -20,6 +20,9 @@ public interface ErupiLinkAccountRepository extends JpaRepository<ErupiLinkAccou
 	@Query("select s  from ErupiLinkAccountEntity s where s.orgId =:orgId ")
 	  public List<ErupiLinkAccountEntity> findErupiListByOrgId(@Param("orgId") Long orgId);
 	
+	@Query("select s  from ErupiLinkAccountEntity s where s.orgId =:orgId and s.accstatus='1' ")
+	  public List<ErupiLinkAccountEntity> findErupiListByOrgIdWithStatus(@Param("orgId") Long orgId);
+	
 	@Query("select s  from ErupiLinkAccountEntity s where s.acNumber = ?1")
 	  public ErupiLinkAccountEntity findErupiAccNumber(String accNumber);
 	

@@ -16,4 +16,5 @@ public interface ErupiLinkAccountService {
 	public ErupiLinkAccountRequest  getErupiPrimaryAccountDetails(Long orgId);
 	public ErupiLinkAccountRequest  updateErupiAccountDisable(ErupiLinkAccountRequest request);
 	public ErupiLinkAccountRequest  updateErupiAccountEnable(ErupiLinkAccountRequest request);
+	public List<ErupiLinkAccountWithOutResponse>  getErupiAccountListDetailsWithStatus(ErupiLinkAccountRequest request);
 }

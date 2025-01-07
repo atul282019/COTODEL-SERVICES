@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -1116,6 +1117,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			List<ErupiVoucherBankListDto> erBankListDtos=new ArrayList<>();
 			ErupiVoucherBankListDto erupiVoucherBankListDto=new ErupiVoucherBankListDto();
 			erupiVoucherBankListDto.setBankName("All Bank");
+			 String base64String = "iVBORw0KGgoAAAANSUhEUgAAALIAAACUCAMAAAAAoYNxAAAAZlBMVEX///8zMzP6+vqoqKguLi6ampogICAlJSUaGhqJiYkqKip6enqioqIdHR1RUVHz8/NGRkbX19cAAAAWFhbl5eVzc3NfX18QEBDs7Oy+vr6vr688PDxlZWXQ0NBBQUHd3d2SkpLHx8ebzWAiAAAEpUlEQVR4nO2b23arIBBAgyIoChq8mxjN///kURMVba6tYtoz+6nLy+pmHHAAs9sBAAAAAAAAAAA8xzC2NngTo3Cc4ldJRzHjnMXR1h4vY5ghRQ00NH9JoKtYoivSrba2eQXrRNEAPVlb+zylEgQjBUzEZwc68wgdXK/qjHrZ1l73KY/2EF1RH/o/w2O5tdkdjBoNWYzxeZcPvZAerE8cOow9Tsdedzhmu+g0NiFF1cdJZzVho7F7bgWzszu0glHrwzL6LJSRTRb+9bDvpcP4QcV5U8UpmWMrI1totsf8rPM2x6bg0PmYQOenUBmJ6dHvjslD3mSHHzOlMSLf2rUjcqhihRAvmoMlZ4ihdmwrlIxpMvoTAp0fVKeWNmXd9iBvX9bl9DQ9bR3oKJZ4KoxPbWzdNvBYNNWnxWbnpbtpTWoGBH2hjXLejW40LuoDnp8nothMOIsZ+2rMuycfS9q4Ukq/GDcZjY/bZLRfkHkWX7I17ka30hWI3GjR5RoyDN0a2cfpjQB2D968tim3jveuwWmsvSY1Tzey+KpDh1zNTHbHGfHA1CocCfueSvfcj2VfBJ3RvQsxF/qGjszjN7NYcZZJUV66mHn/UsZNTd2wPJJHIUZdXFmKjl0X8x9ci4mW4t/w8L1x4OpBRVcnY0acNj3Eo/Yx7K1eR5+D9IEBurzyjPiSDbIdFeLHLZQr16SZFT4WaOLmtA1Do/LxyR00XHM6W4on3a5X9pP2Qnpqh4TgceK314m1Mtp35iXQLXDQhtYXmGGxb5t5d/xW7pHOKi/DXNjP/3kDqdurjdws2uftP0nlK/YKxb/vPhkoRpi6plW/eBdDSwf6ayH/AO5Gl5HLqF5I/h56WDLQkXuvvLkNsRPP3/lNVfRGQ5tSabniPxfh8384hdJqV8pXU6lnsens/uUsVsBxnrx/G8P7RZS9J++729D0Gw1FqbeIsvV2WnyfcBnls3z+rxYCy2UKDsPCTBNosW2K0tTEMp0PAP4kfixWIF5z5cgXDC8OE+sqv1XRvfj+AGVQ3lyZSE7TW0UmtiUh8tZSI0tDyuVk1q1RmdnuPvOjXHxZoqMHq8qyyjrMFwSwnRSRH5UuV9qpT5kOnw4VwSTQmPWb7IY13XdgQT9RimJlC1OXcqhM4veTfCHK7k3B1bYEY6XmO6FuZXZQVyxzJQPCSc2rTmmoWr8bw1q5LuV0On0YnzNOJouCWTLuu8eTW0qpV5lNxXbV+LlIPb2lHhojpxs6WT8D16RM6ulKtjF0QDpbisiHj43Y7JaaaFXms+0kY1iSpbPJ0H5QDmbr9Sb/FOXZWvFvUJ5HmYAyKIMyKIMyKIMyKIMyKIMyKIMyKIMyKIMyKIMyKP855a0Xa4OQd8jZx2EGup6w07myvJzg4WGm7F3PhMGqyp51oZ4tfBtWTz37brOq+zPzr+7L/oy3wS95gP8UQxsLCVeuRpb5fZolqTbkMh99Wupu/8rw/1dZclsTfKHE8AtPG1v8pBV4n721CT8ZnJNUW89TSJPvG/vjh0E6wcn3O+EvVDaSkGxAmPygPMqdTfjRj7v0lZ0rlKAAAAAAAAAAAPwG/gH0+oHRkSQuBgAAAABJRU5ErkJggg==";
+			byte[] decodedLogo = decodeBase64ToByteArray(base64String);
+			erupiVoucherBankListDto.setBankLogo(decodedLogo);
 			erBankListDtos.add(erupiVoucherBankListDto);
 			try {
 				List<Object[]> resultList = erupiVoucherInitiateDetailsDao.getVoucherCreateBankNameList(request.getOrgId());
@@ -1135,7 +1139,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			return erBankListDtos;
 		}
 
-
+		public static byte[] decodeBase64ToByteArray(String base64String) {
+	        return Base64.getDecoder().decode(base64String);
+	    }
 
 		@Override
 		public ErupiVoucherTotalDetailDto getErupiVoucherCreateDetailByAccount(ErupiVoucherCreatedRequest request) {

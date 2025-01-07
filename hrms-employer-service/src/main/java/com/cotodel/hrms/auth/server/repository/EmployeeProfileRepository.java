@@ -17,8 +17,8 @@ public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile
 	@Query("select s  from EmployeeProfileEntity s where  s.employerId = ?1")
 	  public EmployeeProfileEntity findEmployeeId(Long employerId);
 	
-	@Query("select new com.cotodel.hrms.auth.server.dto.EmployeeProfileAddress(s.id,CONCAT(s.officeAddress, '-', s.pinCode) as officeAddress)  from EmployeeProfileEntity s where  s.employerId = ?1")
-	public List<EmployeeProfileAddress> findEmployerAddress(Long employerId);
+	@Query(value = "select s.id,s.office_address,s.pin_code  from employee_profile s where  s.employer_id = ?1", nativeQuery = true)
+	public List<Object[]> findEmployerAddress(Long employerId);
 	
 	
 }

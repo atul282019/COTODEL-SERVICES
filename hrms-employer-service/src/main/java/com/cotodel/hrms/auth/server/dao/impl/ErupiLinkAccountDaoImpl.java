@@ -43,6 +43,12 @@ public class ErupiLinkAccountDaoImpl implements ErupiLinkAccountDao{
 		// TODO Auto-generated method stub
 		return erupiLinkAccountRepository.findPrimaryAccountByOrgId(orgid);
 	}
+
+	@Override
+	public List<ErupiLinkAccountEntity> findByErupiLinkOrgIdWithStatus(Long orgid) {
+		// TODO Auto-generated method stub
+		return erupiLinkAccountRepository.findErupiListByOrgIdWithStatus(orgid);
+	}
 	
 
 	

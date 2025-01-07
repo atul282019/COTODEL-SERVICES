@@ -22,7 +22,6 @@ import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
-import com.cotodel.hrms.auth.server.model.SignUpEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -56,7 +55,6 @@ public class EmployeeProfileController {
 	    public ResponseEntity<Object> saveProfileDetails(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest empolyeeProfileRequest) {
 	    logger.info("inside saveProfileDetails+++");	    	
 	    	
-	    	SignUpEntity userEntity=null;
 	    	String message = "";
 	    	EmployeeProfileRequest response=null;
 	    	try {	    		
@@ -89,7 +87,6 @@ public class EmployeeProfileController {
 	    public ResponseEntity<Object> updateProfileDetails(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest empolyeeProfileRequest) {
 	    logger.info("inside updateProfileDetails");	    	
 	    	
-	    	SignUpEntity userEntity=null;
 	    	String message = "";
 	    	EmployeeProfileRequest response=null;
 	    	try {	    		
@@ -190,12 +187,12 @@ public class EmployeeProfileController {
 	    	
 	    
 	    	String message = "";
-	    	List<EmployeeProfileAddress> response=null;
+	    	EmployeeProfileAddress response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=employeeProfileService.getCompProfileAddress(employeeProfileRequest.getEmployerId());
+				response=employeeProfileService.getCompProfileAddress(employeeProfileRequest.getOrgId());
 	    		if(response!=null) {
 	    			return ResponseEntity.ok(new EmployeeProfileAddressResponse(true,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 	    		}else {

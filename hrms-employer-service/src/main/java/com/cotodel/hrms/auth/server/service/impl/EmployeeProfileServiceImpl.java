@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,13 +13,11 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.EmployeeDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
 import com.cotodel.hrms.auth.server.dao.EmployerDao;
-import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileAddress;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
 import com.cotodel.hrms.auth.server.model.EmployerEntity;
-import com.cotodel.hrms.auth.server.model.SignUpEntity;
 import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -29,8 +28,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	@Autowired
 	EmployerDao  employerDao;
 	
-	@Autowired
-	SignUpDao  signUpDao;
+	
 	
 	@Autowired
 	EmployeeDao  employeeDao;
@@ -129,10 +127,10 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		//Date date = new Date();
 		//LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		
-		SignUpEntity signUpEntity=signUpDao.getUser(user.getSignupId());
-		signUpEntity.setOrgType(user.getOrgType());
-		signUpDao.saveUserDetails(signUpEntity);
-		user.setSignupId(signUpEntity.getSignupId());
+//		SignUpEntity signUpEntity=signUpDao.getUser(user.getSignupId());
+//		signUpEntity.setOrgType(user.getOrgType());
+//		signUpDao.saveUserDetails(signUpEntity);
+//		user.setSignupId(signUpEntity.getSignupId());
 		EmployerEntity employer=employerDao.getUser(user.getEmployerId());
 		
 		employer.setRunPayrollFlag(user.isRunPayrollFlag());
@@ -194,9 +192,20 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	}
 
 	@Override
-	public List<EmployeeProfileAddress> getCompProfileAddress(Long empid) {
+	public EmployeeProfileAddress getCompProfileAddress(Long empid) {
 		// TODO Auto-generated method stub
-		return emplProfileDao.getCompAddress(empid);
+		EmployeeProfileAddress employeeProfileAddresses=new EmployeeProfileAddress();
+		List<Object[]> addresses= emplProfileDao.getCompAddress(empid);
+		for (Object[] objects : addresses) {
+			 Long id = ((BigInteger) objects[0]).longValue();			           
+	         String address = (String) objects[1]; 
+	         String pin = (String) objects[2]; 
+	         String officeAddress=address+"-"+pin;
+	         employeeProfileAddresses.setId(id);
+	         employeeProfileAddresses.setOfficeAddress(officeAddress);
+		}
+		
+		return employeeProfileAddresses;
 	}
 	
 	
