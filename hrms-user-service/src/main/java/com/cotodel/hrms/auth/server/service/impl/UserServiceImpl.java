@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
@@ -22,6 +24,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.xml.bind.DatatypeConverter;
 
@@ -32,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.cotodel.hrms.auth.server.controller.CotoDelBaseController;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
@@ -53,12 +58,13 @@ import com.cotodel.hrms.auth.server.entity.UserRoleMapperEntity;
 import com.cotodel.hrms.auth.server.entity.UserRoleMapperHistoryEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.UserService;
+import com.cotodel.hrms.auth.server.util.CaptchaSession;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends CotoDelBaseController implements UserService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	@Autowired
@@ -82,43 +88,71 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRoleMasterDao userRoleMasterDao;
 	
+	private Map<String, Boolean> captcaValidationMap = new HashMap<String, Boolean>();
+	HashMap<String, Boolean> captchaMap = new HashMap<String, Boolean>();
+	CaptchaSession csotp = new CaptchaSession();
+	
 	@Override
 	@Transactional
-	public UserEntity saveUserDetails(UserRequest user) {
+	public UserEntity saveUserDetails(HttpServletRequest request,UserRequest user) {
 		// TODO Auto-generated method stub
 		
+		//add captcha
+		String captchaSecurity="";
+		UserEntity userEntity=new UserEntity();
+		String response=MessageConstant.RESPONSE_FAILED;
+		user.setResponse(response);
+		try {
+//			captchaSecurity = (String) session.getAttribute("CAPTCHA");
+//			if(request.getSession(true).getAttribute("CAPTCHA")!=null){
+//				captchaSecurity=(String) request.getSession(true).getAttribute("CAPTCHA");
+//			}
+//			logger.info("Session Captcha=="+captchaSecurity);
+//			logger.info("User Enter Captcha=="+user.getCaptcha());
+//			
+//			if (validateCaptcha(request, user.getCaptcha(),captchaSecurity)) {
+				
+				UserEntity userDetails= new UserEntity();
+				UserEmpEntity userEmpEntity= new UserEmpEntity();
+				//CopyUtility.copyProperties(userDetails, user);
+				CopyUtility.copyProperties(user,userDetails);
+				Date date = new Date();
+				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				userDetails.setCreated_date(localDate);
+				if(user.isERupiStatus()) {
+					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
+				}else {
+					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+				}
+				userDetails.setStatus(1);
+				userEntity=userDetailsDao.saveUserDetails(userDetails);
+				//userEmpEntity.setUser_id(UserEntity1.getId());
+				userEmpEntity.setUser_id(userEntity.getId());
+				userEmpEntity.setStatus(userEntity.getStatus());
+				userEmpEntity.setCreated_by(userEntity.getMobile());
+				userEmpEntity.setCreated_date(localDate);
+				userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);
+				
+//				UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
+//				userRoleMapperEntity.setMobile(UserEntity1.getMobile());
+//				userRoleMapperEntity.setOrgId(UserEntity1.getId());
+//				userRoleMapperEntity.setStatus(1);
+//				userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
+//				userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
+//				userRoleMapperEntity.setCreationDate(LocalDateTime.now());
+//				userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
+				response=MessageConstant.RESPONSE_SUCCESS;
+				userEntity.setResponse(response);
+//			}else {
+//				response=MessageConstant.INVALID_CAPTCHA;
+//				userEntity.setResponse(response);
+//			}
 		
-		UserEntity userDetails= new UserEntity();
-		UserEmpEntity userEmpEntity= new UserEmpEntity();
-		//CopyUtility.copyProperties(userDetails, user);
-		CopyUtility.copyProperties(user,userDetails);
-		Date date = new Date();
-		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		userDetails.setCreated_date(localDate);
-		if(user.isERupiStatus()) {
-			userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
-		}else {
-			userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+		}catch (Exception e) {
+			response=MessageConstant.RESPONSE_FAILED;
+			userEntity.setResponse(response);
 		}
-		userDetails.setStatus(1);
-		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
-		//userEmpEntity.setUser_id(UserEntity1.getId());
-		userEmpEntity.setUser_id(UserEntity1.getId());
-		userEmpEntity.setStatus(UserEntity1.getStatus());
-		userEmpEntity.setCreated_by(UserEntity1.getMobile());
-		userEmpEntity.setCreated_date(localDate);
-		userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);
-		
-//		UserRoleMapperEntity userRoleMapperEntity=new UserRoleMapperEntity();
-//		userRoleMapperEntity.setMobile(UserEntity1.getMobile());
-//		userRoleMapperEntity.setOrgId(UserEntity1.getId());
-//		userRoleMapperEntity.setStatus(1);
-//		userRoleMapperEntity.setRoleId(UserEntity1.getRole_id());
-//		userRoleMapperEntity.setCreatedBy(UserEntity1.getUsername());
-//		userRoleMapperEntity.setCreationDate(LocalDateTime.now());
-//		userRoleMapperDao.saveUserRoleDetails(userRoleMapperEntity);
-		
-		return UserEntity1;
+		return userEntity;
 	}
 
 	
@@ -907,6 +941,37 @@ public class UserServiceImpl implements UserService {
 		return existUserList;
 		
 	}
-	
+	@SuppressWarnings("unchecked")
+	protected boolean validateCaptcha(HttpServletRequest request, String captcha,String sessioncaptcha) throws Exception {
+		String captchaId =sessioncaptcha;
+
+		// HashMap<String, Boolean> captchaMap = new HashMap<String, Boolean>();
+		captchaMap = (HashMap<String, Boolean>) request.getSession().getAttribute("capchaValidatedMap");
+		logger.debug("Captcha validation done for " + captchaId);
+		
+			if (null == captchaMap || !captchaMap.containsKey(captchaId)) {
+				if (captcha != null && !"".equals(captcha.trim())) {
+					if (captcha.equals(captchaId)) {
+						captcaValidationMap.put(captchaId, false);
+						request.getSession().setAttribute("capchaValidatedMap", captcaValidationMap);
+						logger.debug("Captcha is set in session  : :" + captchaId);
+						csotp.setCaptchaValidated(true);
+						return true; // invalid captcha
+					} else {
+						logger.error("Captcha is already set in session  : :" + captchaId);
+						csotp.setCaptchaValidated(false);
+						return false; // valid captcha
+					}
+				}
+			} else {
+				logger.error("Captcha is already set in session  : :: :" + captchaId);
+				csotp.setCaptchaValidated(false);
+				return false;
+			}
+			logger.error("Captcha is already set in session or captchaMap is not null : ::::::: :" + captchaId);
+			csotp.setCaptchaValidated(false);
+			return false;
+		
+	}
 
 }

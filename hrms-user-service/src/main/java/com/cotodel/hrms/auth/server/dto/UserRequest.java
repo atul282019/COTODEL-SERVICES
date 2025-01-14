@@ -32,4 +32,6 @@ public class UserRequest {
     private boolean updateStatus ;
     private boolean emailStatus ;
     private boolean eRupiStatus ;
+    private String response;
+    private String captcha;
 }

@@ -2,6 +2,9 @@ package com.cotodel.hrms.auth.server.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.UserDto;
@@ -14,7 +17,7 @@ public interface UserService {
 	
 	public UserEntity getByUserName(String userName);
 
-	public UserEntity saveUserDetails(UserRequest user);
+	public UserEntity saveUserDetails(HttpServletRequest request,UserRequest user);
 	public UserEmpEntity saveUserEmpEntity(UserEmpEntity userEmpEntity);
 	
 	public UserEntity checkUserDetails(String userName);

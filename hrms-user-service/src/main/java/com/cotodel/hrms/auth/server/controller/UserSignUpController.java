@@ -3,12 +3,12 @@ package com.cotodel.hrms.auth.server.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +46,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
  */
 @RestController
 @RequestMapping("/Api")
-public class UserSignUpController {
+public class UserSignUpController extends CotoDelBaseController{
 	
 
 	
@@ -72,16 +72,19 @@ public class UserSignUpController {
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				System.out.println("companyId:signup::"+companyId);
 				responseToken=userService.userExist(userReq.getMobile(), userReq.getEmail());
 				if(!responseToken.equalsIgnoreCase("")) {
 					return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 				}else {
-	    	    userEntity=	userService.saveUserDetails(userReq);
+	    	    userEntity=	userService.saveUserDetails(request,userReq);
 	    		
-	    	    if(userEntity!=null) {	    
+	    	    if(userEntity!=null && userEntity.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {	    
 	    		 userService.sendEmailToEmployee(userReq);
 
 	    		 return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    }else {
+	    	    	return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,userEntity.getResponse(),userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	    	    }
 			}
 	    	}catch (Exception e) {
@@ -490,7 +493,7 @@ public class UserSignUpController {
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				list=userService.getUsersListWithRole(userRoleRequest.getOrgId(),userRoleRequest.getMobile());
-				System.out.println(list);
+				//System.out.println(list);
 				if(list!=null && list.size()>0) {
 					return ResponseEntity.ok(new UserRoleResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 				}else {
