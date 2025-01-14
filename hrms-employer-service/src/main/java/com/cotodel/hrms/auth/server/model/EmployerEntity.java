@@ -1,6 +1,7 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Access;
@@ -123,9 +124,9 @@ public class EmployerEntity implements Serializable{
 	@Column(name="payroll_enabled_flag")
 	private boolean payrollEnabledFlag=false;
 	
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	//@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@Column(name="paid_date")
-	private Date paidDate;
+	private LocalDate paidDate;
     
 	@Column(name="run_payroll_flag")
 	private boolean runPayrollFlag=false;

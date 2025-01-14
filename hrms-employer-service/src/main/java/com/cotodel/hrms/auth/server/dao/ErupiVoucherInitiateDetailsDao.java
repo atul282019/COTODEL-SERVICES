@@ -19,4 +19,5 @@ public interface ErupiVoucherInitiateDetailsDao {
 	public List<Object[]> getVoucherCreateBankNameList(Long orgid);
 	public List<Object[]> getVoucherCreateSummaryWithAccNo(Long orgid,String accNumber);
 	public ErupiVoucherCreatedDto getVoucherCreationById(Long id);
+	public List<ErupiVoucherCreatedDto> getVoucherCreationListById(Long orgID,Long id);
 }

@@ -183,11 +183,11 @@ public class EmployeeProfileController {
 	    @RequestMapping(value = "/get/getCompaneyAddress",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getCompaneyAddress(HttpServletRequest request,@Valid @RequestBody EmployeeProfileRequest employeeProfileRequest) {
-	    logger.info("inside getEmpComplete.....+++");	    	
+	    logger.info("inside getCompaneyAddress.....+++");	    	
 	    	
 	    
 	    	String message = "";
-	    	EmployeeProfileAddress response=null;
+	    	List<EmployeeProfileAddress> response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
@@ -200,7 +200,7 @@ public class EmployeeProfileController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in getEmpComplete====="+e);
+	    		logger.error("error in getCompaneyAddress====="+e);
 	    		//message=e.getMessage();
 			}
 	        

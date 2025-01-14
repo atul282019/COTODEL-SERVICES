@@ -30,4 +30,6 @@ public class MessageConstant {
 	public static final String DETAIL_ID = "Worang detail id.";
 	public static final String DUP_PAN = "PanCard already exist.";
 	public static final String PAYEEVPA = "Payee VPA not blank.";
+	public static final String ORGNULL = "Organization cannot be null.";
+	public static final String ORGZERO = "Organization ID must be greater than or equal to 1.";
 }

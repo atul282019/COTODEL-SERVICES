@@ -99,7 +99,7 @@ public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 				
 				EmployeeProfileEntity employeeProfileEntity = new EmployeeProfileEntity();
 				employeeProfileEntity = employeeProfileDao.getEmplDetails(employee.getEmployerId());
-				employeeProfileEntity.setProfileComplete(3);
+				employeeProfileEntity.setProfileComplete(6);
 				employeeProfileDao.saveDetails(employeeProfileEntity);
 				
 				response = MessageConstant.RESPONSE_SUCCESS;

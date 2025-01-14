@@ -3,22 +3,28 @@ package com.cotodel.hrms.auth.server.service.impl;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
 import com.cotodel.hrms.auth.server.dao.EmployerDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileAddress;
 import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
+import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
 import com.cotodel.hrms.auth.server.model.EmployerEntity;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.EmployeeProfileService;
+import com.cotodel.hrms.auth.server.util.CommonUtility;
+import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 
@@ -36,6 +42,8 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	@Autowired
 	EmployeeProfileDao  emplProfileDao;
 	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
 	
 //	@Override
 //	public EmployeeProfileRequest saveProfileDetails(EmployeeProfileRequest user) {
@@ -77,10 +85,23 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
 			user.setResponse(response);
-		
+			 if (user.getEmployerId() == null) {
+				 response=MessageConstant.ORGNULL;
+					user.setResponse(response);
+					return user;
+		        }
+		        if (user.getEmployerId() < 1) {
+		        	response=MessageConstant.ORGZERO;
+					user.setResponse(response);
+					return user;
+		        }
+			
 		EmployeeProfileEntity employeeProfileEntity=new EmployeeProfileEntity();
 		CopyUtility.copyProperties(user,employeeProfileEntity);
-		employeeProfileEntity.setProfileComplete(2);
+		employeeProfileEntity.setProfileComplete(5);
+		employeeProfileEntity.setPayrollEnabledFlag(user.isPayrollEnabledFlag());
+		employeeProfileEntity.setRunPayrollFlag(user.isRunPayrollFlag());
+		employeeProfileEntity.setSalaryAdvancesFlag(user.isSalaryAdvancesFlag());
 		employeeProfileEntity=emplProfileDao.saveDetails(employeeProfileEntity);
 		
 //		SignUpEntity signUpEntity=new SignUpEntity();
@@ -167,13 +188,13 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		employer.setPayrollEnabledFlag(user.isPayrollEnabledFlag());
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println(user.getPaidDate());
-		Date date=null;
-		try {
-			date=formatter.parse(user.getPaidDate());
-		} catch (Exception e) {
-			
-		}
-		employer.setPaidDate(date);
+//		Date date=null;
+//		try {
+//			date=formatter.parse(user.getPaidDate());
+//		} catch (Exception e) {
+//			
+//		}
+		employer.setPaidDate(user.getPaidDate());
 		employer.setRunPayrollFlag(user.isRunPayrollFlag());
 		employer.setSalaryAdvancesFlag(user.isSalaryAdvancesFlag());       
 	return employer;
@@ -188,26 +209,63 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	@Override
 	public EmployeeProfileEntity getEmpProfile( Long employerid) {
 		// TODO Auto-generated method stub
-		return emplProfileDao.getEmplDetails( employerid);
+		EmployeeProfileEntity employeeProfileEntity=new EmployeeProfileEntity();
+		try {
+			employeeProfileEntity=emplProfileDao.getEmplDetails(employerid);
+			if(employeeProfileEntity==null) {
+				String response1="";
+				String tokenvalue="";
+				TokenGeneration token=new TokenGeneration();
+				UserRequest userRequest=new UserRequest();
+				userRequest.setId(employerid);
+				tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
+				 response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+						applicationConstantConfig.userServiceApiUrl+CommonUtils.existOrgid);
+				if (!ObjectUtils.isEmpty(response1)) {
+					JSONObject demoRes = new JSONObject(response1);
+					boolean status = demoRes.getBoolean("status");
+					if (status) {
+						
+						if (demoRes.has("userEntity")) {
+							JSONObject userEntity = demoRes.getJSONObject("userEntity");
+							int role=userEntity.getInt("role_id");
+							if(role==1) {
+								employeeProfileEntity=new EmployeeProfileEntity();
+								employeeProfileEntity.setProfileComplete(1);
+							}
+						}						
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return employeeProfileEntity;
+		
 	}
 
 	@Override
-	public EmployeeProfileAddress getCompProfileAddress(Long empid) {
+	public List<EmployeeProfileAddress> getCompProfileAddress(Long empid) {
 		// TODO Auto-generated method stub
+		List<EmployeeProfileAddress> list=new ArrayList<>();
 		EmployeeProfileAddress employeeProfileAddresses=new EmployeeProfileAddress();
+		EmployeeProfileAddress employeeProfileAddresses1=new EmployeeProfileAddress();
 		List<Object[]> addresses= emplProfileDao.getCompAddress(empid);
 		for (Object[] objects : addresses) {
 			 Long id = ((BigInteger) objects[0]).longValue();			           
-	         String address = (String) objects[1]; 
-	         String pin = (String) objects[2]; 
-	         String officeAddress=address+"-"+pin;
+	         String addressline = (String) objects[1]; 
+	         String officeaddres = (String) objects[2]; 
+	         
 	         employeeProfileAddresses.setId(id);
-	         employeeProfileAddresses.setOfficeAddress(officeAddress);
+	         employeeProfileAddresses.setOfficeAddress(addressline);
+	         list.add(employeeProfileAddresses);
+	         employeeProfileAddresses1.setId(id);
+	         employeeProfileAddresses1.setOfficeAddress(officeaddres);
+	         list.add(employeeProfileAddresses1);
 		}
 		
-		return employeeProfileAddresses;
+		return list;
 	}
-	
-	
 	
 }

@@ -17,7 +17,7 @@ public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile
 	@Query("select s  from EmployeeProfileEntity s where  s.employerId = ?1")
 	  public EmployeeProfileEntity findEmployeeId(Long employerId);
 	
-	@Query(value = "select s.id,s.office_address,s.pin_code  from employee_profile s where  s.employer_id = ?1", nativeQuery = true)
+	@Query(value = "select s.id,address_line,s.office_address  from employee_profile s where  s.employer_id = ?1", nativeQuery = true)
 	public List<Object[]> findEmployerAddress(Long employerId);
 	
 	

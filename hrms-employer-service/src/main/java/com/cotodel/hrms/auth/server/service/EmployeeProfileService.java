@@ -13,5 +13,5 @@ public interface EmployeeProfileService {
 	
 	public List<EmployeeProfileEntity>  getEmpProfileList(Long empid);
 	public EmployeeProfileEntity  getEmpProfile(Long employerid);
-	public EmployeeProfileAddress  getCompProfileAddress(Long empid);
+	public List<EmployeeProfileAddress>  getCompProfileAddress(Long empid);
 }

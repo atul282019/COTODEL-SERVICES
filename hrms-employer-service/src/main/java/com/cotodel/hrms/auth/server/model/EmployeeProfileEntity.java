@@ -67,18 +67,24 @@ public class EmployeeProfileEntity implements Serializable{
 	private String stateCode;
    
 	@Column(name="payroll_enabled_flag")
-	private boolean payrollEnabledFlag=false;
+	private boolean payrollEnabledFlag;
 	
 	@Column(name="paid_date")
 	private LocalDate paidDate;
     
 	@Column(name="run_payroll_flag")
-	private boolean runPayrollFlag=false;
+	private boolean runPayrollFlag;
     
 	@Column(name="salary_advances_flag")
-	private boolean salaryAdvancesFlag=false;
+	private boolean salaryAdvancesFlag;
 	
 	@Column(name="profile_complete")
 	private int profileComplete;
+	
+	@Column(name="organization_type")
+	private String organizationType;
+	
+	@Column(name="org_sub_type")
+	private String orgsubType;
 }
 
