@@ -19,7 +19,7 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Logger name="com.gov.nha.bis" additivity="false">
+		<Logger name="com.cotodel.hrms.auth" additivity="false">
 			<AppenderRef ref="ManageWebInfo" />
 			<AppenderRef ref="Console" />
 		</Logger>
