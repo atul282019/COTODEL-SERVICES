@@ -119,7 +119,7 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 				Date date = new Date();
 				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				userDetails.setCreated_date(localDate);
-				if(user.isERupiStatus()) {
+				if(user.isErupistatus()) {
 					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
 				}else {
 					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
@@ -524,7 +524,7 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 			if(user.isEmailStatus()) {
 				CommonUtility.sendEmail(user);
 			}
-			response=MessageConstant.PROFILE_SUCCESS;
+			response=MessageConstant.RESPONSE_SUCCESS;
 			
 			UserEntity1.setResponse(response);
 		} catch (DataIntegrityViolationException e) {
