@@ -112,7 +112,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			userRequest.setUsername(request.getName());
 			userRequest.setMobile(request.getMobile());
 			userRequest.setEmail(request.getEmail());
-			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
+			userRequest.setEmployerid(request.getOrgId()==null?0:request.getOrgId().intValue());
 			userRequest.setUpdateStatus(request.isUpdateStatus());
 			userRequest.setUpdateStatus(request.isEmailStatus());
 			
@@ -132,9 +132,11 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 					request.setResponse(response);
 					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
 					CopyUtility.copyProperties(request, employeeOnboarding);
+					employeeOnboarding.setName(request.getUsername());
+					employeeOnboarding.setEmployerId(request.getOrgId());
 					employeeOnboarding.setUserDetailsId(id);
 					employeeOnboarding.setMode(2l);
-					String empCode=getEmpCode(request.getEmployerId());
+					String empCode=getEmpCode(request.getOrgId());
 					employeeOnboarding.setEmpCode(empCode);
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					response = MessageConstant.RESPONSE_SUCCESS;
@@ -146,6 +148,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			response = MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);
 		}

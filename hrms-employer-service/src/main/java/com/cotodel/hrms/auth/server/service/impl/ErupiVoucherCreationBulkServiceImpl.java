@@ -15,6 +15,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -208,14 +209,14 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 	public List<ErupiVoucherCreateDetailsRequest> createErupiVoucherBulkFile(
 			ErupiVoucherBulkVoucherCreateRequest request) {
 		VoucherBulkUploadSuccessEntity voEntity=new VoucherBulkUploadSuccessEntity();
-		ErupiVoucherCreateDetailsRequest erRequest=new ErupiVoucherCreateDetailsRequest();
+		
 		List<ErupiVoucherCreateDetailsRequest> erupiList=new ArrayList<ErupiVoucherCreateDetailsRequest>();
 		try {
 	        List<String> idList = Arrays.asList(request.getArrayofid());
 	        
 			for (String id : idList) {
-				
-			Long idValue=Long.valueOf(id);
+				ErupiVoucherCreateDetailsRequest erRequest=new ErupiVoucherCreateDetailsRequest();	
+				Long idValue=Long.valueOf(id);
 			
 			voEntity=erupiVoucherBulkDao.findSuccessDetails(idValue);
 			if(voEntity!=null) {
@@ -455,6 +456,9 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 			int failCount = 0;
 			while (rowIterator.hasNext()) {
 				Row row = rowIterator.next();
+				 if (isRowEmpty(row)) {
+				        break; // Exit the while loop if the row is blank
+				    }
 				if (isHeaderRow) {
 					// Process the header row
 					String benName = row.getCell(1).getStringCellValue();
@@ -505,6 +509,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					if (mob) {
 						String username ="";
 						UserRequest userRequest = new UserRequest();
+						userRequest.setMobile(mobile);
 						TokenGeneration token = new TokenGeneration();
 						String tokenvalue = token
 								.getToken(applicationConstantConfig.authTokenApiUrl + CommonUtils.getToken);
@@ -580,6 +585,14 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		return bulkupload;
 	}
 	
-	
+	private boolean isRowEmpty(Row row) {
+	    for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
+	        Cell cell = row.getCell(i);
+	        if (cell != null && !cell.toString().trim().isEmpty()) {
+	            return false; // Row is not empty if at least one cell has content
+	        }
+	    }
+	    return true; // Row is empty
+	}
 
 }

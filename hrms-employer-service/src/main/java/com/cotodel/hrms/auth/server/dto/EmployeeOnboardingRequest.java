@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
 public class EmployeeOnboardingRequest implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
-	private Long employerId;
+    private Long employerId;
+	private Long orgId;
 	private String empOrCont;
 	private String name;
 	private String email;
@@ -33,5 +34,7 @@ public class EmployeeOnboardingRequest implements Serializable {
 	private String managerLbl;
 	private Long jobTitleId;    
 	private String response;
+	private String username;
+	
 	
 }

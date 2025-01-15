@@ -10,7 +10,7 @@ import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 public interface EmployeeOnboardingRepository extends JpaRepository<EmployeeOnboardingEntity, Long>{
 	
 	
-	@Query("select s  from EmployeeOnboardingEntity s where s.employerId = ?1 and s.status='0'")
+	@Query("select s  from EmployeeOnboardingEntity s where s.employerId = ?1 ")
 	public List<EmployeeOnboardingEntity> findByOnboardingList(Long emplid);
 	
 	@Query("select s  from EmployeeOnboardingEntity s where s.mobile = ?1")

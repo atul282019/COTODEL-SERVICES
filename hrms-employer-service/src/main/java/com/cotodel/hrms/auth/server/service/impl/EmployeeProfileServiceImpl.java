@@ -229,7 +229,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 						if (demoRes.has("userEntity")) {
 							JSONObject userEntity = demoRes.getJSONObject("userEntity");
 							int role=userEntity.getInt("role_id");
-							if(role==1) {
+							if(role==1 || role==9) {
 								employeeProfileEntity=new EmployeeProfileEntity();
 								employeeProfileEntity.setProfileComplete(1);
 							}
@@ -250,19 +250,20 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		// TODO Auto-generated method stub
 		List<EmployeeProfileAddress> list=new ArrayList<>();
 		EmployeeProfileAddress employeeProfileAddresses=new EmployeeProfileAddress();
-		EmployeeProfileAddress employeeProfileAddresses1=new EmployeeProfileAddress();
+		//EmployeeProfileAddress employeeProfileAddresses1=new EmployeeProfileAddress();
 		List<Object[]> addresses= emplProfileDao.getCompAddress(empid);
 		for (Object[] objects : addresses) {
 			 Long id = ((BigInteger) objects[0]).longValue();			           
 	         String addressline = (String) objects[1]; 
 	         String officeaddres = (String) objects[2]; 
 	         
+	        // employeeProfileAddresses.setId(id);
+	        // employeeProfileAddresses.setOfficeAddress(addressline);
+	         String address=officeaddres+"-"+addressline;
+	        // list.add(employeeProfileAddresses);
 	         employeeProfileAddresses.setId(id);
-	         employeeProfileAddresses.setOfficeAddress(addressline);
+	         employeeProfileAddresses.setOfficeAddress(address);
 	         list.add(employeeProfileAddresses);
-	         employeeProfileAddresses1.setId(id);
-	         employeeProfileAddresses1.setOfficeAddress(officeaddres);
-	         list.add(employeeProfileAddresses1);
 		}
 		
 		return list;
