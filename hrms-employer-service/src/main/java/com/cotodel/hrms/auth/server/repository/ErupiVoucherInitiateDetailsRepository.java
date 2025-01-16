@@ -57,11 +57,16 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 	public List<Object[]> getVoucherCreateSummary(@Param("orgId") Long orgId);
 	
 	
-	@Query(value = "SELECT COUNT(1) AS record_count,SUM(a.amount) AS total_amount,b.workflowid,(SELECT w.type "
-			+ "FROM hrms1.workflowmaster w WHERE w.workflowid = b.workflowid) AS type,CASE WHEN a.expdate < CURRENT_DATE THEN 'expire' "
-			+ "ELSE 'active' END AS status FROM hrms1.erupi_voucher_creation_details a JOIN "
-			+ "hrms1.erupi_voucher_txn_details b ON a.id_pk = b.details_id "
-			+ "WHERE a.org_id =:orgId and b.workflowid!=100004 GROUP BY b.workflowid,status", nativeQuery = true)
+//	@Query(value = "SELECT COUNT(1) AS record_count,SUM(a.amount) AS total_amount,b.workflowid,(SELECT w.type "
+//			+ "FROM hrms1.workflowmaster w WHERE w.workflowid = b.workflowid) AS type,CASE WHEN a.expdate < CURRENT_DATE THEN 'Expire' "
+//			+ "ELSE CASE WHEN a.workflowid=100003 THEN 'Active' ELSE 'InActive' END  status FROM hrms1.erupi_voucher_creation_details a JOIN "
+//			+ "hrms1.erupi_voucher_txn_details b ON a.id_pk = b.details_id "
+//			+ "WHERE a.org_id =:orgId and b.workflowid!=100004 GROUP BY b.workflowid,status", nativeQuery = true)
+	@Query(value = "SELECT COUNT(1) AS record_count,SUM(a.amount) AS total_amount,a.workflowid,(SELECT w.type FROM hrms1.workflowmaster w "
+			+ " WHERE w.workflowid = a.workflowid LIMIT 1 ) AS type,CASE WHEN a.expdate < CURRENT_DATE THEN 'Expire' "
+			+ " ELSE CASE WHEN a.workflowid = 100003 THEN 'Active' ELSE 'InActive' END END AS status "
+			+ " FROM hrms1.erupi_voucher_creation_details a WHERE a.org_id =:orgId AND a.workflowid != 100004 "
+			+ " GROUP BY a.workflowid, status", nativeQuery = true)
 	public List<Object[]> getVoucherCreateStatus(@Param("orgId") Long orgId);	
 	
 	@Query("select s  from ErupiVoucherCreationDetailsEntity s where s.merchanttxnid = ?1")

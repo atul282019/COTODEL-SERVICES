@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cotodel.hrms.auth.server.dao.ExpenseReimbursementDao;
+import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDto;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementRequest;
 import com.cotodel.hrms.auth.server.model.ExpenseReimbursementEntity;
 import com.cotodel.hrms.auth.server.repository.UploadSequenceRepository;
@@ -189,4 +190,30 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 		}
 		return message;
 	}
+
+	@Override
+	public List<ExpenseReimbursementDto> getExpenseReimbFileByEmpAndEmprId(Long employerId, Long employeeId) {
+		List<ExpenseReimbursementDto> list=new ArrayList<ExpenseReimbursementDto>();
+		List<ExpenseReimbursementDto> list1=new ArrayList<ExpenseReimbursementDto>();
+		try {
+			if(employerId>0) {
+				list=expenseReimbursementDao.getExpenseReimListByEmplrId(employerId);
+			}else {
+				list=expenseReimbursementDao.getExpenseReimListByEmpId(employeeId);
+			}
+			
+			for (ExpenseReimbursementDto expenseReimbursementDto:list) {
+				ExpenseReimbursementEntity expenseReimbursementEntity=new ExpenseReimbursementEntity();
+				
+				//String message=getMessage(expenseReimbursementDto.getStatus());
+				
+				//expenseReimbursementEntity.setStatusMessage(message);
+				list1.add(expenseReimbursementDto);
+			}
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		return list1;
+	}
+	
 }

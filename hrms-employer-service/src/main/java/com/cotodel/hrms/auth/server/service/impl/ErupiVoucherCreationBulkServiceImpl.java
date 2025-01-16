@@ -17,6 +17,7 @@ import javax.persistence.Query;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -471,28 +472,76 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 				} else {
 					// Process data row
 					totalCount++;
-					String voucherType = row.getCell(1).getStringCellValue();
-					String benName = row.getCell(2).getStringCellValue();
+					String voucherType = "";
+					if (row.getCell(1) != null) {
+					    voucherType = row.getCell(1).getStringCellValue();
+					}
+					//String voucherType = row.getCell(1).getStringCellValue();
+					//String benName = row.getCell(2).getStringCellValue();
+					String benName = "";
+					if (row.getCell(2) != null) {
+					    benName = row.getCell(2).getStringCellValue();
+					}
+//					String mobile = "";
+//					if (row.getCell(3).getCellType() == CellType.STRING) {
+//						mobile = row.getCell(3).getStringCellValue();
+//					} else {
+//						mobile = String.valueOf((long) row.getCell(3).getNumericCellValue());
+//					}
 					String mobile = "";
-					if (row.getCell(3).getCellType() == CellType.STRING) {
-						mobile = row.getCell(3).getStringCellValue();
-					} else {
-						mobile = String.valueOf((long) row.getCell(3).getNumericCellValue());
+					if (row.getCell(3) != null) {
+					    if (row.getCell(3).getCellType() == CellType.STRING) {
+					        mobile = row.getCell(3).getStringCellValue();
+					    } else if (row.getCell(3).getCellType() == CellType.NUMERIC) {
+					        mobile = String.valueOf((long) row.getCell(3).getNumericCellValue());
+					    }
 					}
 					String amount = "";
-					if (row.getCell(4).getCellType() == CellType.STRING) {
-						amount = row.getCell(4).getStringCellValue();
-					} else {
-						amount = String.valueOf(row.getCell(4).getNumericCellValue());
+					if (row.getCell(4) != null) {
+					    if (row.getCell(4).getCellType() == CellType.STRING) {
+					        amount = row.getCell(4).getStringCellValue();
+					    } else if (row.getCell(4).getCellType() == CellType.NUMERIC) {
+					        amount = String.valueOf(row.getCell(4).getNumericCellValue());
+					    }
 					}
-					Date starDate = row.getCell(5).getDateCellValue();
-					LocalDate stDate = CommonUtility.convertToLocalDate(starDate);
+//					String amount = "";
+//					if (row.getCell(4).getCellType() == CellType.STRING) {
+//						amount = row.getCell(4).getStringCellValue();
+//					} else {
+//						amount = String.valueOf(row.getCell(4).getNumericCellValue());
+//					}
+					//Date starDate = row.getCell(5).getDateCellValue();
+					//Date startDate = null;
+//					if (row.getCell(5) != null && row.getCell(5).getCellType() == CellType.DATE) {
+//					    startDate = row.getCell(5).getDateCellValue();
+//					}
+					
+					Date startDate = null;
+					if (row.getCell(5) != null && row.getCell(5).getCellType() == CellType.NUMERIC) {
+					    // Check if the cell contains a date
+					    if (DateUtil.isCellDateFormatted(row.getCell(5))) {
+					        startDate = row.getCell(5).getDateCellValue(); // Get the date value
+					    }
+					}
+					LocalDate stDate = null;
+					if (startDate != null) {
+					    stDate = CommonUtility.convertToLocalDate(startDate);
+					}
+
+					String validity = "";
+					if (row.getCell(6) != null) {
+					    validity = row.getCell(6).getStringCellValue();
+					}
+					//LocalDate stDate = CommonUtility.convertToLocalDate(startDate);
 					//String validity=
-					String validity = row.getCell(6).getStringCellValue();
+					//String validity = row.getCell(6).getStringCellValue();
 					String[] daysArray=validity.split(" ");
 					Long days=Long.valueOf(daysArray[0]);
-					
-					LocalDate etDate =stDate.plusDays(days); //CommonUtility.convertToLocalDate(endDate);
+					LocalDate etDate = null;
+					if (stDate != null) {
+					    etDate = stDate.plusDays(days);  // Add the days to the start date
+					}
+					//LocalDate etDate =stDate.plusDays(days); //CommonUtility.convertToLocalDate(endDate);
 					//System.out.println(etDate);
 
 					boolean mob = CommonUtility.isValid(mobile);
@@ -500,11 +549,16 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					
 					boolean amountValid = CommonUtility.isValidAmount(amount);
 					boolean expDateValid = CommonUtility.checkDate(etDate.toString());
+					boolean startDateValid = CommonUtility.checkStartDate(stDate.toString());
+					
 					String message = "";
-					message = mob == false ? "Invalid Mobile " : "";
-					// message=message==""?""
-					message += name == false ? "Invalid name" : "";
-					message += expDateValid == false ? "Invalid Date" : "";
+					message = mob == false ? "Invalid Mobile ," : "";
+					//message=message==""?""
+					message += name == false ? " Invalid name ," : "";
+					message += startDateValid == false ? " Invalid Start Date ," : "";
+					message += expDateValid == false ? " Invalid exp Date ," : "";
+					message += amountValid == false ? " Invalid Amount min 10.0," : "";
+					
 					boolean empexit =false;
 					if (mob) {
 						String username ="";
@@ -523,8 +577,10 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 								//String username ="";
 								if (demoRes.has("userEntity")) {
 									JSONObject userEntity = demoRes.getJSONObject("userEntity");
-									username = userEntity.getString("username");
+									if (userEntity != null && userEntity.has("username")) {
+									username = userEntity.optString("username", null);
 									empexit=true;
+									}
 								}
 							}
 						}

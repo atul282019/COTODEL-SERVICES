@@ -147,18 +147,30 @@ public class CommonUtility {
 	        }
 	        return fileName.substring(lastIndexOfDot + 1);
 	    }
+//		public static boolean isValidName(String name) {
+//	        if (name == null || name.trim().isEmpty()) {
+//	            return false;
+//	        }
+//
+//	        // Updated regular expression to allow spaces, apostrophes, and hyphens
+//	        String regex = "^[A-Za-z]+([\\s'-][A-Za-z]+)*$";  // Allows alphabets, spaces, apostrophes, hyphens
+//	        Pattern pattern = Pattern.compile(regex);
+//	        Matcher matcher = pattern.matcher(name);
+//
+//	        return matcher.matches();  // Returns true if the name matches the pattern
+//	    }
 		public static boolean isValidName(String name) {
-	        if (name == null || name.trim().isEmpty()) {
-	            return false;
-	        }
+		    if (name == null || name.trim().isEmpty()) {
+		        return false;
+		    }
 
-	        // Updated regular expression to allow spaces, apostrophes, and hyphens
-	        String regex = "^[A-Za-z]+([\\s'-][A-Za-z]+)*$";  // Allows alphabets, spaces, apostrophes, hyphens
-	        Pattern pattern = Pattern.compile(regex);
-	        Matcher matcher = pattern.matcher(name);
+		    // Regular expression that allows only alphabets and spaces
+		    String regex = "^[A-Za-z]+(\\s[A-Za-z]+)*$";
+		    Pattern pattern = Pattern.compile(regex);
+		    Matcher matcher = pattern.matcher(name);
 
-	        return matcher.matches();  // Returns true if the name matches the pattern
-	    }
+		    return matcher.matches();  // Returns true if the name matches the pattern
+		}
 		public static String generateUniqueFileName(String filename,Long orgId,String ext) {
 	        // Get the current date and time
 	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
@@ -188,7 +200,7 @@ public class CommonUtility {
 			boolean result=false;
 			try {
 				BigDecimal amountDeci = new BigDecimal(amount);
-				result=amountDeci.compareTo(BigDecimal.ZERO) > 0;
+				result=amountDeci.compareTo(BigDecimal.TEN) > 0;
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -206,6 +218,27 @@ public class CommonUtility {
 			    LocalDate oneYearLater = currentDate.plusYears(1);
 			    
 				if (target.isAfter(dateAfterTwoDays) && target.isBefore(oneYearLater)) {
+					result=true;
+				} else {
+					result=false;
+				}
+				
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return result;
+			}
+		public static  boolean checkStartDate(String startDate) {
+			boolean result=false;
+				try {			
+					if (startDate == null || startDate.equalsIgnoreCase("")) {
+			            return false;
+			        }
+			    LocalDate target = LocalDate.parse(startDate);
+			    LocalDate currentDate = LocalDate.now();
+			    LocalDate oneYearLater = currentDate.plusYears(1);
+			    
+				if (!target.isBefore(currentDate)) {
 					result=true;
 				} else {
 					result=false;

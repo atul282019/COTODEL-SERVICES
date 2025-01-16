@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDto;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementRequest;
 import com.cotodel.hrms.auth.server.model.ExpenseReimbursementEntity;
 @Service
@@ -16,4 +17,5 @@ public interface ExpenseReimbursementService {
 	public List<ExpenseReimbursementEntity>  getExpenseReimbFileByEmpID(Long employeeId);
 	public ExpenseReimbursementRequest  getExpenseReimbursementFileDelete(ExpenseReimbursementRequest request);
 	public ExpenseReimbursementEntity  saveExpenseReimbursementFileUploadSubmit(ExpenseReimbursementRequest request);
+	public List<ExpenseReimbursementDto>  getExpenseReimbFileByEmpAndEmprId(Long employerId,Long employeeId);
 }
