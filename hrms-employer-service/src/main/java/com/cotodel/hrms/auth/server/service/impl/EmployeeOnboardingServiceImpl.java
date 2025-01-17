@@ -109,7 +109,8 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		UserRequest userRequest=new UserRequest();
 		try {
 			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
-			userRequest.setUsername(request.getName());
+			String name=request.getName()==null?request.getUsername():request.getName();
+			userRequest.setUsername(name);
 			userRequest.setMobile(request.getMobile());
 			userRequest.setEmail(request.getEmail());
 			userRequest.setEmployerid(request.getOrgId()==null?0:request.getOrgId().intValue());

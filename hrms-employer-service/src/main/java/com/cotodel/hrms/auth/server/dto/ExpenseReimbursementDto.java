@@ -19,4 +19,10 @@ public class ExpenseReimbursementDto implements Serializable{
 	private String depratment;
 	private String amount;
 	private LocalDate createationDate;
+	private String modeOfPayment;
+	private String expenseTitle;
+	private long status;
+	private String statusMessage;
+	private String approvedBy;
+	private byte[] file;
 }

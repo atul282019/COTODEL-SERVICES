@@ -34,5 +34,10 @@ public class ApplicationConstantConfig {
 	@Value("${voucher.service.api.url}")
 	public String voucherServiceApiUrl;
 	
+	@Value("${voucher.creation.min.amount}")
+	public String voucherCreationMinAmount;
+	
+	@Value("${voucher.creation.max.amount}")
+	public String voucherCreationMaxAmount;
 	
 }

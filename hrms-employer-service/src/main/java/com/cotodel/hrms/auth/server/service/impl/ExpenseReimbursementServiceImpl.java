@@ -205,15 +205,27 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			for (ExpenseReimbursementDto expenseReimbursementDto:list) {
 				ExpenseReimbursementEntity expenseReimbursementEntity=new ExpenseReimbursementEntity();
 				
-				//String message=getMessage(expenseReimbursementDto.getStatus());
-				
-				//expenseReimbursementEntity.setStatusMessage(message);
+				String message=getMessage(expenseReimbursementDto.getStatus());
+				String approvedBy=expenseReimbursementDto.getApprovedBy()==null?"Pending":expenseReimbursementDto.getApprovedBy();
+				expenseReimbursementDto.setStatusMessage(message);
+				expenseReimbursementDto.setApprovedBy(approvedBy);
 				list1.add(expenseReimbursementDto);
 			}
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
 		return list1;
+	}
+
+	@Override
+	public ExpenseReimbursementDto getExpenseReimbFileById(Long id) {
+		// TODO Auto-generated method stub
+		ExpenseReimbursementDto expenseReimbursementDto=expenseReimbursementDao.getExpenseReimById(id);
+		String message=getMessage(expenseReimbursementDto.getStatus());
+		String approvedBy=expenseReimbursementDto.getApprovedBy()==null?"Pending":expenseReimbursementDto.getApprovedBy();
+		expenseReimbursementDto.setStatusMessage(message);
+		expenseReimbursementDto.setApprovedBy(approvedBy);
+		return expenseReimbursementDto;
 	}
 	
 }

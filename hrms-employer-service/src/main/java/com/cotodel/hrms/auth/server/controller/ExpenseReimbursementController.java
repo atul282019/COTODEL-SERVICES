@@ -19,6 +19,7 @@ import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementByIdResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDeleteByIdResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDto;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDtoByEmpIdListResponse;
+import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDtoByIdResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementRequest;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
@@ -231,7 +232,7 @@ public class ExpenseReimbursementController {
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> expenseReimbFileByEmpId(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseTravelAdvanceRequest) {
 		 
-	    logger.info("inside expenseReimbFileDownloadByEmpID+++");	    	
+	    logger.info("inside expenseReimbFileByEmpId+++");	    	
 	    	
 	    	String message = "";
 	    	List<ExpenseReimbursementDto> response=null;
@@ -247,10 +248,43 @@ public class ExpenseReimbursementController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in expenseReimbursementFileDownload====="+e);
+	    		logger.error("error in expenseReimbFileByEmpId====="+e);
 	    		//message=e.getMessage();
 			}
 	        
 	        return ResponseEntity.ok(new ExpenseReimbursementDtoByEmpIdListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/expenseReimbFileById",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> expenseReimbFileById(HttpServletRequest request,@Valid @RequestBody ExpenseReimbursementRequest expenseTravelAdvanceRequest) {
+		 
+	    logger.info("inside expenseReimbFileById+++");	    	
+	    	
+	    	String message = "";
+	    	ExpenseReimbursementDto response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=expenseReimbursementService.getExpenseReimbFileById(expenseTravelAdvanceRequest.getId());
+	    		if(response!=null) {
+	    			return ResponseEntity.ok(new ExpenseReimbursementDtoByIdResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new ExpenseReimbursementDtoByIdResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		logger.error("error in expenseReimbFileById====="+e);
+	    		//message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new ExpenseReimbursementDtoByIdResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
 }

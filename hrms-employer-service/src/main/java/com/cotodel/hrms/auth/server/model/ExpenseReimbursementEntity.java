@@ -90,4 +90,20 @@ public class ExpenseReimbursementEntity  implements Serializable{
 	
 	@Transient
 	private String statusMessage;
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@Column(name="updated_date")
+	private LocalDate updatedDate;
+	
+	@Column(name="updated_by")
+	private String updatedBy;
+	
+	@Column(name="approved_date")
+	private LocalDate approvedDate;
+	
+	@Column(name="approved_by")
+	private String approvedBy;
+	
 }

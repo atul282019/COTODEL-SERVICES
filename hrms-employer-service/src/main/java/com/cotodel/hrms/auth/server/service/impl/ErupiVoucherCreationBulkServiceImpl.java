@@ -145,7 +145,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					boolean mob = CommonUtility.isValid(mobile);
 					boolean name = CommonUtility.isValidName(benName);
 					
-					boolean amountValid = CommonUtility.isValidAmount(amount);
+					boolean amountValid = CommonUtility.isValidAmount(amount,applicationConstantConfig.voucherCreationMinAmount,applicationConstantConfig.voucherCreationMaxAmount);
 					boolean expDateValid = CommonUtility.checkDate(etDate.toString());
 					String message = "";
 					message = mob == false ? "Invalid Mobile " : "";
@@ -547,7 +547,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					boolean mob = CommonUtility.isValid(mobile);
 					boolean name = CommonUtility.isValidName(benName);
 					
-					boolean amountValid = CommonUtility.isValidAmount(amount);
+					boolean amountValid = CommonUtility.isValidAmount(amount,applicationConstantConfig.voucherCreationMinAmount,applicationConstantConfig.voucherCreationMaxAmount);
 					boolean expDateValid = CommonUtility.checkDate(etDate.toString());
 					boolean startDateValid = CommonUtility.checkStartDate(stDate.toString());
 					
@@ -557,7 +557,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					message += name == false ? " Invalid name ," : "";
 					message += startDateValid == false ? " Invalid Start Date ," : "";
 					message += expDateValid == false ? " Invalid exp Date ," : "";
-					message += amountValid == false ? " Invalid Amount min 10.0," : "";
+					message += amountValid == false ? " Amount should be between "+applicationConstantConfig.voucherCreationMinAmount+" and "+applicationConstantConfig.voucherCreationMaxAmount+".,"  : "";
 					
 					boolean empexit =false;
 					if (mob) {
@@ -587,7 +587,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 						//check
 						message += empexit == false ? "User does not exist" : "";
 					}
-					if (mob && name && amountValid && expDateValid && empexit) {		
+					if (mob && name && amountValid && startDateValid && expDateValid && empexit) {		
 						
 						saveSuccess(request,voucherBulkUploadEntity.getId(),uniqueFileName,voucherType,
 								benName,mobile,amount,stDate,etDate,orgId,voucherId,createdBy);

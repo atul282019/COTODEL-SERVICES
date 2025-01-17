@@ -18,4 +18,5 @@ public interface ExpenseReimbursementService {
 	public ExpenseReimbursementRequest  getExpenseReimbursementFileDelete(ExpenseReimbursementRequest request);
 	public ExpenseReimbursementEntity  saveExpenseReimbursementFileUploadSubmit(ExpenseReimbursementRequest request);
 	public List<ExpenseReimbursementDto>  getExpenseReimbFileByEmpAndEmprId(Long employerId,Long employeeId);
+	public ExpenseReimbursementDto  getExpenseReimbFileById(Long id);
 }

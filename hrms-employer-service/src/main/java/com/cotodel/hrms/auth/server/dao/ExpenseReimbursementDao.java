@@ -13,4 +13,5 @@ public interface ExpenseReimbursementDao {
 	
 	public List<ExpenseReimbursementDto> getExpenseReimListByEmpId(Long employeeId);
 	public List<ExpenseReimbursementDto> getExpenseReimListByEmplrId(Long employerId);
+	public ExpenseReimbursementDto getExpenseReimById(Long Id);
 }

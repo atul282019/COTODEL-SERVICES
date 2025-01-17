@@ -195,18 +195,33 @@ public class CommonUtility {
 	        return fileName;
 	    }
 		
-		public static boolean isValidAmount(String amount) {
-	        // Ensure it's positive
-			boolean result=false;
-			try {
-				BigDecimal amountDeci = new BigDecimal(amount);
-				result=amountDeci.compareTo(BigDecimal.TEN) > 0;
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-			
-	        return result;
-	    }
+//		public static boolean isValidAmount(String amount) {
+//	        // Ensure it's positive
+//			boolean result=false;
+//			try {
+//				BigDecimal amountDeci = new BigDecimal(amount);
+//				result=amountDeci.compareTo(BigDecimal.TEN) > 0;
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//			}
+//			
+//	        return result;
+//	    }
+		public static boolean isValidAmount(String amount,String minAmount,String maxAmount) {
+		    boolean result = false;
+		    try {
+		        BigDecimal amountDeci = new BigDecimal(amount);
+		        BigDecimal amountMin = new BigDecimal(minAmount);
+		        BigDecimal amountMax = new BigDecimal(maxAmount);
+		        // Check if amount is between 1 and 10,000 inclusive
+		        result = amountDeci.compareTo(amountMin) >= 0 && amountDeci.compareTo(amountMax) <= 0;
+		    } catch (Exception e) {
+		        // Optionally log or handle the exception here
+		        // e.g., System.out.println("Invalid amount: " + e.getMessage());
+		    }
+		    
+		    return result;
+		}
 		
 		public static  boolean checkDate(String targetDate) {
 			boolean result=false;
