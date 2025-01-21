@@ -3,12 +3,13 @@ package com.cotodel.hrms.auth.server.dto;
 import java.time.LocalDateTime;
 
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
+import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 import com.cotodel.hrms.auth.server.util.AccountType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@NoSqlKeywords
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

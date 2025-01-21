@@ -2,18 +2,17 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
 import com.cotodel.hrms.auth.server.model.master.MccMasterEntity;
+import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@NoSqlKeywords
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -2,17 +2,13 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
-import com.cotodel.hrms.auth.server.model.WorkFlowMasterEntity;
+import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@NoSqlKeywords
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
