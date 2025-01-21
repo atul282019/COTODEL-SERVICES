@@ -55,4 +55,5 @@ public interface UserService {
 	public List<UserManagerDto> searchUsersWithOutMobile(int  orgId,String userName);
 	//public List<ExistUserResponse> saveUsersListWithRole(ExistUserResponse  existUserResponse);
 	//public List<UserDto> getUsersList(Long  orgId,String userName);
+	public UserEntity searchUsersWithMobileAndOrgId(int  orgId,String mobile);
 }

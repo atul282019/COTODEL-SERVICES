@@ -115,6 +115,12 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		// TODO Auto-generated method stub
 		return userRepository.findByUserSearchWithoutMobile(orgId, userName);
 	}
+
+	@Override
+	public UserEntity getUserDetailsByMobileAndOrgId(int orgId, String mobile) {
+		// TODO Auto-generated method stub
+		return userRepository.checkUserMobileAndOrgId(orgId,mobile);
+	}
 	
 	
 	

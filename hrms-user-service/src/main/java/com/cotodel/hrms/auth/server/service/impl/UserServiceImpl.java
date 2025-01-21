@@ -974,4 +974,13 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 		
 	}
 
+
+
+
+	@Override
+	public UserEntity searchUsersWithMobileAndOrgId(int orgId, String mobile) {
+		// TODO Auto-generated method stub
+		return userDetailsDao.getUserDetailsByMobileAndOrgId(orgId, mobile);
+	}
+
 }

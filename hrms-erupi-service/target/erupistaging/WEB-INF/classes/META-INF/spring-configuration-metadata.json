@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "tenants",
+      "type": "com.cotodel.hrms.auth.server.multi.datasource.MultiDbManager",
+      "sourceType": "com.cotodel.hrms.auth.server.multi.datasource.MultiDbManager"
+    }
+  ],
+  "properties": [
+    {
+      "name": "tenants.db-sources",
+      "type": "java.util.Map<java.lang.Object,java.lang.Object>",
+      "sourceType": "com.cotodel.hrms.auth.server.multi.datasource.MultiDbManager"
+    }
+  ],
+  "hints": []
+}

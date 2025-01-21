@@ -33,4 +33,6 @@ public interface UserDetailsDao {
 	public UserEntity checkUserEligible(String mobile);
 	
 	List<UserEntity> getSearchUserWithOutMobile(int orgId, String userName);
+	
+	UserEntity getUserDetailsByMobileAndOrgId(int orgId,String mobile);
 }
