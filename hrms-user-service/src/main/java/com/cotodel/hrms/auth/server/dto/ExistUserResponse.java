@@ -4,14 +4,12 @@ package com.cotodel.hrms.auth.server.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.Transient;
-
-import com.cotodel.hrms.auth.server.entity.UserRoleMapperEntity;
+import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@NoSqlKeywords
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
