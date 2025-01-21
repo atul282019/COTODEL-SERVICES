@@ -3,6 +3,7 @@ package com.cotodel.hrms.auth.server.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintValidatorContext;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.ExpenseReimbursementEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.ExpenseReimbursementService;
+import com.cotodel.hrms.auth.server.sql.NoSqlKeywordsValidator;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -134,7 +136,12 @@ public class ExpenseReimbursementController {
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
-				
+//				NoSqlKeywordsValidator noSqlKeywordsValidator=new NoSqlKeywordsValidator();
+//				ConstraintValidatorContext context=null;
+//				boolean sqlinject= noSqlKeywordsValidator.isValid(expenseTravelAdvanceRequest, context);
+//				if(sqlinject==false) {
+//					return ResponseEntity.ok(new ExpenseReimbursementByIdListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//				}
 				response=expenseReimbursementService.getExpenseReimbFileByEmpID(expenseTravelAdvanceRequest.getEmployeeId());
 	    		if(response!=null && response.size()>0) {
 	    			return ResponseEntity.ok(new ExpenseReimbursementByIdListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
