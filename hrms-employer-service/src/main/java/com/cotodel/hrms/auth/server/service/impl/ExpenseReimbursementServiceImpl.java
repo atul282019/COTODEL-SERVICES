@@ -119,6 +119,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			expenseReimbursementEntity=new ExpenseReimbursementEntity();
 			CopyUtility.copyProperties(request,expenseReimbursementEntity);			
 			expenseReimbursementEntity.setStatus(1l);
+			expenseReimbursementEntity.setWorkFlowId(100013l);
 			Date date = new Date();
 			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			expenseReimbursementEntity.setCreated_date(localDate);
@@ -180,10 +181,13 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			message = "Draft";
 			break;
 		case 1:
-			message = "Submitted";
+			message = "Pending";
 			break;
 		case 2:
-			message = "InProgress";
+			message = "Rejected";
+			break;
+		case 3:
+			message = "Approved";
 			break;
 		default:
 			message = "Draft";
@@ -226,6 +230,53 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 		expenseReimbursementDto.setStatusMessage(message);
 		expenseReimbursementDto.setApprovedBy(approvedBy);
 		return expenseReimbursementDto;
+	}
+
+	@Override
+	public ExpenseReimbursementEntity updateExpenseReimbursementApprover(ExpenseReimbursementRequest request) {
+		String response="";
+		ExpenseReimbursementEntity expenseReimbursementEntity=new ExpenseReimbursementEntity();;
+		try {
+			response = MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+			expenseReimbursementEntity = expenseReimbursementDao.getExpenseDetails(request.getId());
+			if (expenseReimbursementEntity != null) {
+
+				// CopyUtility.copyProperties(request,expenseReimbursementEntity);
+				String remarks = "";
+				if(request.getApprovedOrRejected() != null) {
+					if (request.getApprovedOrRejected().equalsIgnoreCase(MessageConstant.APPROVED)) {
+						expenseReimbursementEntity.setStatus(3l);
+						expenseReimbursementEntity.setWorkFlowId(100014l);
+						//remarks = expenseReimbursementEntity.getRemarks() + "," + request.getRemarks();
+						//expenseReimbursementEntity.setRemarks(remarks);
+					} else {
+	
+						expenseReimbursementEntity.setStatus(2l);
+						expenseReimbursementEntity.setWorkFlowId(100015l);
+						remarks = request.getRejectedRemarks();
+						expenseReimbursementEntity.setRejectedRemarks(remarks);
+					}
+				}
+				Date date = new Date();
+				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				expenseReimbursementEntity.setUpdatedDate(localDate);
+				expenseReimbursementEntity.setApprovedDate(localDate);
+				expenseReimbursementEntity.setApprovedBy(request.getUsername());
+				expenseReimbursementEntity = expenseReimbursementDao.saveDetails(expenseReimbursementEntity);
+				response = MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			} else {
+				response = MessageConstant.RESPONSE_FAILED;
+				request.setResponse(response);
+			}
+		} catch (Exception e) {
+			//e.printStackTrace();
+			// TODO: handle exception
+			response=MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+		}
+		return expenseReimbursementEntity;
 	}
 	
 }

@@ -16,22 +16,26 @@ public interface ExpenseReimbursementRepository extends JpaRepository<ExpenseRei
 	  public List<ExpenseReimbursementEntity> findByEmployeeId(Long emplid);
 	
 	@Query("select new com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDto(a.id,a.sequenceId,a.expenseCategory,"
-			+ "CONCAT(b.name,'|',b.userDetailsId,'|',b.jobTitle) as name, b.depratment,CONCAT(a.currency,' ',a.amount) as amount,"
-			+ "a.created_date,a.modeOfPayment,a.expenseTitle,a.status,'',a.approvedBy,a.file) "
+			+ "CONCAT(b.name,'|',b.userDetailsId,'|',b.jobTitle) as name, b.depratment,a.amount,a.currency,"
+			+ "a.created_date,a.modeOfPayment,a.expenseTitle,a.status,'',a.approvedBy,a.fileType,a.invoiceNumber,a.vendorName,a.remarks"
+			+ ",a.file) "
 			+ "from ExpenseReimbursementEntity a join EmployeeOnboardingEntity b on a.employeeId=b.userDetailsId "
 			+ " and a.employeeId=:employeeId   order by a.created_date desc ")
+
 	public List<ExpenseReimbursementDto> findExpenseReimByEmpId(@Param("employeeId") Long employeeId);
 	
 	@Query("select new com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDto(a.id,a.sequenceId,a.expenseCategory,"
-			+ "CONCAT(b.name,'|',b.userDetailsId,'|',b.jobTitle) as name, b.depratment,CONCAT(a.currency,' ',a.amount) as amount,"
-			+ "a.created_date,a.modeOfPayment,a.expenseTitle,a.status,'',a.approvedBy,a.file) "
+			+ "CONCAT(b.name,'|',b.userDetailsId,'|',b.jobTitle) as name, b.depratment,a.amount,a.currency,"
+			+ "a.created_date,a.modeOfPayment,a.expenseTitle,a.status,'',a.approvedBy,a.fileType,a.invoiceNumber,a.vendorName,a.remarks"
+			+ ",a.file) "
 			+ "from ExpenseReimbursementEntity a join EmployeeOnboardingEntity b on a.employeeId=b.userDetailsId "
 			+ " and a.employerId=:employerId   order by a.created_date desc ")
 	public List<ExpenseReimbursementDto> findExpenseReimByEmplrId(@Param("employerId") Long employerId);
 	
 	@Query("select new com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDto(a.id,a.sequenceId,a.expenseCategory,"
-			+ "CONCAT(b.name,'|',b.userDetailsId,'|',b.jobTitle) as name, b.depratment,CONCAT(a.currency,' ',a.amount) as amount,"
-			+ "a.created_date,a.modeOfPayment,a.expenseTitle,a.status,'',a.approvedBy,a.file) "
+			+ "CONCAT(b.name,'|',b.userDetailsId,'|',b.jobTitle) as name, b.depratment,a.amount,a.currency,"
+			+ "a.created_date,a.modeOfPayment,a.expenseTitle,a.status,'',a.approvedBy,a.fileType,a.invoiceNumber,a.vendorName,a.remarks"
+			+ ",a.file) "
 			+ "from ExpenseReimbursementEntity a join EmployeeOnboardingEntity b on a.employeeId=b.userDetailsId "
 			+ " and a.id=:Id   order by a.created_date desc ")
 	public ExpenseReimbursementDto findExpenseReimById(@Param("Id") Long Id);

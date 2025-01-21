@@ -69,5 +69,7 @@ public class EmployeePayrollEntity  implements Serializable{
     private String perLta ;
 	@Column(name="taxable_lta")
     private String taxableLta;
-    private Integer status; 
+    private Integer status;
+    @Column(name="director_payroll_flag")
+	private boolean directorPayrollFlag;
 }

@@ -25,73 +25,54 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="employee_onboarding")
+@Table(name="director_onboarding")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="employee_onboarding_seq" , sequenceName="employee_onboarding_seq", allocationSize=1)
-public class EmployeeOnboardingEntity  implements Serializable{
+@SequenceGenerator(name="director_onboarding_seq" , sequenceName="director_onboarding_seq", allocationSize=1)
+public class DirectorOnboardingEntity  implements Serializable{
 	
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="employee_onboarding_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="director_onboarding_seq")
 	@Column(name="id")
-	private Long id;	
+	private Long id;
+	
 	@Column(name="employer_id")
 	private Long employerId;
-	@Column(name="emp_or_cont")
-	private String empOrCont;
+	
 	@Column(name="name")
 	private String name;
+	
 	@Column(name="email")
 	private String email;
+	
 	@Column(name="mobile")
 	private String mobile;
+	
 	@Column(name="her_date")
 	private LocalDate herDate;
-	@Column(name="job_title")
-	private String jobTitle;
-	@Column(name="depratment")
-	private String depratment;
-	@Column(name="manager_name")
-	private String managerName;
+	
 	@Column(name="ctc")
 	private String ctc;
+	
 	@Column(name="status")
 	private int status;
-	@Column(name="user_details_id")
-	private Long userDetailsId;
-	@Column(name="mode")
-	private Long mode;
-	@Column(name="location")
-	private String location;
-	@Column(name="resident_of_india")
-	private String residentOfIndia;	
+	
+	@Column(name="employee_payroll_id")
+	private Long employeePayrollId;	
+
+	@Column(name="address")
+	private String address;
+
 	@CreationTimestamp
 	@Column(name="creation_date")
 	private Date creationDate;
+	
 	@Column(name="proof_of_identity")
 	private String proofOfIdentity;
+	
 	@Column(name="pan")
 	private String pan;
-	@Column(name="bank_account_number")
-    private String bankAccountNumber;
-	@Column(name="ifsc_code")
-    private String ifscCode;
-	@Column(name="beneficiary_name")
-    private String beneficiaryName;
-	
-	@Column(name="manager_id")
-	private Long managerId;
-	
-	@Column(name="manager_lbl")
-	private String managerLbl;
-	
-	@Column(name="job_title_id")
-	private Long jobTitleId;
-	
-	@Column(name="emp_code")
-	private String empCode;
-	
-	//change
+
 }

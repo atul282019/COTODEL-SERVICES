@@ -106,4 +106,9 @@ public class ExpenseReimbursementEntity  implements Serializable{
 	@Column(name="approved_by")
 	private String approvedBy;
 	
+	@Column(name="rejected_remarks")
+	private String rejectedRemarks;
+	
+	@Column(name="workflowid")
+	private Long workFlowId;
 }

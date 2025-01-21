@@ -32,4 +32,5 @@ public class MessageConstant {
 	public static final String PAYEEVPA = "Payee VPA not blank.";
 	public static final String ORGNULL = "Organization cannot be null.";
 	public static final String ORGZERO = "Organization ID must be greater than or equal to 1.";
+	public static final String APPROVED = "Approved";	
 }
