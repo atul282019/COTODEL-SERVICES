@@ -26,6 +26,7 @@ public class ExpenseReimbursementRequest {
 	private String invoiceNumber;	 
 	private String currency;
 	private String amount;
+	private String approvedAmount;
 	private String modeOfPayment;	
 	private String remarks;
 	private String response;

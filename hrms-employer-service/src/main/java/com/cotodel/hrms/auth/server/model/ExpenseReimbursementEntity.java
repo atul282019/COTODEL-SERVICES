@@ -82,6 +82,9 @@ public class ExpenseReimbursementEntity  implements Serializable{
 	@Column(name="amount")
 	private String amount;	
 	
+	@Column(name="approved_amount")
+	private String approvedAmount;
+	
 	@Column(name="mode_of_payment")
 	private String modeOfPayment;
 	

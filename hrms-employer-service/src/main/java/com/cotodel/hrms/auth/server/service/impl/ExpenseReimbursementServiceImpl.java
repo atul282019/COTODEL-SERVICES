@@ -248,6 +248,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 					if (request.getApprovedOrRejected().equalsIgnoreCase(MessageConstant.APPROVED)) {
 						expenseReimbursementEntity.setStatus(3l);
 						expenseReimbursementEntity.setWorkFlowId(100014l);
+						expenseReimbursementEntity.setApprovedAmount(request.getApprovedAmount());
 						//remarks = expenseReimbursementEntity.getRemarks() + "," + request.getRemarks();
 						//expenseReimbursementEntity.setRemarks(remarks);
 					} else {
