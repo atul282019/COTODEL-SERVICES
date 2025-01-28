@@ -23,7 +23,9 @@ public class GstApiService {
    
     public String getTaxpayerDetails(String gstin) {
         // Construct the URL
-        String url = "https://apisetu.gov.in/gstn/v2/taxpayers/" + gstin;
+        //String url = "https://apisetu.gov.in/gstn/v2/taxpayers/" + gstin;
+       String url = "https://sandbox.api-setu.in/org-collections/pan-PANCR-ABCDE1234F" ;
+        
         HttpHeaders headers = new HttpHeaders();
         // Set up headers
         try {

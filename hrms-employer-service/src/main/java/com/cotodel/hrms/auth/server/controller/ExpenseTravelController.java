@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -12,13 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelListResponse;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelRequest;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelResponse;
 import com.cotodel.hrms.auth.server.dto.ExpanceTravelAdvance;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceNameListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
-import com.cotodel.hrms.auth.server.model.ExpanceTravelAdvanceEntity;
+import com.cotodel.hrms.auth.server.model.AdvanceRequestSettingEntity;
+import com.cotodel.hrms.auth.server.model.AdvanceTravelRequestEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.service.ExpenseTravelAdvanceService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -89,7 +95,7 @@ public class ExpenseTravelController {
 	    	
 	    
 	    	String message = "";
-	    	ExpanceTravelAdvanceEntity response=null;
+	    	AdvanceRequestSettingEntity response=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
@@ -142,5 +148,107 @@ public class ExpenseTravelController {
 	        
 	        return ResponseEntity.ok(new ExpenseTravelAdvanceNameListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
-
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/advanceTravelRequest",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> advanceTravelRequest(HttpServletRequest request,@Valid @RequestBody AdvanceTravelRequest advanceTravelRequest) {
+		 
+	    logger.info("inside AdvanceTravelRequest+++");	    	
+	    	
+	    
+	    	String message = "";
+	    	AdvanceTravelRequest response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=expenseTravelAdvanceService.saveAdvenceTravelRequestDetails(advanceTravelRequest);
+	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    			return ResponseEntity.ok(new AdvanceTravelResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new AdvanceTravelResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		logger.error("error in advanceTravelRequest====="+e);
+	    		//message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new AdvanceTravelResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/advanceTravelRequest",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> advanceTravelRequestByEmplrId(HttpServletRequest request,@Valid @RequestBody AdvanceTravelRequest advanceTravelRequest) {
+		 
+	    logger.info("inside get/advanceTravelRequest+++");	    	
+	    	
+	    
+	    	String message = "";
+	    	List<AdvanceTravelRequestEntity> response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=expenseTravelAdvanceService.getAdvenceTravelListByEmployerId(advanceTravelRequest.getEmployerId(),advanceTravelRequest.getEmployeeId());
+	    		if(response!=null && response.size()>0) {
+	    			return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		logger.error("error in get/advanceTravelRequest====="+e);
+	    		//message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/advanceTravelRequestById",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> advanceTravelRequestById(HttpServletRequest request,@Valid @RequestBody AdvanceTravelRequest advanceTravelRequest) {
+		 
+	    logger.info("inside get/advanceTravelRequest+++");	    	
+	    	
+	    
+	    	String message = "";
+	    	List<AdvanceTravelRequestEntity> response=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				response=expenseTravelAdvanceService.getAdvenceTravelListByEmployerId(advanceTravelRequest.getEmployerId(),advanceTravelRequest.getEmployeeId());
+	    		if(response!=null && response.size()>0) {
+	    			return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}else {
+	    			return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		logger.error("error in get/advanceTravelRequest====="+e);
+	    		//message=e.getMessage();
+			}
+	        
+	        return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    }
 	}

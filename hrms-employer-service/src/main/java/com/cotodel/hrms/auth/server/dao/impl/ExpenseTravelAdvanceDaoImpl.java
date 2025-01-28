@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ExpenseTravelAdvanceDao;
-import com.cotodel.hrms.auth.server.model.ExpanceTravelAdvanceEntity;
+import com.cotodel.hrms.auth.server.model.AdvanceRequestSettingEntity;
 import com.cotodel.hrms.auth.server.repository.ExpenseTravelAdvanceRepository;
 @Repository
 
@@ -14,12 +14,12 @@ public class ExpenseTravelAdvanceDaoImpl implements ExpenseTravelAdvanceDao{
 	ExpenseTravelAdvanceRepository expenseTravelAdvanceRepository;
 
 	@Override
-	public ExpanceTravelAdvanceEntity saveDetails(ExpanceTravelAdvanceEntity expanceTravelAdvanceEntity) {
-		return expenseTravelAdvanceRepository.saveAndFlush(expanceTravelAdvanceEntity);
+	public AdvanceRequestSettingEntity saveDetails(AdvanceRequestSettingEntity advanceRequestSettingEntity) {
+		return expenseTravelAdvanceRepository.saveAndFlush(advanceRequestSettingEntity);
 	}
 
 	@Override
-	public ExpanceTravelAdvanceEntity findByEmployerId(Long employerId) {
+	public AdvanceRequestSettingEntity findByEmployerId(Long employerId) {
 		
 		return expenseTravelAdvanceRepository.findByEmpoyerId(employerId);
 	}

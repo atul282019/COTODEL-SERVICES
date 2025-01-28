@@ -4,16 +4,19 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dao.AdvanceTravelRequestDao;
 import com.cotodel.hrms.auth.server.dao.ExpenseTravelAdvanceDao;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelRequest;
 import com.cotodel.hrms.auth.server.dto.ExpanceTravelAdvance;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
-import com.cotodel.hrms.auth.server.model.ExpanceTravelAdvanceEntity;
+import com.cotodel.hrms.auth.server.model.AdvanceRequestSettingEntity;
+import com.cotodel.hrms.auth.server.model.AdvanceTravelRequestEntity;
+import com.cotodel.hrms.auth.server.repository.UploadSequenceRepository;
 import com.cotodel.hrms.auth.server.service.ExpenseTravelAdvanceService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -22,20 +25,26 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 
 	@Autowired
 	ExpenseTravelAdvanceDao  expenseTravelAdvanceDao;
+	
+	@Autowired
+	AdvanceTravelRequestDao  advanceTravelRequestDao;
+	
+	@Autowired
+	UploadSequenceRepository uploadSequenceRepository;
 
 	@Override
 	public ExpenseTravelAdvanceRequest saveExpenseTravelAdvenceDetails(ExpenseTravelAdvanceRequest request) {
 		String response="";
-		ExpanceTravelAdvanceEntity employeeBandEntity=null;
-		ExpanceTravelAdvanceEntity employeeBandEntity1=null;
+		AdvanceRequestSettingEntity employeeBandEntity=null;
+		AdvanceRequestSettingEntity employeeBandEntity1=null;
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);	
-			employeeBandEntity=new ExpanceTravelAdvanceEntity();
+			employeeBandEntity=new AdvanceRequestSettingEntity();
 			
 			employeeBandEntity=expenseTravelAdvanceDao.findByEmployerId(request.getEmployerId());
 			if(employeeBandEntity!=null) {
-				employeeBandEntity1=new ExpanceTravelAdvanceEntity();
+				employeeBandEntity1=new AdvanceRequestSettingEntity();
 				CopyUtility.copyProperties(request,employeeBandEntity1);
 				employeeBandEntity1.setStatus(1l);
 				employeeBandEntity1.setId(employeeBandEntity.getId());
@@ -43,11 +52,12 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 				Date date = new Date();
 				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				employeeBandEntity1.setModified_date(localDate);
+				
 				employeeBandEntity1=expenseTravelAdvanceDao.saveDetails(employeeBandEntity1);
 				response=MessageConstant.RESPONSE_SUCCESS;
 				request.setResponse(response);
 			}else {
-				employeeBandEntity=new ExpanceTravelAdvanceEntity();
+				employeeBandEntity=new AdvanceRequestSettingEntity();
 				CopyUtility.copyProperties(request,employeeBandEntity);			
 				employeeBandEntity.setStatus(1l);
 				Date date = new Date();
@@ -68,8 +78,8 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 	}
 
 	@Override
-	public ExpanceTravelAdvanceEntity getExpenseTravelAdvenceDetails(Long employerid) {
-		ExpanceTravelAdvanceEntity expanceTravelAdvanceEntities=null;
+	public AdvanceRequestSettingEntity getExpenseTravelAdvenceDetails(Long employerid) {
+		AdvanceRequestSettingEntity expanceTravelAdvanceEntities=null;
 		String response="";
 		try {
 			expanceTravelAdvanceEntities=expenseTravelAdvanceDao.findByEmployerId(employerid);
@@ -84,7 +94,7 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 
 	@Override
 	public ExpanceTravelAdvance getExpenseTravelAdvence(Long employerid) {
-		ExpanceTravelAdvanceEntity expanceTravelAdvanceEntities=new ExpanceTravelAdvanceEntity();
+		AdvanceRequestSettingEntity expanceTravelAdvanceEntities=new AdvanceRequestSettingEntity();
 		ExpanceTravelAdvance expanceTravelAdvance=new ExpanceTravelAdvance();
 		String response="";
 		List<String> list=new ArrayList<String>();
@@ -107,11 +117,118 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 			//e.printStackTrace();
 		}
 		return expanceTravelAdvance;
-	}	
+	}
+
+	@Override
+	public AdvanceTravelRequest saveAdvenceTravelRequestDetails(AdvanceTravelRequest request) {
+		String response = "";
+		AdvanceTravelRequestEntity advanceTravelRequestEntity = null;
+		try {
+			response = MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+			advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+			CopyUtility.copyProperties(request, advanceTravelRequestEntity);
+			advanceTravelRequestEntity.setStatus(1);
+			advanceTravelRequestEntity.setCreatedDate(LocalDate.now());
+			String sequenceId= sequenceID();
+			advanceTravelRequestEntity.setSequenceId(sequenceId);
+			advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+			response = MessageConstant.RESPONSE_SUCCESS;
+			request.setResponse(response);
+			request.setId(advanceTravelRequestEntity.getId());
+			
+		} catch (Exception e) {
+			response = MessageConstant.RESPONSE_FAILED;
+			// e.printStackTrace();
+			request.setResponse(response);
+		}
+		return request;
+	}
+
+	@Override
+	public List<AdvanceTravelRequestEntity> getAdvenceTravelListByEmployerId(Long employerid,Long employeeId) {
+		List<AdvanceTravelRequestEntity> list=new ArrayList<AdvanceTravelRequestEntity>();
+		try {
+			if(employerid!=null && employerid>0) {
+				list=advanceTravelRequestDao.findByEmployerId(employerid);			
+			}else {
+				list=advanceTravelRequestDao.findByEmployeeId(employeeId);	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public AdvanceTravelRequestEntity getAdvenceTravelListById(Long id) {
+		AdvanceTravelRequestEntity advanceTravelRequestEntity=new AdvanceTravelRequestEntity();
+		try {
+			advanceTravelRequestEntity=advanceTravelRequestDao.findById(id);	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return advanceTravelRequestEntity;
+	}
 	
-	
-	
-	
+	 public Long fetchNextSequenceValue() {
+		    return uploadSequenceRepository.getNextSeriesId();
+		 }
+		
+		public String sequenceID() {
+			
+			String  sequence=String.valueOf(fetchNextSequenceValue());
+			
+			String sequenceValue="";
+			String finalSequenceValue="";
+			
+			if(sequence.length()==1) {
+				sequenceValue="00"+sequence;
+			}else if(sequence.length()==2) {
+				sequenceValue="0"+sequence;
+			}else {
+				sequenceValue=sequence;
+			}
+			
+			finalSequenceValue=monthYear()+"-"+sequenceValue;
+			
+			return finalSequenceValue;
+		}
+
+		public String monthYear() {
+			
+			LocalDate date = LocalDate.now();		
+			String month=String.valueOf(date.getMonthValue());
+			String year=String.valueOf(date.getYear());
+			String str="CDL-";
+			String  monthValue=month.length()==1?"0"+month:month;
+			String  yearValue=year.substring(2,4);
+			
+			return str+monthValue+yearValue;
+		}
+
+		public String getMessage(Long status) {
+
+			int st = status.intValue();		
+			String message = "";		
+			switch (st) {
+			case 0:
+				message = "Draft";
+				break;
+			case 1:
+				message = "Pending";
+				break;
+			case 2:
+				message = "Rejected";
+				break;
+			case 3:
+				message = "Approved";
+				break;
+			default:
+				message = "Draft";
+			}
+			return message;
+		}
 
 	
 }

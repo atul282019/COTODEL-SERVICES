@@ -21,16 +21,16 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="expance_travel_advance")
+@Table(name="advance_request_setting")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="expance_travel_advance_seq" , sequenceName="expance_travel_advance_seq", allocationSize=1)
+@SequenceGenerator(name="advance_request_setting_seq" , sequenceName="advance_request_setting_seq", allocationSize=1)
 
-public class ExpanceTravelAdvanceEntity implements Serializable{
+public class AdvanceRequestSettingEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="expance_travel_advance_seq")	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="advance_request_setting_seq")	
 	@Column(name="id")
 	private Long id;
 	

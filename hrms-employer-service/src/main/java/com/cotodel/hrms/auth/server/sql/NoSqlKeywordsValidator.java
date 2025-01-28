@@ -9,7 +9,7 @@ public class NoSqlKeywordsValidator implements ConstraintValidator<NoSqlKeywords
 
     // List of forbidden SQL keywords
     private static final List<String> FORBIDDEN_KEYWORDS = Arrays.asList(
-            "update", "delete", "drop", "insert", "select", "alter", "union", "script", "exec"
+    		"update", "delete", "drop", "insert", "select", "alter", "union", "table", "script", "exec","create","from","where","join",  "order", "group"
     );
 
     @Override
