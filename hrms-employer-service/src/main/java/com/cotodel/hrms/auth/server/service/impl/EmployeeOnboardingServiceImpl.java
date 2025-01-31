@@ -390,5 +390,17 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
         System.out.println(finalValue);
     	return finalValue;
     }
+
+
+	@Override
+	public List<EmployeeOnboardingEntity> getEmployeeDetailsByManagerId(Long managerId) {
+		List<EmployeeOnboardingEntity> employeeOnboading=new ArrayList<EmployeeOnboardingEntity>();
+		try {
+			employeeOnboading=employeeOnboardingDao.getEmployeeOnboardingManagerId(managerId);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return employeeOnboading;
+	}
 	
 }

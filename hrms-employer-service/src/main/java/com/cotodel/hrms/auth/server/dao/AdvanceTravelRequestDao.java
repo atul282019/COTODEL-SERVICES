@@ -9,4 +9,6 @@ public interface AdvanceTravelRequestDao {
 	public List<AdvanceTravelRequestEntity> findByEmployerId(Long employerId);
 	public List<AdvanceTravelRequestEntity> findByEmployeeId(Long employeeId);
 	public AdvanceTravelRequestEntity findById(Long id);
+	public List<AdvanceTravelRequestEntity> findByEmployerId(Long employerId,int status);
+	public List<AdvanceTravelRequestEntity> findByEmployeeId(Long employeeId,int status);
 }

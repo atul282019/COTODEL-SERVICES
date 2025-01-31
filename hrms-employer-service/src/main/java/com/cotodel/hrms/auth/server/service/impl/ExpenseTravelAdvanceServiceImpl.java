@@ -1,7 +1,10 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,9 +14,12 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.AdvanceTravelRequestDao;
 import com.cotodel.hrms.auth.server.dao.ExpenseTravelAdvanceDao;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelAllRequest;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelCashRequest;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelRequest;
 import com.cotodel.hrms.auth.server.dto.ExpanceTravelAdvance;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
+import com.cotodel.hrms.auth.server.dto.TravelReimbursement;
 import com.cotodel.hrms.auth.server.model.AdvanceRequestSettingEntity;
 import com.cotodel.hrms.auth.server.model.AdvanceTravelRequestEntity;
 import com.cotodel.hrms.auth.server.repository.UploadSequenceRepository;
@@ -118,6 +124,30 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 		}
 		return expanceTravelAdvance;
 	}
+	
+	
+	
+	@Override
+	public AdvanceTravelCashRequest saveAdvenceTravelRequestCashDetails(AdvanceTravelCashRequest request) {
+		// TODO Auto-generated method stub
+		String response ="";
+		try {
+			AdvanceTravelRequestEntity advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+			CopyUtility.copyProperties(request, advanceTravelRequestEntity);
+			advanceTravelRequestEntity.setStatus(1);
+			advanceTravelRequestEntity.setCreatedDate(LocalDateTime.now());
+			String sequenceId= sequenceID();
+			advanceTravelRequestEntity.setSequenceId(sequenceId);
+			advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+			response = MessageConstant.RESPONSE_SUCCESS;
+			request.setResponse(response);
+			request.setId(advanceTravelRequestEntity.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return request;
+	}
 
 	@Override
 	public AdvanceTravelRequest saveAdvenceTravelRequestDetails(AdvanceTravelRequest request) {
@@ -126,17 +156,93 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 		try {
 			response = MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);
-			advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
-			CopyUtility.copyProperties(request, advanceTravelRequestEntity);
-			advanceTravelRequestEntity.setStatus(1);
-			advanceTravelRequestEntity.setCreatedDate(LocalDate.now());
-			String sequenceId= sequenceID();
-			advanceTravelRequestEntity.setSequenceId(sequenceId);
-			advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
-			response = MessageConstant.RESPONSE_SUCCESS;
-			request.setResponse(response);
-			request.setId(advanceTravelRequestEntity.getId());
-			
+			if(request.getRequestType().equalsIgnoreCase("Travel")) {
+				List<TravelReimbursement> travelReimbursement=request.getTravelReimbursement();
+				for (TravelReimbursement travelReimbursement2 : travelReimbursement) {
+					advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+					CopyUtility.copyProperties(travelReimbursement2, advanceTravelRequestEntity);
+					advanceTravelRequestEntity.setEmployeeId(request.getEmployeeId());
+					advanceTravelRequestEntity.setEmployerId(request.getEmployerId());
+					advanceTravelRequestEntity.setRequestType(request.getRequestType());
+					advanceTravelRequestEntity.setCreatedDate(LocalDateTime.now());
+					advanceTravelRequestEntity.setStatus(0);
+					String sequenceId= sequenceID();
+					advanceTravelRequestEntity.setSequenceId(sequenceId);
+					advanceTravelRequestEntity.setStatusRemarks("Draft");
+					advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+				}
+				response = MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			}else if(request.getRequestType().equalsIgnoreCase("Accomodation")) {
+				List<TravelReimbursement> travelReimbursement=request.getTravelReimbursement();
+				for (TravelReimbursement travelReimbursement2 : travelReimbursement) {
+					advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+					CopyUtility.copyProperties(travelReimbursement2, advanceTravelRequestEntity);
+					advanceTravelRequestEntity.setEmployeeId(request.getEmployeeId());
+					advanceTravelRequestEntity.setEmployerId(request.getEmployerId());
+					advanceTravelRequestEntity.setRequestType(request.getRequestType());
+					advanceTravelRequestEntity.setCreatedDate(LocalDateTime.now());
+					advanceTravelRequestEntity.setStatus(0);
+					String sequenceId= sequenceID();
+					advanceTravelRequestEntity.setSequenceId(sequenceId);
+					advanceTravelRequestEntity.setStatusRemarks("Draft");
+					advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+				}
+				response = MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			}else if(request.getRequestType().equalsIgnoreCase("In-City-Cab")) {
+				List<TravelReimbursement> travelReimbursement=request.getTravelReimbursement();
+				for (TravelReimbursement travelReimbursement2 : travelReimbursement) {
+					advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+					CopyUtility.copyProperties(travelReimbursement2, advanceTravelRequestEntity);
+					advanceTravelRequestEntity.setEmployeeId(request.getEmployeeId());
+					advanceTravelRequestEntity.setEmployerId(request.getEmployerId());
+					advanceTravelRequestEntity.setRequestType(request.getRequestType());
+					advanceTravelRequestEntity.setCreatedDate(LocalDateTime.now());
+					advanceTravelRequestEntity.setStatus(0);
+					String sequenceId= sequenceID();
+					advanceTravelRequestEntity.setSequenceId(sequenceId);
+					advanceTravelRequestEntity.setStatusRemarks("Draft");
+					advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+				}
+				response = MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			}else if(request.getRequestType().equalsIgnoreCase("Meal")) {
+				List<TravelReimbursement> travelReimbursement=request.getTravelReimbursement();
+				for (TravelReimbursement travelReimbursement2 : travelReimbursement) {
+					advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+					CopyUtility.copyProperties(travelReimbursement2, advanceTravelRequestEntity);
+					advanceTravelRequestEntity.setEmployeeId(request.getEmployeeId());
+					advanceTravelRequestEntity.setEmployerId(request.getEmployerId());
+					advanceTravelRequestEntity.setRequestType(request.getRequestType());
+					advanceTravelRequestEntity.setCreatedDate(LocalDateTime.now());
+					advanceTravelRequestEntity.setStatus(0);
+					String sequenceId= sequenceID();
+					advanceTravelRequestEntity.setSequenceId(sequenceId);
+					advanceTravelRequestEntity.setStatusRemarks("Draft");
+					advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+				}
+				response = MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			}else if(request.getRequestType().equalsIgnoreCase("Miscellaneous")) {
+				List<TravelReimbursement> travelReimbursement=request.getTravelReimbursement();
+				for (TravelReimbursement travelReimbursement2 : travelReimbursement) {
+					advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+					CopyUtility.copyProperties(travelReimbursement2, advanceTravelRequestEntity);
+					advanceTravelRequestEntity.setEmployeeId(request.getEmployeeId());
+					advanceTravelRequestEntity.setEmployerId(request.getEmployerId());
+					advanceTravelRequestEntity.setRequestType(request.getRequestType());
+					advanceTravelRequestEntity.setCreatedDate(LocalDateTime.now());
+					advanceTravelRequestEntity.setStatus(0);
+					String sequenceId= sequenceID();
+					advanceTravelRequestEntity.setSequenceId(sequenceId);
+					advanceTravelRequestEntity.setStatusRemarks("Draft");
+					advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+				}
+				response = MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			}
+				 
 		} catch (Exception e) {
 			response = MessageConstant.RESPONSE_FAILED;
 			// e.printStackTrace();
@@ -228,6 +334,115 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 				message = "Draft";
 			}
 			return message;
+		}
+
+		@Override
+		public AdvanceTravelAllRequest getAdvenceTravelListByStatus(Long employerid, Long employeeId,
+				int status) {
+			List<AdvanceTravelRequestEntity> list=new ArrayList<AdvanceTravelRequestEntity>();
+			AdvanceTravelAllRequest advanceAllRequest=new AdvanceTravelAllRequest();
+			try {
+				if(employerid!=null && employerid>0) {
+					list=advanceTravelRequestDao.findByEmployerId(employerid,status);			
+				}else {
+					list=advanceTravelRequestDao.findByEmployeeId(employeeId,status);	
+				}
+				 
+				List<TravelReimbursement> travelList=new ArrayList<TravelReimbursement>();
+				List<TravelReimbursement> miscellaneousList=new ArrayList<TravelReimbursement>();
+				List<TravelReimbursement> mealList=new ArrayList<TravelReimbursement>();
+				List<TravelReimbursement> inCityCabList=new ArrayList<TravelReimbursement>();
+				List<TravelReimbursement> accomodationList=new ArrayList<TravelReimbursement>();
+				if(list!=null) {
+					for (AdvanceTravelRequestEntity advanceTravelRequestEntity : list) {
+						if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("Travel")) {
+							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
+							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
+							System.out.println(advanceTravelRequestEntity.getCreatedDate());
+							DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+							DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+							LocalDateTime localDateTime=advanceTravelRequestEntity.getCreatedDate();
+							String formattedDate = localDateTime.format(dateFormatter);
+							System.out.println(formattedDate);
+							String formattedTime = localDateTime.format(timeFormatter);
+							System.out.println(formattedTime);
+							travelReimbursement.setCreatedDate(formattedDate);
+							travelReimbursement.setCreatedTime(formattedTime);
+							travelList.add(travelReimbursement);
+						}else if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("Meal")) {
+							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
+							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
+							System.out.println(advanceTravelRequestEntity.getCreatedDate());
+							DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+							DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+							LocalDateTime localDateTime=advanceTravelRequestEntity.getCreatedDate();
+							String formattedDate = localDateTime.format(dateFormatter);
+							System.out.println(formattedDate);
+							String formattedTime = localDateTime.format(timeFormatter);
+							System.out.println(formattedTime);
+							travelReimbursement.setCreatedDate(formattedDate);
+							travelReimbursement.setCreatedTime(formattedTime);
+							mealList.add(travelReimbursement);
+						}else if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("Miscellaneous")) {
+							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
+							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
+							System.out.println(advanceTravelRequestEntity.getCreatedDate());
+							DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+							DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+							LocalDateTime localDateTime=advanceTravelRequestEntity.getCreatedDate();
+							String formattedDate = localDateTime.format(dateFormatter);
+							System.out.println(formattedDate);
+							String formattedTime = localDateTime.format(timeFormatter);
+							System.out.println(formattedTime);
+							travelReimbursement.setCreatedDate(formattedDate);
+							travelReimbursement.setCreatedTime(formattedTime);
+							miscellaneousList.add(travelReimbursement);
+						}else if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("In-City-Cab")) {
+							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
+							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
+							System.out.println(advanceTravelRequestEntity.getCreatedDate());
+							DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+							DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+							LocalDateTime localDateTime=advanceTravelRequestEntity.getCreatedDate();
+							String formattedDate = localDateTime.format(dateFormatter);
+							System.out.println(formattedDate);
+							String formattedTime = localDateTime.format(timeFormatter);
+							System.out.println(formattedTime);
+							travelReimbursement.setCreatedDate(formattedDate);
+							travelReimbursement.setCreatedTime(formattedTime);
+							inCityCabList.add(travelReimbursement);
+						}else if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("Accomodation")) {
+							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
+							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
+							System.out.println(advanceTravelRequestEntity.getCreatedDate());
+							DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+							DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+							LocalDateTime localDateTime=advanceTravelRequestEntity.getCreatedDate();
+							String formattedDate = localDateTime.format(dateFormatter);
+							System.out.println(formattedDate);
+							String formattedTime = localDateTime.format(timeFormatter);
+							System.out.println(formattedTime);
+							travelReimbursement.setCreatedDate(formattedDate);
+							travelReimbursement.setCreatedTime(formattedTime);
+							accomodationList.add(travelReimbursement);
+						}
+					}
+				}
+				
+				advanceAllRequest.setTravelReimbursement(travelList);
+				advanceAllRequest.setMealReimbursement(mealList);
+				advanceAllRequest.setMiscellaneousReimbursement(miscellaneousList);
+				advanceAllRequest.setInCityCabReimbursement(inCityCabList);
+				advanceAllRequest.setAccomodationReimbursement(accomodationList);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return advanceAllRequest;
 		}
 
 	

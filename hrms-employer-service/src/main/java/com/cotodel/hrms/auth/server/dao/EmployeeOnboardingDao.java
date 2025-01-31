@@ -9,4 +9,5 @@ public interface EmployeeOnboardingDao {
 	public EmployeeOnboardingEntity getEmployeeOnboarding(String mobile);
 	public EmployeeOnboardingEntity getEmployeeOnboardingId(Long id);
 	public List<EmployeeOnboardingEntity> getEmployeeOnboardingList(Long employerId);
+	public List<EmployeeOnboardingEntity> getEmployeeOnboardingManagerId(Long managerId);
 }

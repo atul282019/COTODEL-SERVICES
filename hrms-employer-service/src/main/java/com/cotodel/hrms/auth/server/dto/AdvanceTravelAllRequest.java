@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdvanceTravelRequest {
+public class AdvanceTravelAllRequest {
 	
-	private Long id;
     private Long employerId;
-    private Long employeeId;
-	private String requestType;
-	private int status;
-	private String response;
 	private List<TravelReimbursement> travelReimbursement;
+	private List<TravelReimbursement> mealReimbursement;
+	private List<TravelReimbursement> miscellaneousReimbursement;
+	private List<TravelReimbursement> inCityCabReimbursement;
+	private List<TravelReimbursement> accomodationReimbursement;
+	
 }

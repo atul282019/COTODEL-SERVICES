@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -79,14 +80,14 @@ public class AdvanceTravelRequestEntity implements Serializable{
 	@Column(name="currency")
 	private String currency;
 	
-	@Column(name="amount")
-	private String amount;
+	@Column(name="amount",scale = 2)
+	private Float amount;
 	
-	@Column(name="approved_amount")
-	private String approvedAmount;	
+	@Column(name="approved_amount",scale = 2)
+	private Float approvedAmount;	
 
 	@Column(name="created_date")
-	private LocalDate  createdDate ;	
+	private LocalDateTime  createdDate ;	
 
 	@Column(name="created_by")
 	private String createdBy;	
@@ -109,5 +110,69 @@ public class AdvanceTravelRequestEntity implements Serializable{
 	@Column(name="cash_date")
 	private LocalDate cashDate;
 	
+	@Column(name="travel_sub_type")
+	private String travelSubType;
+	
+	@Column(name="date")
+	private LocalDate date;
+	
+	@Column(name="departure")
+	private String departure;
+	
+	@Column(name="arrival")
+	private String arrival;
+	
+	@Column(name="preferred_time")
+	private String preferredTime;
+	
+	@Column(name="time_preference")
+	private String timePreference;
+	
+	@Column(name="carrier_class")
+	private String carrierClass;
+	
+	@Column(name="payment_mode")
+	private String paymentMode;
+	
+	@Column(name="hotel_details")
+	private String hotelDetails;
+	
+	@Column(name="location")
+	private String location;
+
+	@Column(name="checkout_date")
+	private LocalDate  checkoutDate;
+	
+	@Column(name="checkin_date")
+	private LocalDate  checkinDate;
+	
+	@Column(name="type")
+	private String type;
+	
+	@Column(name="from_location")
+	private String fromLocation;
+	
+	@Column(name="to_location")
+	private String toLocation;
+
+	@Column(name="type_of_meal")
+	private String typeOfMeal;
+	
+	@Column(name="start_date")
+	private LocalDate startDate;
+	
+	@Column(name="number_of_days")
+	private String numberOfDays;
+	
+	@Column(name="approved_status")
+	private int approvedStatus;//0-1-2
+	
+	@Column(name="approved_status_remarks")
+	private String approvedStatusRemarks;//0-for pending,1-approved,2-rejected
+	
+	@Column(name="status_remarks")
+	private String statusRemarks;//-Draft,Submitted
+	
+
 	
 }

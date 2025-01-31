@@ -2,6 +2,8 @@ package com.cotodel.hrms.auth.server.service;
 
 import java.util.List;
 
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelAllRequest;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelCashRequest;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelRequest;
 import com.cotodel.hrms.auth.server.dto.ExpanceTravelAdvance;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
@@ -17,4 +19,6 @@ public interface ExpenseTravelAdvanceService {
 	public AdvanceTravelRequest  saveAdvenceTravelRequestDetails(AdvanceTravelRequest request);
 	public List<AdvanceTravelRequestEntity>  getAdvenceTravelListByEmployerId(Long employerid,Long employeeId);
 	public AdvanceTravelRequestEntity  getAdvenceTravelListById(Long id);
+	public AdvanceTravelAllRequest  getAdvenceTravelListByStatus(Long employerid,Long employeeId,int status);
+	public AdvanceTravelCashRequest  saveAdvenceTravelRequestCashDetails(AdvanceTravelCashRequest request);
 }

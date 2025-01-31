@@ -942,6 +942,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				}
 				//request.setMandateType("04");
 				//request.setPayeeVPA("invaciauat@prepaidicici");
+				request.setType("CREATE");
 				LocalDate stDate =request.getStartDate();
 				String validity = request.getValidity();
 				String[] daysArray=validity.split(" ");

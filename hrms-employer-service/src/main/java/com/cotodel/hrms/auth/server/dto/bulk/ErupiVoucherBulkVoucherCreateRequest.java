@@ -21,7 +21,7 @@ public class ErupiVoucherBulkVoucherCreateRequest {
 	private String mcc;
 	private String type;
 	private String createdby;	
-	private VoucherTypeMasterEntity voucherId;//id_pk of vouchermaster	
+	//private VoucherTypeMasterEntity voucherId;//id_pk of vouchermaster	
 	private String redemtionType;
 	private String payerVA;
 	private String purposeCode;

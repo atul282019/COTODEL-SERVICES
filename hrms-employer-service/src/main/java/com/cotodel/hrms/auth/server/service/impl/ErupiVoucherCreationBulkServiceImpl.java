@@ -420,6 +420,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		try {
 
 			response = MessageConstant.RESPONSE_FAILED;
+			request.setType("CREATE");
 			Long orgId = request.getOrgId();
 			Long voucherId=request.getVoucherId();
 			String filename = request.getFileName();

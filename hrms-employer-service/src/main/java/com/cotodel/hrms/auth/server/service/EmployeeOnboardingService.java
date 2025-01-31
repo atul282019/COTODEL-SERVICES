@@ -15,4 +15,5 @@ public interface EmployeeOnboardingService {
 	public List<EmployeeOnboardingRequest>  confirmBulkEmployeeDetails(List<EmployeeOnboardingRequest>	 request);
 	public List<EmployeeOnboardingRequest>  tryBulkEmployeeDetails(List<EmployeeOnboardingRequest>	 request);
 	public EmployeeOnboardingEntity  getEmployeeDetailsById(Long id);
+	public List<EmployeeOnboardingEntity>  getEmployeeDetailsByManagerId(Long managerId);
 }
