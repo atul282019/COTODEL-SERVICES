@@ -35,6 +35,6 @@ public class EmployeeOnboardingRequest implements Serializable {
 	private Long jobTitleId;    
 	private String response;
 	private String username;
-	
+	private byte[] empPhoto;
 	
 }

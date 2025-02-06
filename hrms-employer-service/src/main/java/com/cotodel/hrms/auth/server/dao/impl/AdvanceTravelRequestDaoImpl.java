@@ -50,5 +50,17 @@ public class AdvanceTravelRequestDaoImpl implements AdvanceTravelRequestDao{
 		// TODO Auto-generated method stub
 		return advanceTravelRequestRepository.findEmployeeId(employeeId,status);
 	}
+
+	@Override
+	public void deleteById(Long id) {
+		// TODO Auto-generated method stub
+		advanceTravelRequestRepository.deleteDetails(id);
+	}
+
+	@Override
+	public List<AdvanceTravelRequestEntity> findApprovalByEmployerId(Long employerId) {
+		// TODO Auto-generated method stub
+		return advanceTravelRequestRepository.findApprovalEmployerId(employerId);
+	}
 	
 }

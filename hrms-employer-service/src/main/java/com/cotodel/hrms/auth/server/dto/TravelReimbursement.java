@@ -16,7 +16,7 @@ public class TravelReimbursement {
 	 private Long employeeId;
     private String mode;
     private String toBeBookedBy;
-    private String date;
+    private LocalDate date;
     private String departure;
     private String arrival;
     private String preferredTime;
@@ -42,4 +42,8 @@ public class TravelReimbursement {
     private String numberOfDays;
     private String requestType;
     private String statusRemarks;
+	private String limitAmount;
+	private String title;
+	private String arrivalPreference;
+	
 }

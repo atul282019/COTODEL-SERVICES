@@ -1,6 +1,5 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,11 +14,14 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.AdvanceTravelRequestDao;
 import com.cotodel.hrms.auth.server.dao.ExpenseTravelAdvanceDao;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelAllRequest;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelAllUpdateRequest;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelCashRequest;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelRequest;
+import com.cotodel.hrms.auth.server.dto.ApprovalTravelReimbursement;
 import com.cotodel.hrms.auth.server.dto.ExpanceTravelAdvance;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
 import com.cotodel.hrms.auth.server.dto.TravelReimbursement;
+import com.cotodel.hrms.auth.server.dto.TravelRequestUpdate;
 import com.cotodel.hrms.auth.server.model.AdvanceRequestSettingEntity;
 import com.cotodel.hrms.auth.server.model.AdvanceTravelRequestEntity;
 import com.cotodel.hrms.auth.server.repository.UploadSequenceRepository;
@@ -135,9 +137,14 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 			AdvanceTravelRequestEntity advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
 			CopyUtility.copyProperties(request, advanceTravelRequestEntity);
 			advanceTravelRequestEntity.setStatus(1);
+			advanceTravelRequestEntity.setStatusRemarks("Submited");
 			advanceTravelRequestEntity.setCreatedDate(LocalDateTime.now());
+			String amt=request.getAmount();
+			Float amount=Float.valueOf(amt);
+			advanceTravelRequestEntity.setAmount(amount);
 			String sequenceId= sequenceID();
 			advanceTravelRequestEntity.setSequenceId(sequenceId);
+			advanceTravelRequestEntity.setPaymentMode(request.getModeOfPayment());
 			advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
 			response = MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
@@ -445,5 +452,228 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 			return advanceAllRequest;
 		}
 
-	
+		@Override
+		public AdvanceTravelAllUpdateRequest updateAdvenceTravelList(AdvanceTravelAllUpdateRequest advanceTravelAllUpdateRequest) {
+			List<AdvanceTravelRequestEntity> list=new ArrayList<AdvanceTravelRequestEntity>();
+			AdvanceTravelAllRequest advanceAllRequest=new AdvanceTravelAllRequest();
+			try {
+								 
+				advanceTravelAllUpdateRequest.setResponse(MessageConstant.RESPONSE_FAILED);
+				TravelRequestUpdate travelRequestUpdate=advanceTravelAllUpdateRequest.getTravelRequestUpdate();
+				List<TravelReimbursement> travelList=travelRequestUpdate.getTravelReimbursement();
+				List<TravelReimbursement> miscellaneousList=travelRequestUpdate.getMiscellaneousReimbursement();
+				List<TravelReimbursement> mealList=travelRequestUpdate.getMealReimbursement();
+				List<TravelReimbursement> inCityCabList=travelRequestUpdate.getInCityCabsReimbursement();
+				List<TravelReimbursement> accomodationList=travelRequestUpdate.getAccommodationReimbursement();
+				if(travelList!=null) {
+					for (TravelReimbursement travelReimbursement : travelList) {
+						AdvanceTravelRequestEntity advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+						advanceTravelRequestEntity=advanceTravelRequestDao.findById(travelReimbursement.getId());
+						if(advanceTravelRequestEntity!=null) {
+							AdvanceTravelRequestEntity advanceTravelRequestEntity1 = new AdvanceTravelRequestEntity();
+							//    private String date;
+							advanceTravelRequestEntity.setMode(travelReimbursement.getMode());
+							advanceTravelRequestEntity.setToBeBookedBy(travelReimbursement.getToBeBookedBy());
+							advanceTravelRequestEntity.setDate(travelReimbursement.getDate());//
+							advanceTravelRequestEntity.setFromLocation(travelReimbursement.getFromLocation());
+							advanceTravelRequestEntity.setToLocation(travelReimbursement.getToLocation());							
+							advanceTravelRequestEntity.setPreferredTime(travelReimbursement.getPreferredTime());
+							advanceTravelRequestEntity.setRemarks(travelReimbursement.getRemarks());
+							Float amount=travelReimbursement.getAmount().floatValue();
+							advanceTravelRequestEntity.setAmount(amount);
+							advanceTravelRequestEntity.setPaymentMode(travelReimbursement.getPaymentMode());							
+							advanceTravelRequestEntity.setCarrierDetails(travelReimbursement.getCarrierDetails());
+							advanceTravelRequestEntity.setCarrierClass(travelReimbursement.getCarrierClass());
+							advanceTravelRequestEntity.setLimitAmount(travelReimbursement.getLimitAmount());
+							advanceTravelRequestEntity.setStatus(1);
+							advanceTravelRequestEntity.setStatusRemarks("Submited");
+							advanceTravelRequestEntity1 = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+						}
+					}
+				}
+				if(miscellaneousList!=null) {
+					for (TravelReimbursement travelReimbursement : miscellaneousList) {
+						AdvanceTravelRequestEntity advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+						advanceTravelRequestEntity=advanceTravelRequestDao.findById(travelReimbursement.getId());
+						if(advanceTravelRequestEntity!=null) {
+							AdvanceTravelRequestEntity advanceTravelRequestEntity1 = new AdvanceTravelRequestEntity();
+				
+							advanceTravelRequestEntity.setToBeBookedBy(travelReimbursement.getToBeBookedBy());
+							advanceTravelRequestEntity.setDate(travelReimbursement.getDate());
+							advanceTravelRequestEntity.setPaymentMode(travelReimbursement.getPaymentMode());
+							advanceTravelRequestEntity.setRemarks(travelReimbursement.getRemarks());
+							Float amount=travelReimbursement.getAmount().floatValue();
+							advanceTravelRequestEntity.setAmount(amount);
+							advanceTravelRequestEntity.setLimitAmount(travelReimbursement.getLimitAmount());
+							advanceTravelRequestEntity.setTitle(travelReimbursement.getTitle());
+						
+							advanceTravelRequestEntity.setStatus(1);
+							advanceTravelRequestEntity.setStatusRemarks("Submited");
+							advanceTravelRequestEntity1 = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+						}
+					}
+				}
+				if(mealList!=null) {
+					for (TravelReimbursement travelReimbursement : mealList) {
+						AdvanceTravelRequestEntity advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+						advanceTravelRequestEntity=advanceTravelRequestDao.findById(travelReimbursement.getId());
+						if(advanceTravelRequestEntity!=null) {
+							AdvanceTravelRequestEntity advanceTravelRequestEntity1 = new AdvanceTravelRequestEntity();							
+							
+							advanceTravelRequestEntity.setDate(travelReimbursement.getDate());
+							advanceTravelRequestEntity.setRemarks(travelReimbursement.getRemarks());
+							advanceTravelRequestEntity.setNumberOfDays(travelReimbursement.getNumberOfDays());
+							advanceTravelRequestEntity.setTypeOfMeal(travelReimbursement.getTypeOfMeal());
+							advanceTravelRequestEntity.setLocation(travelReimbursement.getLocation());
+							advanceTravelRequestEntity.setPaymentMode(travelReimbursement.getPaymentMode());
+							Float amount=travelReimbursement.getAmount().floatValue();
+							advanceTravelRequestEntity.setAmount(amount);
+							advanceTravelRequestEntity.setLimitAmount(travelReimbursement.getLimitAmount());							
+							advanceTravelRequestEntity.setStatus(1);
+							advanceTravelRequestEntity.setStatusRemarks("Submited");
+							advanceTravelRequestEntity1 = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+						}
+					}
+				}
+				if(inCityCabList!=null) {
+					for (TravelReimbursement travelReimbursement : inCityCabList) {
+						AdvanceTravelRequestEntity advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+						advanceTravelRequestEntity=advanceTravelRequestDao.findById(travelReimbursement.getId());
+						if(advanceTravelRequestEntity!=null) {
+							AdvanceTravelRequestEntity advanceTravelRequestEntity1 = new AdvanceTravelRequestEntity();
+
+							advanceTravelRequestEntity.setToBeBookedBy(travelReimbursement.getToBeBookedBy());
+							advanceTravelRequestEntity.setMode(travelReimbursement.getMode());
+							advanceTravelRequestEntity.setDate(travelReimbursement.getDate());							
+							advanceTravelRequestEntity.setPaymentMode(travelReimbursement.getPaymentMode());
+							advanceTravelRequestEntity.setRemarks(travelReimbursement.getRemarks());
+							advanceTravelRequestEntity.setPreferredTime(travelReimbursement.getPreferredTime());
+							advanceTravelRequestEntity.setFromLocation(travelReimbursement.getFromLocation());
+							advanceTravelRequestEntity.setToLocation(travelReimbursement.getToLocation());
+							Float amount=travelReimbursement.getAmount().floatValue();
+							advanceTravelRequestEntity.setAmount(amount);
+							advanceTravelRequestEntity.setLimitAmount(travelReimbursement.getLimitAmount());
+							advanceTravelRequestEntity.setStatus(1);
+							advanceTravelRequestEntity.setStatusRemarks("Submited");
+							advanceTravelRequestEntity1 = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+						}
+					}
+				}
+				if(accomodationList!=null) {
+					for (TravelReimbursement travelReimbursement : accomodationList) {
+						AdvanceTravelRequestEntity advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+						advanceTravelRequestEntity=advanceTravelRequestDao.findById(travelReimbursement.getId());
+						if(advanceTravelRequestEntity!=null) {
+							AdvanceTravelRequestEntity advanceTravelRequestEntity1 = new AdvanceTravelRequestEntity();
+				
+							advanceTravelRequestEntity.setToBeBookedBy(travelReimbursement.getToBeBookedBy());							
+							advanceTravelRequestEntity.setRemarks(travelReimbursement.getRemarks());							
+							advanceTravelRequestEntity.setHotelDetails(travelReimbursement.getHotelDetails());							
+							advanceTravelRequestEntity.setCheckinDate(travelReimbursement.getCheckinDate());
+							advanceTravelRequestEntity.setCheckoutDate(travelReimbursement.getCheckoutDate());							
+							advanceTravelRequestEntity.setType(travelReimbursement.getType());
+							advanceTravelRequestEntity.setLocation(travelReimbursement.getLocation());
+							advanceTravelRequestEntity.setPreferredTime(travelReimbursement.getPreferredTime());
+							advanceTravelRequestEntity.setPaymentMode(travelReimbursement.getPaymentMode());
+							Float amount=travelReimbursement.getAmount().floatValue();
+							advanceTravelRequestEntity.setAmount(amount);
+							advanceTravelRequestEntity.setLimitAmount(travelReimbursement.getLimitAmount());
+							advanceTravelRequestEntity.setStatus(1);
+							advanceTravelRequestEntity.setStatusRemarks("Submited");
+							advanceTravelRequestEntity1 = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+						}
+					}
+				}
+				
+				
+				advanceTravelAllUpdateRequest.setResponse(MessageConstant.RESPONSE_SUCCESS);
+//				advanceAllRequest.setTravelReimbursement(travelList);
+//				advanceAllRequest.setMealReimbursement(mealList);
+//				advanceAllRequest.setMiscellaneousReimbursement(miscellaneousList);
+//				advanceAllRequest.setInCityCabReimbursement(inCityCabList);
+//				advanceAllRequest.setAccomodationReimbursement(accomodationList);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return advanceTravelAllUpdateRequest;
+		}
+
+		@Override
+		public String deleteAdvenceTravelById(Long id) {
+			// TODO Auto-generated method stub
+			advanceTravelRequestDao.deleteById(id);
+			return MessageConstant.RESPONSE_SUCCESS;
+		}
+
+		@Override
+		public List<AdvanceTravelRequestEntity> getAdvenceTravelApprovalEmployerId(Long employerid) {
+			
+			List<AdvanceTravelRequestEntity> list=new ArrayList<AdvanceTravelRequestEntity>();
+			
+			List<AdvanceTravelRequestEntity> listUpdate=new ArrayList<AdvanceTravelRequestEntity>();
+			
+			try {
+				
+				if(employerid!=null && employerid>0) {
+					list=advanceTravelRequestDao.findApprovalByEmployerId(employerid);
+					for (AdvanceTravelRequestEntity advanceTravelRequestEntity : list) {
+						if(advanceTravelRequestEntity.getApprovedStatus()==1) {
+							advanceTravelRequestEntity.setStatusRemarks("Approved");
+						}else if(advanceTravelRequestEntity.getApprovedStatus()==2) {
+							advanceTravelRequestEntity.setStatusRemarks("Rejected");
+						}else {
+							
+						}
+						listUpdate.add(advanceTravelRequestEntity);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return listUpdate;
+		}
+
+		@Override
+		public ApprovalTravelReimbursement ApprovalAdvenceTravel(ApprovalTravelReimbursement approvalTravelReimbursement) {
+			try {
+				approvalTravelReimbursement.setResponse(MessageConstant.RESPONSE_FAILED);
+				AdvanceTravelRequestEntity advanceTravelRequestEntity = new AdvanceTravelRequestEntity();
+				advanceTravelRequestEntity=advanceTravelRequestDao.findById(approvalTravelReimbursement.getId());
+				if(advanceTravelRequestEntity!=null) {
+					advanceTravelRequestEntity.setApprovedStatusRemarks(approvalTravelReimbursement.getApprovalRemarks());
+					advanceTravelRequestEntity.setApprovedBy(approvalTravelReimbursement.getApprovedBy());
+					advanceTravelRequestEntity.setApprovedDate(LocalDate.now());
+					Float approvedAmount=approvalTravelReimbursement.getApprovalAmount().floatValue();
+					advanceTravelRequestEntity.setApprovedAmount(approvedAmount);
+					String approvedOrRejected=approvalTravelReimbursement.getApprovedOrRejected();
+					if(approvedOrRejected.equalsIgnoreCase(approvedOrRejected)) {
+						advanceTravelRequestEntity.setApprovedStatus(1);
+					}else {
+						advanceTravelRequestEntity.setApprovedStatus(2);
+					}
+					advanceTravelRequestEntity = advanceTravelRequestDao.saveDetails(advanceTravelRequestEntity);
+				}
+				approvalTravelReimbursement.setResponse(MessageConstant.RESPONSE_SUCCESS);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return approvalTravelReimbursement;
+		}
+
+		@Override
+		public List<AdvanceTravelRequestEntity> advenceTravelListById(Long id) {
+			AdvanceTravelRequestEntity advanceTravelRequestEntity=new AdvanceTravelRequestEntity();
+			List<AdvanceTravelRequestEntity> list=new ArrayList<AdvanceTravelRequestEntity>();
+			try {
+				advanceTravelRequestEntity=advanceTravelRequestDao.findById(id);
+				
+				list.add(advanceTravelRequestEntity);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return list;
+			
+		}
+		
 }
+

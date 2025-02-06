@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -173,6 +174,13 @@ public class AdvanceTravelRequestEntity implements Serializable{
 	@Column(name="status_remarks")
 	private String statusRemarks;//-Draft,Submitted
 	
-
+	@Column(name="arrival_preference")
+	private String arrivalPreference;//-Draft,Submitted
+	
+	@Column(name="limit_amount")
+	private String limitAmount;//-Draft,Submitted
+	
+	@Column(name="title")
+	private String title;//-Draft,Submitted
 	
 }
