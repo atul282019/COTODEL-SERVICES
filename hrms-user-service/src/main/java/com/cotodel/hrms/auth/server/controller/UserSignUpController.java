@@ -20,6 +20,7 @@ import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserManagerDto;
 import com.cotodel.hrms.auth.server.dto.UserManagerResponse;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
+import com.cotodel.hrms.auth.server.dto.UserRequestEncript;
 import com.cotodel.hrms.auth.server.dto.UserResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleEditListResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleEditResponse;
@@ -29,9 +30,16 @@ import com.cotodel.hrms.auth.server.dto.UserSignUpResponse;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.UserService;
+import com.cotodel.hrms.auth.server.util.CopyUtility;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -54,6 +62,9 @@ public class UserSignUpController extends CotoDelBaseController{
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
+	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {
@@ -63,36 +74,62 @@ public class UserSignUpController extends CotoDelBaseController{
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/saveUserDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> saveUserDetails(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
+	    public ResponseEntity<Object> saveUserDetails(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 	    	logger.info("inside get saveUserDetails+++");
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
+	    	UserSignUpResponse userSignUpResponse=null;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				System.out.println("companyId:signup::"+companyId);
+				UserRequest userReq=new UserRequest();
+				UserRequestEncript userReqEnc=new UserRequestEncript();
+
+	            String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+		        userReqEnc = EncryptionDecriptionUtil.convertFromJson(decript, UserRequestEncript.class);
+		        
+		        CopyUtility.copyProperties(userReqEnc, userReq);
+		        
 				responseToken=userService.userExist(userReq.getMobile(), userReq.getEmail());
 				if(!responseToken.equalsIgnoreCase("")) {
-					return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+					userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+					String jsonEncript = EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+		            EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+		    	    return ResponseEntity.ok(jsonEncriptObject);
 				}else {
 	    	    userEntity=	userService.saveUserDetails(request,userReq);
 	    		
 	    	    if(userEntity!=null && userEntity.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {	    
 	    		 userService.sendEmailToEmployee(userReq);
-
-	    		 return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    		 userSignUpResponse=new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    		 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+		            EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+		    	    return ResponseEntity.ok(jsonEncriptObject);
 	    	    }else {
-	    	    	return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,userEntity.getResponse(),userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,userEntity.getResponse(),userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript = EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+		            EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+		    	    return ResponseEntity.ok(jsonEncriptObject);
 	    	    }
+	    	    
 			}
 	    	}catch (Exception e) {
 				
 	    		e.printStackTrace();
 	    		logger.error("error in saveUserDetails====="+e);
 			}
-	        
-	        return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	 EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+		    	String jsonEncript = EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+	            jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+	    	
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	          
 	        
 	    }
@@ -732,7 +769,18 @@ public class UserSignUpController extends CotoDelBaseController{
 				SetDatabaseTenent.setDataSource(companyId);
 				userEntity=userService.checkUserMobile(userReq.getMobile());
 				
-	    		
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.registerModule(new JavaTimeModule());
+		        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+	            String json = objectMapper.writeValueAsString(userEntity);
+	            EncriptResponse jsonObject=EncryptionDecriptionUtil.encriptResponse(json, applicationConstantConfig.apiSignaturePublicPath);
+
+	            String decript=EncryptionDecriptionUtil.decriptResponse(jsonObject.getEncriptData(), jsonObject.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+		        objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+		        objectMapper.disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+		        userEntity = objectMapper.readValue(decript, UserEntity.class);
+				
 	    	    if(userEntity!=null) {
 	    	    	return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	    	    }else {

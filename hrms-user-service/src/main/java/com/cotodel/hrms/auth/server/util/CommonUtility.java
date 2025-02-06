@@ -1,7 +1,13 @@
 package com.cotodel.hrms.auth.server.util;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -219,5 +225,22 @@ public class CommonUtility {
             return ""; // No extension
         }
         return fileName.substring(lastIndexOfDot + 1);
+    }
+	public static PrivateKey getPrivateKey(String keyPath) throws Exception {
+
+    	String privateKeyPEM = new String(Files.readAllBytes(Paths.get(keyPath)));
+
+        // Remove the first and last lines
+    	privateKeyPEM = privateKeyPEM.replace("-----BEGIN RSA PRIVATE KEY-----\r\n", "");
+        privateKeyPEM = privateKeyPEM.replace("-----END RSA PRIVATE KEY-----", "");
+        privateKeyPEM = privateKeyPEM.replaceAll("\\s", "");
+
+        // Decode the base64 encoded string
+        byte[] keyBytes = Base64.getDecoder().decode(privateKeyPEM);
+
+        // Generate the private key
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return keyFactory.generatePrivate(spec);
     }
 }

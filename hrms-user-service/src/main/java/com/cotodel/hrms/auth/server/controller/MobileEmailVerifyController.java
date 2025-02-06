@@ -293,6 +293,7 @@ public class MobileEmailVerifyController {
 						
 						if(demoRes.has("orderId")) {
 							orderId=demoRes.isNull("orderId")?"": demoRes.getString("orderId");
+							
 							return ResponseEntity.ok(new UserNewOtpResponse(true,MessageConstant.OTP_SENT,orderId,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
 							
 						}else {
@@ -352,6 +353,7 @@ public class MobileEmailVerifyController {
 	    				if(!response.startsWith("{")) {
 	    					if(response.contains("Link expired")) {
 	    						response="Link expired";
+	    						response=null;
 	    						return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));
 	    					}else {
 	    						return ResponseEntity.ok(new UserOtpVerifyResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity));

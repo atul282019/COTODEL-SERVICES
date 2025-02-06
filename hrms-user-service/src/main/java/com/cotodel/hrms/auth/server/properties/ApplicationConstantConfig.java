@@ -55,5 +55,10 @@ public class ApplicationConstantConfig {
 	@Value("${otp.less.sender.client.enable}")
 	public String otpLessSenderClientEnable;
 	
+	@Value("${api.signature.keystore.public.path}")
+	public String apiSignaturePublicPath;
+	
+	@Value("${api.signature.keystore.private.path}")
+	public String apiSignaturePrivatePath;
 	
 }
