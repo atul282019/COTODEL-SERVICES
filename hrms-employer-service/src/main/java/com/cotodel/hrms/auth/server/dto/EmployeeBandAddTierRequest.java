@@ -21,6 +21,7 @@ public class EmployeeBandAddTierRequest {
 	private long status;		
 	private String introAddTierFlag;
 	private long employerId;
+	private String[] listArray;
 	private List<EmployeeBandAddTierEntity> list;
 	private String response;
 }

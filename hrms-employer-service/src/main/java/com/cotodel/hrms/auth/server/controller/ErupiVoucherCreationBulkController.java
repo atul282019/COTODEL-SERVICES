@@ -27,7 +27,10 @@ import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherMasterUploadResponse;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherMasterUploadSFResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherCreationBulkService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -45,6 +48,9 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	
 	@Autowired
 	ErupiVoucherCreationBulkService erupiVoucherCreationBulkService;
+	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
 	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -90,31 +96,46 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/erupiVoucherBulkVoucherCreate",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> erupiVoucherBulkVoucherCreate(HttpServletRequest request,@Valid @RequestBody ErupiVoucherBulkVoucherCreateRequest erCreateRequest) {
+	    public ResponseEntity<Object> erupiVoucherBulkVoucherCreate(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside erupiVoucherBulkVoucherCreate....");	    	
 	    	
 	    
 	    	String message = "";
 	    	List<ErupiVoucherCreateDetailsRequest> response=null;
+	    	ErupiVoucherBulkCreateResponse erupiVoucherBulkCreateResponse;
 	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-	    		
+	    		String companyId = request.getHeader("companyId");	    		
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ErupiVoucherBulkVoucherCreateRequest erCreateRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherBulkVoucherCreateRequest.class);
 				response=erupiVoucherCreationBulkService.createErupiVoucherBulkFile(erCreateRequest);
 	    		
 				if(response!=null) {
-	    			return ResponseEntity.ok(new ErupiVoucherBulkCreateResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+					erupiVoucherBulkCreateResponse=new ErupiVoucherBulkCreateResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkCreateResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new ErupiVoucherBulkCreateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			erupiVoucherBulkCreateResponse=new ErupiVoucherBulkCreateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkCreateResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		logger.error("error in erupiVoucherBulkVoucherCreate====="+e);
 			}
-	        
-	        return ResponseEntity.ok(new ErupiVoucherBulkCreateResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    	
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		erupiVoucherBulkCreateResponse=new ErupiVoucherBulkCreateResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkCreateResponse);
+				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
+    	
 	 }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -126,30 +147,45 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/update/erupiVoucherDelete",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> erupiVoucherDelete(HttpServletRequest request,@Valid @RequestBody ErupiBulkIdRequest erupiBulkRequest) {
+	    public ResponseEntity<Object> erupiVoucherDelete(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside erupiVoucherDelete....");	    	
 	    	
 	    
 	    	String message = "";
 	    	int result=0;
+	    	ErupiVoucherBulkUpdateResponse erupiVoucherBulkUpdateResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ErupiBulkIdRequest erupiBulkRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiBulkIdRequest.class);
 				result=erupiVoucherCreationBulkService.updateErupiVoucherStatus(erupiBulkRequest);
 	    		
 				if(result==1) {
-	    			return ResponseEntity.ok(new ErupiVoucherBulkUpdateResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,result,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+					erupiVoucherBulkUpdateResponse=new ErupiVoucherBulkUpdateResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,result,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkUpdateResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new ErupiVoucherBulkUpdateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,result,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			erupiVoucherBulkUpdateResponse=new ErupiVoucherBulkUpdateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,result,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkUpdateResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		logger.error("error in erupiVoucherBulkVoucherCreate====="+e);
 			}
-	        
-	        return ResponseEntity.ok(new ErupiVoucherBulkUpdateResponse(MessageConstant.FALSE,message,result,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    	
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		erupiVoucherBulkUpdateResponse=new ErupiVoucherBulkUpdateResponse(MessageConstant.FALSE,message,result,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkUpdateResponse);
+				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in erupiVoucherBulkVoucherCreate====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);	    	
 	 }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -195,28 +231,46 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/erupiVoucherBulkVoucherUploadNew",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> erupiVoucherBulkVoucherUploadNew(HttpServletRequest request,@Valid @RequestBody ErupiVoucherBulkUploadRequest erupiBulkUploadRequest) {
+	    public ResponseEntity<Object> erupiVoucherBulkVoucherUploadNew(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside erupiVoucherBulkVoucherUploadNew....");	    	
 	    	
 	    
 	    	String message = "";
 	    	ErupiVoucherBulkUploadSFListResponse response=null;
+	    	ErupiVoucherBulkUploadResponse erupiVoucherBulkUploadResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
-				response=erupiVoucherCreationBulkService.saveErupiVoucherBulkFileNew(erupiBulkUploadRequest);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ErupiVoucherBulkUploadRequest erupiBulkUploadRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherBulkUploadRequest.class);
+				
+	            response=erupiVoucherCreationBulkService.saveErupiVoucherBulkFileNew(erupiBulkUploadRequest);
 	    		
 				if(response!=null) {
-	    			return ResponseEntity.ok(new ErupiVoucherBulkUploadResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+					 erupiVoucherBulkUploadResponse=new ErupiVoucherBulkUploadResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkUploadResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new ErupiVoucherBulkUploadResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			erupiVoucherBulkUploadResponse=new ErupiVoucherBulkUploadResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkUploadResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		logger.error("error in erupiVoucherBulkVoucherUploadNew====="+e);
 			}
-	        
-	        return ResponseEntity.ok(new ErupiVoucherBulkUploadResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		erupiVoucherBulkUploadResponse=new ErupiVoucherBulkUploadResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+				 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkUploadResponse);
+				 jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
 
 public interface ErupiLinkAccountService {
@@ -16,5 +17,5 @@ public interface ErupiLinkAccountService {
 	public ErupiLinkAccountRequest  getErupiPrimaryAccountDetails(Long orgId);
 	public ErupiLinkAccountRequest  updateErupiAccountDisable(ErupiLinkAccountRequest request);
 	public ErupiLinkAccountRequest  updateErupiAccountEnable(ErupiLinkAccountRequest request);
-	public List<ErupiLinkAccountWithOutResponse>  getErupiAccountListDetailsWithStatus(ErupiLinkAccountRequest request);
+	public List<ErupiLinkAccountWithOutResponse>  getErupiAccountListDetailsWithStatus(ErupiVoucherCreatedRequest request);
 }

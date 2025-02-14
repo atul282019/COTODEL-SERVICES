@@ -22,7 +22,10 @@ import com.cotodel.hrms.auth.server.dto.VoucherTypeMasterResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.VoucherTypeMasterService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -41,6 +44,9 @@ public class VoucherTypeMasterController {
 	
 	@Autowired
 	VoucherTypeMasterService voucherTypeMasterService;	
+	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;	
 	
 	
 	@Operation(summary = "This API will provide the Save User Details ", security = {
@@ -154,29 +160,44 @@ public class VoucherTypeMasterController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @PostMapping(value = "/get/voucherTypeMaster",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"})
-	    public ResponseEntity<Object> voucherTypeMaster(HttpServletRequest request,@Valid @RequestBody VoucherTypeDto voucherTypeDto) {
+	    public ResponseEntity<Object> voucherTypeMaster(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    log.info("inside voucherTypeMaster-------");
 	    	String message = "";
 	    	VoucherTypeMasterEntity response=null;
+	    	VoucherTypeMasterDetailResponse voucherTypeMasterDetailResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
-				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				VoucherTypeDto voucherTypeDto= EncryptionDecriptionUtil.convertFromJson(decript, VoucherTypeDto.class);
 				response=voucherTypeMasterService.getVoucherTypeMasterDetail(voucherTypeDto.getVoucherCode());
 				
 	    		if(response!=null) {
-	    			return ResponseEntity.ok(new VoucherTypeMasterDetailResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			voucherTypeMasterDetailResponse=new VoucherTypeMasterDetailResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(voucherTypeMasterDetailResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new VoucherTypeMasterDetailResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			voucherTypeMasterDetailResponse=new VoucherTypeMasterDetailResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(voucherTypeMasterDetailResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		log.error("error in voucherTypeMaster====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new VoucherTypeMasterDetailResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		voucherTypeMasterDetailResponse=new VoucherTypeMasterDetailResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(voucherTypeMasterDetailResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -220,29 +241,45 @@ public class VoucherTypeMasterController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @PostMapping(value = "/update/voucherTypeMasterStatus",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"})
-	    public ResponseEntity<Object> voucherTypeMasterStatus(HttpServletRequest request,@Valid @RequestBody VoucherTypeMasterRequest voucherTypeMasterRequest) {
+	    public ResponseEntity<Object> voucherTypeMasterStatus(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    log.info("inside voucherTypeMaster-------");
 	    	String message = "";
 	    	VoucherTypeMasterRequest response=null;
+	    	VoucherTypeMasterResponse voucherTypeMasterResponse;
 	    	try {	    		
-	    		String companyId = request.getHeader("4re"
-	    				+ "");
+	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				VoucherTypeMasterRequest voucherTypeMasterRequest= EncryptionDecriptionUtil.convertFromJson(decript, VoucherTypeMasterRequest.class);
 				
 				response=voucherTypeMasterService.updateVoucherTypeMaster(voucherTypeMasterRequest);
 				
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new VoucherTypeMasterResponse(MessageConstant.TRUE,MessageConstant.PROFILE_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			voucherTypeMasterResponse=new VoucherTypeMasterResponse(MessageConstant.TRUE,MessageConstant.PROFILE_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(voucherTypeMasterResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new VoucherTypeMasterResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			voucherTypeMasterResponse=new VoucherTypeMasterResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(voucherTypeMasterResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		log.error("error in voucherTypeMaster====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new VoucherTypeMasterResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		voucherTypeMasterResponse=new VoucherTypeMasterResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(voucherTypeMasterResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	}

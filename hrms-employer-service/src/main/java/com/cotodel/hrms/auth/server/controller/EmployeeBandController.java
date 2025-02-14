@@ -26,7 +26,10 @@ import com.cotodel.hrms.auth.server.dto.EmployeeBandResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.EmployeeBandEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.EmployeeBandService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -45,6 +48,9 @@ public class EmployeeBandController {
 	
 	@Autowired
 	EmployeeBandService employeeBandService;
+	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
 	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -90,30 +96,47 @@ public class EmployeeBandController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/employeeBandAddTier",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> employeeBandAddTier(HttpServletRequest request,@Valid @RequestBody EmployeeBandAddTierRequest empolyeeRequest) {
+	    public ResponseEntity<Object> employeeBandAddTier(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside employeeBandAddTier+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	EmployeeBandAddTierRequest response=null;
+	    	EmployeeBandAddTierResponse employeeBandAddTierResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				EmployeeBandAddTierRequest empolyeeRequest= EncryptionDecriptionUtil.convertFromJson(decript, EmployeeBandAddTierRequest.class);
+				
 				response=employeeBandService.saveEmployeeBandAddTier(empolyeeRequest);
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			employeeBandAddTierResponse=new EmployeeBandAddTierResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeBandAddTierResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);	    			
 	    		}else {
-	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			employeeBandAddTierResponse=new EmployeeBandAddTierResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeBandAddTierResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in employeeBandAddTier====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,message,empolyeeRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		employeeBandAddTierResponse=new EmployeeBandAddTierResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeBandAddTierResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in employeeBandAddTier====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -196,30 +219,47 @@ public class EmployeeBandController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/employeeBandAddTierReview",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> employeeBandAddTierReview(HttpServletRequest request,@Valid @RequestBody EmployeeBandAddTierRequest empolyeeRequest) {
+	    public ResponseEntity<Object> employeeBandAddTierReview(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside employeeBandAddTier+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	EmployeeBandAddTierRequest response=null;
+	    	EmployeeBandAddTierResponse employeeBandAddTierResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				EmployeeBandAddTierRequest empolyeeRequest= EncryptionDecriptionUtil.convertFromJson(decript, EmployeeBandAddTierRequest.class);
+				
 				response=employeeBandService.getEmployeeBandAddTierReview(empolyeeRequest.getEmployerId());
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			employeeBandAddTierResponse=new EmployeeBandAddTierResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeBandAddTierResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			employeeBandAddTierResponse=new EmployeeBandAddTierResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeBandAddTierResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new EmployeeBandAddTierResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		employeeBandAddTierResponse=new EmployeeBandAddTierResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeBandAddTierResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in saveProfileDetails====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -299,30 +339,47 @@ public class EmployeeBandController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/employeeBandName",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> employeeBandName(HttpServletRequest request,@Valid @RequestBody EmployeeBandNameRequest empolyeeRequest) {
+	    public ResponseEntity<Object> employeeBandName(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside employeeBandName+++++");	    	
 	    	
 	    
 	    	String message = "";
 	    	EmployeeBandNameRequest response=null;
+	    	EmployeeBandNameResponse employeeBandNameResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				EmployeeBandNameRequest empolyeeRequest= EncryptionDecriptionUtil.convertFromJson(decript, EmployeeBandNameRequest.class);
 				
 				response=employeeBandService.getEmployeeBandName(empolyeeRequest.getEmployerId());
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new EmployeeBandNameResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			
+	    			employeeBandNameResponse=new EmployeeBandNameResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeBandNameResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new EmployeeBandNameResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			employeeBandNameResponse=new EmployeeBandNameResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeBandNameResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in saveProfileDetails====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new EmployeeBandNameResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		employeeBandNameResponse=new EmployeeBandNameResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeBandNameResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	
 	}

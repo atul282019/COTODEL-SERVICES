@@ -40,4 +40,9 @@ public class ApplicationConstantConfig {
 	@Value("${voucher.creation.max.amount}")
 	public String voucherCreationMaxAmount;
 	
+	@Value("${api.signature.keystore.public.path}")
+	public String apiSignaturePublicPath;
+	
+	@Value("${api.signature.keystore.private.path}")
+	public String apiSignaturePrivatePath;
 }

@@ -33,6 +33,8 @@ public class EmployeeBandAddTierEntity implements Serializable{
 	@Column(name="id")
 	private Long id;	
 		
+	@Column(name="employer_id")
+	private Long employerId;
 	
 	@Column(name="employee_band_id")
 	private Long employeeBandId;

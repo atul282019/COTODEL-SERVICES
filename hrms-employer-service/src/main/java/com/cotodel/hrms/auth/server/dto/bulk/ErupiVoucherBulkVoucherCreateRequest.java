@@ -42,7 +42,9 @@ public class ErupiVoucherBulkVoucherCreateRequest {
 	private String beneficiaryID;
 	private String mandateType;
 	private String payeeVPA;
-	
-	
-	 
+	private String consent;
+	private String otpValidationStatus;
+	private String extra1;
+	private String extra2;
+	private String extra3;	 
 }

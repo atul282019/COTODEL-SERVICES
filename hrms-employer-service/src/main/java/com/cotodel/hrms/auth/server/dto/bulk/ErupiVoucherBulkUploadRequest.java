@@ -42,4 +42,15 @@ public class ErupiVoucherBulkUploadRequest {
 	private Long voucherId;
 	private String MandateType;
 	private String PayeeVPA;
+	private Long id;
+	private Long employerId;
+	private String bankName;
+	private String accountHolderName;
+	private String acNumber;
+	private String ifsc;
+	private String mandateType;
+	private String orgCode;
+	private String tid;
+	private String merchentid;
+	private Long status;
 }

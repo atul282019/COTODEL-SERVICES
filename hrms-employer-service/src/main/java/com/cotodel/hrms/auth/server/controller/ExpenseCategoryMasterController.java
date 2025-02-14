@@ -16,7 +16,10 @@ import com.cotodel.hrms.auth.server.dto.ExpenseCategoryMasterResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.ExpenseCategoryMasterEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ExpenseCategoryMasterService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -36,6 +39,9 @@ public class ExpenseCategoryMasterController {
 	@Autowired
 	ExpenseCategoryMasterService expenseCategoryMasterService;
 	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
+	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {
@@ -51,23 +57,37 @@ public class ExpenseCategoryMasterController {
 	    		    
 	    	String message = "";
 	    	List<ExpenseCategoryMasterEntity> response=null;
+	    	ExpenseCategoryMasterResponse expenseCategoryMasterResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				response=expenseCategoryMasterService.getExpenseCategoryMaster();
 	    		if(response!=null && response.size()>0) {
-	    			return ResponseEntity.ok(new ExpenseCategoryMasterResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			expenseCategoryMasterResponse=new ExpenseCategoryMasterResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseCategoryMasterResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new ExpenseCategoryMasterResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			expenseCategoryMasterResponse=new ExpenseCategoryMasterResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseCategoryMasterResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new ExpenseCategoryMasterResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		expenseCategoryMasterResponse=new ExpenseCategoryMasterResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseCategoryMasterResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 
 	}

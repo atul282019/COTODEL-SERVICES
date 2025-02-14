@@ -25,5 +25,6 @@ public class ExpenseCategoryBandRequest {
 	private Long status;
 	private String expenseLimit;
 	private String response;
-	private List<CategoryEmployeeBandEntity> list;
+	private List<CategoryEmployeeBandEntity> list;	
+	private String[] listArray;
 }

@@ -13,4 +13,7 @@ public class BankMasterStatusRequest {
 	private Long id;
 	private int status;
 	private String response;
+	private String bankName;
+	private String bankCode;
+	private byte[] bankLogo;
 }

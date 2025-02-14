@@ -220,7 +220,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 				userRequest.setId(employerid);
 				tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 				 response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-						applicationConstantConfig.userServiceApiUrl+CommonUtils.existOrgid);
+						applicationConstantConfig.userServiceApiUrl+CommonUtils.existOrgid,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 				if (!ObjectUtils.isEmpty(response1)) {
 					JSONObject demoRes = new JSONObject(response1);
 					boolean status = demoRes.getBoolean("status");

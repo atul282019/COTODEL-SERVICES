@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ErupiVoucherCreatedRequest {
 	private Long orgId;
-	private Long workflowid;
+	private String purposeCode;
 	private String accNumber;
+	private String userName;
 	private String timePeriod;
+	private Long employeeId;
 	private Long id;
 }

@@ -29,7 +29,9 @@ public class UserRequest {
     private String otp;
     private String txnId;
     private int status ;
-    private String response;
     private boolean updateStatus ;
     private boolean emailStatus ;
+    private boolean erupistatus ;
+    private String response;
+    private String captcha;
 }

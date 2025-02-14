@@ -20,6 +20,7 @@ import com.cotodel.hrms.auth.server.dto.AdvanceTravelRequest;
 import com.cotodel.hrms.auth.server.dto.ApprovalTravelReimbursement;
 import com.cotodel.hrms.auth.server.dto.ExpanceTravelAdvance;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
+import com.cotodel.hrms.auth.server.dto.TravelGetReimbursement;
 import com.cotodel.hrms.auth.server.dto.TravelReimbursement;
 import com.cotodel.hrms.auth.server.dto.TravelRequestUpdate;
 import com.cotodel.hrms.auth.server.model.AdvanceRequestSettingEntity;
@@ -355,15 +356,15 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 					list=advanceTravelRequestDao.findByEmployeeId(employeeId,status);	
 				}
 				 
-				List<TravelReimbursement> travelList=new ArrayList<TravelReimbursement>();
-				List<TravelReimbursement> miscellaneousList=new ArrayList<TravelReimbursement>();
-				List<TravelReimbursement> mealList=new ArrayList<TravelReimbursement>();
-				List<TravelReimbursement> inCityCabList=new ArrayList<TravelReimbursement>();
-				List<TravelReimbursement> accomodationList=new ArrayList<TravelReimbursement>();
+				List<TravelGetReimbursement> travelList=new ArrayList<TravelGetReimbursement>();
+				List<TravelGetReimbursement> miscellaneousList=new ArrayList<TravelGetReimbursement>();
+				List<TravelGetReimbursement> mealList=new ArrayList<TravelGetReimbursement>();
+				List<TravelGetReimbursement> inCityCabList=new ArrayList<TravelGetReimbursement>();
+				List<TravelGetReimbursement> accomodationList=new ArrayList<TravelGetReimbursement>();
 				if(list!=null) {
 					for (AdvanceTravelRequestEntity advanceTravelRequestEntity : list) {
 						if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("Travel")) {
-							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							TravelGetReimbursement travelReimbursement=new TravelGetReimbursement();
 							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
 							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
 							System.out.println(advanceTravelRequestEntity.getCreatedDate());
@@ -378,7 +379,7 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 							travelReimbursement.setCreatedTime(formattedTime);
 							travelList.add(travelReimbursement);
 						}else if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("Meal")) {
-							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							TravelGetReimbursement travelReimbursement=new TravelGetReimbursement();
 							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
 							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
 							System.out.println(advanceTravelRequestEntity.getCreatedDate());
@@ -393,7 +394,7 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 							travelReimbursement.setCreatedTime(formattedTime);
 							mealList.add(travelReimbursement);
 						}else if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("Miscellaneous")) {
-							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							TravelGetReimbursement travelReimbursement=new TravelGetReimbursement();
 							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
 							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
 							System.out.println(advanceTravelRequestEntity.getCreatedDate());
@@ -408,7 +409,7 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 							travelReimbursement.setCreatedTime(formattedTime);
 							miscellaneousList.add(travelReimbursement);
 						}else if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("In-City-Cab")) {
-							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							TravelGetReimbursement travelReimbursement=new TravelGetReimbursement();
 							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
 							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
 							System.out.println(advanceTravelRequestEntity.getCreatedDate());
@@ -423,7 +424,7 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 							travelReimbursement.setCreatedTime(formattedTime);
 							inCityCabList.add(travelReimbursement);
 						}else if(advanceTravelRequestEntity.getRequestType().equalsIgnoreCase("Accomodation")) {
-							TravelReimbursement travelReimbursement=new TravelReimbursement();
+							TravelGetReimbursement travelReimbursement=new TravelGetReimbursement();
 							CopyUtility.copyProperties(advanceTravelRequestEntity, travelReimbursement);
 							advanceAllRequest.setEmployerId(advanceTravelRequestEntity.getEmployerId());
 							System.out.println(advanceTravelRequestEntity.getCreatedDate());

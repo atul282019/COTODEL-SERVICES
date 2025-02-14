@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TravelReimbursement {
+public class TravelGetReimbursement {
 	private Long id;
     private String mode;
     private String toBeBookedBy;
@@ -40,5 +40,6 @@ public class TravelReimbursement {
 	private String title;
 	private String arrivalPreference;
     private String travelSubType;
-
+    private String createdDate;
+    private String createdTime;
 }

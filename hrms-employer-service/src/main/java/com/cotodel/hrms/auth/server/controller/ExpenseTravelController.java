@@ -32,11 +32,15 @@ import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceNameListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceResponse;
+import com.cotodel.hrms.auth.server.dto.TravelGetReimbursement;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.AdvanceRequestSettingEntity;
 import com.cotodel.hrms.auth.server.model.AdvanceTravelRequestEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ExpenseTravelAdvanceService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -56,6 +60,9 @@ public class ExpenseTravelController {
 	@Autowired
 	ExpenseTravelAdvanceService expenseTravelAdvanceService;
 	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
+	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {
@@ -65,30 +72,46 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/expanceTravelAdvanceRequest",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> expanceTravelAdvanceRequest(HttpServletRequest request,@Valid @RequestBody ExpenseTravelAdvanceRequest expenseTravelAdvanceRequest) {
+	    public ResponseEntity<Object> expanceTravelAdvanceRequest(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside expanceTravelAdvanceRequest+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	ExpenseTravelAdvanceRequest response=null;
+	    	ExpenseTravelAdvanceResponse expenseTravelAdvanceResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ExpenseTravelAdvanceRequest expenseTravelAdvanceRequest= EncryptionDecriptionUtil.convertFromJson(decript, ExpenseTravelAdvanceRequest.class);
 				
 				response=expenseTravelAdvanceService.saveExpenseTravelAdvenceDetails(expenseTravelAdvanceRequest);
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new ExpenseTravelAdvanceResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			expenseTravelAdvanceResponse=new ExpenseTravelAdvanceResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseTravelAdvanceResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new ExpenseTravelAdvanceResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			expenseTravelAdvanceResponse=new ExpenseTravelAdvanceResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseTravelAdvanceResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new ExpenseTravelAdvanceResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		expenseTravelAdvanceResponse=new ExpenseTravelAdvanceResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseTravelAdvanceResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -133,30 +156,47 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/expanceTravelAdvance",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getExpanceTravelAdvance(HttpServletRequest request,@Valid @RequestBody ExpenseTravelAdvanceRequest expenseTravelAdvanceRequest) {
+	    public ResponseEntity<Object> getExpanceTravelAdvance(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside expanceTravelAdvance+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	ExpanceTravelAdvance response=null;
+	    	ExpenseTravelAdvanceNameListResponse erAdvanceNameListResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ExpenseTravelAdvanceRequest expenseTravelAdvanceRequest= EncryptionDecriptionUtil.convertFromJson(decript, ExpenseTravelAdvanceRequest.class);
+				
 				response=expenseTravelAdvanceService.getExpenseTravelAdvence(expenseTravelAdvanceRequest.getEmployerId());
-	    		if(response!=null) {	    			
-	    			return ResponseEntity.ok(new ExpenseTravelAdvanceNameListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    		if(response!=null) {
+	    			erAdvanceNameListResponse=new ExpenseTravelAdvanceNameListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erAdvanceNameListResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new ExpenseTravelAdvanceNameListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			erAdvanceNameListResponse=new ExpenseTravelAdvanceNameListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erAdvanceNameListResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in expenseCategoryBandDetails====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new ExpenseTravelAdvanceNameListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		erAdvanceNameListResponse=new ExpenseTravelAdvanceNameListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erAdvanceNameListResponse);
+	    		jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in expenseCategoryBandDetails====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -168,30 +208,46 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/advanceTravelRequestCash",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> advanceTravelRequestCash(HttpServletRequest request,@Valid @RequestBody AdvanceTravelCashRequest advanceTravelRequest) {
+	    public ResponseEntity<Object> advanceTravelRequestCash(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside AdvanceTravelRequest+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	AdvanceTravelCashRequest response=null;
+	    	AdvanceTravelCashResponse advanceTravelCashResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				AdvanceTravelCashRequest advanceTravelRequest= EncryptionDecriptionUtil.convertFromJson(decript, AdvanceTravelCashRequest.class);
 				
 				response=expenseTravelAdvanceService.saveAdvenceTravelRequestCashDetails(advanceTravelRequest);
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new AdvanceTravelCashResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelCashResponse=new AdvanceTravelCashResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelCashResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new AdvanceTravelCashResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelCashResponse=new AdvanceTravelCashResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelCashResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in advanceTravelRequest====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new AdvanceTravelCashResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		advanceTravelCashResponse=new AdvanceTravelCashResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelCashResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in advanceTravelRequest====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -203,30 +259,46 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/advanceTravelRequest",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> advanceTravelRequest(HttpServletRequest request,@Valid @RequestBody AdvanceTravelRequest advanceTravelRequest) {
+	    public ResponseEntity<Object> advanceTravelRequest(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside AdvanceTravelRequest+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	AdvanceTravelRequest response=null;
+	    	AdvanceTravelResponse advanceTravelResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				AdvanceTravelRequest advanceTravelRequest= EncryptionDecriptionUtil.convertFromJson(decript, AdvanceTravelRequest.class);
 				
 				response=expenseTravelAdvanceService.saveAdvenceTravelRequestDetails(advanceTravelRequest);
 	    		if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new AdvanceTravelResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelResponse=new AdvanceTravelResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new AdvanceTravelResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelResponse=new AdvanceTravelResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in advanceTravelRequest====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new AdvanceTravelResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		advanceTravelResponse=new AdvanceTravelResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -237,30 +309,47 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/advanceTravelRequest",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> advanceTravelRequestByEmplrId(HttpServletRequest request,@Valid @RequestBody AdvanceTravelRequest advanceTravelRequest) {
+	    public ResponseEntity<Object> advanceTravelRequestByEmplrId(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside get/advanceTravelRequest+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	List<AdvanceTravelRequestEntity> response=null;
+	    	AdvanceTravelListResponse advanceTravelListResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				AdvanceTravelCashRequest advanceTravelRequest= EncryptionDecriptionUtil.convertFromJson(decript, AdvanceTravelCashRequest.class);
+				
 				response=expenseTravelAdvanceService.getAdvenceTravelListByEmployerId(advanceTravelRequest.getEmployerId(),advanceTravelRequest.getEmployeeId());
 	    		if(response!=null && response.size()>0) {
-	    			return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in get/advanceTravelRequest====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in get/advanceTravelRequest====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -306,30 +395,46 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/advanceTravelRequestStatus",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> advanceTravelRequestStatus(HttpServletRequest request,@Valid @RequestBody AdvanceTravelRequest advanceTravelRequest) {
+	    public ResponseEntity<Object> advanceTravelRequestStatus(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside get/advanceTravelRequestStatus+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	AdvanceTravelAllRequest response=null;
+	    	AdvanceTravelAllResponse advanceTravelAllResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				AdvanceTravelCashRequest advanceTravelRequest= EncryptionDecriptionUtil.convertFromJson(decript, AdvanceTravelCashRequest.class);
 				
 				response=expenseTravelAdvanceService.getAdvenceTravelListByStatus(advanceTravelRequest.getEmployerId(),advanceTravelRequest.getEmployeeId(),advanceTravelRequest.getStatus());
 	    		if(response!=null) {
-	    			return ResponseEntity.ok(new AdvanceTravelAllResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelAllResponse=new AdvanceTravelAllResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelAllResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new AdvanceTravelAllResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelAllResponse=new AdvanceTravelAllResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelAllResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in get/advanceTravelRequestStatus====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new AdvanceTravelAllResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		advanceTravelAllResponse=new AdvanceTravelAllResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelAllResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in get/advanceTravelRequestStatus====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -340,30 +445,47 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/update/advanceTravelRequestUpdate",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> advanceTravelRequestUpdate(HttpServletRequest request,@Valid @RequestBody AdvanceTravelAllUpdateRequest advanceTravelAllUpdateRequest) {
+	    public ResponseEntity<Object> advanceTravelRequestUpdate(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside update/advanceTravelRequestUpdate+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	AdvanceTravelAllUpdateRequest response=null;
+	    	AdvanceTravelAllUpdateResponse advanceTravelAllUpdateResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				AdvanceTravelAllUpdateRequest advanceTravelAllUpdateRequest= EncryptionDecriptionUtil.convertFromJson(decript, AdvanceTravelAllUpdateRequest.class);
+				
 				response=expenseTravelAdvanceService.updateAdvenceTravelList(advanceTravelAllUpdateRequest);
 	    		if(response!=null) {
-	    			return ResponseEntity.ok(new AdvanceTravelAllUpdateResponse(MessageConstant.TRUE,MessageConstant.PROFILE_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelAllUpdateResponse=new AdvanceTravelAllUpdateResponse(MessageConstant.TRUE,MessageConstant.PROFILE_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelAllUpdateResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new AdvanceTravelAllUpdateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelAllUpdateResponse=new AdvanceTravelAllUpdateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelAllUpdateResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in update/advanceTravelRequestUpdate====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new AdvanceTravelAllUpdateResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		advanceTravelAllUpdateResponse=new AdvanceTravelAllUpdateResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelAllUpdateResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in update/advanceTravelRequestUpdate====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -374,29 +496,46 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/delete/advanceTravelRequestDelete",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> advanceTravelRequestDelete(HttpServletRequest request,@Valid @RequestBody AdvanceTravelRequest advanceTravelRequest) {
+	    public ResponseEntity<Object> advanceTravelRequestDelete(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside delete/advanceTravelRequestDelete+++");	    	
 	    	
 	    	String message = "";
 	    	String response=null;
+	    	AdvanceTravelDeleteResponse advanceTravelDeleteResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader(" ");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				TravelGetReimbursement advanceTravelRequest= EncryptionDecriptionUtil.convertFromJson(decript, TravelGetReimbursement.class);
+				
 				response=expenseTravelAdvanceService.deleteAdvenceTravelById(advanceTravelRequest.getId());
 	    		if(response!=null && response.equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new AdvanceTravelDeleteResponse(MessageConstant.TRUE,MessageConstant.PROFILE_DELETE,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelDeleteResponse=new AdvanceTravelDeleteResponse(MessageConstant.TRUE,MessageConstant.PROFILE_DELETE,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelDeleteResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new AdvanceTravelDeleteResponse(MessageConstant.FALSE,MessageConstant.PROFILE_DELETE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelDeleteResponse=new AdvanceTravelDeleteResponse(MessageConstant.FALSE,MessageConstant.PROFILE_DELETE_FAILED,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelDeleteResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in advanceTravelRequestDelete====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new AdvanceTravelDeleteResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		advanceTravelDeleteResponse=new AdvanceTravelDeleteResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelDeleteResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in advanceTravelRequestDelete====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -407,30 +546,47 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/advanceTravelApprovalRequest",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> advanceTravelApprovalRequest(HttpServletRequest request,@Valid @RequestBody AdvanceTravelRequest advanceTravelRequest) {
+	    public ResponseEntity<Object> advanceTravelApprovalRequest(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside get/advanceTravelApprovalRequest+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	List<AdvanceTravelRequestEntity> response=null;
+	    	AdvanceTravelListResponse advanceTravelListResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				AdvanceTravelRequest advanceTravelRequest= EncryptionDecriptionUtil.convertFromJson(decript, AdvanceTravelRequest.class);
+				
 				response=expenseTravelAdvanceService.getAdvenceTravelApprovalEmployerId(advanceTravelRequest.getEmployerId());
 	    		if(response!=null && response.size()>0) {
-	    			return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in get/advanceTravelRequest====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new AdvanceTravelListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in get/advanceTravelRequest====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
@@ -442,30 +598,47 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/update/advanceTravelRequestApproved",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> advanceTravelRequestApproved(HttpServletRequest request,@Valid @RequestBody ApprovalTravelReimbursement approvalTravelReimbursement) {
+	    public ResponseEntity<Object> advanceTravelRequestApproved(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside update/advanceTravelRequestApproved+++");	    	
 	    	
 	    
 	    	String message = "";
 	    	ApprovalTravelReimbursement response=null;
+	    	AdvanceTravelApprovalResponse appAdvanceTravelApprovalResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ApprovalTravelReimbursement approvalTravelReimbursement= EncryptionDecriptionUtil.convertFromJson(decript, ApprovalTravelReimbursement.class);
+				
 				response=expenseTravelAdvanceService.ApprovalAdvenceTravel(approvalTravelReimbursement);
 	    		if(response!=null) {
-	    			return ResponseEntity.ok(new AdvanceTravelApprovalResponse(MessageConstant.TRUE,MessageConstant.PROFILE_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			appAdvanceTravelApprovalResponse=new AdvanceTravelApprovalResponse(MessageConstant.TRUE,MessageConstant.PROFILE_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(appAdvanceTravelApprovalResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new AdvanceTravelApprovalResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			appAdvanceTravelApprovalResponse=new AdvanceTravelApprovalResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(appAdvanceTravelApprovalResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in update/AdvanceTravelApprovalResponse====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new AdvanceTravelApprovalResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		appAdvanceTravelApprovalResponse=new AdvanceTravelApprovalResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(appAdvanceTravelApprovalResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in update/AdvanceTravelApprovalResponse====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -476,29 +649,46 @@ public class ExpenseTravelController {
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/advanceTravelById",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> advanceTravelById(HttpServletRequest request,@Valid @RequestBody ApprovalTravelReimbursement approvalTravelReimbursement) {
+	    public ResponseEntity<Object> advanceTravelById(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside get/advanceTravelById+++");	    	
 	    	
 	    	String message = "";
 	    	AdvanceTravelRequestEntity response=null;
+	    	AdvanceTravelByIdResponse advanceTravelByIdResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ApprovalTravelReimbursement approvalTravelReimbursement= EncryptionDecriptionUtil.convertFromJson(decript, ApprovalTravelReimbursement.class);
+				
 				response=expenseTravelAdvanceService.getAdvenceTravelListById(approvalTravelReimbursement.getId());
 	    		if(response!=null ) {
-	    			return ResponseEntity.ok(new AdvanceTravelByIdResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelByIdResponse=new AdvanceTravelByIdResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelByIdResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new AdvanceTravelByIdResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			advanceTravelByIdResponse=new AdvanceTravelByIdResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelByIdResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
 	    		logger.error("error in get/advanceTravelById====="+e);
 	    		//message=e.getMessage();
 			}
-	        
-	        return ResponseEntity.ok(new AdvanceTravelByIdResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		advanceTravelByIdResponse=new AdvanceTravelByIdResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelByIdResponse);
+    			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in get/advanceTravelById====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})

@@ -159,7 +159,7 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 				//erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 					
 					String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
-							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherSms);
+							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherSms,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 					log.info("Ending voucher create response1 ...."+response1);
 					
 					
@@ -266,7 +266,7 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 				log.info("Starting voucher status request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());
 									
 					String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(erupiVoucherStatusApiRequest),
-							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherStatus);
+							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherStatus,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 					log.info("Ending voucher status response1 ...."+response1);
 					
 					profileJsonRes= new JSONObject(response1);

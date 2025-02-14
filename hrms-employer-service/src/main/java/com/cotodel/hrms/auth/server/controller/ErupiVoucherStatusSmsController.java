@@ -18,7 +18,10 @@ import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusSmsRequest;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherStatusSmsService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -37,8 +40,8 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	@Autowired
 	ErupiVoucherStatusSmsService erupiVoucherStatusSmsService;
 	
-	
-	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -49,30 +52,45 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/erupiVoucherSms",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> erupiVoucherSms(HttpServletRequest request,@Valid @RequestBody ErupiVoucherStatusSmsRequest erupiVoucherStatusSmsRequest) {
+	    public ResponseEntity<Object> erupiVoucherSms(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
-	    logger.info("inside erupiVoucherSms....");	    	
-	    	
+	    logger.info("inside erupiVoucherSms....");    	
 	    
 	    	String message = "";
 	    	ErupiVoucherStatusSmsRequest response=null;
-	    	try {
-	    		
+	    	ErupiVoucherSmsResponse erupiVoucherSmsResponse;
+	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ErupiVoucherStatusSmsRequest erupiVoucherStatusSmsRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherStatusSmsRequest.class);
 				
 				response=erupiVoucherStatusSmsService.erupiVoucherSmsDetails(erupiVoucherStatusSmsRequest);
 	    		
 				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-	    			return ResponseEntity.ok(new ErupiVoucherSmsResponse(MessageConstant.TRUE,response.getResponseApi(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+					erupiVoucherSmsResponse=new ErupiVoucherSmsResponse(MessageConstant.TRUE,response.getResponseApi(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherSmsResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			return ResponseEntity.ok(new ErupiVoucherSmsResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    			erupiVoucherSmsResponse=new ErupiVoucherSmsResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherSmsResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
 	    		logger.error("error in erupiVoucherSms====="+e);
 			}
-	        
-	        return ResponseEntity.ok(new ErupiVoucherSmsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		erupiVoucherSmsResponse=new ErupiVoucherSmsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+				 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherSmsResponse);
+				 jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in erupiVoucherSms====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {

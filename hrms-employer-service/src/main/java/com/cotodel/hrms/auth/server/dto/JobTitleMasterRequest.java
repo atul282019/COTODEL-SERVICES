@@ -1,5 +1,9 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+
 import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
 import lombok.AllArgsConstructor;
@@ -18,8 +22,7 @@ public class JobTitleMasterRequest {
 	private String updatedBy;
 	private String remarks;
 	private String response;
+	private int status;
+	private LocalDateTime creationDate;	
+	private LocalDateTime updationDate;
 }
-
-
-
-

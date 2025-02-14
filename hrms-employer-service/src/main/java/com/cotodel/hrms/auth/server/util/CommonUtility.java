@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
 
@@ -31,8 +32,9 @@ public class CommonUtility {
 	
 	private static final String MOBILE_REGEX = "^(0[0-9]{10}|91[0-9]{10}|[7-9][0-9]{9})$";
 	
-	public static String userRequest(String sAccessToken,String requestJson,String url){
+	public static String userRequest(String sAccessToken,String requestJson,String url,String publicPath,String privatePath){
 		String returnStr=null;
+		String decript=null;
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		try{
@@ -43,7 +45,39 @@ public class CommonUtility {
 			if(sAccessToken!=null && !sAccessToken.isEmpty()) {
 				headers.setBearerAuth(sAccessToken);
 			}
+			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(requestJson, publicPath);
+			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(jsonEncriptObject);
+			HttpEntity<String> entity = new HttpEntity<String>(jsonEncript,headers);
+
+			returnStr = restTemplate.postForObject(url, entity, String.class);
+			EncriptResponse enResponse= EncryptionDecriptionUtil.convertFromJson(returnStr, EncriptResponse.class);
+			decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), privatePath);
+			logger.info(" response Json---"+returnStr);
+			return decript;
+		}catch(HttpStatusCodeException e) {
+			logger.error("HttpStatusCodeException error in---"+url+"-"+e.getResponseBodyAsString());
+			return e.getResponseBodyAsString();
+		}catch(Exception e){
+			logger.error(" error in---"+url+"-"+e);
+			return null;
+		}finally {
+			restTemplate=null;headers=null;sAccessToken=null;requestJson=null;url=null;	
+		}		
+	}
+	
+	public static String userRequestWiout(String sAccessToken,String requestJson,String url){
+		String returnStr=null;
+		String decript=null;
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		try{
+			logger.info(" Request Json for url"+url+"---"+requestJson);
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
 			
+			if(sAccessToken!=null && !sAccessToken.isEmpty()) {
+				headers.setBearerAuth(sAccessToken);
+			}
 			HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
 
 			returnStr = restTemplate.postForObject(url, entity, String.class);

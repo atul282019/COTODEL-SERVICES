@@ -570,7 +570,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 								.getToken(applicationConstantConfig.authTokenApiUrl + CommonUtils.getToken);
 						String response1 = CommonUtility.userRequest(tokenvalue,
 								MessageConstant.gson.toJson(userRequest),
-								applicationConstantConfig.userServiceApiUrl + CommonUtils.userDetailsWithMobile);
+								applicationConstantConfig.userServiceApiUrl + CommonUtils.userDetailsWithMobile,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 						if (!ObjectUtils.isEmpty(response1)) {
 							JSONObject demoRes = new JSONObject(response1);
 							boolean status = demoRes.getBoolean("status");

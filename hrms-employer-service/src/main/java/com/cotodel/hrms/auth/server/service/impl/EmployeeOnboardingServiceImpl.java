@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeOnboardingDao;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
@@ -49,7 +50,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			userRequest.setEmail(request.getEmail());
 			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMail);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMail,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
@@ -109,16 +110,16 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		UserRequest userRequest=new UserRequest();
 		try {
 			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
-			String name=request.getName()==null?request.getUsername():request.getName();
+			String name=request.getName()==null?"":request.getName();
 			userRequest.setUsername(name);
 			userRequest.setMobile(request.getMobile());
 			userRequest.setEmail(request.getEmail());
-			userRequest.setEmployerid(request.getOrgId()==null?0:request.getOrgId().intValue());
+			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
 			userRequest.setUpdateStatus(request.isUpdateStatus());
 			userRequest.setUpdateStatus(request.isEmailStatus());
 			
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersBulk);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersBulk,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
@@ -133,11 +134,11 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 					request.setResponse(response);
 					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
 					CopyUtility.copyProperties(request, employeeOnboarding);
-					employeeOnboarding.setName(request.getUsername());
-					employeeOnboarding.setEmployerId(request.getOrgId());
+					employeeOnboarding.setName(request.getName());
+					employeeOnboarding.setEmployerId(request.getEmployerId());
 					employeeOnboarding.setUserDetailsId(id);
 					employeeOnboarding.setMode(2l);
-					String empCode=getEmpCode(request.getOrgId());
+					String empCode=getEmpCode(request.getEmployerId());
 					employeeOnboarding.setEmpCode(empCode);
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					response = MessageConstant.RESPONSE_SUCCESS;
@@ -159,7 +160,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 
 
 	@Override
-	public List<EmployeeOnboardingRequest> confirmBulkEmployeeDetails(List<EmployeeOnboardingRequest> request) {
+	public EmployeeOnboardingListRequest confirmBulkEmployeeDetails(EmployeeOnboardingListRequest request) {
 		String response="";
 		String response1="";
 		String tokenvalue="";
@@ -167,8 +168,9 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		TokenGeneration token=new TokenGeneration();
 		UserRequest userRequest=new UserRequest();
 		try {
+			List<EmployeeOnboardingRequest> employeeConfirmOnboardingResponse=request.getEmployeeOnboardingRequest();
 			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
-			for (EmployeeOnboardingRequest employeeOnboardingRequest : request) {
+			for (EmployeeOnboardingRequest employeeOnboardingRequest : employeeConfirmOnboardingResponse) {
 				
 			
 			userRequest.setUsername(employeeOnboardingRequest.getName());
@@ -176,7 +178,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			userRequest.setEmail(employeeOnboardingRequest.getEmail());
 			userRequest.setEmployerid(employeeOnboardingRequest.getEmployerId()==null?0:employeeOnboardingRequest.getEmployerId().intValue());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceApiUrl+CommonUtils.updateUser);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.updateUser,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
@@ -220,15 +222,18 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 
 
 	@Override
-	public List<EmployeeOnboardingRequest> tryBulkEmployeeDetails(List<EmployeeOnboardingRequest> request) {
+	public EmployeeOnboardingListRequest tryBulkEmployeeDetails(EmployeeOnboardingListRequest request) {
 		
 		String response="";
 		String response1="";
 		String tokenvalue="";
 		TokenGeneration token=new TokenGeneration();
 		UserRequest userRequest=new UserRequest();
+		EmployeeOnboardingListRequest employeeOnboardingListRequest=new EmployeeOnboardingListRequest();
+		List<EmployeeOnboardingRequest> empList=new ArrayList<EmployeeOnboardingRequest>();
 		List<EmployeeOnboardingRequest> emList=new ArrayList<EmployeeOnboardingRequest>();
-		for (EmployeeOnboardingRequest employeeOnboardingRequest : request) {
+		empList=request.getEmployeeOnboardingRequest();
+		for (EmployeeOnboardingRequest employeeOnboardingRequest : empList) {
 		try {
 			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			
@@ -237,7 +242,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			userRequest.setEmail(employeeOnboardingRequest.getEmail());
 			userRequest.setEmployerid(employeeOnboardingRequest.getEmployerId()==null?0:employeeOnboardingRequest.getEmployerId().intValue());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMail);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMail,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
@@ -271,7 +276,8 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		}
 		emList.add(employeeOnboardingRequest);
 		}
-		return emList;
+		employeeOnboardingListRequest.setEmployeeOnboardingRequest(emList);
+		return employeeOnboardingListRequest;
 
 	}
 
@@ -304,7 +310,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			userRequest.setEmail(request.getEmail());
 			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMailNew);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMailNew,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");

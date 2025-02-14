@@ -14,6 +14,7 @@ import com.cotodel.hrms.auth.server.dao.BankMasterDao;
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
@@ -68,7 +69,7 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			userRequest.setId(request.getOrgId());
 				tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			 response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceApiUrl+CommonUtils.existOrgid);
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.existOrgid,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
@@ -233,7 +234,7 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 	}
 
 	@Override
-	public List<ErupiLinkAccountWithOutResponse> getErupiAccountListDetailsWithStatus(ErupiLinkAccountRequest request) {
+	public List<ErupiLinkAccountWithOutResponse> getErupiAccountListDetailsWithStatus(ErupiVoucherCreatedRequest request) {
 		List<ErupiLinkAccountEntity> erupiLinkAccountEntity=null;
 		String response="";
 		ErupiLinkAccountWithOutResponse erupiLinkAccountWithOutResponse=null;

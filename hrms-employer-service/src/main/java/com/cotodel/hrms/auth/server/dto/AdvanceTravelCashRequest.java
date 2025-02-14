@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdvanceTravelCashRequest {
-	
 	private Long id;
+	private String sequeneId;	
     private Long employerId;
     private Long employeeId;
 	private String requestType;	
@@ -35,4 +35,10 @@ public class AdvanceTravelCashRequest {
 	private LocalDate cashDate;
 	private String response;
 	private int status;
+	private String  statusMessage;	
+    private String approvalRemarks;
+    private String approvedBy;
+	private Float approvalAmount;
+	private String approvedOrRejected;
+	
 }

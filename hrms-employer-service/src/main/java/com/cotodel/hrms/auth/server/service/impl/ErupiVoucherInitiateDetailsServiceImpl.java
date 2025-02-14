@@ -138,7 +138,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			log.info("Starting voucher create request ...."+merchantTranId);	
 			erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 				
-				String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
+				String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
 						applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
 				log.info("Ending voucher create response1 ...."+response1);
 				
@@ -317,7 +317,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				log.info("Starting voucher create request ...."+request.getMerchanttxnid());	
 				erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 					
-					String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
+					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
 							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
 					log.info("Ending voucher create response1 ...."+response1);
 					
@@ -561,7 +561,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				log.info("Starting voucher revoking single request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());	
 				//erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 					
-					String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
+					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
 							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
 					log.info("Ending voucher revoking response1 ...."+response1);
 					
@@ -852,7 +852,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				log.info("Starting voucher create request ...."+merchantTranId);	
 				erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 					
-					String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
+					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
 							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
 					log.info("Ending voucher create response1 ...."+response1);
 					
@@ -987,7 +987,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				log.info("Starting voucher create request ...."+merchantTranId);	
 				erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 					
-					String response1 = CommonUtility.userRequest("", MessageConstant.gson.toJson(voucherCreateRequest),
+					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
 							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
 					log.info("Ending voucher create response1 ...."+response1);
 					

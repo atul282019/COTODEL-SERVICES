@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 public class AdvanceTravelAllRequest {
 	
     private Long employerId;
-	private List<TravelReimbursement> travelReimbursement;
-	private List<TravelReimbursement> mealReimbursement;
-	private List<TravelReimbursement> miscellaneousReimbursement;
-	private List<TravelReimbursement> inCityCabReimbursement;
-	private List<TravelReimbursement> accomodationReimbursement;
+	private List<TravelGetReimbursement> travelReimbursement;
+	private List<TravelGetReimbursement> mealReimbursement;
+	private List<TravelGetReimbursement> miscellaneousReimbursement;
+	private List<TravelGetReimbursement> inCityCabReimbursement;
+	private List<TravelGetReimbursement> accomodationReimbursement;
 	
 }
