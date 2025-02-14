@@ -38,5 +38,7 @@ public class EmployerDetailsRequest {
 	private String gstIdentificationNumber;
 	private String pan;
 	private String createdBy;
-	private String response;	
+	private Long id;
+	private String response;
+	
 }

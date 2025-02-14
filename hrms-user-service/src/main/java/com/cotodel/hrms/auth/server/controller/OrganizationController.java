@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cotodel.hrms.auth.server.dto.OrganizaionResponse;
 import com.cotodel.hrms.auth.server.entity.OrganizationMaster;
 import com.cotodel.hrms.auth.server.exception.ApiError;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.OrganizationMasterService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +34,9 @@ public class OrganizationController {
 	@Autowired
 	OrganizationMasterService organizationMasterService;
 	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
+	
 	 @Operation(summary = "This API will provide the User Roles Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {
@@ -43,26 +49,38 @@ public class OrganizationController {
 	    public ResponseEntity<Object> getOrganizationList() {
 	    	logger.info("inside get Organization+++");
 	    	List<OrganizationMaster> organizationMasters=null;
-	    	try {
-	    		
+	    	OrganizaionResponse organizaionResponse;
+	    	
+	    	try {	    		
 	    		
 	    		organizationMasters=organizationMasterService.getOrganizationMaster();
 	    		
-	    	 if(organizationMasters!=null)
-	    		 return ResponseEntity.ok(new OrganizaionResponse(true,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+	    	 if(organizationMasters!=null) {
+	    		 organizaionResponse=new OrganizaionResponse(true,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(organizaionResponse);
+	    		 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    		 return ResponseEntity.ok(jsonEncriptObject);
 	    	 
-	    	 
+	    	 }else {
+	    		 organizaionResponse=new OrganizaionResponse(false,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(organizaionResponse);
+	    		 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    		 return ResponseEntity.ok(jsonEncriptObject);
+	    	 }
 	    	}catch (Exception e) {
 				
 	    		logger.error("error in organization====="+e);
 	    		
 			}
-	        
-	    	return ResponseEntity.ok(new OrganizaionResponse(false,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	          
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		organizaionResponse=new OrganizaionResponse(false,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		String jsonEncript =  EncryptionDecriptionUtil.convertToJson(organizaionResponse);
+	    		jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in organization====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);   
 	        
 	    }
-
-	
-
 }

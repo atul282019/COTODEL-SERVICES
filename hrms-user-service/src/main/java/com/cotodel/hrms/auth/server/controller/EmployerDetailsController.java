@@ -17,16 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cotodel.hrms.auth.server.dto.EmployerAddressRequest;
 import com.cotodel.hrms.auth.server.dto.EmployerAddressResponse;
 import com.cotodel.hrms.auth.server.dto.EmployerDetailsByEmpIdResponse;
+import com.cotodel.hrms.auth.server.dto.EmployerDetailsGetRequest;
 import com.cotodel.hrms.auth.server.dto.EmployerDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployerDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.EmployerProfileAddress;
-import com.cotodel.hrms.auth.server.dto.UserRoleRequest;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.entity.EmployerDetailsEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.EmployerDetailsService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -48,6 +53,9 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	@Autowired
 	EmployerDetailsService employerDetailsService;
 	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
+	
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {
@@ -57,21 +65,31 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/saveEmployerDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> saveEmployerDetails(HttpServletRequest request,@Valid @RequestBody EmployerDetailsRequest employerDetailsRequest) {
+	    public ResponseEntity<Object> saveEmployerDetails(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 	    	logger.info("inside get saveEmployerDetails+++");
 	    	EmployerDetailsRequest userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
+	    	EmployerDetailsResponse employerDetailsResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				EmployerDetailsRequest employerDetailsRequest= EncryptionDecriptionUtil.convertFromJson(decript, EmployerDetailsRequest.class);
+				
 	    	    userEntity=	employerDetailsService.saveEmployerDetails(employerDetailsRequest);
 	    	    
 	    	    if(userEntity!=null) {
-	    	    	return ResponseEntity.ok(new EmployerDetailsResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	employerDetailsResponse=new EmployerDetailsResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
 	    	    }else {
-	    	    	return ResponseEntity.ok(new EmployerDetailsResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	employerDetailsResponse=new EmployerDetailsResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
 	    	    }
 			
 	    	}catch (Exception e) {
@@ -79,8 +97,15 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	    		e.printStackTrace();
 	    		logger.error("error in saveUserDetails====="+e);
 			}
-	        
-	        return ResponseEntity.ok(new EmployerDetailsResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		employerDetailsResponse=new EmployerDetailsResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsResponse);
+    	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in saveUserDetails====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	          
 	        
 	    }
@@ -131,21 +156,31 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/getEmployerComplete",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getEmployerComplete(HttpServletRequest request,@Valid @RequestBody EmployerDetailsRequest employerDetailsRequest) {
+	    public ResponseEntity<Object> getEmployerComplete(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 	    	logger.info("inside get getEmployerComplete+++");
 	    	EmployerDetailsEntity emDetailsEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
+	    	EmployerDetailsByEmpIdResponse employerDetailsByEmpIdResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				EmployerDetailsGetRequest employerDetailsRequest= EncryptionDecriptionUtil.convertFromJson(decript, EmployerDetailsGetRequest.class);
+				
 				emDetailsEntity=	employerDetailsService.getEmployerDetails(employerDetailsRequest.getEmployerId());
 	    	    
 	    	    if(emDetailsEntity!=null) {
-	    	    	return ResponseEntity.ok(new EmployerDetailsByEmpIdResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	employerDetailsByEmpIdResponse=new EmployerDetailsByEmpIdResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsByEmpIdResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
 	    	    }else {
-	    	    	return ResponseEntity.ok(new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	employerDetailsByEmpIdResponse=new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsByEmpIdResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
 	    	    }
 			
 	    	}catch (Exception e) {
@@ -153,9 +188,15 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	    		e.printStackTrace();
 	    		logger.error("error in saveUserDetails====="+e);
 			}
-	        
-	        return ResponseEntity.ok(new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
-	          
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		employerDetailsByEmpIdResponse=new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsByEmpIdResponse);
+    	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in saveUserDetails====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);         
 	        
 	    }
 	 
@@ -168,27 +209,44 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/get/getCompaneyAddress",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getCompaneyAddress(HttpServletRequest request,@Valid @RequestBody EmployerAddressRequest employerAddressRequest) {
+	    public ResponseEntity<Object> getCompaneyAddress(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 	    	logger.info("inside getCompaneyAddress+++");
 	    	List<EmployerProfileAddress> response=null;
 	    	String authToken = "";
+	    	EmployerAddressResponse employerAddressResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);				
-				response=	employerDetailsService.getCompaneyAddress(employerAddressRequest.getOrgId());	    	    
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ErupiVoucherCreatedRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
+				
+				response=	employerDetailsService.getCompaneyAddress(erupiLinkAccountRequest.getOrgId());	    	    
 	    	    if(response!=null) {
-	    	    	return ResponseEntity.ok(new EmployerAddressResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	employerAddressResponse=new EmployerAddressResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerAddressResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
 	    	    }else {
-	    	    	return ResponseEntity.ok(new EmployerAddressResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	employerAddressResponse=new EmployerAddressResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerAddressResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
 	    	    }
 			
-	    	}catch (Exception e) {
-				
+	    	}catch (Exception e) {				
 	    		e.printStackTrace();
 	    		logger.error("error in getCompaneyAddress====="+e);
 			}
-	        
-	        return ResponseEntity.ok(new EmployerAddressResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		employerAddressResponse=new EmployerAddressResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerAddressResponse);
+    	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in getCompaneyAddress====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
 	          
 	        
 	    }

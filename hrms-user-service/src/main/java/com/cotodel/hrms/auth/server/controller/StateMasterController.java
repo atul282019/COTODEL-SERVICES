@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cotodel.hrms.auth.server.dto.StateResponse;
 import com.cotodel.hrms.auth.server.entity.StateMaster;
 import com.cotodel.hrms.auth.server.exception.ApiError;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.StateMasterService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +39,9 @@ public class StateMasterController {
 	@Autowired
 	StateMasterService stateMasterService;
 	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
+	
 	@Operation(summary = "This API will provide the Authentication token", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {
@@ -47,6 +53,7 @@ public class StateMasterController {
 	    public ResponseEntity<Object> getState() {
 	    	logger.info("inside get state-list+++");
 	    	List<StateMaster>  stateMasters=null;
+	    	StateResponse stateResponse;
 	    	try {
 	    		
 	    		stateMasters=stateMasterService.getByStateList();
@@ -57,15 +64,30 @@ public class StateMasterController {
 	            System.out.println("mapIdCustomer Names: " + mapIdCustomer);
 	            List<StateMaster> targetList = new ArrayList<>(mapIdCustomer.values());
 	            System.out.println("targetList Names: " + targetList);
-	    		 if(targetList!=null && targetList.size()>0 )
-		    		 return ResponseEntity.ok(new StateResponse(true,targetList,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-		    	 
+	    		 if(targetList!=null && targetList.size()>0 ) {
+	    			 stateResponse=new StateResponse(true,targetList,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(stateResponse);
+	    			 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			 return ResponseEntity.ok(jsonEncriptObject);
+	    		 }else {
+	    			 stateResponse=new StateResponse(false,stateMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(stateResponse);
+	    			 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			 return ResponseEntity.ok(jsonEncriptObject);
+	    		 }
 			} catch (Exception e) {
 				logger.error("error in state-list====="+e);
 			}
-	    	
-	    	 return ResponseEntity.ok(new StateResponse(false,stateMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	          
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		stateResponse=new StateResponse(false,stateMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+   			    String jsonEncript =  EncryptionDecriptionUtil.convertToJson(stateResponse);
+   			    jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in state-list====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
+        
 	        
 	    }
 }

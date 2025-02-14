@@ -890,11 +890,12 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 
 
 	@Override
-	public List<UserManagerDto> userManagerList(int orgId) {
+	public List<UserManagerDto> userManagerList(Long orgId) {
 		List<UserManagerDto> existUserList=new ArrayList<UserManagerDto>();
+		int emprid=orgId.intValue();
 		try {
 			
-			existUserList=userDetailsDao.getUserManagerList(orgId);
+			existUserList=userDetailsDao.getUserManagerList(emprid);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -905,37 +906,23 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	
 	
 	@Override
-	public List<UserManagerDto> searchUsersWithOutMobile(int orgId, String userName) {
+	public List<UserManagerDto> searchUsersWithOutMobile(Long orgId, String userName) {
 		
 		
 		List<UserManagerDto> existUserList=new ArrayList<UserManagerDto>();
 		try {
-			
-			List<UserEntity>  userEntities=userDetailsDao.getSearchUserWithOutMobile(orgId, userName);
+			int organizationId=orgId.intValue();
+			List<UserEntity>  userEntities=userDetailsDao.getSearchUserWithOutMobile(organizationId, userName);
 			if(userEntities!=null) {
 				for (UserEntity userEntity : userEntities) {
 					UserManagerDto userManagerDto=new UserManagerDto();
-					CopyUtility.copyProperties(userEntity, userManagerDto);
-					//CopyUtility.copyProperties
-					//List<RoleMasterEntity> roleMasterEntities=userRoleMasterDao.getUserRoleMaster();
-					//List<UserRoleMapperDto> userRoleMapperDtoList=new ArrayList<UserRoleMapperDto>();
-//					for (RoleMasterEntity roleMasterEntity : roleMasterEntities) {
-//						UserRoleMapperDto userRoleMapperDto=new UserRoleMapperDto();
-//						userRoleMapperDto.setRoleId(roleMasterEntity.getRoleId().intValue());
-//						userRoleMapperDto.setRoleDesc(roleMasterEntity.getRoleDesc());
-//						//CopyUtility.copyProperties(roleMasterEntity, userRoleMapperDto);
-//						userRoleMapperDtoList.add(userRoleMapperDto);
-//					}
-					
-					
-					//existUserResponse.setUserRole(userRoleMapperDtoList);
+					CopyUtility.copyProperties(userEntity, userManagerDto);					
 					existUserList.add(userManagerDto);
 				}
 			}
 			
-			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return existUserList;
 		

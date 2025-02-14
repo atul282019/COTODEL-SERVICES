@@ -19,7 +19,10 @@ import com.cotodel.hrms.auth.server.dto.UserWaitingListResponse;
 import com.cotodel.hrms.auth.server.entity.UserWaitingListEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.UserWaitingService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
@@ -35,7 +38,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 public class WaitingListController {
 
 	@Autowired
-	UserWaitingService userWaitingService;		
+	UserWaitingService userWaitingService;
+	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
 	
 	private static final Logger logger = LoggerFactory.getLogger(WaitingListController.class);
    
@@ -48,32 +54,42 @@ public class WaitingListController {
     @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
     @RequestMapping(value = "/add/saveWaitingListUsers",produces = {"application/json"}, 
     consumes = {"application/json","application/text"},method = RequestMethod.POST)
-    public ResponseEntity<Object> saveWaitingListUsers(HttpServletRequest request,@Valid @RequestBody UserWaitingListEntity userWaitingListEntity) {
+    public ResponseEntity<Object> saveWaitingListUsers(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
     	logger.info("inside get saveWaitingListUsers+++");
     	UserWaitingListEntity userEntity=null;
     	String authToken = "";
     	String message=MessageConstant.RESPONSE_FAILED;
+    	UserWaitingListResponse userWaitingListResponse;
     	try {	    		
     		String companyId = request.getHeader("companyId");
 			SetDatabaseTenent.setDataSource(companyId);
-			
+			String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+			UserWaitingListEntity userWaitingListEntity= EncryptionDecriptionUtil.convertFromJson(decript, UserWaitingListEntity.class);
 			
     	    userEntity=	userWaitingService.saveUserDetails(userWaitingListEntity);
     		
     	    if(userEntity!=null) {   		 
-
-    		 return ResponseEntity.ok(new UserWaitingListResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+    	    	userWaitingListResponse=new UserWaitingListResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userWaitingListResponse);
+    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+    	    	return ResponseEntity.ok(jsonEncriptObject);
     	    }
 		
     	}catch (Exception e) {
 			
     		e.printStackTrace();
-    		logger.error("error in saveWaitingListUsers====="+e.getMessage());
+    		logger.error("error in /add/saveWaitingListUsers====="+e.getMessage());
     		message=e.getMessage();
 		}
-        
-        return ResponseEntity.ok(new UserWaitingListResponse(MessageConstant.FALSE,message,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
-          
+    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+    	try {
+    		userWaitingListResponse=new UserWaitingListResponse(MessageConstant.FALSE,message,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userWaitingListResponse);
+	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+		} catch (Exception e) {
+			logger.error("error in /add/saveWaitingListUsers====="+e.getMessage());
+		}
+	    return ResponseEntity.ok(jsonEncriptObject);
         
     }
 

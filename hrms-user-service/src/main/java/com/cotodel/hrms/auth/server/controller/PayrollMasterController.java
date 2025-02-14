@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cotodel.hrms.auth.server.dto.PayrollMasterResponse;
 import com.cotodel.hrms.auth.server.entity.PayrollMasterEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.PayrollMasterService;
+import com.cotodel.hrms.auth.server.util.EncriptResponse;
+import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +37,9 @@ public class PayrollMasterController {
 	@Autowired
 	PayrollMasterService payrollMasterService;
 	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
+	
 	 @Operation(summary = "This API will provide the Authentication token", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {
@@ -45,18 +51,34 @@ public class PayrollMasterController {
 	    public ResponseEntity<Object> getState() {
 	    	logger.info("inside get state-list+++");
 	    	List<PayrollMasterEntity>  payrollMasterServices=null;
+	    	PayrollMasterResponse payrollMasterResponse;
 	    	try {
 	    		payrollMasterServices=payrollMasterService.getByPayrollMasterList();
 	    		
-	    		 if(payrollMasterServices!=null && payrollMasterServices.size()>0 )
-		    		 return ResponseEntity.ok(new PayrollMasterResponse(true,payrollMasterServices,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-		    	 
+	    		 if(payrollMasterServices!=null && payrollMasterServices.size()>0 ) {
+	    			 payrollMasterResponse=new PayrollMasterResponse(true,payrollMasterServices,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(payrollMasterResponse);
+	    			 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			 return ResponseEntity.ok(jsonEncriptObject);
+	    		 }else {
+	    			 payrollMasterResponse=new PayrollMasterResponse(false,payrollMasterServices,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(payrollMasterResponse);
+	    			 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			 return ResponseEntity.ok(jsonEncriptObject);
+	    		 }
 			} catch (Exception e) {
 				logger.error("error in state-list====="+e);
 			}
-	    	
-	    	 return ResponseEntity.ok(new PayrollMasterResponse(false,payrollMasterServices,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	          
-	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		payrollMasterResponse=new PayrollMasterResponse(false,payrollMasterServices,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+   			 	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(payrollMasterResponse);
+   			 	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+   			 return ResponseEntity.ok(jsonEncriptObject);
+			} catch (Exception e) {
+				logger.error("error in state-list====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
+   
 	    }
 }
