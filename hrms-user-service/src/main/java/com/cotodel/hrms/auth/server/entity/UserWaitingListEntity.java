@@ -3,6 +3,7 @@ package com.cotodel.hrms.auth.server.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -33,8 +34,27 @@ public class UserWaitingListEntity implements Serializable{
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="user_waiting_list_seq")
 	private Long id ;
 	
-    private String name;
-    @Column(unique=true)
-    private String email ;
-    private LocalDate  created_date ;
+	@Column(name="company_name")
+	private String companyName;
+	
+	@Column(name="company_size")
+	private String companySize;
+	
+	@Column(name="industry")
+	private String industry;
+	
+	@Column(name="contact_person_name")
+	private String contactPersonName;
+	
+	@Column(name="contact_number")
+	private String contactNumber;
+    
+	@Column(name="created_date")
+    private LocalDateTime  createdDate ;
+	
+	@Column(name="email")
+	private String email;
+	
+	@Column(name="status")
+	private int status;
 }

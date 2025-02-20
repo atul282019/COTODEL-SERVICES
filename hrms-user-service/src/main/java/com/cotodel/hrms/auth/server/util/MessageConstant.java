@@ -25,4 +25,5 @@ public class MessageConstant {
 	public static final String CONSENT_CREATED_BY = "Either 'consent' or 'createdBy' must be provided.";
 	public static final String USER_BULK_EXIST = "User Already exist with this mobile number !!";
 	public static final String INVALID_CAPTCHA = "Invalid Captcha";
+	public static final String USER_EMAIL = "User Already exist with this Email !!";
 }
