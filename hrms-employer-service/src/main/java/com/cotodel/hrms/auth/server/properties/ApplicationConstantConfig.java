@@ -10,21 +10,6 @@ import org.springframework.stereotype.Component;
 @PropertySource({"classpath:application.properties"})
 public class ApplicationConstantConfig {
 	
-//	@Value("${user.service.add.url}")
-//	public String userServiceAddUrl;
-	
-//	@Value("${auth.token.get.url}")
-//	public String getTokenUrl;	
-	
-//	@Value("${user.service.add.bulk.url}")
-//	public String userServiceAddBulkUrl;
-	
-//	@Value("${user.service.update.bulk.url}")
-//	public String userServiceUpdateBulkUrl;
-	
-//	@Value("${user.service.add.new.url}")
-//	public String userServiceAddNewUrl;
-	
 	@Value("${auth.token.api.url}")
 	public String authTokenApiUrl;
 	

@@ -543,14 +543,25 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					    etDate = stDate.plusDays(days);  // Add the days to the start date
 					}
 					//LocalDate etDate =stDate.plusDays(days); //CommonUtility.convertToLocalDate(endDate);
-					//System.out.println(etDate);
+					System.out.println(etDate);
 
 					boolean mob = CommonUtility.isValid(mobile);
 					boolean name = CommonUtility.isValidName(benName);
 					
 					boolean amountValid = CommonUtility.isValidAmount(amount,applicationConstantConfig.voucherCreationMinAmount,applicationConstantConfig.voucherCreationMaxAmount);
-					boolean expDateValid = CommonUtility.checkDate(etDate.toString());
-					boolean startDateValid = CommonUtility.checkStartDate(stDate.toString());
+					boolean expDateValid =false;
+					boolean startDateValid =false;
+					try {
+						expDateValid = CommonUtility.checkDate(etDate.toString());
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					try {
+						startDateValid = CommonUtility.checkStartDate(stDate.toString());
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					 
 					
 					String message = "";
 					message = mob == false ? "Invalid Mobile ," : "";

@@ -1,7 +1,7 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Access;
@@ -38,8 +38,8 @@ public class DirectorOnboardingEntity  implements Serializable{
 	@Column(name="id")
 	private Long id;
 	
-	@Column(name="employer_id")
-	private Long employerId;
+	@Column(name="org_id")
+	private Long orgId;
 	
 	@Column(name="name")
 	private String name;
@@ -50,29 +50,21 @@ public class DirectorOnboardingEntity  implements Serializable{
 	@Column(name="mobile")
 	private String mobile;
 	
-	@Column(name="her_date")
-	private LocalDate herDate;
+	@Column(name="din")
+	private String din;
 	
-	@Column(name="ctc")
-	private String ctc;
+	@Column(name="designation")
+	private String designation;	
 	
-	@Column(name="status")
-	private int status;
-	
-	@Column(name="employee_payroll_id")
-	private Long employeePayrollId;	
-
 	@Column(name="address")
 	private String address;
 
-	@CreationTimestamp
 	@Column(name="creation_date")
-	private Date creationDate;
-	
-	@Column(name="proof_of_identity")
-	private String proofOfIdentity;
-	
-	@Column(name="pan")
-	private String pan;
+	private LocalDateTime creationDate;
 
+	@Column(name="created_by")
+	private String createdby;
+	
+	@Column(name="status")
+	private int status;
 }
