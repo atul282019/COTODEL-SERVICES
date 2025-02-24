@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExistUserRoleRequest {
+public class DeleteUserRoleRequest {
 	private Long id;
     private int employerId ;
     private Long orgId;
-    List<UserDetailsDto> userDTO;
-    private String createdBy;
+    List<UserRoleDto> roleDesc;
+    private String createdby;
     private String response;   
     private String consent;
     private String userMobile;
@@ -25,4 +25,3 @@ public class ExistUserRoleRequest {
     private String email;
     private String mobile;
 }
-	

@@ -41,6 +41,7 @@ import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperHistoryDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMasterDao;
+import com.cotodel.hrms.auth.server.dto.DeleteUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.RoleDto;
@@ -118,11 +119,12 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 				Date date = new Date();
 				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				userDetails.setCreated_date(localDate);
-				if(user.isErupistatus()) {
-					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
-				}else {
-					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
-				}
+//				if(user.isErupistatus()) {
+//					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
+//				}else {
+//					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+//				}
+				userDetails.setRole_id(MessageConstant.REPUTE_ROLE);
 				userDetails.setStatus(1);
 				userEntity=userDetailsDao.saveUserDetails(userDetails);
 				//userEmpEntity.setUser_id(UserEntity1.getId());
@@ -750,7 +752,7 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 
 
 	@Override
-	public ExistUserResponse deleteUsersRole(ExistUserResponse existUserResponse) {
+	public DeleteUserRoleRequest deleteUsersRole(DeleteUserRoleRequest existUserResponse) {
 		try {
 			String mobile=existUserResponse.getMobile();
 			
@@ -835,7 +837,7 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	public ExistUserRoleRequest updateUsersRoleList(ExistUserRoleRequest existUserRoleRequest) {
 		try {
 			Long orgId=existUserRoleRequest.getOrgId();
-			int employerid=existUserRoleRequest.getEmployerid();
+			int employerid=existUserRoleRequest.getEmployerId();
 			String consent=existUserRoleRequest.getConsent();
 			String createdBy=existUserRoleRequest.getCreatedBy();
 			String userMobile=existUserRoleRequest.getUserMobile();
@@ -967,6 +969,48 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	public UserEntity searchUsersWithMobileAndOrgId(int orgId, String mobile) {
 		// TODO Auto-generated method stub
 		return userDetailsDao.getUserDetailsByMobileAndOrgId(orgId, mobile);
+	}
+
+
+
+
+	@Override
+	public UserEntity saveReputeDetails(HttpServletRequest request, UserRequest user) {
+		String captchaSecurity="";
+		UserEntity userEntity=new UserEntity();
+		String response=MessageConstant.RESPONSE_FAILED;
+		user.setResponse(response);
+		try {
+				
+				UserEntity userDetails= new UserEntity();
+				UserEmpEntity userEmpEntity= new UserEmpEntity();
+				//CopyUtility.copyProperties(userDetails, user);
+				CopyUtility.copyProperties(user,userDetails);
+				Date date = new Date();
+				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				userDetails.setCreated_date(localDate);
+				if(user.isErupistatus()) {
+					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
+				}else {
+					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+				}
+				userDetails.setStatus(1);
+				userEntity=userDetailsDao.saveUserDetails(userDetails);
+				userEmpEntity.setUser_id(userEntity.getId());
+				userEmpEntity.setStatus(userEntity.getStatus());
+				userEmpEntity.setCreated_by(userEntity.getMobile());
+				userEmpEntity.setCreated_date(localDate);
+				userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);		
+
+				response=MessageConstant.RESPONSE_SUCCESS;
+				userEntity.setResponse(response);
+
+		
+		}catch (Exception e) {
+			response=MessageConstant.RESPONSE_FAILED;
+			userEntity.setResponse(response);
+		}
+		return userEntity;
 	}
 
 }

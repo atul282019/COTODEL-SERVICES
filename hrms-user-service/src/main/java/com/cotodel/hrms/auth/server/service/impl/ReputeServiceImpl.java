@@ -28,23 +28,13 @@ public class ReputeServiceImpl implements ReputeService {
 		ReputeTokenEntity reputeTokenEntity= new ReputeTokenEntity();
 		user.setResponse(MessageConstant.RESPONSE_FAILED);
 		try {
-			reputeTokenEntity=reputeDao.getReputeDetails(user.getMobile());
-			if(reputeTokenEntity!=null) {
-				reputeTokenEntity.setAccessToken(user.getAccessToken());
-				reputeTokenEntity.setIdToken(user.getIdToken());
-				reputeTokenEntity.setRefreshToken(user.getRefreshToken());
-				reputeTokenEntity.setScope(user.getScope());
-				reputeTokenEntity.setTokenType(user.getTokenType());
-				reputeTokenEntity.setExpiresIn(user.getExpiresIn());
-				reputeTokenEntity=reputeDao.saveUserDetails(reputeTokenEntity);
-				user.setResponse(MessageConstant.RESPONSE_SUCCESS);
-			}else {
+			
 				reputeTokenEntity= new ReputeTokenEntity();
 				CopyUtility.copyProperties(user,reputeTokenEntity);
 				reputeTokenEntity.setCreatedDate(LocalDateTime.now());
 				reputeTokenEntity=reputeDao.saveUserDetails(reputeTokenEntity);
 				user.setResponse(MessageConstant.RESPONSE_SUCCESS);
-			}
+			
 			
 		}catch (DataIntegrityViolationException e) {
 			user.setResponse(MessageConstant.USER_BULK_EXIST);

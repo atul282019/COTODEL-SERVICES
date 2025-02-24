@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.DeleteUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
@@ -23,9 +24,9 @@ import com.cotodel.hrms.auth.server.dto.UserManagerResponse;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.UserRequestEncript;
 import com.cotodel.hrms.auth.server.dto.UserResponse;
+import com.cotodel.hrms.auth.server.dto.UserRoleDeleteResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleEditListResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleEditResponse;
-import com.cotodel.hrms.auth.server.dto.UserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.UserRoleRequestNew;
 import com.cotodel.hrms.auth.server.dto.UserRoleResponse;
 import com.cotodel.hrms.auth.server.dto.UserSignUpResponse;
@@ -738,23 +739,23 @@ public class UserSignUpController extends CotoDelBaseController{
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> deleteUserRole(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 	    	logger.info("inside add deleteUserRole+++");
-	    	ExistUserResponse existResponse=null;
-	    	UserRoleEditResponse userRoleEditResponse;
+	    	DeleteUserRoleRequest existResponse=null;
+	    	UserRoleDeleteResponse userRoleDeleteResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
-				ExistUserResponse existUserResponse= EncryptionDecriptionUtil.convertFromJson(decript, ExistUserResponse.class);
+				DeleteUserRoleRequest existUserResponse= EncryptionDecriptionUtil.convertFromJson(decript, DeleteUserRoleRequest.class);
 				existResponse=userService.deleteUsersRole(existUserResponse);
 				
 				if(existResponse!=null && existResponse.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
-					userRoleEditResponse=new UserRoleEditResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
-					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userRoleEditResponse);
+					userRoleDeleteResponse=new UserRoleDeleteResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userRoleDeleteResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);
 				}else {
-					userRoleEditResponse=new UserRoleEditResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
-					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userRoleEditResponse);
+					userRoleDeleteResponse=new UserRoleDeleteResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userRoleDeleteResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);   	   
 			}
@@ -765,8 +766,8 @@ public class UserSignUpController extends CotoDelBaseController{
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		userRoleEditResponse=new UserRoleEditResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
-				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userRoleEditResponse);
+	    		userRoleDeleteResponse=new UserRoleDeleteResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,existResponse,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userRoleDeleteResponse);
 				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 				return ResponseEntity.ok(jsonEncriptObject); 
 			} catch (Exception e) {
@@ -1017,4 +1018,73 @@ public class UserSignUpController extends CotoDelBaseController{
 	          
 	        
 	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/saveReputeDetails",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> saveReputeDetails(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+	    	logger.info("inside get saveUserDetails+++");
+	    	UserEntity userEntity=null;
+	    	String responseToken="";
+	    	String authToken = "";
+	    	UserSignUpResponse userSignUpResponse=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				System.out.println("companyId:signup::"+companyId);
+				UserRequest userReq=new UserRequest();
+				UserRequestEncript userReqEnc=new UserRequestEncript();
+
+	            String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+		        userReqEnc = EncryptionDecriptionUtil.convertFromJson(decript, UserRequestEncript.class);
+		        
+		        CopyUtility.copyProperties(userReqEnc, userReq);
+		        
+				responseToken=userService.userExist(userReq.getMobile(), userReq.getEmail());
+				if(!responseToken.equalsIgnoreCase("")) {
+					userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+					String jsonEncript = EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+		            EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+		    	    return ResponseEntity.ok(jsonEncriptObject);
+				}else {
+	    	    userEntity=	userService.saveUserDetails(request,userReq);
+	    		
+	    	    if(userEntity!=null && userEntity.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {	    
+	    		 userService.sendEmailToEmployee(userReq);
+	    		 userSignUpResponse=new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    		 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+		            EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+		    	    return ResponseEntity.ok(jsonEncriptObject);
+	    	    }else {
+	    	    	userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,userEntity.getResponse(),userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript = EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+		            EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+		    	    return ResponseEntity.ok(jsonEncriptObject);
+	    	    }
+	    	    
+			}
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in saveUserDetails====="+e);
+			}
+	    	 EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+		    	String jsonEncript = EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+	            jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+	    	
+ 	    return ResponseEntity.ok(jsonEncriptObject);
+	          
+	        
+	    }
+
 }

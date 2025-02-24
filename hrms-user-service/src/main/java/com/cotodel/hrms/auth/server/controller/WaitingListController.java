@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.UserGetWaitingListResponse;
+import com.cotodel.hrms.auth.server.dto.UserWaitingListGetResponse;
 import com.cotodel.hrms.auth.server.dto.UserWaitingListRequest;
 import com.cotodel.hrms.auth.server.dto.UserWaitingListResponse;
 import com.cotodel.hrms.auth.server.entity.UserWaitingListEntity;
@@ -93,35 +94,55 @@ public class WaitingListController {
 	    return ResponseEntity.ok(jsonEncriptObject);
         
     }
-
-    
-    @Operation(summary = "This API will provide the user Authentication ", security = {
-    		@SecurityRequirement(name = "task_auth")}, tags = {"user Authentication  APIs"})
+	
+	@Operation(summary = "This API will provide the Save User Details ", security = {
+    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
     @ApiResponses(value = {
-    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = String.class))),		
+    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
     @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
     @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
     @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-    @RequestMapping(value = "/get/waitingListUser",produces = {"application/json"}, consumes = {"application/json"},method = RequestMethod.POST)
-    public ResponseEntity<Object>   waitingListUser(HttpServletRequest request,@RequestBody UserWaitingListEntity userWaitingListEntity) {
+    @RequestMapping(value = "/get/waitingListUsers",produces = {"application/json"}, 
+    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+    public ResponseEntity<Object> waitingListUsers(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+    	logger.info("inside get waitingListUsers+++");
+    	List<UserWaitingListEntity> response=null;
+    	String authToken = "";
+    	String message=MessageConstant.RESPONSE_FAILED;
+    	UserWaitingListGetResponse userWaitingListGetResponse;
+    	try {	    		
+    		String companyId = request.getHeader("companyId");
+			SetDatabaseTenent.setDataSource(companyId);
+			String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+			UserWaitingListRequest userWaitingListRequest= EncryptionDecriptionUtil.convertFromJson(decript, UserWaitingListRequest.class);
+			
+			response=userWaitingService.checkUserList();
+    		
+    	    if(response!=null && response.size()>0) {   		 
+    	    	userWaitingListGetResponse=new UserWaitingListGetResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userWaitingListGetResponse);
+    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+    	    	return ResponseEntity.ok(jsonEncriptObject);
+    	    }
+		
+    	}catch (Exception e) {
+			
+    		e.printStackTrace();
+    		logger.error("error in /get/waitingListUsers====="+e.getMessage());
+    		message=e.getMessage();
+		}
+    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+    	try {
+    		userWaitingListGetResponse=new UserWaitingListGetResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userWaitingListGetResponse);
+	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+		} catch (Exception e) {
+			logger.error("error in /get/waitingListUsers====="+e.getMessage());
+		}
+	    return ResponseEntity.ok(jsonEncriptObject);
         
-    	String companyId=request.getHeader("companyId");
-    	SetDatabaseTenent.setDataSource(companyId);
-    	List<UserWaitingListEntity> list=null;
-    try {
-    	list=	userWaitingService.checkUserList();
-    	if(list!=null && list.size()>0) {
-			return ResponseEntity.ok(new UserGetWaitingListResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-		}else {
-			return ResponseEntity.ok(new UserGetWaitingListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp())); 		
-	   
-	}
-	} catch (Exception e) {
-		e.printStackTrace();
-	}   	 
-    return ResponseEntity.ok(new UserGetWaitingListResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	
-    	
     }
+
 
 
 }

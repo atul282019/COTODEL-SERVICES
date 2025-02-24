@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +24,8 @@ public class ReputeDaoImpl implements ReputeDao {
 	@Override
 	public ReputeTokenEntity getReputeDetails(String mobile) {
 		// TODO Auto-generated method stub
-		return repository.getReputeByMobile(mobile);
+		List<ReputeTokenEntity> list=repository.getReputeByMobile(mobile);
+		return list.size()>0?list.get(0):null;
 	}
 
 		
