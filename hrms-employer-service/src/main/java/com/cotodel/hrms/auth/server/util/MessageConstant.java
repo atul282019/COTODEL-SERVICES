@@ -11,6 +11,7 @@ public class MessageConstant {
 	public static final String OTP_SENT = "Otp Sent Successfully.";
 	public static final String OTP_FAILED = "Otp Failed.";
 	public static final String PROFILE_SUCCESS = "Data Saved Successfully.";
+	public static final String PROFILE_SUCCESS_UPDATE = "Data Saved/Update Successfully.";
 	public static final String PROFILE_UPDATE = "Data Update Successfully.";
 	public static final String PROFILE_FAILED = "Data Not Saved Successfully.";
 	public static final String PROFILE_FAILED_UPDATE = "Data Not Update Successfully.";

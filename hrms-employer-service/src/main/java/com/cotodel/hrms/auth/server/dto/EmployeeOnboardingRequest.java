@@ -21,7 +21,7 @@ public class EmployeeOnboardingRequest implements Serializable {
    	private String name;
    	private String email;
    	private String mobile;
-   	private String herDate;
+   	private LocalDate herDate;
    	private String jobTitle;		
    	private String depratment;
    	private Long managerId;
@@ -36,7 +36,7 @@ public class EmployeeOnboardingRequest implements Serializable {
     private String ifscCode;
     private String beneficiaryName;    
    	private String response;
-   	private String empPhoto;
+   	private byte[] empPhoto;
    	private String managerName;
 	
 }

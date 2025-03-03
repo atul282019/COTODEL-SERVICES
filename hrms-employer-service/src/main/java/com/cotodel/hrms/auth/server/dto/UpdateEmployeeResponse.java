@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeOnboardingResponse {
+public class UpdateEmployeeResponse {
 	
 	 private boolean status;
 	 private String message;
-	  EmployeeOnboardingRequest data;
-	  private String txnId;
-	  private String timestamp;
+	 private UpdateEmployeeStatusRequest data;
+	 private String txnId;
+	 private String timestamp;
 	  
 }

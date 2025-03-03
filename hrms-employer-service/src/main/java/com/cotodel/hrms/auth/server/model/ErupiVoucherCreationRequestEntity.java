@@ -68,5 +68,11 @@ public class ErupiVoucherCreationRequestEntity implements Serializable{
 	
 	@Column(name = "creation_date")
     private LocalDateTime creationDate;
+	
+	@Column(name = "purposecode", length =29 )
+    private String purposeCode;
+	
+	@Column(name="mcc")
+	private String mcc;
 
 }

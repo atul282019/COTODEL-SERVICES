@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import javax.persistence.Column;
+
 import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
 import lombok.AllArgsConstructor;
@@ -21,4 +23,6 @@ public class ErupiVoucherCreateRequest {
 	private Float amount;
 	private String remarks;
 	private String response;
+	private String purposeCode;	
+	private String mcc;
 }
