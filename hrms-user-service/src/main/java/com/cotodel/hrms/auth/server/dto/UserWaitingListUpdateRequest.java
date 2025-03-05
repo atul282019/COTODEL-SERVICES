@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserWaitingListRequest{
+public class UserWaitingListUpdateRequest{
+
 	private Long id ;	
 	private String companyName;	
 	private String companySize;	
@@ -18,5 +19,5 @@ public class UserWaitingListRequest{
 	private String email;
 	private String response;
 	private String status;
-	private boolean erupistatus;
+	private boolean erupistatus ;
 }

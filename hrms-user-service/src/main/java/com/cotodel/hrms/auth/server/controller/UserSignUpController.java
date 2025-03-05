@@ -91,7 +91,7 @@ public class UserSignUpController extends CotoDelBaseController{
 		        userReqEnc = EncryptionDecriptionUtil.convertFromJson(decript, UserRequestEncript.class);
 		        
 		        CopyUtility.copyProperties(userReqEnc, userReq);
-		        
+		        userReq.setErupistatus(userReqEnc.isErupistatus());
 				responseToken=userService.userExist(userReq.getMobile(), userReq.getEmail());
 				if(!responseToken.equalsIgnoreCase("")) {
 					userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
@@ -1052,7 +1052,7 @@ public class UserSignUpController extends CotoDelBaseController{
 		            EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 		    	    return ResponseEntity.ok(jsonEncriptObject);
 				}else {
-	    	    userEntity=	userService.saveUserDetails(request,userReq);
+	    	    userEntity=	userService.saveReputeDetails(request,userReq);
 	    		
 	    	    if(userEntity!=null && userEntity.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {	    
 	    		 userService.sendEmailToEmployee(userReq);

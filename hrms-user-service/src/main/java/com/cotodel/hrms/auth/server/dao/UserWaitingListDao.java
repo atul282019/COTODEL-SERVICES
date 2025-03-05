@@ -9,4 +9,5 @@ public interface UserWaitingListDao {
 	public UserWaitingListEntity saveUserDetails(UserWaitingListEntity user);
 	UserWaitingListEntity getUser(String email);
 	List<UserWaitingListEntity> getUserList();
+	UserWaitingListEntity getUserById(Long id);
 }

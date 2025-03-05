@@ -2,7 +2,6 @@ package com.cotodel.hrms.auth.server.entity;
 
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Access;
@@ -57,4 +56,8 @@ public class UserWaitingListEntity implements Serializable{
 	
 	@Column(name="status")
 	private int status;
+	
+	@Column(name="status_remarks")
+	private String statusRemarks;
+	
 }

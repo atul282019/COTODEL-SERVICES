@@ -36,10 +36,10 @@ public interface UserRoleMapperRepository extends JpaRepository<UserRoleMapperEn
 	    @Query("DELETE FROM UserRoleMapperEntity s WHERE s.mobile = :mobile AND s.orgId = :orgId")
 	    void getMapperMobilDelete(@Param("mobile") String mobile, @Param("orgId") Long orgId);
 
-	 	//role_id in ('1','9','10','12')
+	 	//role_id in ('13','9','10','12')
 	 	
 	 	@Query("SELECT new com.cotodel.hrms.auth.server.dto.RoleDto(r.roleId, r.roleDesc) " +
-	 	       "FROM RoleMasterEntity r WHERE r.roleId in ('1','9','10','12') AND r.roleId NOT IN " +
+	 	       "FROM RoleMasterEntity r WHERE r.roleId in ('13','9','10','12') AND r.roleId NOT IN " +
 	 	       "(SELECT urm.roleId FROM UserRoleMapperEntity urm WHERE urm.mobile = :mobile)")
 	 	public List<RoleDto> getByMobileRoleMaster(@Param("mobile") String mobile);
 } 

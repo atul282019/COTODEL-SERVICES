@@ -119,12 +119,12 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 				Date date = new Date();
 				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				userDetails.setCreated_date(localDate);
-//				if(user.isErupistatus()) {
-//					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
-//				}else {
-//					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
-//				}
-				userDetails.setRole_id(MessageConstant.REPUTE_ROLE);
+				if(user.isErupistatus()) {
+					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
+				}else {
+					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+				}
+				//userDetails.setRole_id(MessageConstant.REPUTE_ROLE);
 				userDetails.setStatus(1);
 				userEntity=userDetailsDao.saveUserDetails(userDetails);
 				//userEmpEntity.setUser_id(UserEntity1.getId());
@@ -989,11 +989,12 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 				Date date = new Date();
 				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				userDetails.setCreated_date(localDate);
-				if(user.isErupistatus()) {
-					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
-				}else {
-					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
-				}
+//				if(user.isErupistatus()) {
+//					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
+//				}else {
+//					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+//				}
+				userDetails.setRole_id(MessageConstant.REPUTE_ROLE);
 				userDetails.setStatus(1);
 				userEntity=userDetailsDao.saveUserDetails(userDetails);
 				userEmpEntity.setUser_id(userEntity.getId());
