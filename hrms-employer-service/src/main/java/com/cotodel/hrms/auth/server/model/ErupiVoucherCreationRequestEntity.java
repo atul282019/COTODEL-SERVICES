@@ -1,7 +1,6 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Access;

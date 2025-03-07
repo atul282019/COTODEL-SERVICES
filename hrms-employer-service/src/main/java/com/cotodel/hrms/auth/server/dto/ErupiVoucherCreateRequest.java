@@ -1,7 +1,5 @@
 package com.cotodel.hrms.auth.server.dto;
 
-import javax.persistence.Column;
-
 import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
 import lombok.AllArgsConstructor;

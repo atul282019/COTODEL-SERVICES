@@ -14,10 +14,6 @@ public interface CommonUtils {
 	public static String userDetailsWithMobile = "/userServices/Api/get/userDetailsWithMobile";
 	public static String getToken = "/tokenService/Api/get/access-token";
 	public static String verifyToken = "/tokenService/Api/verify/access-token";
-	//auth.token.get.url=http://13.234.119.146:8082/tokenService/Api/get/access-token
-	//auth.token.verify.url=http://13.234.119.146:8082/tokenService/Api/verify/access-token
-	//user.service.add.url=http://13.234.119.146:8088/userServices/Api/add/saveUsersWithOutMail
-	//user.service.add.new.url=http://13.234.119.146:8088/userServices/Api/add/saveUsersWithOutMailNew
-	//http://13.234.119.146:8088/userServices/Api/add/saveUsersBulk
-	//user.service.update.bulk.url=http://13.234.119.146:8088/userServices/Api/update/updateUsers
+	public static String sendIndianVoucherCreate = "/erupitesting/Api/call/indianVoucherCreation";
+	public static String sendIndianVoucherRevoke = "/erupitesting/Api/call/indianVoucherRevoke";
 }

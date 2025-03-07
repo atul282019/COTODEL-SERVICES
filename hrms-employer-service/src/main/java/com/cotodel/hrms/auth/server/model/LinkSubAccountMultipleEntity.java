@@ -12,6 +12,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -28,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "link_sub_account_multiple", uniqueConstraints = @UniqueConstraint(columnNames = {"acnumber"}) )
+@Table(name = "link_sub_account_multiple",uniqueConstraints = @UniqueConstraint(columnNames = {"acnumber", "org_id","status"}))
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="link_sub_account_multiple_seq" , sequenceName="link_sub_account_multiple_seq", allocationSize=1)
 public class LinkSubAccountMultipleEntity implements Serializable{
@@ -40,8 +42,9 @@ public class LinkSubAccountMultipleEntity implements Serializable{
 	@Column(name="id")
 	private Long id;
 	
-	@Column(name="link_id")
-	private Long linkId;
+	@ManyToOne
+	@JoinColumn(name = "link_id", referencedColumnName = "id_pk")  
+	private ErupiLinkAccountEntity erupiLinkAccountEntity;
 	
 	@Column(name="bankcode", length=99)
 	private String bankCode;//FK
@@ -52,7 +55,7 @@ public class LinkSubAccountMultipleEntity implements Serializable{
 	@Column(name="accountholdername", length=99)
 	private String accountHolderName;
 	
-	@Column(name="acnumber", length=18,unique = true)
+	@Column(name="acnumber", length=18)
 	private String acNumber;
 	
 	@Enumerated(EnumType.STRING)
@@ -94,4 +97,7 @@ public class LinkSubAccountMultipleEntity implements Serializable{
 	
 	@Column(name="rejected_by", length=49)
 	private String rejectedby;
+	
+	@Column(name="status_message")
+	private String statusMessage;
 }

@@ -5,18 +5,13 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import com.cotodel.hrms.auth.server.model.master.MccMasterEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -158,5 +153,11 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	
 	@Column(name="payee_name")
 	private String payeeName;
+	
+	@Column(name="txn_ref_id")
+	private String txnRefId;
+	
+	@Column(name="txn_date_time")
+	private String txnDateTime;
 	
 }

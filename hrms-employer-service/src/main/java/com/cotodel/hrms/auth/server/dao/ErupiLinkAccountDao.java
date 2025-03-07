@@ -11,4 +11,5 @@ public interface ErupiLinkAccountDao {
 	public ErupiLinkAccountEntity findByErupiLinkAccNumber(String accNo);
 	public ErupiLinkAccountEntity findByErupiPrimaryAccDetails(Long orgid);
 	public List<ErupiLinkAccountEntity> findByErupiLinkOrgIdWithStatus(Long orgid);
+	public ErupiLinkAccountEntity findByErupiLinkById(Long id);
 }

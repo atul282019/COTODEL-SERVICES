@@ -2,7 +2,6 @@ package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -13,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

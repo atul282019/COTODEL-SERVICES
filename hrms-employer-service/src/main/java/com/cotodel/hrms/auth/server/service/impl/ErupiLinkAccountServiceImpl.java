@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dao.BankMasterDao;
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
+import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountDao;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
@@ -19,6 +20,7 @@ import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
+import com.cotodel.hrms.auth.server.model.LinkSubAccountMultipleEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.repository.EmployeeOnboardingRepository;
 import com.cotodel.hrms.auth.server.repository.ErupiLinkAccountRepository;
@@ -47,6 +49,9 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 	
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
+	
+	@Autowired
+	LinkSubMultipleAccountDao  linkSubMultipleAccountDao;
 	
 	@Override
 	public ErupiLinkAccountRequest saveErupiAccountDetails(ErupiLinkAccountRequest request) {
@@ -246,6 +251,15 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 				CopyUtility.copyProperties(erupiLinkAccountWithOutResponse2,erupiLinkAccountWithOutResponse);
 				erupiLinkList.add(erupiLinkAccountWithOutResponse);
 			}
+			//start
+			List<LinkSubAccountMultipleEntity> linksubacount=linkSubMultipleAccountDao.getLinkMultipleDetailsByOrgId(request.getOrgId());
+			for (LinkSubAccountMultipleEntity linkSubAccountMultipleEntity : linksubacount) {
+				erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
+				ErupiLinkAccountEntity erupiLinkAccountEntity1=erupiLinkAccountDao.findByErupiLinkById(linkSubAccountMultipleEntity.getErupiLinkAccountEntity().getId());
+				CopyUtility.copyProperties(erupiLinkAccountEntity1,erupiLinkAccountWithOutResponse);
+				erupiLinkList.add(erupiLinkAccountWithOutResponse);		
+			}
+			//end
 			
 		} catch (Exception e) {
 			e.printStackTrace();
