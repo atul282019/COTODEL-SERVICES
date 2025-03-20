@@ -565,7 +565,7 @@ public class MobileEmailVerifyController {
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		userOtpVerifyWithoutUserResponse=new UserOtpVerifyWithoutUserResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		userOtpVerifyWithoutUserResponse=new UserOtpVerifyWithoutUserResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyWithoutUserResponse);
 				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {
