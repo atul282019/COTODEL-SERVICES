@@ -16,4 +16,5 @@ public interface CommonUtils {
 	public static String verifyToken = "/tokenService/Api/verify/access-token";
 	public static String sendIndianVoucherCreate = "/erupitesting/Api/call/indianVoucherCreation";
 	public static String sendIndianVoucherRevoke = "/erupitesting/Api/call/indianVoucherRevoke";
+	public static String sendIndianVoucherInquary = "/erupitesting/Api/call/indianVoucherInquiry";
 }

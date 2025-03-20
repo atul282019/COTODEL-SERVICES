@@ -43,6 +43,7 @@ import com.cotodel.hrms.auth.server.dto.LinkMultipleAccountUpdate;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.indianbank.ErupiIndianBankVoucherRevokeRequest;
 import com.cotodel.hrms.auth.server.dto.indianbank.IndianBankVoucherCreateResponse;
+import com.cotodel.hrms.auth.server.dto.indianbank.InputParamRRequest;
 import com.cotodel.hrms.auth.server.dto.indianbank.VoucherCreateIndianBankRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
@@ -50,10 +51,12 @@ import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
+import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnDetailsEntity;
 import com.cotodel.hrms.auth.server.model.LinkSubAccountMultipleEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
+import com.cotodel.hrms.auth.server.service.ErupiLinkAccountService;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherInitiateDetailsService;
 import com.cotodel.hrms.auth.server.service.LinkMultipleAccountService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
@@ -91,6 +94,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 	
 	@Autowired
 	LinkMultipleAccountService linkMultipleAccountService;
+	
+	@Autowired
+	ErupiLinkAccountService erupiLinkAccountService;
 	
 	@Override
 	public ErupiVoucherCreateDetailsRequest saveErupiVoucherInitiateDetails(ErupiVoucherCreateDetailsRequest request) {
@@ -596,8 +602,19 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					//erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
 						
 					ErupiIndianBankVoucherRevokeRequest eruRequest=new ErupiIndianBankVoucherRevokeRequest();
-					eruRequest.setAction("");
-						String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
+					eruRequest.setAction("revoke");
+					eruRequest.setSubaction("revoke");
+					eruRequest.setEntityId("INB");
+					InputParamRRequest inputparam=new InputParamRRequest();
+					inputparam.setTxnrefID(erupiVoucherTxnDetailsEntity.getTxnRefId());
+					inputparam.setUmn(erupiVoucherTxnDetailsEntity.getUmn());
+					inputparam.setOrgTxnId("");
+					inputparam.setOrgTxnDate(erupiVoucherTxnDetailsEntity.getTxnDateTime());
+					inputparam.setOrgTxnAmount(erupiVoucherInitiateDetailsEntity.getAmount().toString());
+					inputparam.setTxndatetime(erupiVoucherTxnDetailsEntity.getTxnDateTime());
+					inputparam.setCheckSum("");
+					eruRequest.setInputparam(inputparam);
+						String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(eruRequest),
 								applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendIndianVoucherRevoke);
 						log.info("Ending voucher revoking response1 ...."+response1);
 						
@@ -613,17 +630,17 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 							request.setResponse(response);
 							
 							JSONObject data = profileJsonRes.getJSONObject("data");
-							DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+							//DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+							IndianBankVoucherCreateResponse decryptedResponse= jsonToPojoIndianBank(data.toString());
 							
-							
-							if(decryptedResponse.getStatus().equalsIgnoreCase("REVOKE-SUCCESS")) {
+							if(decryptedResponse.getTxnStatus().equalsIgnoreCase("00")) {
 								//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-								request.setResponseApi(decryptedResponse.getMessage());
+								request.setResponseApi(decryptedResponse.getTxnMsg());
 								//erupiVoucherTxnDetailsEntity.setId(null);
 								int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100005l);
 								erupiVoucherTxnDetailsEntity2.setWorkFlowId(100005l);
-								erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
-								erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
+								erupiVoucherTxnDetailsEntity2.setResponseJson(data.toString());
+								erupiVoucherTxnDetailsEntity2=setResponseValueIndianBank(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 								erupiVoucherTxnDetailsEntity2.setOrgId(erupiVoucherInitiateDetailsEntity.getOrgId());
 								erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 								//
@@ -642,15 +659,15 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 									response=MessageConstant.RESPONSE_FAILED;
 									request.setResponse(response);
 									//erupiVoucherRevokeDetailsRequest.setResponse(decryptedResponse.getMessage());
-									request.setResponseApi(decryptedResponse.getMessage());
+									request.setResponseApi(decryptedResponse.getTxnMsg());
 									//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
 									//erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
 									//erupiVoucherTxnDetailsEntity.setId(null);
 									erupiVoucherTxnDetailsEntity2.setWorkFlowId(100012l);
 									erupiVoucherTxnDetailsEntity2.setVoucherType("Revoke");
 									erupiVoucherTxnDetailsEntity2.setOrgId(erupiVoucherInitiateDetailsEntity.getOrgId());
-									erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
-									erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
+									erupiVoucherTxnDetailsEntity2.setResponseJson(data.toString());
+									erupiVoucherTxnDetailsEntity2=setResponseValueIndianBank(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 									erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 								}
 							
@@ -664,13 +681,14 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 							//erupiVoucherTxnDetailsEntity.setId(null);
 							
 							JSONObject data = profileJsonRes.getJSONObject("data");
-							DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+							//DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+							IndianBankVoucherCreateResponse decryptedResponse= jsonToPojoIndianBank(data.toString());
 							//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
 							//erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
 							erupiVoucherTxnDetailsEntity2.setWorkFlowId(100012l);
 							erupiVoucherTxnDetailsEntity2.setOrgId(erupiVoucherInitiateDetailsEntity.getOrgId());
-							erupiVoucherTxnDetailsEntity2.setResponseJson(decryptedResponse.getApiResponse());
-							erupiVoucherTxnDetailsEntity2=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity2);
+							erupiVoucherTxnDetailsEntity2.setResponseJson(data.toString());
+							erupiVoucherTxnDetailsEntity2=setResponseValueIndianBank(decryptedResponse,erupiVoucherTxnDetailsEntity2);
 							//erupiVoucherTxnDetailsEntity
 							erupiVoucherTxnDetailsEntity2=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity2);
 							logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity2);
@@ -1129,30 +1147,32 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 			        String startDate = stDate.format(formatter);
 			        String endDate = etDate.format(formatter);
+			        ErupiLinkAccountEntity erupi=erupiLinkAccountService.getErupiAccountDetails(request.getAccountNumber());
 			        voucherCreateIndianBankRequest.setCorpid("");
-			        voucherCreateIndianBankRequest.setCorpmobno("91"+"7639400793");
-			        voucherCreateIndianBankRequest.setCorpupiID("testbradco@indianbk");
-			        voucherCreateIndianBankRequest.setCorpaccNo("615021536");
-			        voucherCreateIndianBankRequest.setCorpaccType("SB");
-			        voucherCreateIndianBankRequest.setCorpifsc("IDIB000S269");
-			        voucherCreateIndianBankRequest.setCorpname("BRADCO GANGA KALYANA SCHEME");
+			        voucherCreateIndianBankRequest.setCorpmobno("91"+erupi.getCorpmobno());
+			        voucherCreateIndianBankRequest.setCorpupiID(erupi.getCorpupiId());
+			        voucherCreateIndianBankRequest.setCorpaccNo(erupi.getCorpaccNo());
+			        voucherCreateIndianBankRequest.setCorpaccType(erupi.getCorpaccType());
+			        voucherCreateIndianBankRequest.setCorpifsc(erupi.getCorpifsc());
+			        voucherCreateIndianBankRequest.setCorpname(erupi.getCorpname());
 			        voucherCreateIndianBankRequest.setBenemobNo("91"+request.getMobile());
 			        voucherCreateIndianBankRequest.setBenename(request.getName());
-			        voucherCreateIndianBankRequest.setBenemailId("navnath.satpute@kiya.ai");
+			        voucherCreateIndianBankRequest.setBenemailId("fakhruddeen.mca@gmail.com");
 			        voucherCreateIndianBankRequest.setBeneIdName("DL");
 			        voucherCreateIndianBankRequest.setBeneIdno("HR0443438448");
 			        voucherCreateIndianBankRequest.setPurposecode(request.getPurposeCode());
-			        voucherCreateIndianBankRequest.setRevocable("N");
+			        voucherCreateIndianBankRequest.setRevocable(erupi.getRevocable());
 			        voucherCreateIndianBankRequest.setAmount(formattedValue);
 			        voucherCreateIndianBankRequest.setValiditystartdate(startDate);
 			        voucherCreateIndianBankRequest.setValidityenddate(endDate);
-			        voucherCreateIndianBankRequest.setInitiationMode("00");
+			        voucherCreateIndianBankRequest.setInitiationMode(erupi.getInitiationMode());
 			        voucherCreateIndianBankRequest.setMerchantid(request.getMerchantId());
 			        voucherCreateIndianBankRequest.setPayeeVPA(request.getPayeeVPA());
 			        voucherCreateIndianBankRequest.setPayermcc(request.getMcc());
 			        voucherCreateIndianBankRequest.setPayeemcc(request.getMcc());
 			        voucherCreateIndianBankRequest.setRecurrencePattern("ONETIME");
 			        voucherCreateIndianBankRequest.setChecksum("");
+			        
 			        String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateIndianBankRequest),
 							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendIndianVoucherCreate);
 					log.info("Ending voucher create indian bank response1 ...."+response1);
@@ -1224,12 +1244,17 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				//request.setPayeeVPA("invaciauat@prepaidicici");
 				request.setType("CREATE");
 				LocalDate stDate =request.getStartDate();
-				String validity = request.getValidity();
-				String[] daysArray=validity.split(" ");
-				Long days=Long.valueOf(daysArray[0]);
-				//erupiVoucherInitiateDetailsEntity.setExpDate(stDate);
-				LocalDate etDate =stDate.plusDays(days);
-				request.setExpDate(etDate);
+				if(request.getBulktblId()!=null && request.getBulktblId()>0) {
+					
+				}else {
+					String validity = request.getValidity();
+					String[] daysArray=validity.split(" ");
+					Long days=Long.valueOf(daysArray[0]);
+					LocalDate etDate =stDate.plusDays(days);
+					request.setExpDate(etDate);
+				}
+				
+				
 				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
 				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
 				CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
@@ -1239,7 +1264,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				erupiVoucherInitiateDetailsEntity.setWorkFlowId(100001l);
 				erupiVoucherInitiateDetailsEntity.setMerchanttxnid(merchantTranId);
 				 //CommonUtility.convertToLocalDate(endDate);
-				erupiVoucherInitiateDetailsEntity.setExpDate(etDate);
+				//erupiVoucherInitiateDetailsEntity.setExpDate(etDate);
 				
 				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.saveDetails(erupiVoucherInitiateDetailsEntity);
 				if(erupiVoucherInitiateDetailsEntity!=null) {

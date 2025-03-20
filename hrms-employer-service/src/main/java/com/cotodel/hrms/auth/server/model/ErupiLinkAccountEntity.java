@@ -131,4 +131,37 @@ public class ErupiLinkAccountEntity implements Serializable{
 	@Column(name="ps_flag", length=9)
 	private String psFlag;//Flag value P for primary and S for Secondry Default is null
 	
+	@Column(name="corpmobno")
+	private String corpmobno;
+	
+	@Column(name="corpupi_id")
+	private String corpupiId;
+	
+	@Column(name="corpacc_no")
+	private String corpaccNo;
+	
+	@Column(name="corpacc_type")
+	private String corpaccType;
+	
+	@Column(name="corpifsc")
+	private String corpifsc;
+	
+	@Column(name="corpname")
+	private String corpname;
+	
+	@Column(name="benemail_id")
+	private String benemailId;
+	
+	@Column(name="bene_id_name")
+	private String beneIdName;
+	
+	@Column(name="bene_id_no")
+	private String beneIdno;
+	
+	@Column(name="revocable")
+	private String revocable;
+	
+	@Column(name="initiation_mode")
+	private String initiationMode;
+	
 }

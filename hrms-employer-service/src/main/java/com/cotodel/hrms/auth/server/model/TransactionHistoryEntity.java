@@ -1,6 +1,8 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -54,5 +56,6 @@ public class TransactionHistoryEntity implements Serializable{
 	@Column(name="merchantid", length=19)
 	private String merchantId;
 	
-	
+	@Column(name = "creationdate")
+    private LocalDateTime creationDate;
 }

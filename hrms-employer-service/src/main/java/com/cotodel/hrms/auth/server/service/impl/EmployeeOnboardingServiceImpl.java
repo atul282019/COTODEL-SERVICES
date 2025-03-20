@@ -178,6 +178,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 					employeeOnboarding.setEmployerId(request.getEmployerId());
 					employeeOnboarding.setUserDetailsId(id);
 					employeeOnboarding.setMode(2l);
+					employeeOnboarding.setStatus(1);
 					String empCode=getEmpCode(request.getEmployerId());
 					employeeOnboarding.setEmpCode(empCode);
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);

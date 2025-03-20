@@ -50,7 +50,13 @@ public class LinkSubMultipleAccountDaoImpl implements LinkSubMultipleAccountDao{
 	@Override
 	public LinkSubAccountMultipleEntity getLinkMultipleAccountByAccNoOrgId(String acNumber, Long orgId) {
 		// TODO Auto-generated method stub
-		return linkSubMultipleAccountRepository.getLinkMultipleAccountByAccNoOrgId(acNumber, orgId);
+		LinkSubAccountMultipleEntity linkSubAccountMultipleEntity=null;
+		try {
+			linkSubAccountMultipleEntity=linkSubMultipleAccountRepository.getLinkMultipleAccountByAccNoOrgId(acNumber, orgId);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return linkSubAccountMultipleEntity;
 	}
 
 

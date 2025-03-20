@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import java.time.LocalDateTime;
+
 import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 import com.cotodel.hrms.auth.server.util.AccountType;
 
@@ -29,4 +31,5 @@ public class LinkMultipleAccountRequest {
 	private String rejectedby;
 	private String response;
 	private String statusMessage;
+	private LocalDateTime creationDate;
 }

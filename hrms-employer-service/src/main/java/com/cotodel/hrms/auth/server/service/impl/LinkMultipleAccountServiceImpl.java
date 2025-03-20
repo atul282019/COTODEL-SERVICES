@@ -13,11 +13,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountDao;
+import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountTempDao;
 import com.cotodel.hrms.auth.server.dao.TransactionHistoryDao;
 import com.cotodel.hrms.auth.server.dto.LinkMultipleAccountRequest;
 import com.cotodel.hrms.auth.server.dto.LinkMultipleAccountUpdate;
 import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
 import com.cotodel.hrms.auth.server.model.LinkSubAccountMultipleEntity;
+import com.cotodel.hrms.auth.server.model.LinkSubAccountMultipleTempEntity;
 import com.cotodel.hrms.auth.server.model.TransactionHistoryEntity;
 import com.cotodel.hrms.auth.server.service.LinkMultipleAccountService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
@@ -31,7 +33,10 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 
 	private static final Logger logger = LoggerFactory.getLogger(LinkMultipleAccountServiceImpl.class);
 	@Autowired
-	LinkSubMultipleAccountDao  linkSubMultipleAccountDao;	
+	LinkSubMultipleAccountDao  linkSubMultipleAccountDao;
+	
+	@Autowired
+	LinkSubMultipleAccountTempDao linkSubMultipleAccountTempDao;
 	
 	@Autowired
 	TransactionHistoryDao  transactionHistoryDao;
@@ -40,19 +45,26 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 	@Override
 	public LinkMultipleAccountRequest saveMultipleAccountRequest(LinkMultipleAccountRequest request) {
 		
-		LinkSubAccountMultipleEntity linkSubAccountMultipleEntity=null;
+		LinkSubAccountMultipleTempEntity linkSubAccountMultipleTempEntity=null;
 		String response=MessageConstant.RESPONSE_FAILED;
 		try {
+			Float amount=request.getAmountLimit();
+			if(amount<=0) {
+				response=MessageConstant.BAL;
+				request.setResponse(response);
+				return request;
+			}
 			ErupiLinkAccountEntity erupiLinkAccountEntity=new ErupiLinkAccountEntity();
-			linkSubAccountMultipleEntity=new LinkSubAccountMultipleEntity();
-			CopyUtility.copyProperties(request,linkSubAccountMultipleEntity);
-			linkSubAccountMultipleEntity.setCreationDate(LocalDateTime.now());
+			linkSubAccountMultipleTempEntity=new LinkSubAccountMultipleTempEntity();
+			
+			CopyUtility.copyProperties(request,linkSubAccountMultipleTempEntity);
+			linkSubAccountMultipleTempEntity.setCreationDate(LocalDateTime.now());
 			erupiLinkAccountEntity.setId(request.getLinkId());
-			linkSubAccountMultipleEntity.setStatus(0l);
-			linkSubAccountMultipleEntity.setStatusMessage("Requested");
-			linkSubAccountMultipleEntity.setBalance(request.getAmountLimit());
-			linkSubAccountMultipleEntity.setErupiLinkAccountEntity(erupiLinkAccountEntity);
-			linkSubAccountMultipleEntity=linkSubMultipleAccountDao.saveDetails(linkSubAccountMultipleEntity);
+			linkSubAccountMultipleTempEntity.setStatus(0l);
+			linkSubAccountMultipleTempEntity.setStatusMessage("Requested");
+			linkSubAccountMultipleTempEntity.setBalance(request.getAmountLimit());
+			linkSubAccountMultipleTempEntity.setErupiLinkAccountEntity(erupiLinkAccountEntity);
+			linkSubAccountMultipleTempEntity=linkSubMultipleAccountTempDao.saveDetails(linkSubAccountMultipleTempEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
 			
@@ -91,6 +103,7 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 			transactionHistoryEntity.setMerchantId(request.getMerchantId());
 			transactionHistoryEntity.setAcNumber(request.getAcNumber());
 			transactionHistoryEntity.setMobile(request.getMobile());
+			transactionHistoryEntity.setCreationDate(LocalDateTime.now());
 			transactionHistoryDao.saveDetails(transactionHistoryEntity);
 			request.setResponse(MessageConstant.RESPONSE_SUCCESS);
 		}
@@ -118,6 +131,7 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 			transactionHistoryEntity.setMerchantId(request.getMerchantId());
 			transactionHistoryEntity.setAcNumber(request.getAcNumber());
 			transactionHistoryEntity.setMobile(request.getMobile());
+			transactionHistoryEntity.setCreationDate(LocalDateTime.now());
 			transactionHistoryDao.saveDetails(transactionHistoryEntity);
 			request.setResponse(MessageConstant.RESPONSE_SUCCESS);
 		}
@@ -128,11 +142,11 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 	@Override
 	public List<LinkMultipleAccountRequest> getMultipleAccountList(LinkMultipleAccountRequest request) {
 		List<LinkMultipleAccountRequest> liRequests=new ArrayList<>();
-		List<LinkSubAccountMultipleEntity> list=linkSubMultipleAccountDao.getLinkMultipleDetails();	
-		for (LinkSubAccountMultipleEntity linkSubAccountMultipleEntity : list) {
+		List<LinkSubAccountMultipleTempEntity> list=linkSubMultipleAccountTempDao.getLinkMultipleDetails(request.getOrgId());	
+		for (LinkSubAccountMultipleTempEntity linkSubAccountMultipleTempEntity : list) {
 			LinkMultipleAccountRequest linkMultipleAccountRequest=new LinkMultipleAccountRequest();
-			CopyUtility.copyProperties(linkSubAccountMultipleEntity,linkMultipleAccountRequest);
-			linkMultipleAccountRequest.setLinkId(linkSubAccountMultipleEntity.getErupiLinkAccountEntity().getId());
+			CopyUtility.copyProperties(linkSubAccountMultipleTempEntity,linkMultipleAccountRequest);
+			linkMultipleAccountRequest.setLinkId(linkSubAccountMultipleTempEntity.getErupiLinkAccountEntity().getId());
 			liRequests.add(linkMultipleAccountRequest);
 		}
 		return liRequests;
@@ -140,30 +154,82 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 
 	@Override
 	public LinkMultipleAccountRequest updateMultipleAccount(LinkMultipleAccountRequest request) {
-request.setResponse(MessageConstant.RESPONSE_FAILED);
-		LinkSubAccountMultipleEntity linkSubAccountMultipleEntity=new LinkSubAccountMultipleEntity();
-		LinkSubAccountMultipleEntity link=linkSubMultipleAccountDao.getDetails(request.getId());
-		if(link!=null) {			
+		request.setResponse(MessageConstant.RESPONSE_FAILED);
+		LinkSubAccountMultipleTempEntity linkSubAccountMultipleEntity=new LinkSubAccountMultipleTempEntity();
+		LinkSubAccountMultipleEntity linkSubAccountMultipleEntity1=new LinkSubAccountMultipleEntity();
+		LinkSubAccountMultipleEntity linkSubAccountEntity=null;
+		try {			
+		
+			LinkSubAccountMultipleTempEntity link=linkSubMultipleAccountTempDao.getDetails(request.getId());
+		if(link!=null && link.getStatus()==0) {			
 			if(request.getApprovedby()!=null && !request.getApprovedby().equalsIgnoreCase("")) {
+				
+				linkSubAccountEntity=linkSubMultipleAccountDao.getLinkMultipleAccountByAccNoOrgId(link.getAcNumber(), link.getOrgId());
+				
+				if(linkSubAccountEntity!=null) {
+					
+					Float amtLmt=linkSubAccountEntity.getAmountLimit()+request.getAmountLimit();
+					Float bal=linkSubAccountEntity.getBalance()+request.getBalance();
+					linkSubAccountEntity.setAmountLimit(amtLmt);
+					linkSubAccountEntity.setBalance(bal);
+					linkSubMultipleAccountDao.saveDetails(linkSubAccountEntity);
+					
+				}else {
+					ErupiLinkAccountEntity erupiLinkAccountEntity=new ErupiLinkAccountEntity();
+					CopyUtility.copyProperties(request,linkSubAccountMultipleEntity1);
+					linkSubAccountMultipleEntity1.setCreationDate(LocalDateTime.now());
+					erupiLinkAccountEntity.setId(request.getLinkId());
+					linkSubAccountMultipleEntity1.setStatus(1l);
+					linkSubAccountMultipleEntity1.setStatusMessage("Approved");
+					linkSubAccountMultipleEntity1.setBalance(request.getAmountLimit());
+					linkSubAccountMultipleEntity1.setErupiLinkAccountEntity(erupiLinkAccountEntity);
+					linkSubAccountMultipleEntity1=linkSubMultipleAccountDao.saveDetails(linkSubAccountMultipleEntity1);
+					//response=MessageConstant.RESPONSE_SUCCESS;
+				}
 				link.setApprovedby(request.getApprovedby());
 				link.setStatus(1l);
 				link.setStatusMessage("Approved");
 				link.setApprovedDate(LocalDateTime.now());
-				linkSubAccountMultipleEntity=linkSubMultipleAccountDao.saveDetails(link);			
+				linkSubAccountMultipleEntity=linkSubMultipleAccountTempDao.saveDetails(link);			
 				request.setResponse(MessageConstant.RESPONSE_SUCCESS);
+				
 			}else if(request.getRejectedby()!=null) {
 				link.setRejectedby(request.getRejectedby());
 				link.setStatus(2l);
 				link.setStatusMessage("Rejected");
 				link.setRejectedDate(LocalDateTime.now());
-				linkSubAccountMultipleEntity=linkSubMultipleAccountDao.saveDetails(link);			
+				linkSubAccountMultipleEntity=linkSubMultipleAccountTempDao.saveDetails(link);			
 				request.setResponse(MessageConstant.RESPONSE_SUCCESS);
 			}
+		}else if(link!=null && link.getStatus()==1){
+			request.setResponse("Request already Approved");
+		}else if(link!=null && link.getStatus()==2){
+			request.setResponse("Request already Rejected");
 		}
-		
+		}catch (DataIntegrityViolationException ex) {
+            // Handle the specific exception here
+        request.setResponse(MessageConstant.DUP_ACC);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return request;
 	}
-	
+
+	@Override
+	public String getMultipleAccountBalance(LinkMultipleAccountRequest request) {
+		// TODO Auto-generated method stub
+		LinkSubAccountMultipleEntity linkSubAccountMultipleEntity=null;
+		String balance="";
+		try {
+			linkSubAccountMultipleEntity=linkSubMultipleAccountDao.getLinkMultipleAccountByAccNoOrgId(request.getAcNumber(), request.getOrgId());
+			Float amount=linkSubAccountMultipleEntity.getBalance();
+			balance=amount.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return balance;
+	}
 	
 
 }

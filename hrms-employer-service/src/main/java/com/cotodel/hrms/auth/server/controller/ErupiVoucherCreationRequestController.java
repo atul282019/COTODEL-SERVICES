@@ -77,7 +77,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			erupiVoucherRequestResponse=new ErupiVoucherRequestResponse(MessageConstant.FALSE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			erupiVoucherRequestResponse=new ErupiVoucherRequestResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherRequestResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);

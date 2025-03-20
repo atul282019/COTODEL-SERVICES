@@ -240,7 +240,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 				erRequest.setBankcode(request.getBankcode());
 				//ErupiVoucherInitiateDetailsServiceImpl help=new ErupiVoucherInitiateDetailsServiceImpl();
 				//String merTranId=help.getMerTranId(voEntity.getBankcode());
-				erRequest=erupiVoucherInitiateDetailsService.saveErupiVoucherInitiateDetails(erRequest);
+				erRequest=erupiVoucherInitiateDetailsService.saveErupiVoucherInitiateDetailsNew(erRequest);
 				//if(erRequest.getResponse().equalsIgnoreCase("SUCCESS")){
 					erupiVoucherBulkDao.updateSuccessFlag(idValue);
 				//}

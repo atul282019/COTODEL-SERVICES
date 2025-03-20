@@ -35,4 +35,5 @@ public class MessageConstant {
 	public static final String ORGZERO = "Organization ID must be greater than or equal to 1.";
 	public static final String APPROVED = "Approved";	
 	public static final String INSUFBAL = "Insufficient balance for the transaction";
+	public static final String BAL = "Please enter valid amount";
 }

@@ -32,6 +32,11 @@ public class ErupiVoucherRequestServiceImpl implements ErupiVoucherRequestServic
 		ErupiVoucherCreationRequestEntity erupiVoucherCreationRequestEntity=null;
 		String response=MessageConstant.RESPONSE_FAILED;
 		try {
+			if(request.getAmount()<=0) {
+				response=MessageConstant.INSUFBAL;
+				request.setResponse(response);
+				return request;
+			}
 			erupiVoucherCreationRequestEntity=new ErupiVoucherCreationRequestEntity();
 			CopyUtility.copyProperties(request,erupiVoucherCreationRequestEntity);
 			erupiVoucherCreationRequestEntity.setCreationDate(LocalDateTime.now());
@@ -50,10 +55,10 @@ public class ErupiVoucherRequestServiceImpl implements ErupiVoucherRequestServic
 	@Override
 	public List<ErupiVoucherCreationRequestEntity> getErupiVoucherRequestEmployerId(Long EmployerId,Long EmployeeId) {
 		// TODO Auto-generated method stub
-		if(EmployerId>0) {
+		if(EmployerId!=null && EmployerId>0) {
 		return erupiVoucherRequestDao.getVoucherCreationRequest(EmployerId);
 		}else {
-			return erupiVoucherRequestDao.getVoucherCreationRequest(EmployeeId);
+			return erupiVoucherRequestDao.getVoucherCreationRequestEmp(EmployeeId);
 		}
 	}
 

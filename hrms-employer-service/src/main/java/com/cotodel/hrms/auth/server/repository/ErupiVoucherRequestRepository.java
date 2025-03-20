@@ -10,9 +10,9 @@ import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationRequestEntity;
 @Repository
 public interface ErupiVoucherRequestRepository extends JpaRepository<ErupiVoucherCreationRequestEntity,Long>{
 	
-	@Query("select s  from ErupiVoucherCreationRequestEntity s where s.employerId = ?1")
+	@Query("select s  from ErupiVoucherCreationRequestEntity s where s.employerId = ?1order by s.creationDate desc")
 	public List<ErupiVoucherCreationRequestEntity> findByEmployerId(Long employerId);
 	
-	@Query("select s  from ErupiVoucherCreationRequestEntity s where s.employeeId = ?1")
+	@Query("select s  from ErupiVoucherCreationRequestEntity s where s.employeeId = ?1order by s.creationDate desc")
 	public List<ErupiVoucherCreationRequestEntity> findByEmployeeId(Long employeeId);
 }

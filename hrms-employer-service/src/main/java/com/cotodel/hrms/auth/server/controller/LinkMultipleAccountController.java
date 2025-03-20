@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cotodel.hrms.auth.server.dto.LinkMultipleAccountAmountResponse;
 import com.cotodel.hrms.auth.server.dto.LinkMultipleAccountListResponse;
 import com.cotodel.hrms.auth.server.dto.LinkMultipleAccountRequest;
 import com.cotodel.hrms.auth.server.dto.LinkMultipleAccountResponse;
@@ -167,19 +168,19 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				response=linkMultipleAccountService.updateMultipleAccount(linkMultipleAccountRequest);				
 	    		
-				if(response!=null) {
+				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.PROFILE_SUCCESS)) {
 					linkMultipleAccountResponse=new LinkMultipleAccountResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(linkMultipleAccountResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			linkMultipleAccountResponse=new LinkMultipleAccountResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			linkMultipleAccountResponse=new LinkMultipleAccountResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(linkMultipleAccountResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
-	    		logger.error("error in linkMultipleAccountList====="+e);
+	    		logger.error("error in linkMultipleAccountUpdate====="+e);
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
@@ -187,7 +188,56 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(linkMultipleAccountResponse);
 				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {
-				logger.error("error in linkMultipleAccountList====="+e);
+				logger.error("error in linkMultipleAccountUpdate====="+e);
+			}
+	    return ResponseEntity.ok(jsonEncriptObject);
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/linkMultipleAccountAmount",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> linkMultipleAccountAmount(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+		 
+	    logger.info("inside linkMultipleAccountAmount....");	    	
+	    	
+	    String response="";
+	    LinkMultipleAccountAmountResponse linkMultipleAccountResponse;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				LinkMultipleAccountRequest linkMultipleAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, LinkMultipleAccountRequest.class);
+				
+				response=linkMultipleAccountService.getMultipleAccountBalance(linkMultipleAccountRequest);				
+	    		
+				if(response!=null) {
+					linkMultipleAccountResponse=new LinkMultipleAccountAmountResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(linkMultipleAccountResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+	    		}else {
+	    			linkMultipleAccountResponse=new LinkMultipleAccountAmountResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(linkMultipleAccountResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+	    		}
+	    	}catch (Exception e) {				
+	    		logger.error("error in linkMultipleAccountAmount====="+e);
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		linkMultipleAccountResponse=new LinkMultipleAccountAmountResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(linkMultipleAccountResponse);
+				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in linkMultipleAccountAmount====="+e);
 			}
 	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
