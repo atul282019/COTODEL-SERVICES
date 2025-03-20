@@ -121,8 +121,7 @@ public class ErupiVoucherCreateApiController extends CotoDelBaseController{
     			
     			DecryptedSmsResponse decryptedResponse=null; 
     			
-    			try {
-    				
+    			try {    				
     			    logger.info("inside /callapi/voucherSms...voucherSms."+erupiVoucherSmsRequest);
     			    
     			    decryptedResponse= erupiVoucherTxnService.calApiErupiVoucherSmsDetails(erupiVoucherSmsRequest);

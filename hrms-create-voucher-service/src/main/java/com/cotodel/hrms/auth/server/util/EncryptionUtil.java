@@ -89,12 +89,7 @@ public class EncryptionUtil {
 	    }
 	    
 	    public static PrivateKey getPrivateKey(String keyPath) throws Exception {
-//	        try (FileInputStream fis = new FileInputStream(keyPath)) {
-//	            byte[] keyBytes = fis.readAllBytes();
-//	            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-//	            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-//	            return keyFactory.generatePrivate(spec);
-//	        }
+
 	    	String privateKeyPEM = new String(Files.readAllBytes(Paths.get(keyPath)));
 
 	        // Remove the first and last lines

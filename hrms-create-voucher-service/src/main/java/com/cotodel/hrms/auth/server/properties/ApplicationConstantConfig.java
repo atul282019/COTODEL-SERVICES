@@ -32,29 +32,29 @@ public class ApplicationConstantConfig {
 	
 	@Value("${erupi.create.vouchers.apikey}")
 	public String getCreateVouchersToken;
-	
-//	@Value("${erupi.create.vouchers.mid}")
-//	public String getCreateVouchersMid;
-	
-	
-//	@Value("${api.key}")
-//    private String apiKey;
-//
-//    @Value("#{'${whitelisted.ips}'.split(',')}")
-//    private Set<String> whitelistedIps;
-//
-//    public boolean isValidApiKey(String key) {
-//        return apiKey.equals(key);
-//    }
-//
-//    public boolean isIpWhitelisted(HttpServletRequest request) {
-//        String clientIp = request.getRemoteAddr();
-//        return whitelistedIps.contains(clientIp);
-//    }
-    
+	   
     @Value("${erupi.voucher.status.url}")
 	public String getVoucherStatusUrl;
     
     @Value("${erupi.voucher.resend.url}")
 	public String getVoucherSmsUrl;
+    
+    @Value("${erupi.indianbank.voucher.key}")
+	public String erupiIndianbankVoucherKey;
+    
+    @Value("${erupi.indianbank.voucher.ende.key}")
+	public String erupiIndianbankVoucherEndeKey;
+    
+    @Value("${erupi.indianbank.voucher.create.url}")
+	public String erupiIndianbankVoucherCreateUrl;
+    
+    @Value("${erupi.indianbank.voucher.revoke.url}")
+	public String erupiIndianbankVoucherRevokeUrl;
+    
+    @Value("${erupi.indianbank.voucher.inquiry.url}")
+	public String erupiIndianbankVoucherInquiryUrl;
+    
+    
+    
+    
 }

@@ -319,4 +319,28 @@ public class CommonUtility {
 		
 		return request.toString();
 	}
+	public static String createVoucher(String jsonData, String url) {
+        // Create an instance of RestTemplate
+        RestTemplate restTemplate = new RestTemplate();
+        String returnStr="";
+        HttpHeaders headers = new HttpHeaders();
+        try{
+        	       	
+        HttpEntity<String> entity = new HttpEntity<>(jsonData, headers);
+
+			logger.info(" Request URL---"+url);
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+
+			returnStr = restTemplate.postForObject(url, entity, String.class);
+			logger.info(" response Json---"+returnStr);
+			return returnStr;
+		}catch(Exception e){
+			e.printStackTrace();
+			
+			return e.getMessage();
+		}finally {
+			restTemplate=null;headers=null;	
+		}		
+    }
 }
