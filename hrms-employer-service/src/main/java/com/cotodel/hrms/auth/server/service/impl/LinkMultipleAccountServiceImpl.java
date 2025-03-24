@@ -151,6 +151,7 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 //		LinkSubAccountMultipleEntity linkSubAccountMultipleEntity=mainAccount.get(0);
 //		balance=linkSubAccountMultipleEntity.getBalance();
 //		}
+		
 		List<LinkSubAccountMultipleTempEntity> list=linkSubMultipleAccountTempDao.getLinkMultipleDetailsList();	
 		for (LinkSubAccountMultipleTempEntity linkSubAccountMultipleTempEntity : list) {
 			LinkMultipleAccountRequest linkMultipleAccountRequest=new LinkMultipleAccountRequest();
