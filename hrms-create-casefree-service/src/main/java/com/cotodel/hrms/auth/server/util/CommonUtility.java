@@ -93,15 +93,15 @@ public class CommonUtility {
 		HttpHeaders headers = new HttpHeaders();
 		try{
 			logger.info(" Request URL---"+url+requestJson);
-			
+			url=url+requestJson;
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			
 			headers.add("X-Client-Id", clientid);
 			headers.add("X-Client-Secret", clientSecret);
 			headers.add("x-api-version", "2023-08-01");
-			
+			headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-			HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
+			HttpEntity<String> entity = new HttpEntity<String>("",headers);
 			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 	        returnStr = response.getBody();
 			logger.info(" response Json---"+returnStr);

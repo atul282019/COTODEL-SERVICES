@@ -16,4 +16,9 @@ public class OrderUserRequest {
 	private String customerPhone;
 	private Long orgId;
 	private String payment_session_id;
+	private String orderId;
+	private String bankCode;	
+	private String bankName;	
+	private String acNumber;
+	private String createdBy;
 }

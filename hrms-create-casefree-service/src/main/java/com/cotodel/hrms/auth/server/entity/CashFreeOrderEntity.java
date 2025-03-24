@@ -103,4 +103,20 @@ public class CashFreeOrderEntity implements Serializable{
 	
 	@Column(name="terminal_data")
 	private String terminalData;
+	
+	@Column(name="status")
+	private int status;
+	
+	@Column(name="bankcode", length=99)
+	private String bankCode;//FK
+	
+	@Column(name="bankname", length=99)
+	private String bankName;
+		
+	@Column(name="acnumber", length=18)
+	private String acNumber;
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
 }
