@@ -26,4 +26,7 @@ public interface LinkSubMultipleAccountRepository extends JpaRepository<LinkSubA
 	
 	@Query("select s  from LinkSubAccountMultipleEntity s WHERE s.acNumber=:acNumber and s.orgId=:orgId and s.status='1'")
 	public LinkSubAccountMultipleEntity getLinkMultipleAccountByAccNoOrgId(@Param("acNumber") String acNumber,@Param("orgId") Long orgId);
+	
+	@Query("select s  from LinkSubAccountMultipleEntity s WHERE s.orgId=:orgId and s.status='1'")
+	public LinkSubAccountMultipleEntity getLinkMultipleAccountByOrgIdWithone(@Param("orgId") Long orgId);
 }

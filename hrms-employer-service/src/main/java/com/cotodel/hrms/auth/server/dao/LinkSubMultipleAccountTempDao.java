@@ -10,4 +10,6 @@ public interface LinkSubMultipleAccountTempDao {
 	public List<LinkSubAccountMultipleTempEntity> getLinkMultipleDetails(Long orgId);
 	public List<LinkSubAccountMultipleTempEntity> getLinkMultipleDetailsByOrgId(Long orgId);
 	public LinkSubAccountMultipleTempEntity getLinkMultipleAccountByAccNoOrgId(String acNumber,Long orgId);
+	public List<LinkSubAccountMultipleTempEntity> getLinkMultipleDetailsList();
+	
 }

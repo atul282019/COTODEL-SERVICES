@@ -11,4 +11,6 @@ public interface LinkSubMultipleAccountDao {
 	public List<LinkSubAccountMultipleEntity> getLinkMultipleDetails();
 	public List<LinkSubAccountMultipleEntity> getLinkMultipleDetailsByOrgId(Long orgId);
 	public LinkSubAccountMultipleEntity getLinkMultipleAccountByAccNoOrgId(String acNumber,Long orgId);
+	public LinkSubAccountMultipleEntity getLinkMultipleDetailsByOrgIdWithOne(Long orgId);
+	
 }

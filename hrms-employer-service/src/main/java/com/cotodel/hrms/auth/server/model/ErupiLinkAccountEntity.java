@@ -164,4 +164,6 @@ public class ErupiLinkAccountEntity implements Serializable{
 	@Column(name="initiation_mode")
 	private String initiationMode;
 	
+	@Column(name="account_balance")
+	private Float accountBalance;
 }

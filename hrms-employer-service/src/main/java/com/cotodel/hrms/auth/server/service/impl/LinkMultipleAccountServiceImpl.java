@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
 import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountDao;
 import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountTempDao;
 import com.cotodel.hrms.auth.server.dao.TransactionHistoryDao;
@@ -41,6 +42,8 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 	@Autowired
 	TransactionHistoryDao  transactionHistoryDao;
 	
+	@Autowired
+	ErupiLinkAccountDao  erupiLinkAccountDao;
 
 	@Override
 	public LinkMultipleAccountRequest saveMultipleAccountRequest(LinkMultipleAccountRequest request) {
@@ -63,7 +66,7 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 			linkSubAccountMultipleTempEntity.setStatus(0l);
 			linkSubAccountMultipleTempEntity.setStatusMessage("Requested");
 			linkSubAccountMultipleTempEntity.setBalance(request.getAmountLimit());
-			linkSubAccountMultipleTempEntity.setErupiLinkAccountEntity(erupiLinkAccountEntity);
+			//linkSubAccountMultipleTempEntity.setErupiLinkAccountEntity(erupiLinkAccountEntity);
 			linkSubAccountMultipleTempEntity=linkSubMultipleAccountTempDao.saveDetails(linkSubAccountMultipleTempEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);
@@ -142,48 +145,72 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 	@Override
 	public List<LinkMultipleAccountRequest> getMultipleAccountList(LinkMultipleAccountRequest request) {
 		List<LinkMultipleAccountRequest> liRequests=new ArrayList<>();
-		List<LinkSubAccountMultipleTempEntity> list=linkSubMultipleAccountTempDao.getLinkMultipleDetails(request.getOrgId());	
+		//List<LinkSubAccountMultipleEntity> mainAccount=linkSubMultipleAccountDao.getLinkMultipleDetailsByOrgId(request.getOrgId());
+		Float balance=0f;
+//		if(mainAccount.size()>0) {
+//		LinkSubAccountMultipleEntity linkSubAccountMultipleEntity=mainAccount.get(0);
+//		balance=linkSubAccountMultipleEntity.getBalance();
+//		}
+		List<LinkSubAccountMultipleTempEntity> list=linkSubMultipleAccountTempDao.getLinkMultipleDetailsList();	
 		for (LinkSubAccountMultipleTempEntity linkSubAccountMultipleTempEntity : list) {
 			LinkMultipleAccountRequest linkMultipleAccountRequest=new LinkMultipleAccountRequest();
 			CopyUtility.copyProperties(linkSubAccountMultipleTempEntity,linkMultipleAccountRequest);
-			linkMultipleAccountRequest.setLinkId(linkSubAccountMultipleTempEntity.getErupiLinkAccountEntity().getId());
+			LinkSubAccountMultipleEntity linkSubAccountMultipleEntity =linkSubMultipleAccountDao.getLinkMultipleDetailsByOrgIdWithOne(linkMultipleAccountRequest.getOrgId());
+			
+			if(linkSubAccountMultipleEntity!=null) {
+				balance=linkSubAccountMultipleEntity.getBalance();
+			}
+			//linkMultipleAccountRequest.setLinkId(linkSubAccountMultipleTempEntity.getErupiLinkAccountEntity().getId());
+			linkMultipleAccountRequest.setBalance(balance);
 			liRequests.add(linkMultipleAccountRequest);
 		}
 		return liRequests;
 	}
 
 	@Override
+	@Transactional
 	public LinkMultipleAccountRequest updateMultipleAccount(LinkMultipleAccountRequest request) {
 		request.setResponse(MessageConstant.RESPONSE_FAILED);
 		LinkSubAccountMultipleTempEntity linkSubAccountMultipleEntity=new LinkSubAccountMultipleTempEntity();
 		LinkSubAccountMultipleEntity linkSubAccountMultipleEntity1=new LinkSubAccountMultipleEntity();
 		LinkSubAccountMultipleEntity linkSubAccountEntity=null;
+		ErupiLinkAccountEntity erupiLinkAccountEntity=null;
+		//erupiLinkAccountDao
+		//ErupiLinkAccountEntity findByErupiLinkAccNumber(String accNo);
+		
 		try {			
 		
 			LinkSubAccountMultipleTempEntity link=linkSubMultipleAccountTempDao.getDetails(request.getId());
 		if(link!=null && link.getStatus()==0) {			
 			if(request.getApprovedby()!=null && !request.getApprovedby().equalsIgnoreCase("")) {
-				
+				erupiLinkAccountEntity=erupiLinkAccountDao.findByErupiLinkAccNumber(link.getAcNumber());
 				linkSubAccountEntity=linkSubMultipleAccountDao.getLinkMultipleAccountByAccNoOrgId(link.getAcNumber(), link.getOrgId());
 				
 				if(linkSubAccountEntity!=null) {
 					
 					Float amtLmt=linkSubAccountEntity.getAmountLimit()+request.getAmountLimit();
-					Float bal=linkSubAccountEntity.getBalance()+request.getBalance();
+					Float bal=linkSubAccountEntity.getBalance()+request.getAmountLimit();
 					linkSubAccountEntity.setAmountLimit(amtLmt);
 					linkSubAccountEntity.setBalance(bal);
 					linkSubMultipleAccountDao.saveDetails(linkSubAccountEntity);
+					Float accountBalance=erupiLinkAccountEntity.getAccountBalance()+request.getAmountLimit();
+					erupiLinkAccountEntity.setAccountBalance(accountBalance);
+					erupiLinkAccountDao.saveDetails(erupiLinkAccountEntity);
+					
 					
 				}else {
-					ErupiLinkAccountEntity erupiLinkAccountEntity=new ErupiLinkAccountEntity();
+					//ErupiLinkAccountEntity erupiLinkAccountEntity=new ErupiLinkAccountEntity();
 					CopyUtility.copyProperties(request,linkSubAccountMultipleEntity1);
 					linkSubAccountMultipleEntity1.setCreationDate(LocalDateTime.now());
-					erupiLinkAccountEntity.setId(request.getLinkId());
+					//erupiLinkAccountEntity.setId(request.getLinkId());
 					linkSubAccountMultipleEntity1.setStatus(1l);
 					linkSubAccountMultipleEntity1.setStatusMessage("Approved");
 					linkSubAccountMultipleEntity1.setBalance(request.getAmountLimit());
-					linkSubAccountMultipleEntity1.setErupiLinkAccountEntity(erupiLinkAccountEntity);
+					//linkSubAccountMultipleEntity1.setErupiLinkAccountEntity(erupiLinkAccountEntity);
 					linkSubAccountMultipleEntity1=linkSubMultipleAccountDao.saveDetails(linkSubAccountMultipleEntity1);
+					Float accountBalance=erupiLinkAccountEntity.getAccountBalance()+request.getAmountLimit();
+					erupiLinkAccountEntity.setAccountBalance(accountBalance);
+					erupiLinkAccountDao.saveDetails(erupiLinkAccountEntity);
 					//response=MessageConstant.RESPONSE_SUCCESS;
 				}
 				link.setApprovedby(request.getApprovedby());

@@ -48,5 +48,12 @@ public class LinkSubMultipleAccountTempDaoImpl implements LinkSubMultipleAccount
 	}
 
 
+	@Override
+	public List<LinkSubAccountMultipleTempEntity> getLinkMultipleDetailsList() {
+		// TODO Auto-generated method stub
+		return linkSubMultipleAccountTempRepository.getLinkMultipleAccountList();
+	}
+
+
 
 }

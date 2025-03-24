@@ -168,7 +168,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				response=linkMultipleAccountService.updateMultipleAccount(linkMultipleAccountRequest);				
 	    		
-				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.PROFILE_SUCCESS)) {
+				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 					linkMultipleAccountResponse=new LinkMultipleAccountResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(linkMultipleAccountResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);

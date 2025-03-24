@@ -41,9 +41,9 @@ public class LinkSubAccountMultipleTempEntity implements Serializable{
 	@Column(name="id")
 	private Long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "link_id", referencedColumnName = "id_pk")  
-	private ErupiLinkAccountEntity erupiLinkAccountEntity;
+//	@ManyToOne
+//	@JoinColumn(name = "link_id", referencedColumnName = "id_pk")  
+//	private ErupiLinkAccountEntity erupiLinkAccountEntity;
 	
 	@Column(name="bankcode", length=99)
 	private String bankCode;//FK
@@ -56,6 +56,9 @@ public class LinkSubAccountMultipleTempEntity implements Serializable{
 	
 	@Column(name="acnumber", length=18)
 	private String acNumber;
+	
+	@Column(name="order_id")
+	private String orderId;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="accounttype", length=99)

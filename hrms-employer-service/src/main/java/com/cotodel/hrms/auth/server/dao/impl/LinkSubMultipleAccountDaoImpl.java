@@ -60,5 +60,12 @@ public class LinkSubMultipleAccountDaoImpl implements LinkSubMultipleAccountDao{
 	}
 
 
+	@Override
+	public LinkSubAccountMultipleEntity getLinkMultipleDetailsByOrgIdWithOne(Long orgId) {
+		// TODO Auto-generated method stub
+		return linkSubMultipleAccountRepository.getLinkMultipleAccountByOrgIdWithone(orgId);
+	}
+
+	
 
 }
