@@ -255,8 +255,8 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			List<LinkSubAccountMultipleEntity> linksubacount=linkSubMultipleAccountDao.getLinkMultipleDetailsByOrgId(request.getOrgId());
 			for (LinkSubAccountMultipleEntity linkSubAccountMultipleEntity : linksubacount) {
 				erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
-				ErupiLinkAccountEntity erupiLinkAccountEntity1=erupiLinkAccountDao.findByErupiLinkById(linkSubAccountMultipleEntity.getErupiLinkAccountEntity().getId());
-				CopyUtility.copyProperties(erupiLinkAccountEntity1,erupiLinkAccountWithOutResponse);
+				//ErupiLinkAccountEntity erupiLinkAccountEntity1=erupiLinkAccountDao.findByErupiLinkById(linkSubAccountMultipleEntity.getErupiLinkAccountEntity().getId());
+				CopyUtility.copyProperties(linkSubAccountMultipleEntity,erupiLinkAccountWithOutResponse);
 				erupiLinkList.add(erupiLinkAccountWithOutResponse);		
 			}
 			//end

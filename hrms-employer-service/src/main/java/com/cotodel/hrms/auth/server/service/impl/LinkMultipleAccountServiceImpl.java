@@ -194,7 +194,8 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 					linkSubAccountEntity.setAmountLimit(amtLmt);
 					linkSubAccountEntity.setBalance(bal);
 					linkSubMultipleAccountDao.saveDetails(linkSubAccountEntity);
-					Float accountBalance=erupiLinkAccountEntity.getAccountBalance()+request.getAmountLimit();
+					Float bala=erupiLinkAccountEntity.getAccountBalance()==null?0:erupiLinkAccountEntity.getAccountBalance();
+					Float accountBalance=bala+request.getAmountLimit();
 					erupiLinkAccountEntity.setAccountBalance(accountBalance);
 					erupiLinkAccountDao.saveDetails(erupiLinkAccountEntity);
 					
@@ -209,7 +210,8 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 					linkSubAccountMultipleEntity1.setBalance(request.getAmountLimit());
 					//linkSubAccountMultipleEntity1.setErupiLinkAccountEntity(erupiLinkAccountEntity);
 					linkSubAccountMultipleEntity1=linkSubMultipleAccountDao.saveDetails(linkSubAccountMultipleEntity1);
-					Float accountBalance=erupiLinkAccountEntity.getAccountBalance()+request.getAmountLimit();
+					Float bala=erupiLinkAccountEntity.getAccountBalance()==null?0:erupiLinkAccountEntity.getAccountBalance();
+					Float accountBalance=bala+request.getAmountLimit();
 					erupiLinkAccountEntity.setAccountBalance(accountBalance);
 					erupiLinkAccountDao.saveDetails(erupiLinkAccountEntity);
 					//response=MessageConstant.RESPONSE_SUCCESS;
@@ -248,10 +250,15 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 		// TODO Auto-generated method stub
 		LinkSubAccountMultipleEntity linkSubAccountMultipleEntity=null;
 		String balance="";
+		Float amount=0f;
 		try {
 			linkSubAccountMultipleEntity=linkSubMultipleAccountDao.getLinkMultipleAccountByAccNoOrgId(request.getAcNumber(), request.getOrgId());
-			Float amount=linkSubAccountMultipleEntity.getBalance();
-			balance=amount.toString();
+			if(linkSubAccountMultipleEntity!=null) {
+			amount=linkSubAccountMultipleEntity.getBalance();
+			}else {
+;				balance="0";
+			}
+			balance=amount==null?"0":amount.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
