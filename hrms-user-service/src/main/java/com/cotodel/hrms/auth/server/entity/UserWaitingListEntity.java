@@ -60,4 +60,9 @@ public class UserWaitingListEntity implements Serializable{
 	@Column(name="status_remarks")
 	private String statusRemarks;
 	
+	@Column(name="erupi_status")
+	private boolean erupistatus;
+					
+	
+	
 }

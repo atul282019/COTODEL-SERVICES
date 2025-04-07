@@ -15,9 +15,9 @@ public class OrganizationMasterServiceImpl implements OrganizationMasterService 
 	@Autowired
 	OrganizationDao  organizationDao;
 	
-	@Override
-	public List<OrganizationMaster> getOrganizationMaster() {
-		return organizationDao.getOrganizationMaster();
-	}
+//	@Override
+//	public List<OrganizationMaster> getOrganizationMaster() {
+//		return organizationDao.getOrganizationMaster();
+//	}
 
 }

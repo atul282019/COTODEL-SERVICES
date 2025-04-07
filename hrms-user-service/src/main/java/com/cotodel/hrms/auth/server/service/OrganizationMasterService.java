@@ -6,7 +6,7 @@ import com.cotodel.hrms.auth.server.entity.OrganizationMaster;
 
 public interface OrganizationMasterService {
 	
-	public List<OrganizationMaster>  getOrganizationMaster();
+	//public List<OrganizationMaster>  getOrganizationMaster();
 
 
 }

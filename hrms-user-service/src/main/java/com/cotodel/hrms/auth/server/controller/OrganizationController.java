@@ -37,50 +37,50 @@ public class OrganizationController {
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
 	
-	 @Operation(summary = "This API will provide the User Roles Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/Organization",produces = {"application/json"}, consumes = {"application/json","application/text"},
-	    method = RequestMethod.POST)
-	    public ResponseEntity<Object> getOrganizationList() {
-	    	logger.info("inside get Organization+++");
-	    	List<OrganizationMaster> organizationMasters=null;
-	    	OrganizaionResponse organizaionResponse;
-	    	
-	    	try {	    		
-	    		
-	    		organizationMasters=organizationMasterService.getOrganizationMaster();
-	    		
-	    	 if(organizationMasters!=null) {
-	    		 organizaionResponse=new OrganizaionResponse(true,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
-	    		 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(organizaionResponse);
-	    		 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
-	    		 return ResponseEntity.ok(jsonEncriptObject);
-	    	 
-	    	 }else {
-	    		 organizaionResponse=new OrganizaionResponse(false,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
-	    		 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(organizaionResponse);
-	    		 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
-	    		 return ResponseEntity.ok(jsonEncriptObject);
-	    	 }
-	    	}catch (Exception e) {
-				
-	    		logger.error("error in organization====="+e);
-	    		
-			}
-	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
-	    	try {
-	    		organizaionResponse=new OrganizaionResponse(false,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
-	    		String jsonEncript =  EncryptionDecriptionUtil.convertToJson(organizaionResponse);
-	    		jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
-			} catch (Exception e) {
-				logger.error("error in organization====="+e);
-			}
-    	    return ResponseEntity.ok(jsonEncriptObject);   
-	        
-	    }
+//	 @Operation(summary = "This API will provide the User Roles Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/get/Organization",produces = {"application/json"}, consumes = {"application/json","application/text"},
+//	    method = RequestMethod.POST)
+//	    public ResponseEntity<Object> getOrganizationList() {
+//	    	logger.info("inside get Organization+++");
+//	    	List<OrganizationMaster> organizationMasters=null;
+//	    	OrganizaionResponse organizaionResponse;
+//	    	
+//	    	try {	    		
+//	    		
+//	    		organizationMasters=organizationMasterService.getOrganizationMaster();
+//	    		
+//	    	 if(organizationMasters!=null) {
+//	    		 organizaionResponse=new OrganizaionResponse(true,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+//	    		 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(organizaionResponse);
+//	    		 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+//	    		 return ResponseEntity.ok(jsonEncriptObject);
+//	    	 
+//	    	 }else {
+//	    		 organizaionResponse=new OrganizaionResponse(false,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+//	    		 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(organizaionResponse);
+//	    		 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+//	    		 return ResponseEntity.ok(jsonEncriptObject);
+//	    	 }
+//	    	}catch (Exception e) {
+//				
+//	    		logger.error("error in organization====="+e);
+//	    		
+//			}
+//	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+//	    	try {
+//	    		organizaionResponse=new OrganizaionResponse(false,organizationMasters,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+//	    		String jsonEncript =  EncryptionDecriptionUtil.convertToJson(organizaionResponse);
+//	    		jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+//			} catch (Exception e) {
+//				logger.error("error in organization====="+e);
+//			}
+//    	    return ResponseEntity.ok(jsonEncriptObject);   
+//	        
+//	    }
 }

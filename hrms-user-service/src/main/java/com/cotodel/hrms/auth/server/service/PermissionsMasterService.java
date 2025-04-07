@@ -6,7 +6,7 @@ import com.cotodel.hrms.auth.server.entity.PermissionsMaster;
 
 public interface PermissionsMasterService {
 	
-	public List<PermissionsMaster>  getPermissionsMaster(int employerId);
+	//public List<PermissionsMaster>  getPermissionsMaster(int employerId);
 
 
 }

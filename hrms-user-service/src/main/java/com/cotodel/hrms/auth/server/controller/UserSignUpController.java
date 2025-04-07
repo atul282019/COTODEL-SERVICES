@@ -475,22 +475,33 @@ public class UserSignUpController extends CotoDelBaseController{
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
 	    @RequestMapping(value = "/add/saveUsersWithOutMailNew",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> saveUsersWithOutMailNew(HttpServletRequest request,@Valid @RequestBody UserRequest userReq) {
+	    public ResponseEntity<Object> saveUsersWithOutMailNew(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 	    	logger.info("inside get saveUsersWithOutMail");
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
+	    	UserSignUpResponse userSignUpResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				UserRequest userReq = EncryptionDecriptionUtil.convertFromJson(decript, UserRequest.class);
 				userEntity=userService.userExistNew(userReq.getMobile(), userReq.getEmail());
 				if(userEntity!=null) {
-					return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+					//return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+					userSignUpResponse=new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.USER_EXIST,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 				}else {
 					userEntity=	userService.saveUsers(userReq);
 	    		
 	    	    if(userEntity!=null) {
-	    	    	return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	//return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	    	userSignUpResponse=new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    	    }
 			}
 	    	}catch (Exception e) {
@@ -499,7 +510,17 @@ public class UserSignUpController extends CotoDelBaseController{
 	    		logger.error("error in saveUserDetails====="+e);
 			}
 	        
-	        return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in saveUserDetails====="+e);
+			}
+    	    return ResponseEntity.ok(jsonEncriptObject);
+    	    
+	        //return ResponseEntity.ok(new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
 	          
 	        
 	    }

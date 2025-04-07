@@ -14,7 +14,7 @@ public interface UserWaitingListRepository extends JpaRepository<UserWaitingList
 	@Query("select s  from UserWaitingListEntity s where s.email = ?1")
 	public UserWaitingListEntity getByUser(String userEmail);
 	
-	@Query("select s  from UserWaitingListEntity s ")
+	@Query("select s  from UserWaitingListEntity s order by s.id desc")
 	public List<UserWaitingListEntity> getByUserList();
 } 
 

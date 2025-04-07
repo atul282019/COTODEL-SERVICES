@@ -15,11 +15,11 @@ public class PermissionsMasterServiceImpl implements PermissionsMasterService {
 	@Autowired
 	PermissionsDao  permissionsDao;
 
-	@Override
-	public List<PermissionsMaster> getPermissionsMaster(int employerId) {
-		// TODO Auto-generated method stub
-		return permissionsDao.getPermissionsMaster(employerId);
-	}
+//	@Override
+//	public List<PermissionsMaster> getPermissionsMaster(int employerId) {
+//		// TODO Auto-generated method stub
+//		return permissionsDao.getPermissionsMaster(employerId);
+//	}
 	
 	
 }

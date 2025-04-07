@@ -15,6 +15,6 @@ import com.cotodel.hrms.auth.server.entity.StateMaster;
 public interface StateMasterService {
 	
 	public StateMaster getByStateCode(String stateCode);
-	public List<StateMaster> getByStateList();
+	//public List<StateMaster> getByStateList();
 
 }

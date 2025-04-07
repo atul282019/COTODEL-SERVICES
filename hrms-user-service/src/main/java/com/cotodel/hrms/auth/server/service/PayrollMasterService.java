@@ -14,6 +14,6 @@ import com.cotodel.hrms.auth.server.entity.PayrollMasterEntity;
  */
 public interface PayrollMasterService {
 	
-	public List<PayrollMasterEntity> getByPayrollMasterList();
+	//public List<PayrollMasterEntity> getByPayrollMasterList();
 
 }

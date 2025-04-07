@@ -30,10 +30,10 @@ public class StateMasterServiceImpl implements StateMasterService {
 		return stateMasterDao.getByStateCode(stateCode);
 	}
 
-	@Override
-	public List<StateMaster> getByStateList() {
-		// TODO Auto-generated method stub
-		return stateMasterDao.getByStateList();
-	}
+//	@Override
+//	public List<StateMaster> getByStateList() {
+//		// TODO Auto-generated method stub
+//		return stateMasterDao.getByStateList();
+//	}
 
 }

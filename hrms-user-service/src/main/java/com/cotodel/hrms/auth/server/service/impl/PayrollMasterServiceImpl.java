@@ -25,11 +25,11 @@ public class PayrollMasterServiceImpl implements PayrollMasterService {
 	public PayrollMasterDao payrollMasterDao;
 	
 	
-
-	@Override
-	public List<PayrollMasterEntity> getByPayrollMasterList() {
-		// TODO Auto-generated method stub
-		return payrollMasterDao.getByPayrollMasterList();
-	}
+//
+//	@Override
+//	public List<PayrollMasterEntity> getByPayrollMasterList() {
+//		// TODO Auto-generated method stub
+//		return payrollMasterDao.getByPayrollMasterList();
+//	}
 
 }

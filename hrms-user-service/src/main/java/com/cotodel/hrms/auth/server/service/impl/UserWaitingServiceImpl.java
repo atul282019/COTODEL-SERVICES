@@ -40,6 +40,7 @@ public class UserWaitingServiceImpl implements UserWaitingService {
 			CopyUtility.copyProperties(user,userWaitingListEntity);
 			userWaitingListEntity.setStatus(0);
 			userWaitingListEntity.setStatusRemarks("Requested");
+			userWaitingListEntity.setErupistatus(user.isErupistatus());
 			userWaitingListEntity.setCreatedDate(LocalDateTime.now());
 			userWaitingListEntity=userWaitingListDao.saveUserDetails(userWaitingListEntity);
 			user.setResponse(MessageConstant.RESPONSE_SUCCESS);
