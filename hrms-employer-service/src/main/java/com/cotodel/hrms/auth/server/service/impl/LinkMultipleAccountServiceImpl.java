@@ -157,7 +157,7 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 			LinkMultipleAccountRequest linkMultipleAccountRequest=new LinkMultipleAccountRequest();
 			CopyUtility.copyProperties(linkSubAccountMultipleTempEntity,linkMultipleAccountRequest);
 			LinkSubAccountMultipleEntity linkSubAccountMultipleEntity =linkSubMultipleAccountDao.getLinkMultipleDetailsByOrgIdWithOne(linkMultipleAccountRequest.getOrgId());
-			
+			balance=0f;
 			if(linkSubAccountMultipleEntity!=null) {
 				balance=linkSubAccountMultipleEntity.getBalance();
 			}

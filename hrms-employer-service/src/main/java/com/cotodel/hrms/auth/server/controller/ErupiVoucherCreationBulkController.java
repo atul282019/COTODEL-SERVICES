@@ -249,13 +249,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 	            response=erupiVoucherCreationBulkService.saveErupiVoucherBulkFileNew(erupiBulkUploadRequest);
 	    		
-				if(response!=null) {
+				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 					 erupiVoucherBulkUploadResponse=new ErupiVoucherBulkUploadResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkUploadResponse);
 					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			erupiVoucherBulkUploadResponse=new ErupiVoucherBulkUploadResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			erupiVoucherBulkUploadResponse=new ErupiVoucherBulkUploadResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkUploadResponse);
 					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);

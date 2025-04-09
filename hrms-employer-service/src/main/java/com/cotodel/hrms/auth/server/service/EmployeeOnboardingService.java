@@ -19,4 +19,6 @@ public interface EmployeeOnboardingService {
 	public EmployeeOnboardingEntity  getEmployeeDetailsById(Long id);
 	public List<EmployeeOnboardingEntity>  getEmployeeDetailsByManagerId(Long managerId);
 	public UpdateEmployeeStatusRequest  updateEmployeeStatus(UpdateEmployeeStatusRequest	 request);
+	public EmployeeOnboardingEntity  getEmployeeDetailsByUserId(Long id);
+	public EmployeeOnboardingNewRequest  updateEmployeeDetailsNew(EmployeeOnboardingNewRequest	 request);
 }

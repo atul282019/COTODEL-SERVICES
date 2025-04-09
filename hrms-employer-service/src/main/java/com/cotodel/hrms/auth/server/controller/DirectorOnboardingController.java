@@ -76,7 +76,7 @@ public class DirectorOnboardingController {
 				EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 				return ResponseEntity.ok(jsonEncriptObject);
     		}else {
-    			directorOnboardingResponse=new DirectorOnboardingResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			directorOnboardingResponse=new DirectorOnboardingResponse(MessageConstant.FALSE,response.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(directorOnboardingResponse);
 				EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 				return ResponseEntity.ok(jsonEncriptObject);
@@ -86,7 +86,7 @@ public class DirectorOnboardingController {
 		}
     	EncriptResponse jsonEncriptObject=new EncriptResponse();
     	try {
-    		directorOnboardingResponse=new DirectorOnboardingResponse(MessageConstant.FALSE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    		directorOnboardingResponse=new DirectorOnboardingResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(directorOnboardingResponse);
 			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 		} catch (Exception e) {

@@ -25,32 +25,32 @@ public class EmployeeOnboardingServiceFailImpl implements EmployeeOnboardingFail
 	@Autowired
 	ApplicationConstantConfig  applicationConstantConfig;
 		
-	@Override
-	public EmployeeOnboardingRequest saveBulkFailEmployeeDetails(EmployeeOnboardingRequest request) {
-		
-		String response="";
-		try {
-			response = MessageConstant.RESPONSE_FAILED;
-			request.setResponse(response);
-			EmployeeOnboardingFailEntity employeeOnboarding = new EmployeeOnboardingFailEntity();
-			employeeOnboarding.setEmployerId(request.getEmployerId());
-			 ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	            ObjectOutputStream out = new ObjectOutputStream(bos);
-	            out.writeObject(request);
-	            byte[] byteData = bos.toByteArray();
-			employeeOnboarding.setFailValue(byteData);
-			employeeOnboarding = employeeOnboardingFailDao.saveDetails(employeeOnboarding);
-			response = MessageConstant.RESPONSE_SUCCESS;
-			request.setResponse(response);
-			
-		} catch (Exception e) {
-			response = MessageConstant.RESPONSE_FAILED;
-			request.setResponse(response);
-			//e.printStackTrace();
-		}
-		return request;
-
-	}
+//	@Override
+//	public EmployeeOnboardingRequest saveBulkFailEmployeeDetails(EmployeeOnboardingRequest request) {
+//		
+//		String response="";
+//		try {
+//			response = MessageConstant.RESPONSE_FAILED;
+//			request.setResponse(response);
+//			EmployeeOnboardingFailEntity employeeOnboarding = new EmployeeOnboardingFailEntity();
+//			employeeOnboarding.setEmployerId(request.getEmployerId());
+//			 ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//	            ObjectOutputStream out = new ObjectOutputStream(bos);
+//	            out.writeObject(request);
+//	            byte[] byteData = bos.toByteArray();
+//			employeeOnboarding.setFailValue(byteData);
+//			employeeOnboarding = employeeOnboardingFailDao.saveDetails(employeeOnboarding);
+//			response = MessageConstant.RESPONSE_SUCCESS;
+//			request.setResponse(response);
+//			
+//		} catch (Exception e) {
+//			response = MessageConstant.RESPONSE_FAILED;
+//			request.setResponse(response);
+//			//e.printStackTrace();
+//		}
+//		return request;
+//
+//	}
 
 	@Override
 	public List<EmployeeOnboardingRequest> getBulkFailDetailsList(Long employerid) {

@@ -24,43 +24,43 @@ public class ManagerMasterServiceImpl implements ManagerMasterService{
 	@Autowired
 	ManagerMasterDao managerDao;
 	
-	@Override
-	public ManagerMasterRequest saveManagerMaster(ManagerMasterRequest request) {
-		String response = "";
-		ManagerLblMasterEntity managerLblMasterEntity = null;
-		try {
-			response = MessageConstant.RESPONSE_FAILED;
-			request.setResponse(response);
-			managerLblMasterEntity = new ManagerLblMasterEntity();
-
-			CopyUtility.copyProperties(request, managerLblMasterEntity);
-			managerLblMasterEntity.setCreationDate(LocalDateTime.now());
-			managerLblMasterEntity.setStatus(1);
-			managerLblMasterEntity = managerDao.saveDetails(managerLblMasterEntity);
-			response = MessageConstant.RESPONSE_SUCCESS;
-			request.setResponse(response);
-
-		} catch (Exception e) {
-			response = MessageConstant.RESPONSE_FAILED;
-			// e.printStackTrace();
-			request.setResponse(response);
-		}
-		return request;
-	}
+//	@Override
+//	public ManagerMasterRequest saveManagerMaster(ManagerMasterRequest request) {
+//		String response = "";
+//		ManagerLblMasterEntity managerLblMasterEntity = null;
+//		try {
+//			response = MessageConstant.RESPONSE_FAILED;
+//			request.setResponse(response);
+//			managerLblMasterEntity = new ManagerLblMasterEntity();
+//
+//			CopyUtility.copyProperties(request, managerLblMasterEntity);
+//			managerLblMasterEntity.setCreationDate(LocalDateTime.now());
+//			managerLblMasterEntity.setStatus(1);
+//			managerLblMasterEntity = managerDao.saveDetails(managerLblMasterEntity);
+//			response = MessageConstant.RESPONSE_SUCCESS;
+//			request.setResponse(response);
+//
+//		} catch (Exception e) {
+//			response = MessageConstant.RESPONSE_FAILED;
+//			// e.printStackTrace();
+//			request.setResponse(response);
+//		}
+//		return request;
+//	}
 
 	
-	@Override
-	public List<ManagerLblMasterEntity> getManagerMaster(Long orgId) {
-		
-		List<ManagerLblMasterEntity> managerLblMasterEntities=new ArrayList<>();
-		try {
-			managerLblMasterEntities=managerDao.getManagerDetails(orgId);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return managerLblMasterEntities;
-	}
-	
+//	@Override
+//	public List<ManagerLblMasterEntity> getManagerMaster(Long orgId) {
+//		
+//		List<ManagerLblMasterEntity> managerLblMasterEntities=new ArrayList<>();
+//		try {
+//			managerLblMasterEntities=managerDao.getManagerDetails(orgId);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		return managerLblMasterEntities;
+//	}
+//	
 
 
 

@@ -43,6 +43,7 @@ public class ErupiLinkAccountRequest {
 	private String psFlag;
 	private byte[] bankLogo;
 	private String response;
-	
+	private String clientKey;
+	private String hash; 
 }
 

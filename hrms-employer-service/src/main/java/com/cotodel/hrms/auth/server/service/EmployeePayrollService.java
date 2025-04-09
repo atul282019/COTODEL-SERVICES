@@ -6,8 +6,8 @@ import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
 
 public interface EmployeePayrollService {
 	
-	public EmployeePayrollRequest  saveEmployeePayrollDetails(EmployeePayrollRequest request);
-	public EmployeePayrollTaxRequest  saveEmployeePayrollTaxDetails(EmployeePayrollTaxRequest request);
-	public EmployeePayrollRequest  saveEmployeePayrollDetailsNew(EmployeePayrollRequest request);
-	public EmployeeProfileEntity getEmployerPayRollDetail(Long employerId);
+	//public EmployeePayrollRequest  saveEmployeePayrollDetails(EmployeePayrollRequest request);
+	//public EmployeePayrollTaxRequest  saveEmployeePayrollTaxDetails(EmployeePayrollTaxRequest request);
+	//public EmployeePayrollRequest  saveEmployeePayrollDetailsNew(EmployeePayrollRequest request);
+	//public EmployeeProfileEntity getEmployerPayRollDetail(Long employerId);
 }

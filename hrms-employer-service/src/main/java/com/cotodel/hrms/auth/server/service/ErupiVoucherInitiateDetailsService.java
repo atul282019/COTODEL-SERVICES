@@ -5,6 +5,8 @@ import java.util.List;
 import com.cotodel.hrms.auth.server.dto.ErupiMultipleVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherBankListDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsRequest;
@@ -33,5 +35,8 @@ public interface ErupiVoucherInitiateDetailsService {
 	public List<ErupiVoucherBankListDto>  getErupiVoucherCreateBAnkList(ErupiVoucherCreatedRequest request);
 	public ErupiVoucherTotalDetailDto  getErupiVoucherCreateDetailByAccount(ErupiVoucherCreatedRequest request);
 	public ErupiVoucherCreatedDto  getErupiVoucherCreateDetailsById(ErupiVoucherCreatedRequest request);
+	public List<ErupiVoucherCreatedDateWiseDto>  getErupiVoucherCreateDetailsListDateWise(ErupiVoucherCreatedDateWiseRequest request);
+	public boolean  getSecurityCheck(String clientId,String secretId,String bankCode);
+	public ErupiVoucherCreateDetailsRequest  saveErupiVoucherInitiateDetailsNewBulk(ErupiVoucherCreateDetailsRequest request);
 	
 }

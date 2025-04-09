@@ -14,6 +14,8 @@ import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.DirectorOnboardingService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.SQLInjectionValidator;
+import com.cotodel.hrms.auth.server.util.ValidateConstants;
 @Repository
 public class DirectorOnboardingServiceImpl implements DirectorOnboardingService{
 
@@ -29,7 +31,18 @@ public class DirectorOnboardingServiceImpl implements DirectorOnboardingService{
 	public DirectorOnboardingRequest saveDirectorDetails(DirectorOnboardingRequest request) {
 		String response="";
 		DirectorOnboardingEntity directorOnboardingEntity=null;
+		
 		try {
+			String message=validateDirectorOnboardingRequest(request);
+			if(message!=null && !message.equalsIgnoreCase("")) {
+				request.setResponse(message);
+				return request;
+			}
+//			String errorMessage =SQLInjectionValidator.validateFieldsForSQLInjection(request);
+//	        if (errorMessage != null) {
+//	        	request.setResponse(errorMessage);
+//				return request;
+//	        }
 			response=MessageConstant.RESPONSE_FAILED;			
 			request.setResponse(response);
 			directorOnboardingEntity=new DirectorOnboardingEntity();
@@ -39,12 +52,43 @@ public class DirectorOnboardingServiceImpl implements DirectorOnboardingService{
 			directorOnboardingDao.saveDetails(directorOnboardingEntity);
 			request.setResponse(MessageConstant.RESPONSE_SUCCESS);
 		}catch (DataIntegrityViolationException ex) {
-	           
+			request.setResponse(MessageConstant.DIRECT_UNIQUE);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		return request;
 	}
+	
+	private String validateDirectorOnboardingRequest(DirectorOnboardingRequest directorOnboardingRequest) {
+        // Check for required fields and validate the data
+        String message="";
+               
+        
+        message=ValidateConstants.validateOrganizationId(directorOnboardingRequest.getOrgId());
+        if(message!=null)
+        	return message;
+        message=ValidateConstants.validateMandatoryName(directorOnboardingRequest.getName());
+        if(message!=null)
+        	return message;
+       message=ValidateConstants.validateEmail(directorOnboardingRequest.getEmail());
+       if(message!=null)
+       	return message;
+       message=ValidateConstants.validateMobile(directorOnboardingRequest.getMobile());
+       if(message!=null)
+       	return message;
+       message=ValidateConstants.validateDin(directorOnboardingRequest.getDin());
+       if(message!=null)
+       	return message;
+       message=ValidateConstants.validateDesignation(directorOnboardingRequest.getDesignation());
+       if(message!=null)
+       	return message;
+       message=ValidateConstants.validateAddress(directorOnboardingRequest.getAddress());
+       if(message!=null)
+       	return message;
+       message=ValidateConstants.validateCreatedBy(directorOnboardingRequest.getCreatedby());
+       
+        return message;
+    }
 
 	@Override
 	public List<DirectorOnboardingEntity> getDirectorDetailsList(Long employerid) {

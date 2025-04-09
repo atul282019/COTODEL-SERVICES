@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -24,9 +28,13 @@ import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.ValidateConstants;
 @Repository
 public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeOnboardingServiceImpl.class);
+
+	
 	@Autowired
 	EmployeeOnboardingDao  employeeOnboardingDao;
 	
@@ -42,8 +50,15 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		String response="";
 		String response1="";
 		String tokenvalue="";
+		
 		TokenGeneration token=new TokenGeneration();
 		UserRequest userRequest=new UserRequest();
+		
+		String message=validateEmployeeOnboardingRequest(request);
+		if(message!=null && !message.equalsIgnoreCase("")) {
+			request.setResponse(message);
+			return request;
+		}
 		try {
 			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			userRequest.setUsername(request.getName());
@@ -334,6 +349,13 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		return employeeOnboading;
 		
 	}
+	
+
+	@Override
+	public EmployeeOnboardingEntity getEmployeeDetailsByUserId(Long userId) {
+		// TODO Auto-generated method stub
+		return employeeOnboardingDao.getEmployeeOnboardingUserId(userId);
+	}
 
 
 	@Override
@@ -345,6 +367,17 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		TokenGeneration token=new TokenGeneration();
 		UserRequest userRequest=new UserRequest();
 		try {
+//			String dataString = request.getOrgId()+request.getBankName()+request.getAccountHolderName()+request.getAcNumber()+request.getConirmAccNumber()+request.getAccountType()+request.getIfsc()
+//	        +request.getMobile()+request.getMerchentIid()+request.getSubmurchentid()+request.getPayerva()+request.getClientKey()+MessageConstant.SECRET_KEY;
+			String dataString =request.getId()+request.getName()+request.getEmail()+
+					request.getMobile()+request.getProofOfIdentity()+request.getClientKey()+MessageConstant.SECRET_KEY;
+			String hash=ValidateConstants.generateHash(dataString);
+			if(!request.getHash().equalsIgnoreCase(hash)) {
+				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}
+			
+			
 			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			userRequest.setUsername(request.getName());
 			userRequest.setMobile(request.getMobile());
@@ -355,33 +388,53 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			if (!ObjectUtils.isEmpty(response1)) {
 				JSONObject demoRes = new JSONObject(response1);
 				boolean status = demoRes.getBoolean("status");
-				if (status || !status) {
+				if (status) {
 					Long id=0l;
 					if (demoRes.has("userEntity")) {
 						JSONObject userEntity = demoRes.getJSONObject("userEntity");
 						id=userEntity.getLong("id");
 						
 					}
-					//String user = demoRes.getString("userEntity");
-					//JSONObject refData=pendJosnIdRes.getJSONArray("data").getJSONObject(0);
 					response = MessageConstant.RESPONSE_FAILED;
 					request.setResponse(response);
 					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
-					employeeOnboarding=employeeOnboardingDao.getEmployeeOnboarding(request.getMobile());
+					employeeOnboarding=employeeOnboardingDao.getEmployeeOnboardingId(request.getId());
 					if(employeeOnboarding!=null) {
-						employeeOnboarding.setProofOfIdentity(request.getProofOfIdentity());
-						employeeOnboarding.setPan(request.getPan());
-						employeeOnboarding.setBankAccountNumber(request.getBankAccountNumber());
-						employeeOnboarding.setIfscCode(request.getIfscCode());
-						employeeOnboarding.setBeneficiaryName(request.getBeneficiaryName());
+						if(request.getProofOfIdentity()!=null) {
+							employeeOnboarding.setProofOfIdentity(request.getProofOfIdentity());
+						}
+						if(request.getPan()!=null) {
+							employeeOnboarding.setPan(request.getPan());
+						}
+						if(request.getBankAccountNumber()!=null) {
+							employeeOnboarding.setBankAccountNumber(request.getBankAccountNumber());
+						}
+						if(request.getIfscCode()!=null) {
+							employeeOnboarding.setIfscCode(request.getIfscCode());
+						}
+						if(request.getBeneficiaryName()!=null) {
+							employeeOnboarding.setBeneficiaryName(request.getBeneficiaryName());
+						}
+//						employeeOnboarding.setEmpOrCont(request.getEmpOrCont());
+//						employeeOnboarding.setName(request.getName());
+//						employeeOnboarding.setEmail(request.getEmail());
+//						employeeOnboarding.setHerDate(request.getHerDate());
+//						employeeOnboarding.setJobTitle(request.getJobTitle());
+//						employeeOnboarding.setDepratment(request.getDepratment());
+//						employeeOnboarding.setManagerName(request.getManagerName());
+//						employeeOnboarding.setCtc(request.getCtc());
+//						employeeOnboarding.setLocation(request.getLocation());
+//						employeeOnboarding.setResidentOfIndia(request.getResidentOfIndia());						
+						employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					}else {
 						employeeOnboarding = new EmployeeOnboardingEntity();
 						CopyUtility.copyProperties(request, employeeOnboarding);
+						employeeOnboarding.setCreationDate(LocalDateTime.now());
+						employeeOnboarding.setUserDetailsId(id);
+						employeeOnboarding.setMode(1l);
+						employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					}
 					
-					employeeOnboarding.setUserDetailsId(id);
-					employeeOnboarding.setMode(1l);
-					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
 					response = MessageConstant.RESPONSE_SUCCESS;
 					request.setResponse(response);
 					request.setId(employeeOnboarding.getId());
@@ -391,6 +444,10 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 				}
 
 			}
+		}catch (DataIntegrityViolationException e) {
+			response=MessageConstant.DUP_ACC;
+			request.setResponse(response);
+			logger.error("Error in saveBankMaster :DataIntegrityViolationException:"+e.getMessage());
 		} catch (Exception e) {
 			response = MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);
@@ -497,7 +554,163 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 	}
 
 
-	
+	private String validateEmployeeOnboardingRequest(EmployeeOnboardingRequest request) {
+		String message="";
+		if(request.getEmpOrCont().equalsIgnoreCase("Office Boy") || request.getEmpOrCont().equalsIgnoreCase("Driver") || request.getEmpOrCont().equalsIgnoreCase("Contractor")) {
+	        message=ValidateConstants.validateMandatoryName(request.getName());
+	        if(message!=null)
+	        	return message;
+		    message=ValidateConstants.validateMobile(request.getMobile());
+		    if(message!=null)
+		        return message;
+		    if(request.getEmail()!=null) {
+		       message=ValidateConstants.validateEmail(request.getEmail());
+		       if(message!=null)
+		       	return message;
+		    }
+		}else if(request.getEmpOrCont().equalsIgnoreCase("Employee")){
+			 message=ValidateConstants.validateMandatoryName(request.getName());
+		        if(message!=null)
+		        	return message;
+			 message=ValidateConstants.validateMobile(request.getMobile());
+			    if(message!=null)
+			        return message;
+			 if(request.getEmail()!=null) {
+			       message=ValidateConstants.validateEmail(request.getEmail());
+			       if(message!=null)
+			       	return message;
+			    }
+			 message=ValidateConstants.validateJoiningDate(request.getHerDate());
+			    if(message!=null)
+			        return message;
+			    message=ValidateConstants.validateMandatoryName(request.getDepratment());
+		        if(message!=null)
+		        	return message;
+		        
+		        message=ValidateConstants.validateName(request.getManagerName());
+		        if(message!=null)
+		        	return message;
+		        
+		        message=ValidateConstants.validateCTC(request.getCtc());
+		        if(message!=null)
+		        	return message;
+		        
+		        
+		}
+		
+//		 message=ValidateConstants.validateOrganizationId(directorOnboardingRequest.getOrgId());
+//	        if(message!=null)
+//	        	return message;
+//	        message=ValidateConstants.validateMandatoryName(directorOnboardingRequest.getName());
+//	        if(message!=null)
+//	        	return message;
+//	       message=ValidateConstants.validateEmail(directorOnboardingRequest.getEmail());
+//	       if(message!=null)
+//	       	return message;
+//	       message=ValidateConstants.validateMobile(directorOnboardingRequest.getMobile());
+//	       if(message!=null)
+//	       	return message;
+//	       message=ValidateConstants.validateDin(directorOnboardingRequest.getDin());
+//	       if(message!=null)
+//	       	return message;
+//	       message=ValidateConstants.validateDesignation(directorOnboardingRequest.getDesignation());
+//	       if(message!=null)
+//	       	return message;
+//	       message=ValidateConstants.validateAddress(directorOnboardingRequest.getAddress());
+//	       if(message!=null)
+//	       	return message;
+//	       message=ValidateConstants.validateCreatedBy(directorOnboardingRequest.getCreatedby());
+//	       
+//	        return message;
+		return "";
+	}
+
+
+	@Override
+	public EmployeeOnboardingNewRequest updateEmployeeDetailsNew(EmployeeOnboardingNewRequest request) {
+		String response="";
+		String response1="";
+		String tokenvalue="";
+		TokenGeneration token=new TokenGeneration();
+		UserRequest userRequest=new UserRequest();
+		try {
+			String dataString =request.getId()+request.getPan()+request.getIfscCode()+request.getBeneficiaryName()+
+					request.getBankAccountNumber()+request.getClientKey()+MessageConstant.SECRET_KEY;
+			
+			String hash=ValidateConstants.generateHash(dataString);
+			if(!request.getHash().equalsIgnoreCase(hash)) {
+				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}
+			
+			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
+			userRequest.setUsername(request.getName());
+			userRequest.setMobile(request.getMobile());
+			userRequest.setEmail(request.getEmail());
+			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
+			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMailNew,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+			if (!ObjectUtils.isEmpty(response1)) {
+				JSONObject demoRes = new JSONObject(response1);
+				boolean status = demoRes.getBoolean("status");
+				if (status) {
+					Long id=0l;
+					if (demoRes.has("userEntity")) {
+						JSONObject userEntity = demoRes.getJSONObject("userEntity");
+						id=userEntity.getLong("id");
+						
+					}
+					response = MessageConstant.RESPONSE_FAILED;
+					request.setResponse(response);
+					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
+					employeeOnboarding=employeeOnboardingDao.getEmployeeOnboardingId(request.getId());
+					if(employeeOnboarding!=null) {
+						if(request.getProofOfIdentity()!=null) {
+							employeeOnboarding.setProofOfIdentity(request.getProofOfIdentity());
+						}
+						if(request.getPan()!=null) {
+							employeeOnboarding.setPan(request.getPan());
+						}
+						if(request.getBankAccountNumber()!=null) {
+							employeeOnboarding.setBankAccountNumber(request.getBankAccountNumber());
+						}
+						if(request.getIfscCode()!=null) {
+							employeeOnboarding.setIfscCode(request.getIfscCode());
+						}
+						if(request.getBeneficiaryName()!=null) {
+							employeeOnboarding.setBeneficiaryName(request.getBeneficiaryName());
+						}
+					
+						employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
+					}else {
+						employeeOnboarding = new EmployeeOnboardingEntity();
+						CopyUtility.copyProperties(request, employeeOnboarding);
+						employeeOnboarding.setCreationDate(LocalDateTime.now());
+						employeeOnboarding.setUserDetailsId(id);
+						employeeOnboarding.setMode(1l);
+						employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
+					}
+					
+					response = MessageConstant.RESPONSE_SUCCESS;
+					request.setResponse(response);
+					request.setId(employeeOnboarding.getId());
+				} else if (!status) {
+					response = demoRes.getString("message");
+					request.setResponse(response);
+				}
+
+			}
+		}catch (DataIntegrityViolationException e) {
+			response=MessageConstant.DUP_ACC;
+			request.setResponse(response);
+			logger.error("Error in saveBankMaster :DataIntegrityViolationException:"+e.getMessage());
+		} catch (Exception e) {
+			response = MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+		}
+		return request;
+
+	}
 	
 	
 }

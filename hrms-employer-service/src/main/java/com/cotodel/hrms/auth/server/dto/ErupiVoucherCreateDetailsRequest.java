@@ -57,5 +57,9 @@ public class ErupiVoucherCreateDetailsRequest {
 	private String mandateType;
 	private String payeeVPA;
 	private String validity;
+	private Long requestId;
+	private String clientKey;
+	private String hash;
 	
+	 
 }

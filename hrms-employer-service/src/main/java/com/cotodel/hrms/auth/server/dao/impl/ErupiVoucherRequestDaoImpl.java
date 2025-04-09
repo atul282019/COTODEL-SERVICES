@@ -38,6 +38,14 @@ public class ErupiVoucherRequestDaoImpl implements ErupiVoucherRequestDao{
 		return erupiVoucherRequestRepository.findByEmployeeId(employeeId);
 	}
 
+
+
+	@Override
+	public ErupiVoucherCreationRequestEntity getVoucherCreationRequestEmpById(Long id) {
+		// TODO Auto-generated method stub
+		return erupiVoucherRequestRepository.getById(id);
+	}
+
 	
 	
 	

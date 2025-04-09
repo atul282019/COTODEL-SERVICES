@@ -8,5 +8,5 @@ public interface ErupiVoucherRequestDao {
 	public ErupiVoucherCreationRequestEntity saveDetails(ErupiVoucherCreationRequestEntity erCreationRequestEntity);
 	public List<ErupiVoucherCreationRequestEntity> getVoucherCreationRequest(Long employerId);
 	public List<ErupiVoucherCreationRequestEntity> getVoucherCreationRequestEmp(Long employeeId);
-	
+	public ErupiVoucherCreationRequestEntity getVoucherCreationRequestEmpById(Long id);
 }

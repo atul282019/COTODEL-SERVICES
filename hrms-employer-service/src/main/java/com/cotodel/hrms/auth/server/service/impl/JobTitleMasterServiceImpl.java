@@ -24,41 +24,41 @@ public class JobTitleMasterServiceImpl implements JobTitleMasterService{
 	JobTitleMasterDao jobTitleMasterDao;
 		
 	
-	@Override
-	public JobTitleMasterRequest saveJobTitleMaster(JobTitleMasterRequest request) {
-		String response = "";
-		JobTitleMasterEntity jobTitleMasterEntity = null;
-		try {
-			response = MessageConstant.RESPONSE_FAILED;
-			request.setResponse(response);
-			jobTitleMasterEntity = new JobTitleMasterEntity();
-
-			CopyUtility.copyProperties(request, jobTitleMasterEntity);
-			jobTitleMasterEntity.setCreationDate(LocalDateTime.now());
-			jobTitleMasterEntity.setStatus(1);
-			jobTitleMasterEntity = jobTitleMasterDao.saveDetails(jobTitleMasterEntity);
-			response = MessageConstant.RESPONSE_SUCCESS;
-			request.setResponse(response);
-
-		} catch (Exception e) {
-			response = MessageConstant.RESPONSE_FAILED;
-			// e.printStackTrace();
-			request.setResponse(response);
-		}
-		return request;
-	}
-
-
-	@Override
-	public List<JobTitleMasterEntity> getJobTitleMaster(Long orgId) {
-		List<JobTitleMasterEntity> jobTitleMasterEntities=new ArrayList<>();
-		try {
-			jobTitleMasterEntities=jobTitleMasterDao.getJobTitleDetails(orgId);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return jobTitleMasterEntities;
-	}
+//	@Override
+//	public JobTitleMasterRequest saveJobTitleMaster(JobTitleMasterRequest request) {
+//		String response = "";
+//		JobTitleMasterEntity jobTitleMasterEntity = null;
+//		try {
+//			response = MessageConstant.RESPONSE_FAILED;
+//			request.setResponse(response);
+//			jobTitleMasterEntity = new JobTitleMasterEntity();
+//
+//			CopyUtility.copyProperties(request, jobTitleMasterEntity);
+//			jobTitleMasterEntity.setCreationDate(LocalDateTime.now());
+//			jobTitleMasterEntity.setStatus(1);
+//			jobTitleMasterEntity = jobTitleMasterDao.saveDetails(jobTitleMasterEntity);
+//			response = MessageConstant.RESPONSE_SUCCESS;
+//			request.setResponse(response);
+//
+//		} catch (Exception e) {
+//			response = MessageConstant.RESPONSE_FAILED;
+//			// e.printStackTrace();
+//			request.setResponse(response);
+//		}
+//		return request;
+//	}
+//
+//
+//	@Override
+//	public List<JobTitleMasterEntity> getJobTitleMaster(Long orgId) {
+//		List<JobTitleMasterEntity> jobTitleMasterEntities=new ArrayList<>();
+//		try {
+//			jobTitleMasterEntities=jobTitleMasterDao.getJobTitleDetails(orgId);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		return jobTitleMasterEntities;
+//	}
 
 	
 }

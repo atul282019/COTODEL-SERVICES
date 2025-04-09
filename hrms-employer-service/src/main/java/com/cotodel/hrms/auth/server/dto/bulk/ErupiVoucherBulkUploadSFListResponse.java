@@ -19,5 +19,6 @@ public class ErupiVoucherBulkUploadSFListResponse {
 	private String failCount;
 	List<VoucherBulkUploadSuccessEntity> success;
 	List<VoucherBulkUploadFailEntity> fail;
+	private String response;
 	
 }

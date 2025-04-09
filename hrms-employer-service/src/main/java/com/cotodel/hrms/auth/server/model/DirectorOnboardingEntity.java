@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="director_onboarding")
+@Table(name="director_onboarding",uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"email"}),
+        @UniqueConstraint(columnNames = {"mobile"}),@UniqueConstraint(columnNames = {"din"})
+    })
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="director_onboarding_seq" , sequenceName="director_onboarding_seq", allocationSize=1)
 public class DirectorOnboardingEntity  implements Serializable{

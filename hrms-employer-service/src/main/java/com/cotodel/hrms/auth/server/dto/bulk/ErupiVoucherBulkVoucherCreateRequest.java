@@ -46,5 +46,7 @@ public class ErupiVoucherBulkVoucherCreateRequest {
 	private String otpValidationStatus;
 	private String extra1;
 	private String extra2;
-	private String extra3;	 
+	private String extra3;
+	private String clientKey;
+	private String hash;
 }

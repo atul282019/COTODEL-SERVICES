@@ -2,6 +2,13 @@ package com.cotodel.hrms.auth.server.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Lob;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 
 import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
@@ -37,6 +44,9 @@ public class EmployeeOnboardingRequest implements Serializable {
     private String beneficiaryName;    
    	private String response;
    	private byte[] empPhoto;
-   	private String managerName;
-	
+   	private String managerName;  
+	private Long userDetailsId;
+	private String clientKey;
+	private String hash;
+
 }

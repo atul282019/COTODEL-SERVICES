@@ -20,7 +20,10 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherBankDetailListResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherBankListDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedByIdResponse;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedListDateWiseResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedListResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherDetailResponse;
@@ -175,7 +178,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreatedRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateDetailsList(erupiLinkAccountRequest);
-	    		System.out.println(response.size());
+	    		//System.out.println(response.size());
 				if(response!=null && response.size()>0) {
 					erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
@@ -730,5 +733,134 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	        
 	        return ResponseEntity.ok(new ErupiVoucherCreatedByIdResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
 	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/get/erupiVoucherCreateListDateWise",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+//	    public ResponseEntity<Object> erupiVoucherCreateListDateWise(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+//		 
+//	    logger.info("inside erupiVoucherCreateList....");	    	
+//	    	
+//	    
+//	    	String message = "";
+//	    	List<ErupiVoucherCreatedDto> response=null;
+//	    	ErupiVoucherCreatedListResponse erupiVoucherCreatedListResponse;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+//				ErupiVoucherCreatedDateWiseRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedDateWiseRequest.class);
+//				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateDetailsListDateWise(erupiLinkAccountRequest);
+//	    		//System.out.println(response.size());
+//				if(response!=null && response.size()>0) {
+//					erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+//					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+//					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+//					 return ResponseEntity.ok(jsonEncriptObject);
+//
+//	    		}else {
+//	    			erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+//					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+//					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+//					 return ResponseEntity.ok(jsonEncriptObject);
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		logger.error("error in erupiVoucherInitiateDetails====="+e);
+//			}
+//	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+//	    	try {
+//	    		erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+//		        String jsonEncript = EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+//	            jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+//			} catch (Exception e) {
+//				logger.error("error in erupiVoucherInitiateDetails====="+e);
+//			}
+// 	    return ResponseEntity.ok(jsonEncriptObject);
+//	    }
 	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/erupiVoucherCreateListDateWise",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> erupiVoucherCreateListDateWise(HttpServletRequest request,@Valid @RequestBody ErupiVoucherCreatedDateWiseRequest erupiLinkAccountRequest) {
+		 
+	    logger.info("inside erupiVoucherCreateListDateWise....");	    	
+	    	
+	    
+	    	String message = "";
+	    	List<ErupiVoucherCreatedDateWiseDto> response=null;
+	    	ErupiVoucherCreatedListDateWiseResponse erupiVoucherCreatedListResponse=null;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				String clientId = request.getHeader("clientId");
+				String secretId = request.getHeader("secretId");
+				System.out.println(clientId);
+				System.out.println(secretId);
+				boolean result=erupiVoucherInitiateDetailsService.getSecurityCheck(clientId, secretId,erupiLinkAccountRequest.getBankCode());
+				if(result) {
+//				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+//				ErupiVoucherCreatedDateWiseRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedDateWiseRequest.class);
+				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateDetailsListDateWise(erupiLinkAccountRequest);
+				if(response!=null && response.size()>0) {
+					erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListDateWiseResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 //String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+					 //EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(erupiVoucherCreatedListResponse);
+
+	    		}else {
+	    			erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListDateWiseResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 //String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+					 //EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(erupiVoucherCreatedListResponse);
+	    		}
+				}else {
+					erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListDateWiseResponse(MessageConstant.FALSE,MessageConstant.INVALID_SECRET,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 //String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+					 //EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(erupiVoucherCreatedListResponse);
+				}
+	    		//System.out.println(response.size());
+				
+	    	}catch (Exception e) {				
+	    		logger.error("error in erupiVoucherCreateListDateWise====="+e);
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListDateWiseResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+		        //String jsonEncript = EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+	            //jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in erupiVoucherCreateListDateWise====="+e);
+			}
+	    return ResponseEntity.ok(erupiVoucherCreatedListResponse);
+	    }
+//	 public static void main(String[] args) {
+//		 ErupiVoucherCreatedDateWiseRequest erupiVoucherCreatedDateWiseRequest=new ErupiVoucherCreatedDateWiseRequest();
+//		 String dateString = "2025-03-02";
+//		 String enddateString = "2025-04-02";
+//	        LocalDate localDate = LocalDate.parse(dateString);
+//	        LocalDate endlocalDate = LocalDate.parse(enddateString);
+//	        erupiVoucherCreatedDateWiseRequest.setFromDate(localDate);
+//	        erupiVoucherCreatedDateWiseRequest.setToDate(endlocalDate);
+//	        try {
+//	        	 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedDateWiseRequest);
+//	        	 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, "/opt/cotodel/key/publicKeyForApplication.txt");
+//	        	 String jsonEncript1 =  EncryptionDecriptionUtil.convertToJson(jsonEncriptObject);
+//	        	 System.out.println(jsonEncript1);
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//			}
+//	       
+//	}
 }

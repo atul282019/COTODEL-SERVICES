@@ -7,8 +7,8 @@ import com.cotodel.hrms.auth.server.model.JobTitleMasterEntity;
 
 public interface JobTitleMasterService {
 	
-	public JobTitleMasterRequest  saveJobTitleMaster(JobTitleMasterRequest jobTitleMasterRequest);	
-	public List<JobTitleMasterEntity>  getJobTitleMaster(Long orgId);
+//	public JobTitleMasterRequest  saveJobTitleMaster(JobTitleMasterRequest jobTitleMasterRequest);	
+//	public List<JobTitleMasterEntity>  getJobTitleMaster(Long orgId);
 	
 	
 	

@@ -23,4 +23,6 @@ public class ErupiVoucherCreateRequest {
 	private String response;
 	private String purposeCode;	
 	private String mcc;
+	private String clientKey;
+	private String hash;
 }

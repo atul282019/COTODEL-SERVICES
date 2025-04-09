@@ -17,4 +17,5 @@ public class ErupiVoucherCreatedRequest {
 	private String timePeriod;
 	private Long employeeId;
 	private Long id;
+	
 }

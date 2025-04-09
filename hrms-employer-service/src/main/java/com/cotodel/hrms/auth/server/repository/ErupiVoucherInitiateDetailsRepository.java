@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 @Repository
@@ -105,4 +106,13 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ " and c.id =:id    order by c.creationDate desc ")
 	public List<ErupiVoucherCreatedDto> findVoucherCreateListById(@Param("orgId") Long orgId,@Param("id") Long id);
 	
+	@Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto(c.id,c.name,c.mobile,c.amount,"
+			+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
+			+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode) "
+			+ "from ErupiVoucherCreationDetailsEntity c"
+			+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
+			+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
+			+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where    t.workFlowId!=100004 and"
+			+ "  c.creationDate BETWEEN :startDate and :endDate and c.bankcode=:bankCode  order by c.creationDate desc ")
+	public List<ErupiVoucherCreatedDateWiseDto> findVoucherCreateListDateWise(@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate,@Param("bankCode") String bankCode);
 }

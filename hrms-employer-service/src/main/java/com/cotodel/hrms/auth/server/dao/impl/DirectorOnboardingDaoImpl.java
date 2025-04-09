@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.DirectorOnboardingDao;
 import com.cotodel.hrms.auth.server.model.DirectorOnboardingEntity;
-import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.repository.DirectorOnboardingRepository;
-import com.cotodel.hrms.auth.server.repository.EmployeeOnboardingRepository;
 @Repository
 public class DirectorOnboardingDaoImpl implements DirectorOnboardingDao{
 

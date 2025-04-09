@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Access;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
@@ -27,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="employee_onboarding")
+@Table(name="employee_onboarding",uniqueConstraints = @UniqueConstraint(columnNames = {"user_details_id"}))
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="employee_onboarding_seq" , sequenceName="employee_onboarding_seq", allocationSize=1)
 public class EmployeeOnboardingEntity  implements Serializable{
@@ -61,7 +63,7 @@ public class EmployeeOnboardingEntity  implements Serializable{
 	private String ctc;
 	@Column(name="status")
 	private int status;
-	@Column(name="user_details_id")
+	@Column(name="user_details_id", unique = true)
 	private Long userDetailsId;
 	@Column(name="mode")
 	private Long mode;
@@ -71,7 +73,7 @@ public class EmployeeOnboardingEntity  implements Serializable{
 	private String residentOfIndia;	
 	@CreationTimestamp
 	@Column(name="creation_date")
-	private Date creationDate;
+	private LocalDateTime creationDate;
 	@Column(name="proof_of_identity")
 	private String proofOfIdentity;
 	@Column(name="pan")

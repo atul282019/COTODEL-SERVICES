@@ -53,4 +53,5 @@ public class ErupiVoucherBulkUploadRequest {
 	private String tid;
 	private String merchentid;
 	private Long status;
+	
 }

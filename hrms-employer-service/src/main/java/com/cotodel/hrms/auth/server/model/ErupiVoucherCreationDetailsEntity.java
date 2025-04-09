@@ -149,5 +149,7 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
 	@Column(name="bankcode")
 	private String bankcode;
 	
-	
+	@Column(name="request_id")
+	private Long requestId;
+	 
 }

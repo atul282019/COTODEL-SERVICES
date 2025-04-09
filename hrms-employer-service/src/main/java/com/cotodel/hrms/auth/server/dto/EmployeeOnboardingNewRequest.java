@@ -35,4 +35,11 @@ public class EmployeeOnboardingNewRequest implements Serializable {
     private String ifscCode;
     private String beneficiaryName;    
 	private String response;
+	private Long userDetailsId;
+	private Long employeeId;
+	private Long managerId;
+	private byte[] empPhoto;
+	private String clientKey;
+	private String hash;
+	
 }

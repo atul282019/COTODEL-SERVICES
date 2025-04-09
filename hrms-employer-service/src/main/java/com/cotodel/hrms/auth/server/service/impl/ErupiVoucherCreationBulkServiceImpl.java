@@ -49,6 +49,7 @@ import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.ValidateConstants;
 @Service
 public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreationBulkService{
 	private static final Logger logger = LoggerFactory.getLogger(ErupiVoucherCreationBulkServiceImpl.class);
@@ -213,6 +214,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		
 		List<ErupiVoucherCreateDetailsRequest> erupiList=new ArrayList<ErupiVoucherCreateDetailsRequest>();
 		try {
+			
 	        List<String> idList = Arrays.asList(request.getArrayofid());
 	        
 			for (String id : idList) {
@@ -240,7 +242,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 				erRequest.setBankcode(request.getBankcode());
 				//ErupiVoucherInitiateDetailsServiceImpl help=new ErupiVoucherInitiateDetailsServiceImpl();
 				//String merTranId=help.getMerTranId(voEntity.getBankcode());
-				erRequest=erupiVoucherInitiateDetailsService.saveErupiVoucherInitiateDetailsNew(erRequest);
+				erRequest=erupiVoucherInitiateDetailsService.saveErupiVoucherInitiateDetailsNewBulk(erRequest);
 				//if(erRequest.getResponse().equalsIgnoreCase("SUCCESS")){
 					erupiVoucherBulkDao.updateSuccessFlag(idValue);
 				//}
@@ -420,11 +422,17 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		try {
 
 			response = MessageConstant.RESPONSE_FAILED;
+			bulkupload.setResponse(response);
 			request.setType("CREATE");
 			Long orgId = request.getOrgId();
 			Long voucherId=request.getVoucherId();
 			String filename = request.getFileName();
 			String extn = CommonUtility.getFileExtension(filename);
+			if(extn.equalsIgnoreCase(".xlsx")) {
+				response=MessageConstant.FILE_ERROR;
+				bulkupload.setResponse(response);
+				return bulkupload;
+			}
 			String fileNameWithout = filename.substring(0, filename.lastIndexOf("."));
 			String uniqueFileName = CommonUtility.generateUniqueFileName(fileNameWithout, request.getOrgId(), extn);
 			LocalDate eventDate = LocalDate.now();
@@ -644,9 +652,11 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 			bulkupload.setFailCount(String.valueOf(failCount));
 			bulkupload.setSuccess(voucherSuccessList);
 			bulkupload.setFail(voucherFailList);
+			bulkupload.setResponse(MessageConstant.RESPONSE_SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			response = MessageConstant.RESPONSE_FAILED;
+			bulkupload.setResponse(response);
 			logger.error("Error :: " + e.getMessage());
 
 		}

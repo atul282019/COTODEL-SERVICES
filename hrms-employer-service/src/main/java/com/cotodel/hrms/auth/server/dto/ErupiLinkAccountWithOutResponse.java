@@ -42,4 +42,5 @@ public class ErupiLinkAccountWithOutResponse {
 	private String extra1;
 	private String psFlag;
 	private String response;
+	private String accountSeltWallet;
 }

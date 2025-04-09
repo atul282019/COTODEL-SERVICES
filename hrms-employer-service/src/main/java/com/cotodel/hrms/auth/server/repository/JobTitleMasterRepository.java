@@ -9,6 +9,6 @@ import com.cotodel.hrms.auth.server.model.JobTitleMasterEntity;
 @Repository
 public interface JobTitleMasterRepository extends JpaRepository<JobTitleMasterEntity,Long>{
 	
-	@Query("select s  from JobTitleMasterEntity s where s.orgId = ?1")
+	@Query("select s  from JobTitleMasterEntity s ")
 	  public List<JobTitleMasterEntity> findByOrgId(Long orgId);
 }

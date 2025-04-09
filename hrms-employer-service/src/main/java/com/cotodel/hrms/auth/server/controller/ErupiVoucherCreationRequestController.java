@@ -131,7 +131,8 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);
 	    		}
-	    	}catch (Exception e) {				
+	    	}catch (Exception e) {		
+	    		e.printStackTrace();
 	    		logger.error("error in erupiVoucherRequest====="+e);
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();

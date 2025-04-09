@@ -36,4 +36,10 @@ public class MessageConstant {
 	public static final String APPROVED = "Approved";	
 	public static final String INSUFBAL = "Insufficient balance for the transaction";
 	public static final String BAL = "Please enter valid amount";
+	public static final String INVALID_SECRET = "Invalid client secret Id";
+	public static final String SECRET_KEY = "0123456789012345";
+	public static final String DIRECT_UNIQUE = "Mobile,email and din should be unique.";
+	public static final String HASH_ERROR = "Tempered Request";
+	public static final String FILE_ERROR = "Invalid file or extension.";
+	
 }

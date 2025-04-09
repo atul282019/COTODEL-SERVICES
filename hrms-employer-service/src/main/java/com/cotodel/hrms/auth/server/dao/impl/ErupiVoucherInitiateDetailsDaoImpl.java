@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.repository.ErupiVoucherInitiateDetailsRepository;
@@ -99,6 +100,12 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 	public List<ErupiVoucherCreatedDto> getVoucherCreationListById(Long orgID, Long id) {
 		// TODO Auto-generated method stub
 		return erupiVoucherInitiateDetailsRepository.findVoucherCreateListById(orgID, id);
+	}
+
+	@Override
+	public List<ErupiVoucherCreatedDateWiseDto> getVoucherCreationListDateWise(LocalDate startDate, LocalDate endDate,String bankCode) {
+		// TODO Auto-generated method stub
+		return erupiVoucherInitiateDetailsRepository.findVoucherCreateListDateWise(startDate, endDate,bankCode);
 	}	
 	
 	

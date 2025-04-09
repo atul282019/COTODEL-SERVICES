@@ -32,4 +32,5 @@ public class LinkMultipleAccountRequest {
 	private String response;
 	private String statusMessage;
 	private LocalDateTime creationDate;
+	private String orderId;
 }

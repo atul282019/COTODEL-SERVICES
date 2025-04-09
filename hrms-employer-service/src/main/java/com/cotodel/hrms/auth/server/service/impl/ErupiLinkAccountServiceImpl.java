@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import com.cotodel.hrms.auth.server.dao.BankMasterDao;
 import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
 import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountDao;
+import com.cotodel.hrms.auth.server.dto.DirectorOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountWithOutResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
@@ -29,6 +30,8 @@ import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.SQLInjectionValidator;
+import com.cotodel.hrms.auth.server.util.ValidateConstants;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -62,12 +65,26 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 		List<EmployeeOnboardingEntity> list=new ArrayList<>();
 		try {
 			
-//			list=employeeOnboardingRepository.findByOnboardingList(request.getOrgId());
-//			if(list==null || list.size()==0) {
-//				response=MessageConstant.ORG_ONBOARDING;
-//				request.setResponse(response);
+			
+			String dataString = request.getOrgId()+request.getBankName()+request.getAccountHolderName()+request.getAcNumber()+request.getConirmAccNumber()+request.getAccountType()+request.getIfsc()
+	        +request.getMobile()+request.getMerchentIid()+request.getSubmurchentid()+request.getPayerva()+request.getClientKey()+MessageConstant.SECRET_KEY;
+			String hash=ValidateConstants.generateHash(dataString);
+			if(!request.getHash().equalsIgnoreCase(hash)) {
+				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}
+			
+//			String errorMessage =SQLInjectionValidator.validateFieldsForSQLInjection(request);
+//	        if (errorMessage != null) {
+//	        	request.setResponse(errorMessage);
 //				return request;
-//			}
+//	        }
+			
+			String message=validateErupiRequest(request);
+			if(message!=null && !message.equalsIgnoreCase("")) {
+				request.setResponse(message);
+				return request;
+			}
 			
 			TokenGeneration token=new TokenGeneration();
 			UserRequest userRequest=new UserRequest();
@@ -113,7 +130,35 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 		}
 		return request;
 	}
-
+	private String validateErupiRequest(ErupiLinkAccountRequest request) {
+        // Check for required fields and validate the data
+        String message="";
+               
+        
+        message=ValidateConstants.validateOrganizationId(request.getOrgId());
+        if(message!=null)
+        	return message;
+        message=ValidateConstants.validateString(request.getBankName());
+        if(message!=null)
+        	return message;       
+       message=ValidateConstants.validateMandatoryName(request.getAccountHolderName());
+       if(message!=null)
+       	return message;
+       message=ValidateConstants.validateMobile(request.getMobile());
+       if(message!=null)
+       	return message;      
+       message=ValidateConstants.validAccountNumber(request.getAcNumber());
+       if(message!=null)
+       	return message;
+       message=ValidateConstants.validAccountNumber(request.getConirmAccNumber());
+       if(message!=null)
+       	return message;
+       message=ValidateConstants.validIFSC(request.getIfsc());
+       
+        return message;
+      //request.getAccountType()+request.getIfsc()+request.getMerchentIid()+request.getSubmurchentid()+request.getPayerva()
+    }
+	
 	@Override
 	public ErupiLinkAccountWithOutResponse getErupiAccountDetails(ErupiLinkAccountRequest request) {
 		ErupiLinkAccountEntity erupiLinkAccountEntity=null;
@@ -249,6 +294,7 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			for (ErupiLinkAccountEntity erupiLinkAccountWithOutResponse2 : erupiLinkAccountEntity) {
 				erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
 				CopyUtility.copyProperties(erupiLinkAccountWithOutResponse2,erupiLinkAccountWithOutResponse);
+				erupiLinkAccountWithOutResponse.setAccountSeltWallet("Self");
 				erupiLinkList.add(erupiLinkAccountWithOutResponse);
 			}
 			//start
@@ -257,6 +303,7 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 				erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
 				//ErupiLinkAccountEntity erupiLinkAccountEntity1=erupiLinkAccountDao.findByErupiLinkById(linkSubAccountMultipleEntity.getErupiLinkAccountEntity().getId());
 				CopyUtility.copyProperties(linkSubAccountMultipleEntity,erupiLinkAccountWithOutResponse);
+				erupiLinkAccountWithOutResponse.setAccountSeltWallet("Wallet");
 				erupiLinkList.add(erupiLinkAccountWithOutResponse);		
 			}
 			//end
