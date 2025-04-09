@@ -33,25 +33,6 @@ public class ApplicationConstantConfig {
 	@Value("${erupi.create.vouchers.apikey}")
 	public String getCreateVouchersToken;
 	
-//	@Value("${erupi.create.vouchers.mid}")
-//	public String getCreateVouchersMid;
-	
-	
-//	@Value("${api.key}")
-//    private String apiKey;
-//
-//    @Value("#{'${whitelisted.ips}'.split(',')}")
-//    private Set<String> whitelistedIps;
-//
-//    public boolean isValidApiKey(String key) {
-//        return apiKey.equals(key);
-//    }
-//
-//    public boolean isIpWhitelisted(HttpServletRequest request) {
-//        String clientIp = request.getRemoteAddr();
-//        return whitelistedIps.contains(clientIp);
-//    }
-    
     @Value("${erupi.voucher.status.url}")
 	public String getVoucherStatusUrl;
     
@@ -68,6 +49,12 @@ public class ApplicationConstantConfig {
    	public String cashFreeClientId;
     
     @Value("${cash.free.order.id.url}")
-   	public String cashFreeOrderIdUrl;    
+   	public String cashFreeOrderIdUrl;
+    
+    @Value("${cash.free.order.return.url}")
+   	public String cashFreeOrderReturnUrl;
+    
+    @Value("${cash.free.order.notify.url}")
+   	public String cashFreeOrderNotifyUrl;
     
 }

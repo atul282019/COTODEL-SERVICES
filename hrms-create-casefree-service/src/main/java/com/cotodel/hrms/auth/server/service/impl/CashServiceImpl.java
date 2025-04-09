@@ -1,7 +1,11 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -14,17 +18,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.CashFreeDao;
+import com.cotodel.hrms.auth.server.dao.CashFreeWebHookDao;
+import com.cotodel.hrms.auth.server.dao.CashFreeWebHookLogDao;
 import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountTempDao;
+import com.cotodel.hrms.auth.server.dto.ChargesDetail;
+import com.cotodel.hrms.auth.server.dto.CustomerDetails;
+import com.cotodel.hrms.auth.server.dto.ErrorDetails;
+import com.cotodel.hrms.auth.server.dto.Order;
 import com.cotodel.hrms.auth.server.dto.OrderIdResponse;
 import com.cotodel.hrms.auth.server.dto.OrderResponse;
 import com.cotodel.hrms.auth.server.dto.OrderUserRequest;
+import com.cotodel.hrms.auth.server.dto.OrderUserUpdateRequest;
+import com.cotodel.hrms.auth.server.dto.Payment;
+import com.cotodel.hrms.auth.server.dto.PaymentGatewayDetails;
 import com.cotodel.hrms.auth.server.entity.CashFreeOrderEntity;
+import com.cotodel.hrms.auth.server.entity.CashFreeOrderWebHookEntity;
+import com.cotodel.hrms.auth.server.entity.CashFreeWebHookLogEntity;
 import com.cotodel.hrms.auth.server.entity.LinkSubAccountMultipleTempEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.CashService;
 import com.cotodel.hrms.auth.server.util.AccountType;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
+import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 @Repository
@@ -40,6 +57,12 @@ public class CashServiceImpl implements CashService {
 
 	@Autowired
 	CashFreeDao cashFreeDao;
+	
+	@Autowired
+	CashFreeWebHookDao cashFreeWebHookDao;
+	
+	@Autowired
+	CashFreeWebHookLogDao cashFreeWebHookLogDao;
 	
 	@Autowired
 	LinkSubMultipleAccountTempDao linkSubMultipleAccountTempDao;
@@ -112,10 +135,8 @@ public class CashServiceImpl implements CashService {
 		customer.put("customer_phone", "+91" + orderUserRequest.getCustomerPhone());
 		request.put("customer_details", customer);
 		JSONObject url = new JSONObject();
-		url.put("return_url", "http://43.205.206.102:8082/cashfreeReturnUrl?order_id={order_id}");
-		// url.put("return_url",
-		// "http://43.205.206.102:8082/cashfreePaymentFailed?order_id={order_id}");
-		url.put("notify_url", "http://cotodel.com/payment");
+		url.put("return_url", applicationConstantConfig.cashFreeOrderReturnUrl);
+		//url.put("notify_url", applicationConstantConfig.cashFreeOrderNotifyUrl);
 		request.put("order_meta", url);
 		return request.toString();
 	}
@@ -165,17 +186,31 @@ public class CashServiceImpl implements CashService {
 								
 				//end							
 				
+				System.out.println(orderResponse.getOrder_status());
+				System.out.println(orderResponse.getOrder_status());
+				
 				if(orderResponse.getOrder_status()!=null && orderResponse.getOrder_status().equalsIgnoreCase("PAID") && !caEntity.getOrderStatus().equalsIgnoreCase("PAID"))
-					
+				{
 					caEntity.setOrderStatus(orderResponse.getOrder_status());
 					cashFreeDao.saveDetails(caEntity);				
 				//
 					LinkSubAccountMultipleTempEntity linkSubAccountMultipleTempEntity=new LinkSubAccountMultipleTempEntity();				
 					linkSubAccountMultipleTempEntity.setOrgId(caEntity.getOrgId());
-					linkSubAccountMultipleTempEntity.setOrderId(orderResponse.getOrder_id());				
-					linkSubAccountMultipleTempEntity.setBalance(orderResponse.getOrder_amount());
+					linkSubAccountMultipleTempEntity.setOrderId(orderResponse.getOrder_id());					
 					linkSubAccountMultipleTempEntity.setAccountHolderName(orderResponse.getCustomer_details().getCustomer_name());
-					linkSubAccountMultipleTempEntity.setAmountLimit(orderResponse.getOrder_amount());
+					Float orderAmount= orderResponse.getOrder_amount();
+					Float serviceTax=orderAmount * 0.34f / 100;
+					Float serviceCharge=orderAmount * 1.9f / 100;
+					BigDecimal serviceTaxRounded = new BigDecimal(serviceTax).setScale(2, RoundingMode.HALF_UP);
+					BigDecimal serviceChargeRounded = new BigDecimal(serviceCharge).setScale(2, RoundingMode.HALF_UP);
+					// Convert back to Float if necessary
+					serviceTax = serviceTaxRounded.floatValue();
+					serviceCharge = serviceChargeRounded.floatValue();
+					Float paymentAmount=orderAmount-(serviceTax+serviceCharge);
+					linkSubAccountMultipleTempEntity.setBalance(paymentAmount);
+					linkSubAccountMultipleTempEntity.setAmountLimit(paymentAmount);
+					linkSubAccountMultipleTempEntity.setServiceCharge(serviceCharge);
+					linkSubAccountMultipleTempEntity.setServiceTax(serviceTax);
 					linkSubAccountMultipleTempEntity.setMobile(orderResponse.getCustomer_details().getCustomer_phone().substring(3));
 					linkSubAccountMultipleTempEntity.setCreationDate(LocalDateTime.now());
 					linkSubAccountMultipleTempEntity.setStatus(0l);
@@ -190,8 +225,13 @@ public class CashServiceImpl implements CashService {
 				orderIdResponse.setOrgId(caEntity.getOrgId());
 				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse);
 
+			}else {
+				caEntity.setOrderStatus(orderResponse.getOrder_status());
+				cashFreeDao.saveDetails(caEntity);	
+				orderIdResponse.setOrgId(caEntity.getOrgId());
+				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse);
 			}
-
+		}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("error Exception ...." + e.getMessage());
@@ -203,6 +243,18 @@ public class CashServiceImpl implements CashService {
 		orderIdResponse.setPayment_session_id(orderResponse.getPayment_session_id());
 		orderIdResponse.setCustomerId(orderResponse.getCustomer_details().getCustomer_id());
 		orderIdResponse.setOrderAmount(orderResponse.getOrder_amount().toString());
+		Float orderAmount= orderResponse.getOrder_amount();
+		Float serviceTax=orderAmount * 0.34f / 100;
+		Float serviceCharge=orderAmount * 1.9f / 100;
+		BigDecimal serviceTaxRounded = new BigDecimal(serviceTax).setScale(2, RoundingMode.HALF_UP);
+		BigDecimal serviceChargeRounded = new BigDecimal(serviceCharge).setScale(2, RoundingMode.HALF_UP);
+		// Convert back to Float if necessary
+		serviceTax = serviceTaxRounded.floatValue();
+		serviceCharge = serviceChargeRounded.floatValue();
+		Float paymentAmount=orderAmount-(serviceTax+serviceCharge);
+		orderIdResponse.setServiceCharge(serviceCharge.toString());
+		orderIdResponse.setServiceTax(serviceTax.toString());
+		orderIdResponse.setSettlementAmount(paymentAmount.toString());
 		orderIdResponse.setOrderCurrency(orderResponse.getOrder_currency());
 		orderIdResponse.setCustomerPhone(orderResponse.getCustomer_details().getCustomer_phone());
 		orderIdResponse.setCustomerName(orderResponse.getCustomer_details().getCustomer_name());
@@ -224,5 +276,182 @@ public class CashServiceImpl implements CashService {
 		orderIdResponse.setTerminal_data(orderResponse.getTerminal_data());
 		return orderIdResponse;
 	}
+
+	@Override
+	public OrderIdResponse callOrderIdApiView(OrderUserRequest orderUserRequest) {
+		String message = "";
+		OrderResponse orderResponse = null;
+		CashFreeOrderEntity caEntity = new CashFreeOrderEntity();
+		OrderIdResponse orderIdResponse = new OrderIdResponse();
+		try {
+
+			logger.info("In side callOrderApi:::" + orderUserRequest.getOrderId());
+
+			String orderid = orderUserRequest.getOrderId();
+
+			message = CommonUtility.getTokenRequest(orderid, applicationConstantConfig.cashFreeClientId,
+					applicationConstantConfig.cashFreeClientSecret, applicationConstantConfig.cashFreeOrderIdUrl);
+
+			logger.info(message);
+
+			if (message != null) {
+				orderResponse = message == "" ? null : jsonToPOJO(message);
+				caEntity = cashFreeDao.getDetails(orderResponse.getCustomer_details().getCustomer_id());
+								
+				//end							
+				
+//				System.out.println(orderResponse.getOrder_status());
+//				System.out.println(orderResponse.getOrder_status());
+				
+//				if(orderResponse.getOrder_status()!=null && orderResponse.getOrder_status().equalsIgnoreCase("PAID") && !caEntity.getOrderStatus().equalsIgnoreCase("PAID"))
+//				{
+//					caEntity.setOrderStatus(orderResponse.getOrder_status());
+//					cashFreeDao.saveDetails(caEntity);				
+				//
+//					LinkSubAccountMultipleTempEntity linkSubAccountMultipleTempEntity=new LinkSubAccountMultipleTempEntity();				
+//					linkSubAccountMultipleTempEntity.setOrgId(caEntity.getOrgId());
+//					linkSubAccountMultipleTempEntity.setOrderId(orderResponse.getOrder_id());				
+//					linkSubAccountMultipleTempEntity.setBalance(orderResponse.getOrder_amount());
+//					linkSubAccountMultipleTempEntity.setAccountHolderName(orderResponse.getCustomer_details().getCustomer_name());
+//					linkSubAccountMultipleTempEntity.setAmountLimit(orderResponse.getOrder_amount());
+//					linkSubAccountMultipleTempEntity.setMobile(orderResponse.getCustomer_details().getCustomer_phone().substring(3));
+//					linkSubAccountMultipleTempEntity.setCreationDate(LocalDateTime.now());
+//					linkSubAccountMultipleTempEntity.setStatus(0l);
+//					linkSubAccountMultipleTempEntity.setAccountType(AccountType.SAVING);
+//					linkSubAccountMultipleTempEntity.setAcNumber(caEntity.getAcNumber());
+//					linkSubAccountMultipleTempEntity.setBankName(caEntity.getBankName());
+//					linkSubAccountMultipleTempEntity.setBankCode(caEntity.getBankCode());
+//					linkSubAccountMultipleTempEntity.setCreatedby(caEntity.getCreatedBy());
+//					linkSubAccountMultipleTempEntity.setStatusMessage("Requested");
+//					linkSubAccountMultipleTempEntity=linkSubMultipleAccountTempDao.saveDetails(linkSubAccountMultipleTempEntity);
+				//
+				
+				orderIdResponse.setOrgId(caEntity.getOrgId());
+				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse);
+
+			//}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("error Exception ...." + e.getMessage());
+		}
+		return orderIdResponse;
+	}
+
+	@Override
+	public OrderUserUpdateRequest callOrderIdApiUpdate(OrderUserUpdateRequest orderUserUpdateRequest) {
+		CashFreeOrderEntity caEntity = new CashFreeOrderEntity();
+		CashFreeOrderWebHookEntity cashFreeWebHookEntity = new CashFreeOrderWebHookEntity();
+		CashFreeWebHookLogEntity cashFreeWebHookLogEntity=new CashFreeWebHookLogEntity();
+		try {
+			
+			orderUserUpdateRequest.setResponse(MessageConstant.RESPONSE_FAILED);
+			//caEntity = cashFreeDao.getDetails(orderUserUpdateRequest.getData().getCustomer_details().getCustomer_id());
+			cashFreeWebHookEntity=getCashFreeOrderUpdate(cashFreeWebHookEntity, orderUserUpdateRequest);
+			cashFreeWebHookDao.saveDetails(cashFreeWebHookEntity);
+			
+			cashFreeWebHookLogEntity.setCreationDate(LocalDateTime.now());
+			cashFreeWebHookLogEntity.setOrderId(orderUserUpdateRequest.getData().getOrder().getOrder_id());
+			ObjectMapper objectMapper = new ObjectMapper();
+	        // Convert POJO to JSON string
+	        String jsonString = objectMapper.writeValueAsString(orderUserUpdateRequest);
+	        cashFreeWebHookLogEntity.setResponseJson(jsonString);
+	        cashFreeWebHookLogDao.saveDetails(cashFreeWebHookLogEntity);
+			orderUserUpdateRequest.setResponse(MessageConstant.RESPONSE_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return orderUserUpdateRequest;
+	}
+	private CashFreeOrderWebHookEntity getCashFreeOrderUpdate(CashFreeOrderWebHookEntity caEntity, OrderUserUpdateRequest orderUserUpdateRequest) {
+	    if (orderUserUpdateRequest == null || orderUserUpdateRequest.getData() == null) {
+	        // handle the case when the request or its data is null
+	        return caEntity; // or you can throw an exception, depending on your needs
+	    }
+	    
+	    Order order = orderUserUpdateRequest.getData().getOrder();
+	    if (order != null) {
+	    	caEntity.setOrderAmount(order.getOrder_amount());
+	    	caEntity.setOrderId(order.getOrder_id());
+	    	caEntity.setOrderCurrency(order.getOrder_currency());      
+	    }
+	    CustomerDetails customerDetails = orderUserUpdateRequest.getData().getCustomer_details();
+	    if (customerDetails != null) {
+	    	caEntity.setCustomerId(customerDetails.getCustomer_id());
+	    	caEntity.setCustomerName(customerDetails.getCustomer_name());
+	    	caEntity.setCustomerEmail(customerDetails.getCustomer_email());
+	    	caEntity.setCustomerPhone(customerDetails.getCustomer_phone());	       
+	    }
+	    
+	    Payment payment = orderUserUpdateRequest.getData().getPayment();
+	    if (payment != null) {
+	        caEntity.setCfPaymentId(payment.getCf_payment_id());
+	        caEntity.setPaymentStatus(payment.getPayment_status());
+	        caEntity.setPaymentAmount(payment.getPayment_amount());
+	        caEntity.setPaymentCurrency(payment.getPayment_currency());
+	        caEntity.setPaymentMessage(payment.getPayment_message());
+	        caEntity.setPaymentTime(payment.getPayment_time());
+	        caEntity.setBankReference(payment.getBank_reference());
+	        caEntity.setPaymentGroup(payment.getPayment_group());
+	    }
+
+	    ErrorDetails errorDetails = orderUserUpdateRequest.getData().getError_details();
+	    if (errorDetails != null) {
+	        caEntity.setErrorCode(errorDetails.getError_code());
+	        caEntity.setErrorDescription(errorDetails.getError_description());
+	        caEntity.setErrorReason(errorDetails.getError_reason());
+	    }
+
+	    PaymentGatewayDetails paymentGatewayDetails = orderUserUpdateRequest.getData().getPayment_gateway_details();
+	    if (paymentGatewayDetails != null) {
+	        caEntity.setGatewayName(paymentGatewayDetails.getGateway_name());
+	        caEntity.setGatewayOrderId(paymentGatewayDetails.getGateway_order_id());
+	        caEntity.setGatewayPaymentId(paymentGatewayDetails.getGateway_payment_id());
+	        caEntity.setGatewayOrderReferenceId(paymentGatewayDetails.getGateway_order_reference_id());
+	    }
+	    
+	    ChargesDetail chargesDetails = orderUserUpdateRequest.getData().getCharges_details();
+	    if (chargesDetails != null) {
+	    	caEntity.setServiceCharge(chargesDetails.getService_charge());
+	    	caEntity.setServiceTax(chargesDetails.getService_tax());
+	    	caEntity.setSettlementAmount(chargesDetails.getSettlement_amount());
+	    	caEntity.setSettlementCurrency(chargesDetails.getSettlement_currency());
+	    	caEntity.setServiceChargeDiscount(chargesDetails.getService_charge_discount());
+	    }
+
+	    if (orderUserUpdateRequest.getEvent_time() != null) {
+	        caEntity.setEventTime(orderUserUpdateRequest.getEvent_time());
+	    }
+
+	    if (orderUserUpdateRequest.getType() != null) {
+	        caEntity.setType(orderUserUpdateRequest.getType());
+	    }
+
+	    return caEntity;
+	}
+
+	@Override
+	public List<CashFreeOrderWebHookEntity> callOrderIdApiList(OrderUserRequest orderUserRequest) {
+		// TODO Auto-generated method stub
+		List<CashFreeOrderWebHookEntity> finalList=new ArrayList<CashFreeOrderWebHookEntity>();
+		try {
+			List<CashFreeOrderEntity> list=cashFreeDao.getDetailsOrderId(orderUserRequest.getOrgId());
+			if(list!=null && list.size()>0) {
+			for (CashFreeOrderEntity cashFreeOrderEntity : list) {
+				List<CashFreeOrderWebHookEntity> local=cashFreeWebHookDao.getDetails(cashFreeOrderEntity.getOrderId());
+				if(local!=null && local.size()>0) {
+					for (CashFreeOrderWebHookEntity cashFreeOrderEntity2 : local) {
+						finalList.add(cashFreeOrderEntity2);
+					}
+				}
+				
+			}
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return finalList;
+	}
+	
 
 }

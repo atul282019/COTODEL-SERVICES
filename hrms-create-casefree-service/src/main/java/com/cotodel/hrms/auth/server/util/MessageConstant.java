@@ -23,4 +23,6 @@ public class MessageConstant {
 	public static final boolean FALSE = false;
 	public static final boolean TRUE = true;
 	public static final String SUCCESS = "Get Back Soon!";
+	public static final String DATA_NOT_FOUND = "No Data Found .";
+	public static final String DATA_FOUND = "Data Found .";
 }

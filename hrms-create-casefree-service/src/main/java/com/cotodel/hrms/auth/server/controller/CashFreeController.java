@@ -1,4 +1,6 @@
-package com.cotodel.hrms.auth.server.controller;
+	package com.cotodel.hrms.auth.server.controller;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +12,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.CashFreeOrderIdResponse;
+import com.cotodel.hrms.auth.server.dto.CashFreeOrderListResponse;
 import com.cotodel.hrms.auth.server.dto.CashFreeOrderResponse;
+import com.cotodel.hrms.auth.server.dto.CashFreeOrderUpdateResponse;
+import com.cotodel.hrms.auth.server.dto.DataUpdateRequest;
 import com.cotodel.hrms.auth.server.dto.OrderIdResponse;
 import com.cotodel.hrms.auth.server.dto.OrderUserRequest;
+import com.cotodel.hrms.auth.server.dto.OrderUserUpdateRequest;
+import com.cotodel.hrms.auth.server.entity.CashFreeOrderWebHookEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.service.CashService;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
@@ -48,7 +55,7 @@ public class CashFreeController extends CotoDelBaseController{
 					
 		 			OrderUserRequest response=null;
 					try {						
-					    logger.info("inside /callapi/vouchercreation...respString."+orderUserRequest);
+					    logger.info("inside /get/cashFreeOrder::."+orderUserRequest);
 					    
 					    response= cashService.callOrderApi(orderUserRequest);
 					    
@@ -66,7 +73,7 @@ public class CashFreeController extends CotoDelBaseController{
 					
 				}
 	 			
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	 			@Operation(summary = "This API will provide the Save User Details ", security = {
 				@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 				@ApiResponses(value = {
 				@ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
@@ -76,9 +83,9 @@ public class CashFreeController extends CotoDelBaseController{
 				@RequestMapping(value = "/get/cashFreeOrderId",produces = {"application/json"},consumes = {"application/json","application/text"},method = RequestMethod.POST)
 					    public ResponseEntity<Object> cashFreeOrderId(@RequestBody OrderUserRequest orderUserRequest) {
 					
-		 OrderIdResponse response=null;
+	 				OrderIdResponse response=null;
 					try {						
-					    logger.info("inside /callapi/vouchercreation...respString."+orderUserRequest);
+					    logger.info("inside /get/cashFreeOrderId...."+orderUserRequest);
 					    
 					    response= cashService.callOrderIdApi(orderUserRequest);
 					    
@@ -94,5 +101,99 @@ public class CashFreeController extends CotoDelBaseController{
 						return ResponseEntity.ok(new CashFreeOrderIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getCurrentTimeStamp()));
 					}
 					
+				}
+	 
+	 			@Operation(summary = "This API will provide the Save User Details ", security = {
+				@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+				@ApiResponses(value = {
+				@ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+				@ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+				@ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+				@ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+				@RequestMapping(value = "/get/cashFreeOrderIdView",produces = {"application/json"},consumes = {"application/json","application/text"},method = RequestMethod.POST)
+					    public ResponseEntity<Object> cashFreeOrderIdView(@RequestBody OrderUserRequest orderUserRequest) {
+					
+	 				OrderIdResponse response=null;
+					try {						
+					    logger.info("inside /get/cashFreeOrderIdView::."+orderUserRequest);
+					    
+					    response= cashService.callOrderIdApiView(orderUserRequest);
+					    
+					    if(response!=null ) {
+					    	return ResponseEntity.ok(new CashFreeOrderIdResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getCurrentTimeStamp()));
+					    }else {
+					    	return ResponseEntity.ok(new CashFreeOrderIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getCurrentTimeStamp()));
+					    }
+							 
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+						return ResponseEntity.ok(new CashFreeOrderIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getCurrentTimeStamp()));
+					}
+					
+				}
+	 
+	 			@Operation(summary = "This API will provide the Save User Details ", security = {
+				@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+				@ApiResponses(value = {
+				@ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+				@ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+				@ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+				@ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+				@RequestMapping(value = "/get/cashFreeOrderIdUpdate",produces = {"application/json"},consumes = {"application/json","application/text"},method = RequestMethod.POST)
+					    public ResponseEntity<Object> cashFreeOrderIdUpdate(@RequestBody OrderUserUpdateRequest orderUserUpdateRequest) {
+					
+		 		OrderUserUpdateRequest response=null;
+					try {						
+					    logger.info("inside get/cashFreeOrderIdUpdate::"+orderUserUpdateRequest);
+					    
+					    response= cashService.callOrderIdApiUpdate(orderUserUpdateRequest);
+					    
+					    if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+					    	return ResponseEntity.ok(new CashFreeOrderUpdateResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getCurrentTimeStamp()));
+					    }else {
+					    	return ResponseEntity.ok(new CashFreeOrderUpdateResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getCurrentTimeStamp()));
+					    }
+							 
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+						return ResponseEntity.ok(new CashFreeOrderUpdateResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getCurrentTimeStamp()));
+					}
+					
+				}
+	 
+	 			@Operation(summary = "This API will provide the Save User Details ", security = {
+	 					@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	 					@ApiResponses(value = {
+						@ApiResponse(responseCode = "200", description = "ok", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class))),
+						@ApiResponse(responseCode = "400", description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+						@ApiResponse(responseCode = "404", description = "Request Resource was not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+						@ApiResponse(responseCode = "500", description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))) })
+				@RequestMapping(value = "/get/cashFreeOrderIdList", produces = { "application/json" }, consumes = {
+						"application/json", "application/text" }, method = RequestMethod.POST)
+				public ResponseEntity<Object> cashFreeOrderIdList(@RequestBody OrderUserRequest orderUserRequest) {
+
+					List<CashFreeOrderWebHookEntity> response = null;
+					try {
+
+						logger.info("inside ..cashFreeOrderIdList.::" + orderUserRequest);
+
+						response = cashService.callOrderIdApiList(orderUserRequest);
+
+						if (response != null && response.size()>0) {
+							return ResponseEntity.ok(new CashFreeOrderListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND, response,
+									TransactionManager.getCurrentTimeStamp()));
+						} else {
+							return ResponseEntity.ok(new CashFreeOrderListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND, response,
+									TransactionManager.getCurrentTimeStamp()));
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+
+						return ResponseEntity.ok(new CashFreeOrderListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND, response, TransactionManager.getCurrentTimeStamp()));
+					}
+
 				}
 }

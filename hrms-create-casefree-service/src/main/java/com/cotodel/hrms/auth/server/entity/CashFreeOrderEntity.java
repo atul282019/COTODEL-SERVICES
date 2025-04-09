@@ -119,4 +119,81 @@ public class CashFreeOrderEntity implements Serializable{
 	@Column(name="created_by")
 	private String createdBy;
 	
+	@Column(name="cf_payment_id")
+	private String cfPaymentId;
+	
+	@Column(name="payment_status")
+	private String paymentStatus;
+	
+	@Column(name="payment_amount")
+	private Float paymentAmount;
+	
+	@Column(name="payment_currency")
+	private String paymentCurrency;
+	
+	@Column(name="payment_message")
+	private String paymentMessage;
+	
+	@Column(name="payment_time")
+	private String paymentTime;
+	
+//	@Column(name="payment_time")
+//	private String paymentTime;
+	
+	@Column(name="bank_reference")
+	private String bankReference;
+	
+	@Column(name="payment_group")
+	private String paymentGroup;
+	
+	@Column(name="error_code")
+	private String errorCode;
+	
+	@Column(name="error_description")
+	private String errorDescription;
+	
+	@Column(name="error_reason")
+	private String errorReason;
+	
+	@Column(name="gateway_name")
+	private String gatewayName;
+	
+	@Column(name="gateway_order_id")
+	private String gatewayOrderId;
+	
+	@Column(name="gateway_payment_id")
+	private String gatewayPaymentId;
+	
+	@Column(name="gateway_order_reference_id")
+	private String gatewayOrderReferenceId;
+	
+	@Column(name="event_time")
+	private String eventTime;
+	
+	@Column(name="type")
+	private String type;
+	
+	@Column(name="service_charge")
+	private String serviceCharge;
+	
+	@Column(name="service_tax")
+	private String serviceTax;
+	
+	@Column(name="settlement_amount")
+	private String settlementAmount;
+	
+	@Column(name="settlement_currency")
+	private String settlementCurrency;
+	
+	@Column(name="service_charge_discount")
+	private String serviceChargeDiscount;
+	
+//	"payment_method":{"app":{}}
+//	"error_details":{"error_code":"TRANSACTION_DECLINED",
+//		"error_description":"Decline - Insufficient funds in the account.",
+//		"error_reason":"insufficient_funds","error_source":"customer"},
+//	"payment_gateway_details":{"gateway_name":"CASHFREE",
+//			"gateway_order_id":"2191475264","gateway_payment_id":"5114917005080","gateway_order_reference_id":"null"}},
+//"event_time":"Mar 27, 2025, 10:48:59 AM","type":"PAYMENT_FAILED_WEBHOOK"}
+	
 }

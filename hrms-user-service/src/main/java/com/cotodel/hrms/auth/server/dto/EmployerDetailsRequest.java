@@ -40,5 +40,7 @@ public class EmployerDetailsRequest {
 	private String createdBy;
 	private Long id;
 	private String response;
+	private String clientKey;
+	private String hash; 
 	
 }

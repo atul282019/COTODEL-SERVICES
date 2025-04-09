@@ -29,4 +29,6 @@ public class MessageConstant {
 	public static final String USER_EMAIL = "User Already exist with this Email !!";
 	public static final String HOLD = "Hold";
 	public static final String REJECTED = "Rejected";
+	public static final String SECRET_KEY = "0123456789012345";
+	public static final String HASH_ERROR = "Tempered Request";
 }

@@ -33,4 +33,20 @@ public class HomeController {
         return "Welcome to the homepage!";
     }
     
+    @GetMapping("/callback/erupiprod/")
+    public String homeProd(@RequestBody String respString) {
+    	System.out.println("homepage");
+    	logger.info("inside Geterupiprod HomeController...respString."+respString);
+    	String result=erupiVoucherRedemService.calApiErupiVoucherRedemDetails(respString);
+        return "Welcome to the homepage!";
+    }
+    
+    @PostMapping("/callback/erupiprod/")
+    public String homePostProd(@RequestBody String respString) {
+    	//System.out.println("homepage");
+    	logger.info("inside Post erupiprod HomeController...respString."+respString);
+    	String result=erupiVoucherRedemService.calApiErupiVoucherRedemDetails(respString);
+        return "Welcome to the homepage!";
+    }
+    
 }

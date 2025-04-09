@@ -82,6 +82,12 @@ public class LinkSubAccountMultipleTempEntity implements Serializable{
 	@Column(name="balance")
 	private Float balance;
 	
+	@Column(name="service_charge")
+	private Float serviceCharge;
+	
+	@Column(name="service_tax")
+	private Float serviceTax;
+	
 	@Column(name = "approved_date")
 	private LocalDateTime approvedDate;
 	

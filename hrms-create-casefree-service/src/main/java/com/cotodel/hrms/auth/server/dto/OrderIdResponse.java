@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.dto;
 
+import javax.persistence.Column;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,4 +33,7 @@ public class OrderIdResponse {
 	private String order_status;
 	private String order_tags;
 	private String terminal_data;
+	private String serviceCharge;	
+	private String serviceTax;	
+	private String settlementAmount;
 }
