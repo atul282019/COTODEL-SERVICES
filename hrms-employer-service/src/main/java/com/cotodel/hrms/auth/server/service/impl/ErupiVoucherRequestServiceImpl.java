@@ -14,6 +14,7 @@ import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationRequestEntity;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherRequestService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.ValidateConstants;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -32,7 +33,23 @@ public class ErupiVoucherRequestServiceImpl implements ErupiVoucherRequestServic
 		ErupiVoucherCreationRequestEntity erupiVoucherCreationRequestEntity=null;
 		String response=MessageConstant.RESPONSE_FAILED;
 		try {
-			if(request.getAmount()<=0) {
+//			String amount= request.getAmount().toString();
+//			String amt=formatAmount(amount);
+			String dataString =
+	        		//added String.valueOf because it was summing employerid and employeeid
+	        		String.valueOf(request.getEmployerId()) +String.valueOf(request.getEmployeeId()) +request.getPurposeCode()+
+	        	    request.getMcc()+request.getName()+request.getVoucherType()+request.getVoucherSubType()+
+	        	    request.getMobile()+request.getAmount()+request.getRemarks()+
+					request.getClientKey()+MessageConstant.SECRET_KEY;
+			log.info("dataString::"+dataString);
+			String hash=ValidateConstants.generateHash(dataString);
+			log.info("hash::"+hash);
+			if(!request.getHash().equalsIgnoreCase(hash)) {
+				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}
+			Float amount = Float.parseFloat(request.getAmount());
+			if(amount<=0) {
 				response=MessageConstant.INSUFBAL;
 				request.setResponse(response);
 				return request;
@@ -61,5 +78,15 @@ public class ErupiVoucherRequestServiceImpl implements ErupiVoucherRequestServic
 			return erupiVoucherRequestDao.getVoucherCreationRequestEmp(EmployeeId);
 		}
 	}
+	public static String formatAmount(String amount) {
+        // Convert the string to a double
+        double value = Double.parseDouble(amount);
 
+        // Check if it's an integer (i.e., no decimal value)
+        if (value == (int) value) {
+            return String.valueOf((int) value);  // Return it as an integer
+        } else {
+            return String.format("%.2f", value);  // Return the original string if it's not a whole number
+        }
+    }
 }

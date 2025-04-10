@@ -21,7 +21,8 @@ public class ErupiVoucherCreateDetailsRequest {
 	private MccMasterEntity voucherId;
 	private String name;	
 	private String mobile;			
-	private Float amount;	
+	//private Float amount;
+	private String amount;	
     private LocalDate startDate;			
     private LocalDate expDate;	
     private String purposeCode;	

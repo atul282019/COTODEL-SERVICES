@@ -1108,7 +1108,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 	        if (value == (int) value) {
 	            return String.valueOf((int) value);  // Return it as an integer
 	        } else {
-	            return String.valueOf(value);  // Return the original string if it's not a whole number
+	            return String.format("%.2f", value);  // Return the original string if it's not a whole number
 	        }
 	    }
 		@Override
@@ -1121,13 +1121,13 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			
 			
 			try {
-				String amount= request.getAmount().toString();
-				String amt=formatAmount(amount);
-				log.info("amt ....::"+amt);
+//				String amount= request.getAmount().toString();
+//				String amt=formatAmount(amount);
+				//log.info("amt ....::"+amt);
 				String dataString = request.getName()+request.getMobile()+request.getStartDate()+request.getValidity()+request.getPurposeCode()+
 						request.getConsent()+request.getCreatedby()+ request.getOrgId()+request.getMerchantId()+request.getSubMerchantId()+
 						request.getRedemtionType()+request.getMcc()+request.getVoucherCode()+request.getVoucherDesc() +
-						request.getBankcode()+request.getAccountNumber()+request.getPayerVA()+request.getMandateType()+amt+
+						request.getBankcode()+request.getAccountNumber()+request.getPayerVA()+request.getMandateType()+request.getAmount()+
 						request.getClientKey()+MessageConstant.SECRET_KEY;
 				log.info("dataString::"+dataString);
 //				String dataString = request.getOrgId()+request.getBankName()+request.getAccountHolderName()+request.getAcNumber()+request.getConirmAccNumber()+request.getAccountType()+request.getIfsc()
@@ -1140,6 +1140,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				}
 				
 				//Check employee exist are not
+				Float amount = Float.parseFloat(request.getAmount());
 				
 				if(request.getBankcode().equalsIgnoreCase("INDB")) {
 					
@@ -1155,7 +1156,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
 					erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
 					CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
+					erupiVoucherInitiateDetailsEntity.setAmount(amount);
 					CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
+					
 					LocalDate eventDate = LocalDate.now();	
 					erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
 					erupiVoucherInitiateDetailsEntity.setWorkFlowId(100001l);
@@ -1173,7 +1176,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					voucherCreateRequest.setBeneficiaryID(request.getBeneficiaryID());
 					voucherCreateRequest.setMobileNumber(request.getMobile());
 					voucherCreateRequest.setBeneficiaryName(request.getName());
-					String formattedValue = String.format("%.2f", request.getAmount());
+					String formattedValue = String.format("%.2f", amount);
 					voucherCreateRequest.setAmount(formattedValue);
 					String expdate=request.getExpDate().toString();
 					voucherCreateRequest.setExpiry(expdate);
@@ -1303,6 +1306,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
 				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
 				CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
+				erupiVoucherInitiateDetailsEntity.setAmount(amount);
 				CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
 				LocalDate eventDate = LocalDate.now();	
 				erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
@@ -1321,7 +1325,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				voucherCreateRequest.setBeneficiaryID(request.getBeneficiaryID());
 				voucherCreateRequest.setMobileNumber(request.getMobile());
 				voucherCreateRequest.setBeneficiaryName(request.getName());
-				String formattedValue = String.format("%.2f", request.getAmount());
+				String formattedValue = String.format("%.2f", amount);
 				voucherCreateRequest.setAmount(formattedValue);
 				String expdate=request.getExpDate().toString();
 				voucherCreateRequest.setExpiry(expdate);
@@ -1340,7 +1344,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				if(liEntity!=null) {
 					LinkMultipleAccountUpdate linkMultipleAccountUpdate=new LinkMultipleAccountUpdate();
 					linkMultipleAccountUpdate.setId(liEntity.getId());
-					linkMultipleAccountUpdate.setAmount(request.getAmount());
+					linkMultipleAccountUpdate.setAmount(amount);
 					linkMultipleAccountUpdate.setOrgId(liEntity.getOrgId());
 					linkMultipleAccountUpdate.setMerchantId(merchantTranId);
 					linkMultipleAccountUpdate.setAcNumber(request.getAccountNumber());
@@ -1388,7 +1392,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 							if(liEntity!=null) {
 								LinkMultipleAccountUpdate linkMultipleAccountUpdate=new LinkMultipleAccountUpdate();
 								linkMultipleAccountUpdate.setId(liEntity.getId());
-								linkMultipleAccountUpdate.setAmount(request.getAmount());
+								linkMultipleAccountUpdate.setAmount(amount);
 								linkMultipleAccountUpdate.setOrgId(liEntity.getOrgId());
 								linkMultipleAccountUpdate.setMerchantId(merchantTranId);
 								linkMultipleAccountUpdate.setAcNumber(request.getAccountNumber());
@@ -1415,7 +1419,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						if(liEntity!=null) {
 							LinkMultipleAccountUpdate linkMultipleAccountUpdate=new LinkMultipleAccountUpdate();
 							linkMultipleAccountUpdate.setId(liEntity.getId());
-							linkMultipleAccountUpdate.setAmount(request.getAmount());
+							linkMultipleAccountUpdate.setAmount(amount);
 							linkMultipleAccountUpdate.setOrgId(liEntity.getOrgId());
 							linkMultipleAccountUpdate.setMerchantId(merchantTranId);
 							linkMultipleAccountUpdate.setAcNumber(request.getAccountNumber());
@@ -1732,9 +1736,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			
 			
 			try {
-				String amount= request.getAmount().toString();
-				String amt=formatAmount(amount);
-				log.info("amt ....::"+amt);
+				//String amount= request.getAmount().toString();
+				//String amt=formatAmount(amount);
+				//log.info("amt ....::"+amt);
 //				String dataString = request.getName()+request.getMobile()+request.getStartDate()+request.getValidity()+request.getPurposeCode()+
 //						request.getConsent()+request.getCreatedby()+ request.getOrgId()+request.getMerchantId()+request.getSubMerchantId()+
 //						request.getRedemtionType()+request.getMcc()+request.getVoucherCode()+request.getVoucherDesc() +
@@ -1751,6 +1755,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 //				}
 				
 				//Check employee exist are not
+				Float amount = Float.parseFloat(request.getAmount());
 				
 				if(request.getBankcode().equalsIgnoreCase("INDB")) {
 					
@@ -1766,6 +1771,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
 					erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
 					CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
+					erupiVoucherInitiateDetailsEntity.setAmount(amount);
 					CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
 					LocalDate eventDate = LocalDate.now();	
 					erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
@@ -1784,7 +1790,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					voucherCreateRequest.setBeneficiaryID(request.getBeneficiaryID());
 					voucherCreateRequest.setMobileNumber(request.getMobile());
 					voucherCreateRequest.setBeneficiaryName(request.getName());
-					String formattedValue = String.format("%.2f", request.getAmount());
+					String formattedValue = String.format("%.2f", amount);
 					voucherCreateRequest.setAmount(formattedValue);
 					String expdate=request.getExpDate().toString();
 					voucherCreateRequest.setExpiry(expdate);
@@ -1914,6 +1920,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
 				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
 				CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
+				erupiVoucherInitiateDetailsEntity.setAmount(amount);
 				CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
 				LocalDate eventDate = LocalDate.now();	
 				erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
@@ -1932,7 +1939,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				voucherCreateRequest.setBeneficiaryID(request.getBeneficiaryID());
 				voucherCreateRequest.setMobileNumber(request.getMobile());
 				voucherCreateRequest.setBeneficiaryName(request.getName());
-				String formattedValue = String.format("%.2f", request.getAmount());
+				String formattedValue = String.format("%.2f", amount);
 				voucherCreateRequest.setAmount(formattedValue);
 				String expdate=request.getExpDate().toString();
 				voucherCreateRequest.setExpiry(expdate);
@@ -1951,7 +1958,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				if(liEntity!=null) {
 					LinkMultipleAccountUpdate linkMultipleAccountUpdate=new LinkMultipleAccountUpdate();
 					linkMultipleAccountUpdate.setId(liEntity.getId());
-					linkMultipleAccountUpdate.setAmount(request.getAmount());
+					linkMultipleAccountUpdate.setAmount(amount);
 					linkMultipleAccountUpdate.setOrgId(liEntity.getOrgId());
 					linkMultipleAccountUpdate.setMerchantId(merchantTranId);
 					linkMultipleAccountUpdate.setAcNumber(request.getAccountNumber());
@@ -1999,7 +2006,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 							if(liEntity!=null) {
 								LinkMultipleAccountUpdate linkMultipleAccountUpdate=new LinkMultipleAccountUpdate();
 								linkMultipleAccountUpdate.setId(liEntity.getId());
-								linkMultipleAccountUpdate.setAmount(request.getAmount());
+								linkMultipleAccountUpdate.setAmount(amount);
 								linkMultipleAccountUpdate.setOrgId(liEntity.getOrgId());
 								linkMultipleAccountUpdate.setMerchantId(merchantTranId);
 								linkMultipleAccountUpdate.setAcNumber(request.getAccountNumber());
@@ -2026,7 +2033,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 						if(liEntity!=null) {
 							LinkMultipleAccountUpdate linkMultipleAccountUpdate=new LinkMultipleAccountUpdate();
 							linkMultipleAccountUpdate.setId(liEntity.getId());
-							linkMultipleAccountUpdate.setAmount(request.getAmount());
+							linkMultipleAccountUpdate.setAmount(amount);
 							linkMultipleAccountUpdate.setOrgId(liEntity.getOrgId());
 							linkMultipleAccountUpdate.setMerchantId(merchantTranId);
 							linkMultipleAccountUpdate.setAcNumber(request.getAccountNumber());

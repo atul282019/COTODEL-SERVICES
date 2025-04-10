@@ -20,4 +20,5 @@ public interface ErupiVoucherCreationBulkService {
 	public ErupiVoucherMasterUploadSFResponse saveErupiVoucherMasterFile(ErupiVoucherMasterUploadRequest erupiVoucherBulkUploadRequest);
 	
 	public ErupiVoucherBulkUploadSFListResponse saveErupiVoucherBulkFileNew(ErupiVoucherBulkUploadRequest erupiVoucherBulkUploadRequest);
+	public ErupiVoucherBulkVoucherCreateRequest createErupiVoucherBulkFileHash(ErupiVoucherBulkVoucherCreateRequest erupiVoucherBulkUploadRequest);
 }

@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -214,8 +215,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		
 		List<ErupiVoucherCreateDetailsRequest> erupiList=new ArrayList<ErupiVoucherCreateDetailsRequest>();
 		try {
-			
-	        List<String> idList = Arrays.asList(request.getArrayofid());
+			List<String> idList = Arrays.asList(request.getArrayofid());
 	        
 			for (String id : idList) {
 				ErupiVoucherCreateDetailsRequest erRequest=new ErupiVoucherCreateDetailsRequest();	
@@ -228,7 +228,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 				MccMasterEntity vtme=new MccMasterEntity();
 				vtme.setId(voEntity.getVoucherId());
 				erRequest.setName(voEntity.getBeneficiaryName());
-				erRequest.setAmount(Float.valueOf(voEntity.getAmount()));
+				erRequest.setAmount(voEntity.getAmount());
 				//erRequest.setRedemtionType(request.getRedemtionType());
 				erRequest.setBulktblId(idValue);
 				erRequest.setVoucherId(vtme);
@@ -428,6 +428,15 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 			Long voucherId=request.getVoucherId();
 			String filename = request.getFileName();
 			String extn = CommonUtility.getFileExtension(filename);
+			String base64Encoded = Base64.getEncoder().encodeToString(request.getFile());
+			  String dataString = request.getOrgId()+request.getFileName()+base64Encoded+request.getMcc()+request.getVoucherCode()+
+					  request.getVoucherDesc()+request.getCreatedby()+request.getClientKey()+MessageConstant.SECRET_KEY;
+			  System.out.println(dataString);
+				String hash=ValidateConstants.generateHash(dataString);
+				if(!request.getHash().equalsIgnoreCase(hash)) {
+					bulkupload.setResponse(MessageConstant.HASH_ERROR);
+					return bulkupload;
+				}
 			if(extn.equalsIgnoreCase(".xlsx")) {
 				response=MessageConstant.FILE_ERROR;
 				bulkupload.setResponse(response);
@@ -671,6 +680,30 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 	        }
 	    }
 	    return true; // Row is empty
+	}
+
+	@Override
+	public ErupiVoucherBulkVoucherCreateRequest createErupiVoucherBulkFileHash(
+			ErupiVoucherBulkVoucherCreateRequest request) {
+		// TODO Auto-generated method stub
+		try {
+			request.setResponse(MessageConstant.RESPONSE_FAILED);
+			
+			String dataString = request.getOrgId()+request.getPurposeCode()+request.getMcc()+request.getPayerVA()+request.getMandateType()+
+					request.getType()+request.getBankcode()+ request.getAccountNumber()+request.getVoucherCode()+request.getVoucherDesc()+
+					request.getMerchantId()+request.getSubMerchantId()+request.getCreatedby()+request.getClientKey()+MessageConstant.SECRET_KEY;
+			System.out.println(dataString);
+			String hash=ValidateConstants.generateHash(dataString);
+			if(!request.getHash().equalsIgnoreCase(hash)) {
+				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}
+			request.setResponse(MessageConstant.RESPONSE_SUCCESS);
+		} catch (Exception e) {
+			request.setResponse(MessageConstant.RESPONSE_FAILED);
+		}
+		
+		return request;
 	}
 
 }
