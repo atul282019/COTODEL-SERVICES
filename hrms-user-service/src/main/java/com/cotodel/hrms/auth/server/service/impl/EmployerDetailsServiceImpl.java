@@ -68,12 +68,18 @@ public class EmployerDetailsServiceImpl implements EmployerDetailsService {
 //	        String dataString = employerDetailsRequest.getPan()+employerDetailsRequest.getPan()+employerDetailsRequest.getLegalNameOfBusiness()+employerDetailsRequest.getLegalNameOfBusiness()+employerDetailsRequest.getConstitutionOfBusiness()+employerDetailsRequest.getOrgType()+
 //	        		employerDetailsRequest.getAddress1()+employerDetailsRequest.getAddress2()+employerDetailsRequest.getDistrictName()+employerDetailsRequest.getPincode()+
 //	        		employerDetailsRequest.getStateName()+employerDetailsRequest.getCreatedBy()+employerDetailsRequest.getEmployerId()+employerDetailsRequest.getClientKey()+MessageConstant.SECRET_KEY;
-//			
-	        String dataString =employerDetailsRequest.getLegalNameOfBusiness()+employerDetailsRequest.getTradeName()+employerDetailsRequest.getConstitutionOfBusiness()+
-	        		employerDetailsRequest.getOrgType()+employerDetailsRequest.getAddress1()+employerDetailsRequest.getAddress2()+
-	        		employerDetailsRequest.getDistrictName()+employerDetailsRequest.getPincode()+employerDetailsRequest.getStateName()+
-	        		employerDetailsRequest.getGstIdentificationNumber()+employerDetailsRequest.getPan()+employerDetailsRequest.getCreatedBy()+
-	        		employerDetailsRequest.getEmployerId()+employerDetailsRequest.getClientKey()+MessageConstant.SECRET_KEY;
+			String dataString = employerDetailsRequest.getPan()+employerDetailsRequest.getLegalNameOfBusiness()+
+					employerDetailsRequest.getTradeName()+employerDetailsRequest.getConstitutionOfBusiness()+
+					employerDetailsRequest.getOrgType()+employerDetailsRequest.getAddress1()+
+					employerDetailsRequest.getAddress2()+employerDetailsRequest.getDistrictName()+
+					employerDetailsRequest.getPincode()+employerDetailsRequest.getStateName()+
+					employerDetailsRequest.getGstIdentificationNumber()+employerDetailsRequest.getCreatedBy()+
+					employerDetailsRequest.getEmployerId()+employerDetailsRequest.getClientKey()+MessageConstant.SECRET_KEY;
+//	        String dataString =employerDetailsRequest.getLegalNameOfBusiness()+employerDetailsRequest.getTradeName()+employerDetailsRequest.getConstitutionOfBusiness()+
+//	        		employerDetailsRequest.getOrgType()+employerDetailsRequest.getAddress1()+employerDetailsRequest.getAddress2()+
+//	        		employerDetailsRequest.getDistrictName()+employerDetailsRequest.getPincode()+employerDetailsRequest.getStateName()+
+//	        		employerDetailsRequest.getGstIdentificationNumber()+employerDetailsRequest.getPan()+employerDetailsRequest.getCreatedBy()+
+//	        		employerDetailsRequest.getEmployerId()+employerDetailsRequest.getClientKey()+MessageConstant.SECRET_KEY;
 	        System.out.println("first hash::"+employerDetailsRequest.getHash());
 	        
 	        String hash=ValidateConstants.generateHash(dataString);
@@ -235,12 +241,20 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 //		        		employerDetailsRequest.getGstIdentificationNumber()+employerDetailsRequest.getPan()+employerDetailsRequest.getCreatedBy()+
 //		        		employerDetailsRequest.getEmployerId()+employerDetailsRequest.getClientKey()+MessageConstant.SECRET_KEY;
 				
-				String dataString =employerDetailsRequest.getLegalNameOfBusiness()+employerDetailsRequest.getTradeName()+
-						employerDetailsRequest.getConstitutionOfBusiness()+employerDetailsRequest.getOrgType()+
-						employerDetailsRequest.getAddress1()+employerDetailsRequest.getAddress2()+
-						employerDetailsRequest.getDistrictName()+employerDetailsRequest.getPincode()+
-						employerDetailsRequest.getStateName()+employerDetailsRequest.getGstIdentificationNumber()+
-						employerDetailsRequest.getPan()+employerDetailsRequest.getCreatedBy()+
+//				String dataString =employerDetailsRequest.getLegalNameOfBusiness()+employerDetailsRequest.getTradeName()+
+//						employerDetailsRequest.getConstitutionOfBusiness()+employerDetailsRequest.getOrgType()+
+//						employerDetailsRequest.getAddress1()+employerDetailsRequest.getAddress2()+
+//						employerDetailsRequest.getDistrictName()+employerDetailsRequest.getPincode()+
+//						employerDetailsRequest.getStateName()+employerDetailsRequest.getGstIdentificationNumber()+
+//						employerDetailsRequest.getPan()+employerDetailsRequest.getCreatedBy()+
+//						employerDetailsRequest.getEmployerId()+employerDetailsRequest.getConsent()+
+//						employerDetailsRequest.getOtpStatus()+employerDetailsRequest.getClientKey()+MessageConstant.SECRET_KEY;
+				String dataString =employerDetailsRequest.getPan()+employerDetailsRequest.getLegalNameOfBusiness()+
+						employerDetailsRequest.getTradeName()+employerDetailsRequest.getConstitutionOfBusiness()+
+						employerDetailsRequest.getOrgType()+employerDetailsRequest.getAddress1()+
+						employerDetailsRequest.getAddress2()+employerDetailsRequest.getDistrictName()+
+						employerDetailsRequest.getPincode()+employerDetailsRequest.getStateName()+
+						employerDetailsRequest.getGstIdentificationNumber()+employerDetailsRequest.getCreatedBy()+
 						employerDetailsRequest.getEmployerId()+employerDetailsRequest.getConsent()+
 						employerDetailsRequest.getOtpStatus()+employerDetailsRequest.getClientKey()+MessageConstant.SECRET_KEY;
 		        System.out.println("first hash::"+employerDetailsRequest.getHash());

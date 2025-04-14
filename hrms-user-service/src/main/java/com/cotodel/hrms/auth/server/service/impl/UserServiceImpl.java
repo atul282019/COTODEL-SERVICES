@@ -62,6 +62,7 @@ import com.cotodel.hrms.auth.server.util.CaptchaSession;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.ValidateConstants;
 
 @Service
 public class UserServiceImpl extends CotoDelBaseController implements UserService {
@@ -836,6 +837,36 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	@Override
 	public ExistUserRoleRequest updateUsersRoleList(ExistUserRoleRequest existUserRoleRequest) {
 		try {
+			
+			StringBuilder dataBuilder = new StringBuilder();
+			 
+	        dataBuilder.append(existUserRoleRequest.getOrgId())
+	                   .append(existUserRoleRequest.getEmployerId())
+	                   .append(existUserRoleRequest.getUserMobile())
+	                   .append(existUserRoleRequest.getConsent())
+	                   .append(existUserRoleRequest.getCreatedBy());
+ 
+	        for (UserDetailsDto user : existUserRoleRequest.getUserDTO()) {
+	            dataBuilder.append(user.getId())
+	                       .append(user.getUsername())
+	                       .append(user.getEmail())
+	                       .append(user.getMobile());
+ 
+	            for (UserRoleDto role : user.getUserRole()) {
+	                dataBuilder.append(role.getRoleDesc());
+	            }
+	        }
+ 
+	        dataBuilder.append(existUserRoleRequest.getClientKey()).append(MessageConstant.SECRET_KEY);
+ 
+	        String dataString = dataBuilder.toString();
+	        
+	        String hash=ValidateConstants.generateHash(dataString);
+			if(!existUserRoleRequest.getHash().equalsIgnoreCase(hash)) {
+				existUserRoleRequest.setResponse(MessageConstant.HASH_ERROR);
+				return existUserRoleRequest;
+			}
+			
 			Long orgId=existUserRoleRequest.getOrgId();
 			int employerid=existUserRoleRequest.getEmployerId();
 			String consent=existUserRoleRequest.getConsent();

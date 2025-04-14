@@ -24,5 +24,7 @@ public class ExistUserRoleRequest {
     private String userName;
     private String email;
     private String mobile;
+    private String clientKey;
+	private String hash;
 }
 	
