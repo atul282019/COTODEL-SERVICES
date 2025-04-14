@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -54,12 +55,50 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		TokenGeneration token=new TokenGeneration();
 		UserRequest userRequest=new UserRequest();
 		
+		logger.info("file name::"+request.getFilename());
+		logger.info("file type::"+request.getFiletype());
+		
 		String message=validateEmployeeOnboardingRequest(request);
 		if(message!=null && !message.equalsIgnoreCase("")) {
 			request.setResponse(message);
 			return request;
 		}
+		
 		try {
+			String idval=request.getId()==null?"":request.getId().toString();
+			String employerId=request.getEmployerId()==null?"":request.getEmployerId().toString();
+			String employeeId=request.getEmployeeId()==null?"":request.getEmployeeId().toString();
+			String name=request.getName();
+			String email=request.getEmail();
+			String mobile=request.getMobile();
+			String herDate=request.getHerDate()==null?"":request.getHerDate().toString();
+			String jobTitle=request.getJobTitle();
+			String depratment=request.getDepratment();
+			String ctc=request.getCtc();
+			String location=request.getLocation();
+			String residentOfIndia=request.getResidentOfIndia();
+			String empOrCont=request.getEmpOrCont();
+			String empPhoto=request.getEmpPhoto()==null?"":request.getEmpPhoto().toString();
+			String base64Encoded ="";
+			if(request.getEmpPhoto()!=null) {
+			  base64Encoded = Base64.getEncoder().encodeToString(request.getEmpPhoto());
+			}else {
+				base64Encoded ="";
+			}
+			String filetype=request.getFiletype();
+			String filename=request.getFilename();
+			String clientKey=request.getClientKey();
+			String managerId=request.getManagerId()==null?"":request.getManagerId().toString();
+			String managerName=request.getManagerName()==null?"":request.getManagerName().toString();
+			String dataString =idval+employerId+employeeId+name+email+mobile+herDate+jobTitle+depratment+ctc+
+					location+residentOfIndia+empOrCont+base64Encoded+filetype+filename+managerId+managerName+clientKey+MessageConstant.SECRET_KEY;
+			logger.info("dataString::"+dataString);
+			String hash=ValidateConstants.generateHash(dataString);
+			logger.info("hash::"+hash);
+			if(!request.getHash().equalsIgnoreCase(hash)) {
+				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}
 			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			userRequest.setUsername(request.getName());
 			userRequest.setMobile(request.getMobile());
@@ -277,65 +316,65 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 	}
 
 
-	@Override
-	public EmployeeOnboardingListRequest tryBulkEmployeeDetails(EmployeeOnboardingListRequest request) {
-		
-		String response="";
-		String response1="";
-		String tokenvalue="";
-		TokenGeneration token=new TokenGeneration();
-		UserRequest userRequest=new UserRequest();
-		EmployeeOnboardingListRequest employeeOnboardingListRequest=new EmployeeOnboardingListRequest();
-		List<EmployeeOnboardingRequest> empList=new ArrayList<EmployeeOnboardingRequest>();
-		List<EmployeeOnboardingRequest> emList=new ArrayList<EmployeeOnboardingRequest>();
-		empList=request.getEmployeeOnboardingRequest();
-		for (EmployeeOnboardingRequest employeeOnboardingRequest : empList) {
-		try {
-			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
-			
-			userRequest.setUsername(employeeOnboardingRequest.getName());
-			userRequest.setMobile(employeeOnboardingRequest.getMobile());
-			userRequest.setEmail(employeeOnboardingRequest.getEmail());
-			userRequest.setEmployerid(employeeOnboardingRequest.getEmployerId()==null?0:employeeOnboardingRequest.getEmployerId().intValue());
-			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMail,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
-			if (!ObjectUtils.isEmpty(response1)) {
-				JSONObject demoRes = new JSONObject(response1);
-				boolean status = demoRes.getBoolean("status");
-				if (status) {
-					Long id=0l;
-					if (demoRes.has("userEntity")) {
-						JSONObject userEntity = demoRes.getJSONObject("userEntity");
-						id=userEntity.getLong("id");
-						
-					}
-					response = MessageConstant.RESPONSE_FAILED;
-					employeeOnboardingRequest.setResponse(response);
-					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
-					CopyUtility.copyProperties(request, employeeOnboarding);
-					employeeOnboarding.setUserDetailsId(id);
-					employeeOnboarding.setMode(1l);
-					
-					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
-					response = MessageConstant.RESPONSE_SUCCESS;
-					employeeOnboardingRequest.setResponse(response);
-				} else if (!status) {
-					response = demoRes.getString("message");
-					employeeOnboardingRequest.setResponse(response);
-				}
-
-			}
-		
-		} catch (Exception e) {
-			response = MessageConstant.RESPONSE_FAILED;
-			employeeOnboardingRequest.setResponse(response);
-		}
-		emList.add(employeeOnboardingRequest);
-		}
-		employeeOnboardingListRequest.setEmployeeOnboardingRequest(emList);
-		return employeeOnboardingListRequest;
-
-	}
+//	@Override
+//	public EmployeeOnboardingListRequest tryBulkEmployeeDetails(EmployeeOnboardingListRequest request) {
+//		
+//		String response="";
+//		String response1="";
+//		String tokenvalue="";
+//		TokenGeneration token=new TokenGeneration();
+//		UserRequest userRequest=new UserRequest();
+//		EmployeeOnboardingListRequest employeeOnboardingListRequest=new EmployeeOnboardingListRequest();
+//		List<EmployeeOnboardingRequest> empList=new ArrayList<EmployeeOnboardingRequest>();
+//		List<EmployeeOnboardingRequest> emList=new ArrayList<EmployeeOnboardingRequest>();
+//		empList=request.getEmployeeOnboardingRequest();
+//		for (EmployeeOnboardingRequest employeeOnboardingRequest : empList) {
+//		try {
+//			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
+//			
+//			userRequest.setUsername(employeeOnboardingRequest.getName());
+//			userRequest.setMobile(employeeOnboardingRequest.getMobile());
+//			userRequest.setEmail(employeeOnboardingRequest.getEmail());
+//			userRequest.setEmployerid(employeeOnboardingRequest.getEmployerId()==null?0:employeeOnboardingRequest.getEmployerId().intValue());
+//			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+//					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMail,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+//			if (!ObjectUtils.isEmpty(response1)) {
+//				JSONObject demoRes = new JSONObject(response1);
+//				boolean status = demoRes.getBoolean("status");
+//				if (status) {
+//					Long id=0l;
+//					if (demoRes.has("userEntity")) {
+//						JSONObject userEntity = demoRes.getJSONObject("userEntity");
+//						id=userEntity.getLong("id");
+//						
+//					}
+//					response = MessageConstant.RESPONSE_FAILED;
+//					employeeOnboardingRequest.setResponse(response);
+//					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
+//					CopyUtility.copyProperties(request, employeeOnboarding);
+//					employeeOnboarding.setUserDetailsId(id);
+//					employeeOnboarding.setMode(1l);
+//					
+//					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
+//					response = MessageConstant.RESPONSE_SUCCESS;
+//					employeeOnboardingRequest.setResponse(response);
+//				} else if (!status) {
+//					response = demoRes.getString("message");
+//					employeeOnboardingRequest.setResponse(response);
+//				}
+//
+//			}
+//		
+//		} catch (Exception e) {
+//			response = MessageConstant.RESPONSE_FAILED;
+//			employeeOnboardingRequest.setResponse(response);
+//		}
+//		emList.add(employeeOnboardingRequest);
+//		}
+//		employeeOnboardingListRequest.setEmployeeOnboardingRequest(emList);
+//		return employeeOnboardingListRequest;
+//
+//	}
 
 
 	@Override

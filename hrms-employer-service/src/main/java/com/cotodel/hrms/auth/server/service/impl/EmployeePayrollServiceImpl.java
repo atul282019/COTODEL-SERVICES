@@ -7,16 +7,7 @@ import com.cotodel.hrms.auth.server.dao.EmployeePayrollDao;
 import com.cotodel.hrms.auth.server.dao.EmployeePayrollNewDao;
 import com.cotodel.hrms.auth.server.dao.EmployeePayrollTaxDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeProfileDao;
-import com.cotodel.hrms.auth.server.dto.EmployeePayrollRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeePayrollTaxRequest;
-import com.cotodel.hrms.auth.server.model.EmployeePayrollEntity;
-import com.cotodel.hrms.auth.server.model.EmployeePayrollNewEntity;
-import com.cotodel.hrms.auth.server.model.EmployeePayrollTaxEntity;
-import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
-import com.cotodel.hrms.auth.server.model.EmployerEntity;
 import com.cotodel.hrms.auth.server.service.EmployeePayrollService;
-import com.cotodel.hrms.auth.server.util.CopyUtility;
-import com.cotodel.hrms.auth.server.util.MessageConstant;
 @Repository
 public class EmployeePayrollServiceImpl implements EmployeePayrollService{
 

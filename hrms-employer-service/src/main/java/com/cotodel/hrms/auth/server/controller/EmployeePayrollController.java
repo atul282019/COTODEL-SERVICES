@@ -1,38 +1,13 @@
 package com.cotodel.hrms.auth.server.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cotodel.hrms.auth.server.dto.EmployeePayrollRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeePayrollResponse;
-import com.cotodel.hrms.auth.server.dto.EmployeePayrollTaxRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeePayrollTaxResponse;
-import com.cotodel.hrms.auth.server.dto.EmployerDetailsResponse;
-import com.cotodel.hrms.auth.server.exception.ApiError;
-import com.cotodel.hrms.auth.server.model.EmployeeProfileEntity;
-import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.EmployeePayrollService;
-import com.cotodel.hrms.auth.server.util.EncriptResponse;
-import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
-import com.cotodel.hrms.auth.server.util.MessageConstant;
-import com.cotodel.hrms.auth.server.util.TransactionManager;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/Api")

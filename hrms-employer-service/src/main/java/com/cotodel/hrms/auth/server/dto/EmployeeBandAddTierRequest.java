@@ -24,4 +24,6 @@ public class EmployeeBandAddTierRequest {
 	private String[] listArray;
 	private List<EmployeeBandAddTierEntity> list;
 	private String response;
+	private String clientKey;
+	private String hash;
 }

@@ -30,7 +30,6 @@ import com.cotodel.hrms.auth.server.dao.ErupiVoucherTxnDao;
 import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountDao;
 import com.cotodel.hrms.auth.server.dao.SecurityClientAndSecretDao;
 import com.cotodel.hrms.auth.server.dto.DecryptedResponse;
-import com.cotodel.hrms.auth.server.dto.DirectorOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiMultipleVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherBankListDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
@@ -38,8 +37,6 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeDetailsRequest;
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherRevokeRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSingleCreateDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTotalDetailDto;
@@ -315,135 +312,135 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 	    }
 
 
-		@Override
-		public ErupiVoucherRevokeDetailsRequest erupiVoucherRevokeDetails(
-				ErupiVoucherRevokeDetailsRequest erupiVoucherRevokeDetailsRequest) {
-			String response="";
-			log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... erupiVoucherRevokeDetails..");
-			ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
-			ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=null;
-			JSONObject profileJsonRes=null;
-			try {
-				
-				
-				List<ErupiVoucherRevokeRequest> list=erupiVoucherRevokeDetailsRequest.getList();
-				for(ErupiVoucherRevokeRequest request : list) {
-				response=MessageConstant.RESPONSE_FAILED;
-				request.setResponse(response);	
-				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
-				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
-				CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
-				CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
-				
-				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.getErupiVoucherCreationDetails(request.getDetailsId());
-				if(erupiVoucherInitiateDetailsEntity==null) {
-					response=MessageConstant.DETAIL_ID;
-					erupiVoucherRevokeDetailsRequest.setResponse(response);
-					return erupiVoucherRevokeDetailsRequest;
-				}
-				
-//				LocalDate eventDate = LocalDate.now();	
-//				erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
-//				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.saveDetails(erupiVoucherInitiateDetailsEntity);
-//				if(erupiVoucherInitiateDetailsEntity!=null) {
-				VoucherCreateRequest voucherCreateRequest=new VoucherCreateRequest();
-					
-				//String merchantTranId=getMerTranId(request.getBankcode());
-				voucherCreateRequest.setMerchantTranId(request.getMerchanttxnid());
-				voucherCreateRequest.setAmount(request.getAmount().toString());
-				voucherCreateRequest.setBeneficiaryID(request.getBeneficiaryID());
-				voucherCreateRequest.setMobileNumber(request.getMobile());
-				voucherCreateRequest.setBeneficiaryName(request.getName());
-				String formattedValue = String.format("%.2f", request.getAmount());
-				voucherCreateRequest.setAmount(formattedValue);
-				String expdate=request.getExpDate()==null?"":request.getExpDate().toString();
-				voucherCreateRequest.setExpiry(expdate);
-				voucherCreateRequest.setPurposeCode(request.getPurposeCode()==null?"":request.getPurposeCode());
-				voucherCreateRequest.setMcc(request.getMcc());
-				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
-				voucherCreateRequest.setPayerVA(request.getPayerVA());
-				voucherCreateRequest.setType("Revoke");
-				voucherCreateRequest.setMandateType(request.getMandateType());
-				voucherCreateRequest.setPayeeVPA(request.getPayeeVPA());
-				//voucherCreateRequest.setMerchantId(request.getm);
-				
-				
-				log.info("Starting voucher create request ...."+request.getMerchanttxnid());	
-				erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
-					
-					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
-							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
-					log.info("Ending voucher create response1 ...."+response1);
-					
-					
-					profileJsonRes= new JSONObject(response1);
-					
-					if(profileJsonRes.getBoolean("status")) { 
-						//request.setCreateResponse(response1);
-						response=MessageConstant.RESPONSE_SUCCESS;
-						request.setResponse(response);
-						erupiVoucherRevokeDetailsRequest.setResponse(response);
-						//
-						JSONObject data = profileJsonRes.getJSONObject("data");
-						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
-						
-						if(decryptedResponse.getStatus().equalsIgnoreCase("REVOKE-SUCCESS")) {
-							//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-							request.setResponseApi(decryptedResponse.getMessage());
-							erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
-							int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
-							erupiVoucherTxnDetailsEntity.setWorkFlowId(100005l);
-							erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
-							erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-							erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-							}else {
-								response=MessageConstant.RESPONSE_FAILED;
-								request.setResponse(response);
-								erupiVoucherRevokeDetailsRequest.setResponse(decryptedResponse.getMessage());
-								request.setResponseApi(decryptedResponse.getMessage());
-								//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
-								//erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
-								erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
-								erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-								erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-							}
-						
-						
-						
-//						erupiVoucherTxnDetailsEntity.setResponse(data.toString());
+//		@Override
+//		public ErupiVoucherRevokeDetailsRequest erupiVoucherRevokeDetails(
+//				ErupiVoucherRevokeDetailsRequest erupiVoucherRevokeDetailsRequest) {
+//			String response="";
+//			log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... erupiVoucherRevokeDetails..");
+//			ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
+//			ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=null;
+//			JSONObject profileJsonRes=null;
+//			try {
+//				
+//				
+//				List<ErupiVoucherRevokeRequest> list=erupiVoucherRevokeDetailsRequest.getList();
+//				for(ErupiVoucherRevokeRequest request : list) {
+//				response=MessageConstant.RESPONSE_FAILED;
+//				request.setResponse(response);	
+//				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
+//				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
+//				CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
+//				CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
+//				
+//				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.getErupiVoucherCreationDetails(request.getDetailsId());
+//				if(erupiVoucherInitiateDetailsEntity==null) {
+//					response=MessageConstant.DETAIL_ID;
+//					erupiVoucherRevokeDetailsRequest.setResponse(response);
+//					return erupiVoucherRevokeDetailsRequest;
+//				}
+//				
+////				LocalDate eventDate = LocalDate.now();	
+////				erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
+////				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.saveDetails(erupiVoucherInitiateDetailsEntity);
+////				if(erupiVoucherInitiateDetailsEntity!=null) {
+//				VoucherCreateRequest voucherCreateRequest=new VoucherCreateRequest();
+//					
+//				//String merchantTranId=getMerTranId(request.getBankcode());
+//				voucherCreateRequest.setMerchantTranId(request.getMerchanttxnid());
+//				voucherCreateRequest.setAmount(request.getAmount().toString());
+//				voucherCreateRequest.setBeneficiaryID(request.getBeneficiaryID());
+//				voucherCreateRequest.setMobileNumber(request.getMobile());
+//				voucherCreateRequest.setBeneficiaryName(request.getName());
+//				String formattedValue = String.format("%.2f", request.getAmount());
+//				voucherCreateRequest.setAmount(formattedValue);
+//				String expdate=request.getExpDate()==null?"":request.getExpDate().toString();
+//				voucherCreateRequest.setExpiry(expdate);
+//				voucherCreateRequest.setPurposeCode(request.getPurposeCode()==null?"":request.getPurposeCode());
+//				voucherCreateRequest.setMcc(request.getMcc());
+//				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
+//				voucherCreateRequest.setPayerVA(request.getPayerVA());
+//				voucherCreateRequest.setType("Revoke");
+//				voucherCreateRequest.setMandateType(request.getMandateType());
+//				voucherCreateRequest.setPayeeVPA(request.getPayeeVPA());
+//				//voucherCreateRequest.setMerchantId(request.getm);
+//				
+//				
+//				log.info("Starting voucher create request ...."+request.getMerchanttxnid());	
+//				erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
+//					
+//					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
+//							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
+//					log.info("Ending voucher create response1 ...."+response1);
+//					
+//					
+//					profileJsonRes= new JSONObject(response1);
+//					
+//					if(profileJsonRes.getBoolean("status")) { 
+//						//request.setCreateResponse(response1);
+//						response=MessageConstant.RESPONSE_SUCCESS;
+//						request.setResponse(response);
+//						erupiVoucherRevokeDetailsRequest.setResponse(response);
+//						//
+//						JSONObject data = profileJsonRes.getJSONObject("data");
+//						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+//						
+//						if(decryptedResponse.getStatus().equalsIgnoreCase("REVOKE-SUCCESS")) {
+//							//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
+//							request.setResponseApi(decryptedResponse.getMessage());
+//							erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
+//							int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
+//							erupiVoucherTxnDetailsEntity.setWorkFlowId(100005l);
+//							erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
+//							erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
+//							erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+//							}else {
+//								response=MessageConstant.RESPONSE_FAILED;
+//								request.setResponse(response);
+//								erupiVoucherRevokeDetailsRequest.setResponse(decryptedResponse.getMessage());
+//								request.setResponseApi(decryptedResponse.getMessage());
+//								//int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
+//								//erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
+//								erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
+//								erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
+//								erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+//							}
+//						
+//						
+//						
+////						erupiVoucherTxnDetailsEntity.setResponse(data.toString());
+////						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
+////						erupiVoucherTxnDetailsEntity.setWorkFlowId(100005l);
+////						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
+////						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+//						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
+//					}else {
+//						//loginservice.sendEmailVerificationCompletion(userForm);
+//						//request.setCreateResponse(response1);
+//						response=MessageConstant.RESPONSE_FAILED;
+//						request.setResponse(response);
+//						erupiVoucherRevokeDetailsRequest.setResponse(response);
 //						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
-//						erupiVoucherTxnDetailsEntity.setWorkFlowId(100005l);
+//						JSONObject data = profileJsonRes.getJSONObject("data");
+//						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+//						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
+//						//erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+//						erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
 //						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
 //						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
-					}else {
-						//loginservice.sendEmailVerificationCompletion(userForm);
-						//request.setCreateResponse(response1);
-						response=MessageConstant.RESPONSE_FAILED;
-						request.setResponse(response);
-						erupiVoucherRevokeDetailsRequest.setResponse(response);
-						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
-						JSONObject data = profileJsonRes.getJSONObject("data");
-						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
-						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-						//erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
-						erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
-						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
-					}
-					
-			//	}
-				}
-				
-				
-				
-			}catch (Exception e) {
-				e.printStackTrace();
-				log.error("Error in ErupiVoucherInitiateDetailsServiceImpl. Revoke:......"+e.getMessage());
-			}
-			return erupiVoucherRevokeDetailsRequest;
-		}
+//						logger.info("erupiVoucherTxnDetailsEntity Revoke:"+erupiVoucherTxnDetailsEntity);
+//					}
+//					
+//			//	}
+//				}
+//				
+//				
+//				
+//			}catch (Exception e) {
+//				e.printStackTrace();
+//				log.error("Error in ErupiVoucherInitiateDetailsServiceImpl. Revoke:......"+e.getMessage());
+//			}
+//			return erupiVoucherRevokeDetailsRequest;
+//		}
 
 
 		@Override
@@ -824,53 +821,53 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 
 
 
-		@Override
-		public String erupiVoucherRedemDetails(ErupiVoucherRedemeRequest request) {
-			String response="";
-			log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... erupiVoucherRedemDetails..");
-			ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
-			ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=null;
-			JSONObject profileJsonRes=null;
-			//String response=""
-			try {
-				
-				response=MessageConstant.RESPONSE_FAILED;
-				//request.setResponse(response);	
-				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
-				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
-				
-				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.getCreationDetailsByTransactionId(request.getMerchantTranId());
-				
-				
-				if(erupiVoucherInitiateDetailsEntity!=null) {
-					if(request.getTxnStatus().equalsIgnoreCase("SUCCESS")) {
-						int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100007l);
-					}
-				}
-				CopyUtility.copyProperties(erupiVoucherInitiateDetailsEntity,erupiVoucherTxnDetailsEntity);
-				erupiVoucherTxnDetailsEntity.setId(null);
-				erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
-				erupiVoucherTxnDetailsEntity.setResponseJson(MessageConstant.gson.toJson(request));
-				
-				if(request.getTxnStatus().equalsIgnoreCase("SUCCESS")) {
-					erupiVoucherTxnDetailsEntity=setResponseRedemValue(request,erupiVoucherTxnDetailsEntity);
-					erupiVoucherTxnDetailsEntity.setWorkFlowId(100007l);
-					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-					response=MessageConstant.RESPONSE_SUCCESS;
-				}else {
-					erupiVoucherTxnDetailsEntity=setResponseRedemValue(request,erupiVoucherTxnDetailsEntity);
-					erupiVoucherTxnDetailsEntity.setWorkFlowId(100011l);
-					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-					response=MessageConstant.RESPONSE_FAILED;
-				}
-
-				
-			}catch (Exception e) {
-				e.printStackTrace();
-				log.error("Error in erupiVoucherRedemDetails.:......"+e.getMessage());
-			}
-			return response;
-		}
+//		@Override
+//		public String erupiVoucherRedemDetails(ErupiVoucherRedemeRequest request) {
+//			String response="";
+//			log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... erupiVoucherRedemDetails..");
+//			ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
+//			ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=null;
+//			JSONObject profileJsonRes=null;
+//			//String response=""
+//			try {
+//				
+//				response=MessageConstant.RESPONSE_FAILED;
+//				//request.setResponse(response);	
+//				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
+//				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
+//				
+//				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.getCreationDetailsByTransactionId(request.getMerchantTranId());
+//				
+//				
+//				if(erupiVoucherInitiateDetailsEntity!=null) {
+//					if(request.getTxnStatus().equalsIgnoreCase("SUCCESS")) {
+//						int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100007l);
+//					}
+//				}
+//				CopyUtility.copyProperties(erupiVoucherInitiateDetailsEntity,erupiVoucherTxnDetailsEntity);
+//				erupiVoucherTxnDetailsEntity.setId(null);
+//				erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
+//				erupiVoucherTxnDetailsEntity.setResponseJson(MessageConstant.gson.toJson(request));
+//				
+//				if(request.getTxnStatus().equalsIgnoreCase("SUCCESS")) {
+//					erupiVoucherTxnDetailsEntity=setResponseRedemValue(request,erupiVoucherTxnDetailsEntity);
+//					erupiVoucherTxnDetailsEntity.setWorkFlowId(100007l);
+//					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+//					response=MessageConstant.RESPONSE_SUCCESS;
+//				}else {
+//					erupiVoucherTxnDetailsEntity=setResponseRedemValue(request,erupiVoucherTxnDetailsEntity);
+//					erupiVoucherTxnDetailsEntity.setWorkFlowId(100011l);
+//					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+//					response=MessageConstant.RESPONSE_FAILED;
+//				}
+//
+//				
+//			}catch (Exception e) {
+//				e.printStackTrace();
+//				log.error("Error in erupiVoucherRedemDetails.:......"+e.getMessage());
+//			}
+//			return response;
+//		}
 	    
 		@Override
 		public List<ErupiVoucherCreateSummaryDto> getErupiVoucherCreateSummaryList(ErupiVoucherCreatedRequest request) {
@@ -979,127 +976,127 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 
 
 
-		@Override
-		public ErupiMultipleVoucherCreateRequest saveErupiMultipleVoucherCreation(
-				ErupiMultipleVoucherCreateRequest erupiMultipleVoucherCreateRequest) {
-			String response="";
-			List<ErupiVoucherSingleCreateDetailsRequest> erupiVoucherCreateDetailsRequests=erupiMultipleVoucherCreateRequest.getList();
-			for (ErupiVoucherSingleCreateDetailsRequest request : erupiVoucherCreateDetailsRequests) {
-				
-			
-			log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... saveErupiMultipleVoucherCreation..");
-			ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
-			ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=null;
-			JSONObject profileJsonRes=null;
-			try {
-				String merchantTranId=getMerTranId(request.getBankcode());
-				response=MessageConstant.RESPONSE_FAILED;
-				request.setResponse(response);	
-				//request.setMandateType("04");
-				//request.setPayeeVPA("invaciauat@prepaidicici");
-				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
-				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
-				CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
-				CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
-				LocalDate eventDate = LocalDate.now();	
-				erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
-				erupiVoucherInitiateDetailsEntity.setWorkFlowId(100001l);
-				erupiVoucherInitiateDetailsEntity.setMerchanttxnid(merchantTranId);
-				
-				LocalDate newDate = request.getStartDate();
-				LocalDate exitdate = newDate.plusDays(request.getValidity());
-				erupiVoucherInitiateDetailsEntity.setExpDate(exitdate);
-				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.saveDetails(erupiVoucherInitiateDetailsEntity);
-				if(erupiVoucherInitiateDetailsEntity!=null) {
-				VoucherCreateRequest voucherCreateRequest=new VoucherCreateRequest();
-					
-				
-				voucherCreateRequest.setMerchantTranId(merchantTranId);
-				voucherCreateRequest.setAmount(request.getAmount().toString());
-				voucherCreateRequest.setBeneficiaryID(request.getBeneficiaryID());
-				voucherCreateRequest.setMobileNumber(request.getMobile());
-				voucherCreateRequest.setBeneficiaryName(request.getName());
-				String formattedValue = String.format("%.2f", request.getAmount());
-				voucherCreateRequest.setAmount(formattedValue);
-				String expdate=erupiVoucherInitiateDetailsEntity.getExpDate().toString();
-				voucherCreateRequest.setExpiry(expdate);
-				voucherCreateRequest.setPurposeCode(request.getPurposeCode());
-				voucherCreateRequest.setMcc(request.getMcc());
-				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
-				voucherCreateRequest.setPayerVA(request.getPayerVA());
-				voucherCreateRequest.setType(request.getType());
-				voucherCreateRequest.setMerchantId(request.getMerchantId());
-				voucherCreateRequest.setSubMerchantId(request.getSubMerchantId());
-				voucherCreateRequest.setMandateType(request.getMandateType());
-				voucherCreateRequest.setPayeeVPA(request.getPayeeVPA());
-				log.info("Starting voucher create request ...."+merchantTranId);	
-				erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
-					
-					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
-							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
-					log.info("Ending voucher create response1 ...."+response1);
-					
-					
-					profileJsonRes= new JSONObject(response1);
-					
-					if(profileJsonRes.getBoolean("status")) { 
-						//request.setCreateResponse(response1);
-						response=MessageConstant.RESPONSE_SUCCESS;
-						request.setResponse(response);
-						JSONObject data = profileJsonRes.getJSONObject("data");
-						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
-						if(decryptedResponse.getStatus().equalsIgnoreCase("CREATE-SUCCESS")) {
-						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-						request.setResponseApi(decryptedResponse.getMessage());
-						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
-						int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
-						erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
-						erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
-						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-						}else {
-							response=MessageConstant.RESPONSE_FAILED;
-							request.setResponse(response);
-							request.setResponseApi(decryptedResponse.getMessage());
-							int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
-							erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
-							erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
-							erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
-							erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-							erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-						}
-						logger.info("erupiVoucherTxnDetailsEntity"+erupiVoucherTxnDetailsEntity);
-					}else {
-						response=MessageConstant.RESPONSE_FAILED;
-						request.setResponse(response);
-						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
-						JSONObject data = profileJsonRes.getJSONObject("data");
-						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
-						//decryptedResponse.getResponseCode()
-						request.setResponseApi("Bad request some field are missing");
-						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
-						erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
-						erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
-						int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
-						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
-						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
-						logger.info("erupiVoucherTxnDetailsEntity"+erupiVoucherTxnDetailsEntity);
-					}
-					
-					
-				}
-			}catch (DataIntegrityViolationException ex) {
-		           
-				log.error("Error in ErupiVoucherInitiateDetailsServiceImpl.DataIntegrityViolationException......"+ex.getMessage());
-		        request.setResponseApi("exception DataException");
-			}catch (Exception e) {
-				e.printStackTrace();
-				request.setResponseApi("exception:Bad request some field are missing");
-				log.error("Error in ErupiVoucherInitiateDetailsServiceImpl......."+e.getMessage());
-			}
-			}
-			return erupiMultipleVoucherCreateRequest;
-		}
+//		@Override
+//		public ErupiMultipleVoucherCreateRequest saveErupiMultipleVoucherCreation(
+//				ErupiMultipleVoucherCreateRequest erupiMultipleVoucherCreateRequest) {
+//			String response="";
+//			List<ErupiVoucherSingleCreateDetailsRequest> erupiVoucherCreateDetailsRequests=erupiMultipleVoucherCreateRequest.getList();
+//			for (ErupiVoucherSingleCreateDetailsRequest request : erupiVoucherCreateDetailsRequests) {
+//				
+//			
+//			log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... saveErupiMultipleVoucherCreation..");
+//			ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
+//			ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=null;
+//			JSONObject profileJsonRes=null;
+//			try {
+//				String merchantTranId=getMerTranId(request.getBankcode());
+//				response=MessageConstant.RESPONSE_FAILED;
+//				request.setResponse(response);	
+//				//request.setMandateType("04");
+//				//request.setPayeeVPA("invaciauat@prepaidicici");
+//				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
+//				erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
+//				CopyUtility.copyProperties(request,erupiVoucherInitiateDetailsEntity);
+//				CopyUtility.copyProperties(request,erupiVoucherTxnDetailsEntity);
+//				LocalDate eventDate = LocalDate.now();	
+//				erupiVoucherInitiateDetailsEntity.setCreationDate(eventDate);
+//				erupiVoucherInitiateDetailsEntity.setWorkFlowId(100001l);
+//				erupiVoucherInitiateDetailsEntity.setMerchanttxnid(merchantTranId);
+//				
+//				LocalDate newDate = request.getStartDate();
+//				LocalDate exitdate = newDate.plusDays(request.getValidity());
+//				erupiVoucherInitiateDetailsEntity.setExpDate(exitdate);
+//				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.saveDetails(erupiVoucherInitiateDetailsEntity);
+//				if(erupiVoucherInitiateDetailsEntity!=null) {
+//				VoucherCreateRequest voucherCreateRequest=new VoucherCreateRequest();
+//					
+//				
+//				voucherCreateRequest.setMerchantTranId(merchantTranId);
+//				voucherCreateRequest.setAmount(request.getAmount().toString());
+//				voucherCreateRequest.setBeneficiaryID(request.getBeneficiaryID());
+//				voucherCreateRequest.setMobileNumber(request.getMobile());
+//				voucherCreateRequest.setBeneficiaryName(request.getName());
+//				String formattedValue = String.format("%.2f", request.getAmount());
+//				voucherCreateRequest.setAmount(formattedValue);
+//				String expdate=erupiVoucherInitiateDetailsEntity.getExpDate().toString();
+//				voucherCreateRequest.setExpiry(expdate);
+//				voucherCreateRequest.setPurposeCode(request.getPurposeCode());
+//				voucherCreateRequest.setMcc(request.getMcc());
+//				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
+//				voucherCreateRequest.setPayerVA(request.getPayerVA());
+//				voucherCreateRequest.setType(request.getType());
+//				voucherCreateRequest.setMerchantId(request.getMerchantId());
+//				voucherCreateRequest.setSubMerchantId(request.getSubMerchantId());
+//				voucherCreateRequest.setMandateType(request.getMandateType());
+//				voucherCreateRequest.setPayeeVPA(request.getPayeeVPA());
+//				log.info("Starting voucher create request ...."+merchantTranId);	
+//				erupiVoucherTxnDetailsEntity=setRequestValue(voucherCreateRequest, erupiVoucherTxnDetailsEntity);
+//					
+//					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(voucherCreateRequest),
+//							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherCreate);
+//					log.info("Ending voucher create response1 ...."+response1);
+//					
+//					
+//					profileJsonRes= new JSONObject(response1);
+//					
+//					if(profileJsonRes.getBoolean("status")) { 
+//						//request.setCreateResponse(response1);
+//						response=MessageConstant.RESPONSE_SUCCESS;
+//						request.setResponse(response);
+//						JSONObject data = profileJsonRes.getJSONObject("data");
+//						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+//						if(decryptedResponse.getStatus().equalsIgnoreCase("CREATE-SUCCESS")) {
+//						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
+//						request.setResponseApi(decryptedResponse.getMessage());
+//						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
+//						int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100003l);
+//						erupiVoucherTxnDetailsEntity.setWorkFlowId(100003l);
+//						erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
+//						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
+//						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+//						}else {
+//							response=MessageConstant.RESPONSE_FAILED;
+//							request.setResponse(response);
+//							request.setResponseApi(decryptedResponse.getMessage());
+//							int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
+//							erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+//							erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
+//							erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
+//							erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
+//							erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+//						}
+//						logger.info("erupiVoucherTxnDetailsEntity"+erupiVoucherTxnDetailsEntity);
+//					}else {
+//						response=MessageConstant.RESPONSE_FAILED;
+//						request.setResponse(response);
+//						erupiVoucherTxnDetailsEntity.setDetailsId(erupiVoucherInitiateDetailsEntity.getId());
+//						JSONObject data = profileJsonRes.getJSONObject("data");
+//						DecryptedResponse decryptedResponse= jsonToPOJO(data.toString());
+//						//decryptedResponse.getResponseCode()
+//						request.setResponseApi("Bad request some field are missing");
+//						//erupiVoucherTxnDetailsEntity.setResponse(data.toString());
+//						erupiVoucherTxnDetailsEntity.setWorkFlowId(100004l);
+//						erupiVoucherTxnDetailsEntity.setResponseJson(decryptedResponse.getApiResponse());
+//						int updatework=erupiVoucherInitiateDetailsDao.updateWorkflowId(erupiVoucherInitiateDetailsEntity.getId(), 100004l);
+//						erupiVoucherTxnDetailsEntity=setResponseValue(decryptedResponse,erupiVoucherTxnDetailsEntity);
+//						erupiVoucherTxnDetailsEntity=erupiVoucherTxnDao.saveDetails(erupiVoucherTxnDetailsEntity);
+//						logger.info("erupiVoucherTxnDetailsEntity"+erupiVoucherTxnDetailsEntity);
+//					}
+//					
+//					
+//				}
+//			}catch (DataIntegrityViolationException ex) {
+//		           
+//				log.error("Error in ErupiVoucherInitiateDetailsServiceImpl.DataIntegrityViolationException......"+ex.getMessage());
+//		        request.setResponseApi("exception DataException");
+//			}catch (Exception e) {
+//				e.printStackTrace();
+//				request.setResponseApi("exception:Bad request some field are missing");
+//				log.error("Error in ErupiVoucherInitiateDetailsServiceImpl......."+e.getMessage());
+//			}
+//			}
+//			return erupiMultipleVoucherCreateRequest;
+//		}
 		public static String formatAmount(String amount) {
 	        // Convert the string to a double
 	        double value = Double.parseDouble(amount);
@@ -1642,23 +1639,23 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 
 
 
-		@Override
-		public ErupiVoucherCreatedDto getErupiVoucherCreateDetailsById(ErupiVoucherCreatedRequest request) {
-			String query="";						
-			ErupiVoucherCreatedDto erupiVoucherCreatedDto= erupiVoucherInitiateDetailsDao.getVoucherCreationById(request.getId());
-			if(erupiVoucherCreatedDto!=null) {
-				ErupiBankMasterEntity erBankMasterEntity=bankMasterDao.getDetails(erupiVoucherCreatedDto.getBankcode());
-				String accNumber=replaceExceptLastFour(erupiVoucherCreatedDto.getAccountNumber());
-				erupiVoucherCreatedDto.setAccountNumber(accNumber);
-				if(erBankMasterEntity==null) {
-					erupiVoucherCreatedDto.setBankIcon(null);
-				}else {
-					erupiVoucherCreatedDto.setBankIcon(erBankMasterEntity.getBankLogo());
-				}
-				
-			}
-			return erupiVoucherCreatedDto;
-		}
+//		@Override
+//		public ErupiVoucherCreatedDto getErupiVoucherCreateDetailsById(ErupiVoucherCreatedRequest request) {
+//			String query="";						
+//			ErupiVoucherCreatedDto erupiVoucherCreatedDto= erupiVoucherInitiateDetailsDao.getVoucherCreationById(request.getId());
+//			if(erupiVoucherCreatedDto!=null) {
+//				ErupiBankMasterEntity erBankMasterEntity=bankMasterDao.getDetails(erupiVoucherCreatedDto.getBankcode());
+//				String accNumber=replaceExceptLastFour(erupiVoucherCreatedDto.getAccountNumber());
+//				erupiVoucherCreatedDto.setAccountNumber(accNumber);
+//				if(erBankMasterEntity==null) {
+//					erupiVoucherCreatedDto.setBankIcon(null);
+//				}else {
+//					erupiVoucherCreatedDto.setBankIcon(erBankMasterEntity.getBankLogo());
+//				}
+//				
+//			}
+//			return erupiVoucherCreatedDto;
+//		}
 
 
 

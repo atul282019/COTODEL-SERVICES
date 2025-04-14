@@ -1,26 +1,27 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
+
 import com.cotodel.hrms.auth.server.dao.BandDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeBandAddTierDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeBandAddTierReviewDao;
 import com.cotodel.hrms.auth.server.dao.EmployeeBandDao;
 import com.cotodel.hrms.auth.server.dao.ExpenseBandNumberDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeeBandAddTierReviewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeBandNameRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeeBandRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeBandAddTierEntity;
-import com.cotodel.hrms.auth.server.model.EmployeeBandAddTierReviewEntity;
 import com.cotodel.hrms.auth.server.model.EmployeeBandEntity;
 import com.cotodel.hrms.auth.server.model.ExpenseBandNumberEntity;
 import com.cotodel.hrms.auth.server.service.EmployeeBandService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.ValidateConstants;
 @Repository
 public class EmployeeBandServiceImpl implements EmployeeBandService{
 
@@ -39,71 +40,51 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 	@Autowired
 	ExpenseBandNumberDao  expenseBandNumberDao;
 	
-	@Override
-	@Transactional
-	public EmployeeBandRequest saveCompEmployeeBandDetails(EmployeeBandRequest request) {
-		String response="";
-		try {
-			response=MessageConstant.RESPONSE_FAILED;
-			request.setResponse(response);			
-			
-			
-			EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
-			CopyUtility.copyProperties(request,employeeBandEntity);
-			
-				employeeBandEntity=employeeBandDao.saveDetails(employeeBandEntity);
-				response=MessageConstant.RESPONSE_SUCCESS;
-				request.setResponse(response);
-			
-			
-		} catch (Exception e) {
-			response=MessageConstant.RESPONSE_FAILED;
-			//e.printStackTrace();
-			request.setResponse(response);
-		}
-		return request;
-
-	}
+//	@Override
+//	@Transactional
+//	public EmployeeBandRequest saveCompEmployeeBandDetails(EmployeeBandRequest request) {
+//		String response="";
+//		try {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			request.setResponse(response);			
+//			
+//			
+//			EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
+//			CopyUtility.copyProperties(request,employeeBandEntity);
+//			
+//				employeeBandEntity=employeeBandDao.saveDetails(employeeBandEntity);
+//				response=MessageConstant.RESPONSE_SUCCESS;
+//				request.setResponse(response);
+//			
+//			
+//		} catch (Exception e) {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			//e.printStackTrace();
+//			request.setResponse(response);
+//		}
+//		return request;
+//
+//	}
 
 
 //	@Override
-//	public EmployeeBandEntity getCompEmployeeBandDetails(String bandid) {
-//		EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
+//	public List<EmployeeBandEntity> getEmployeeBandList() {
+//		List<EmployeeBandEntity> employeeBandEntity=new ArrayList<EmployeeBandEntity>();
 //		
 //		String response=MessageConstant.RESPONSE_FAILED;
 //		
 //		try {
-//			employeeBandEntity=employeeBandDao.getEmployeeBandDetails(bandid);
+//			employeeBandEntity=employeeBandDao.getEmployeeBandList();
 //			
 //			response=MessageConstant.RESPONSE_SUCCESS;
 //			
 //		} catch (Exception e) {
-//			e.printStackTrace();
+//			//e.printStackTrace();
 //			response=MessageConstant.RESPONSE_FAILED;
 //			//companyEmployeeRequest.setResponse(response);
 //		}
 //		return employeeBandEntity;
 //	}
-
-
-	@Override
-	public List<EmployeeBandEntity> getEmployeeBandList() {
-		List<EmployeeBandEntity> employeeBandEntity=new ArrayList<EmployeeBandEntity>();
-		
-		String response=MessageConstant.RESPONSE_FAILED;
-		
-		try {
-			employeeBandEntity=employeeBandDao.getEmployeeBandList();
-			
-			response=MessageConstant.RESPONSE_SUCCESS;
-			
-		} catch (Exception e) {
-			//e.printStackTrace();
-			response=MessageConstant.RESPONSE_FAILED;
-			//companyEmployeeRequest.setResponse(response);
-		}
-		return employeeBandEntity;
-	}
 
 
 	@Override
@@ -115,7 +96,25 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 		ExpenseBandNumberEntity expenseBandNumberEntity=new ExpenseBandNumberEntity();
 		try {
 			//
-			
+			request.setResponse(response);
+			StringBuilder hashBuilder = new StringBuilder();
+			 hashBuilder.append(request.getEmployerId()).append(request.getBandEnabled()).append(request.getEmployeeBandNo())
+			            .append(request.getEmployeeBandNoAlpha()).append(request.getEmployeeBandOrder())
+			            .append(request.getIntroAddTierFlag()).append(request.getStatus());
+	 
+			 if (request.getListArray() != null) {
+			     for (String item : request.getListArray()) {
+			         hashBuilder.append(item);
+			     }
+			 }
+	 
+			 hashBuilder.append(request.getClientKey()).append(MessageConstant.SECRET_KEY);
+			 String dataString=hashBuilder.toString();
+			 String hash=ValidateConstants.generateHash(dataString);
+				if(!request.getHash().equalsIgnoreCase(hash)) {
+					request.setResponse(MessageConstant.HASH_ERROR);
+					return request;
+				}
 			// delete old data;
 			employeeBandEntity=employeeBandDao.getEmployeeBandId(request.getEmployerId());
 			if(employeeBandEntity!=null) {
@@ -125,17 +124,15 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 				if(expenseBandNumberEntity!=null) {
 					expenseBandNumberDao.deleteDetails(expenseBandNumberEntity.getId());
 				}
-			}
-			
-			//
-			employeeBandEntity=new EmployeeBandEntity();
-			CopyUtility.copyProperties(request,employeeBandEntity);
-			employeeBandEntity.setStatus(1);
+			}else {
+				employeeBandEntity=new EmployeeBandEntity();
+				CopyUtility.copyProperties(request,employeeBandEntity);
+				employeeBandEntity.setStatus(1);
+				employeeBandEntity.setCreationDate(LocalDateTime.now());
 				employeeBandEntity=employeeBandDao.saveDetails(employeeBandEntity);
 				response=MessageConstant.RESPONSE_SUCCESS;
 				request.setResponse(response);
-			//
-			
+			}
 			if(employeeBandEntity!=null) {
 				
 				
@@ -233,41 +230,43 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 				response=MessageConstant.RESPONSE_SUCCESS;
 			}
 			request.setResponse(response);	
-		}catch (Exception e) {
-			response=MessageConstant.RESPONSE_FAILED;
-			//e.printStackTrace();
-			request.setResponse(response);
-		}
-		return request;
-	}
-
-
-	@Override
-	public EmployeeBandAddTierReviewRequest saveEmployeeBandAddTierReview(EmployeeBandAddTierReviewRequest request) {
-		String response=MessageConstant.RESPONSE_FAILED;
-		EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
-		List<EmployeeBandAddTierReviewEntity> list1=new ArrayList<EmployeeBandAddTierReviewEntity>();
-		List<EmployeeBandAddTierReviewEntity> list2=new ArrayList<EmployeeBandAddTierReviewEntity>();
-		try {
-			employeeBandEntity=employeeBandDao.getEmployeeBandId(request.getEmployerId());
-			if(employeeBandEntity!=null) {
-				List<EmployeeBandAddTierReviewEntity> list=request.getList();
-				for(EmployeeBandAddTierReviewEntity employeeBandAddTierEntity:list) {
-					employeeBandAddTierEntity.setEmployeeBandId(employeeBandAddTierEntity.getId());
-					list1.add(employeeBandAddTierEntity);
-				}
-				
-				list2=employeeBandAddTierReviewDao.saveDetails(list1);
-				response=MessageConstant.RESPONSE_SUCCESS;
+			}catch (DataIntegrityViolationException ex) {            
+			request.setResponse("exception DataIntegrityViolation");
 			}
-			request.setResponse(response);	
-		}catch (Exception e) {
+			catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
-			//e.printStackTrace();
 			request.setResponse(response);
 		}
 		return request;
 	}
+
+
+//	@Override
+//	public EmployeeBandAddTierReviewRequest saveEmployeeBandAddTierReview(EmployeeBandAddTierReviewRequest request) {
+//		String response=MessageConstant.RESPONSE_FAILED;
+//		EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
+//		List<EmployeeBandAddTierReviewEntity> list1=new ArrayList<EmployeeBandAddTierReviewEntity>();
+//		List<EmployeeBandAddTierReviewEntity> list2=new ArrayList<EmployeeBandAddTierReviewEntity>();
+//		try {
+//			employeeBandEntity=employeeBandDao.getEmployeeBandId(request.getEmployerId());
+//			if(employeeBandEntity!=null) {
+//				List<EmployeeBandAddTierReviewEntity> list=request.getList();
+//				for(EmployeeBandAddTierReviewEntity employeeBandAddTierEntity:list) {
+//					employeeBandAddTierEntity.setEmployeeBandId(employeeBandAddTierEntity.getId());
+//					list1.add(employeeBandAddTierEntity);
+//				}
+//				
+//				list2=employeeBandAddTierReviewDao.saveDetails(list1);
+//				response=MessageConstant.RESPONSE_SUCCESS;
+//			}
+//			request.setResponse(response);	
+//		}catch (Exception e) {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			//e.printStackTrace();
+//			request.setResponse(response);
+//		}
+//		return request;
+//	}
 
 
 	@Override
@@ -298,44 +297,44 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 	}
 
 
-	@Override
-	public EmployeeBandAddTierRequest getEmployeeBandAddTierDisable(Long employerId) {
-		String response=MessageConstant.RESPONSE_FAILED;
-		EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
-		EmployeeBandAddTierRequest employeeBandAddTierRequest=new EmployeeBandAddTierRequest();
-		try {
-			employeeBandEntity=employeeBandDao.findByEmployeeBandED(employerId);
-			if(employeeBandEntity!=null) {				
-				employeeBandEntity.setStatus(0);
-				employeeBandEntity=employeeBandDao.saveDetails(employeeBandEntity);
-				response=MessageConstant.RESPONSE_SUCCESS;
-			}
-			employeeBandAddTierRequest.setResponse(response);	
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return employeeBandAddTierRequest;
-	}
+//	@Override
+//	public EmployeeBandAddTierRequest getEmployeeBandAddTierDisable(Long employerId) {
+//		String response=MessageConstant.RESPONSE_FAILED;
+//		EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
+//		EmployeeBandAddTierRequest employeeBandAddTierRequest=new EmployeeBandAddTierRequest();
+//		try {
+//			employeeBandEntity=employeeBandDao.findByEmployeeBandED(employerId);
+//			if(employeeBandEntity!=null) {				
+//				employeeBandEntity.setStatus(0);
+//				employeeBandEntity=employeeBandDao.saveDetails(employeeBandEntity);
+//				response=MessageConstant.RESPONSE_SUCCESS;
+//			}
+//			employeeBandAddTierRequest.setResponse(response);	
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		return employeeBandAddTierRequest;
+//	}
 
 
-	@Override
-	public EmployeeBandAddTierRequest getEmployeeBandAddTierEnaable(Long employerId) {
-		String response=MessageConstant.RESPONSE_FAILED;
-		EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
-		EmployeeBandAddTierRequest employeeBandAddTierRequest=new EmployeeBandAddTierRequest();
-		try {
-			employeeBandEntity=employeeBandDao.findByEmployeeBandED(employerId);
-			if(employeeBandEntity!=null) {				
-				employeeBandEntity.setStatus(1);
-				employeeBandEntity=employeeBandDao.saveDetails(employeeBandEntity);
-				response=MessageConstant.RESPONSE_SUCCESS;
-			}
-			employeeBandAddTierRequest.setResponse(response);	
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return employeeBandAddTierRequest;
-	}
+//	@Override
+//	public EmployeeBandAddTierRequest getEmployeeBandAddTierEnaable(Long employerId) {
+//		String response=MessageConstant.RESPONSE_FAILED;
+//		EmployeeBandEntity employeeBandEntity=new EmployeeBandEntity();
+//		EmployeeBandAddTierRequest employeeBandAddTierRequest=new EmployeeBandAddTierRequest();
+//		try {
+//			employeeBandEntity=employeeBandDao.findByEmployeeBandED(employerId);
+//			if(employeeBandEntity!=null) {				
+//				employeeBandEntity.setStatus(1);
+//				employeeBandEntity=employeeBandDao.saveDetails(employeeBandEntity);
+//				response=MessageConstant.RESPONSE_SUCCESS;
+//			}
+//			employeeBandAddTierRequest.setResponse(response);	
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		return employeeBandAddTierRequest;
+//	}
 
 
 	@Override

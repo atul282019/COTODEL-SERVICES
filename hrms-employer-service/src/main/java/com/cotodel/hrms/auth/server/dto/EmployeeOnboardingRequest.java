@@ -48,5 +48,6 @@ public class EmployeeOnboardingRequest implements Serializable {
 	private Long userDetailsId;
 	private String clientKey;
 	private String hash;
-
+	private String filename;
+	private String filetype;
 }

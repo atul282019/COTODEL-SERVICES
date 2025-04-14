@@ -9,8 +9,8 @@ public interface EmployeeService {
 	
 	public EmployeeRequest  saveEmployeeDetails(EmployeeRequest	 request);
 	
-	public EmployeeRequest  getEmployeeDetails(Long	 empid);
+	//public EmployeeRequest  getEmployeeDetails(Long	 empid);
 	
-	public List<Employee>  getEmployeeDetailsList();
+	//public List<Employee>  getEmployeeDetailsList();
 	
 }

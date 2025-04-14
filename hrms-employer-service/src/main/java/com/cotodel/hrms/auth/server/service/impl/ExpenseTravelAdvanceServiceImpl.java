@@ -86,20 +86,20 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 		return request;
 	}
 
-	@Override
-	public AdvanceRequestSettingEntity getExpenseTravelAdvenceDetails(Long employerid) {
-		AdvanceRequestSettingEntity expanceTravelAdvanceEntities=null;
-		String response="";
-		try {
-			expanceTravelAdvanceEntities=expenseTravelAdvanceDao.findByEmployerId(employerid);
-			
-		} catch (Exception e) {
-			response=MessageConstant.RESPONSE_FAILED;
-			//e.printStackTrace();
-			//request.setResponse(response);
-		}
-		return expanceTravelAdvanceEntities;
-	}
+//	@Override
+//	public AdvanceRequestSettingEntity getExpenseTravelAdvenceDetails(Long employerid) {
+//		AdvanceRequestSettingEntity expanceTravelAdvanceEntities=null;
+//		String response="";
+//		try {
+//			expanceTravelAdvanceEntities=expenseTravelAdvanceDao.findByEmployerId(employerid);
+//			
+//		} catch (Exception e) {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			//e.printStackTrace();
+//			//request.setResponse(response);
+//		}
+//		return expanceTravelAdvanceEntities;
+//	}
 
 	@Override
 	public ExpanceTravelAdvance getExpenseTravelAdvence(Long employerid) {
@@ -661,20 +661,20 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 			return approvalTravelReimbursement;
 		}
 
-		@Override
-		public List<AdvanceTravelRequestEntity> advenceTravelListById(Long id) {
-			AdvanceTravelRequestEntity advanceTravelRequestEntity=new AdvanceTravelRequestEntity();
-			List<AdvanceTravelRequestEntity> list=new ArrayList<AdvanceTravelRequestEntity>();
-			try {
-				advanceTravelRequestEntity=advanceTravelRequestDao.findById(id);
-				
-				list.add(advanceTravelRequestEntity);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return list;
-			
-		}
+//		@Override
+//		public List<AdvanceTravelRequestEntity> advenceTravelListById(Long id) {
+//			AdvanceTravelRequestEntity advanceTravelRequestEntity=new AdvanceTravelRequestEntity();
+//			List<AdvanceTravelRequestEntity> list=new ArrayList<AdvanceTravelRequestEntity>();
+//			try {
+//				advanceTravelRequestEntity=advanceTravelRequestDao.findById(id);
+//				
+//				list.add(advanceTravelRequestEntity);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			return list;
+//			
+//		}
 		
 }
 

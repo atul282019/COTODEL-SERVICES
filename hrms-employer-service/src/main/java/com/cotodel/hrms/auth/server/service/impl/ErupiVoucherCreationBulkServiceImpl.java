@@ -67,146 +67,146 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
 	
-	@Override
-	public ErupiVoucherBulkUploadSFListResponse saveErupiVoucherBulkFile(
-			ErupiVoucherBulkUploadRequest request) {
-
-		VoucherBulkUploadEntity voucherBulkUploadEntity = new VoucherBulkUploadEntity();
-		ErupiVoucherBulkUploadSFListResponse bulkupload = new ErupiVoucherBulkUploadSFListResponse();
-		String response = "";
-		try {
-
-			response = MessageConstant.RESPONSE_FAILED;
-			Long orgId = request.getOrgId();
-			Long voucherId=request.getVoucherId();
-			String filename = request.getFileName();
-			String extn = CommonUtility.getFileExtension(filename);
-			String fileNameWithout = filename.substring(0, filename.lastIndexOf("."));
-			String uniqueFileName = CommonUtility.generateUniqueFileName(fileNameWithout, request.getOrgId(), extn);
-			LocalDate eventDate = LocalDate.now();
-			CopyUtility.copyProperties(request, voucherBulkUploadEntity);
-			voucherBulkUploadEntity.setCreationDate(eventDate);
-			voucherBulkUploadEntity.setFile(request.getFile());
-			voucherBulkUploadEntity.setFileName(uniqueFileName);
-			voucherBulkUploadEntity.setOrgId(orgId);
-			
-			//voucherBulkUploadEntity.setRedemtionType(re);
-			voucherBulkUploadEntity = erupiVoucherBulkDao.saveDetails(voucherBulkUploadEntity);
-
-			byte[] decodedBytes = request.getFile();
-			// Convert byte[] to InputStream
-			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
-			// Read Excel file using Apache POI
-			XSSFWorkbook workbook = null;
-			try {
-				workbook = new XSSFWorkbook(byteArrayInputStream);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
-			Iterator<Row> rowIterator = sheet.iterator();
-			boolean isHeaderRow = true;
-			int totalCount = 0;
-			int successCount = 0;
-			int failCount = 0;
-			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
-				if (isHeaderRow) {
-					// Process the header row
-					String benName = row.getCell(1).getStringCellValue();
-					String mobile = row.getCell(2).getStringCellValue();
-					String amount = row.getCell(3).getStringCellValue();
-					String starDate = row.getCell(4).getStringCellValue();
-					String expDate = row.getCell(5).getStringCellValue();
-					totalCount = 0;
-					isHeaderRow = false;
-				} else {
-					// Process data row
-					totalCount++;
-					String voucherType = row.getCell(1).getStringCellValue();
-					String benName = row.getCell(2).getStringCellValue();
-					String mobile = "";
-					if (row.getCell(3).getCellType() == CellType.STRING) {
-						mobile = row.getCell(3).getStringCellValue();
-					} else {
-						mobile = String.valueOf((long) row.getCell(3).getNumericCellValue());
-					}
-					String amount = "";
-					if (row.getCell(4).getCellType() == CellType.STRING) {
-						amount = row.getCell(4).getStringCellValue();
-					} else {
-						amount = String.valueOf(row.getCell(4).getNumericCellValue());
-					}
-					Date starDate = row.getCell(5).getDateCellValue();
-					LocalDate stDate = CommonUtility.convertToLocalDate(starDate);
-					Date endDate = row.getCell(6).getDateCellValue();
-					LocalDate etDate = CommonUtility.convertToLocalDate(endDate);
-					//System.out.println(etDate);
-
-					boolean mob = CommonUtility.isValid(mobile);
-					boolean name = CommonUtility.isValidName(benName);
-					
-					boolean amountValid = CommonUtility.isValidAmount(amount,applicationConstantConfig.voucherCreationMinAmount,applicationConstantConfig.voucherCreationMaxAmount);
-					boolean expDateValid = CommonUtility.checkDate(etDate.toString());
-					String message = "";
-					message = mob == false ? "Invalid Mobile " : "";
-					// message=message==""?""
-					message += name == false ? "Invalid name" : "";
-					message += expDateValid == false ? "Invalid Date" : "";
-					
-					if (mob && name && amountValid && expDateValid) {		
-						
-						saveSuccess(request,voucherBulkUploadEntity.getId(),uniqueFileName,voucherType,
-								benName,mobile,amount,stDate,etDate,orgId,voucherId,"createdby");
-						successCount++;
-
-					} else {
-						VoucherBulkUploadFailEntity voucherBulkUploadFailEntity = new VoucherBulkUploadFailEntity();
-						
-						CopyUtility.copyProperties(request, voucherBulkUploadFailEntity);
-						voucherBulkUploadFailEntity.setBulktblId(voucherBulkUploadEntity.getId());
-						voucherBulkUploadFailEntity.setFileName(uniqueFileName);
-						voucherBulkUploadFailEntity.setVoucherType(voucherType);
-						voucherBulkUploadFailEntity.setRedemtionType(voucherType);
-						voucherBulkUploadFailEntity.setBeneficiaryName(benName);
-						voucherBulkUploadFailEntity.setMobile(mobile);
-						voucherBulkUploadFailEntity.setAmount(amount);
-						voucherBulkUploadFailEntity.setStartDate(stDate);
-						voucherBulkUploadFailEntity.setExpDate(etDate);
-						LocalDate curDate = LocalDate.now();
-						voucherBulkUploadFailEntity.setCreationDate(curDate);
-						voucherBulkUploadFailEntity.setMessage(message);
-						voucherBulkUploadFailEntity.setOrgId(orgId);
-						erupiVoucherBulkDao.saveFailDetails(voucherBulkUploadFailEntity);
-						failCount++;
-					}
-				}
-
-				
-			}
-
-			voucherBulkUploadEntity.setTotalCount(String.valueOf(totalCount));
-			voucherBulkUploadEntity.setSuccessCount(String.valueOf(successCount));
-			voucherBulkUploadEntity.setFailCount(String.valueOf(failCount));
-			erupiVoucherBulkDao.saveDetails(voucherBulkUploadEntity);
-
-			List<VoucherBulkUploadSuccessEntity> voucherSuccessList = erupiVoucherBulkDao.findSuccessList(orgId,
-					uniqueFileName);
-			List<VoucherBulkUploadFailEntity> voucherFailList = erupiVoucherBulkDao.findFailList(orgId, uniqueFileName);
-			bulkupload.setTotalCount(String.valueOf(totalCount));
-			bulkupload.setSuccessCount(String.valueOf(successCount));
-			bulkupload.setFailCount(String.valueOf(failCount));
-			bulkupload.setSuccess(voucherSuccessList);
-			bulkupload.setFail(voucherFailList);
-		} catch (Exception e) {
-			e.printStackTrace();
-			response = MessageConstant.RESPONSE_FAILED;
-			logger.error("Error :: " + e.getMessage());
-
-		}
-		return bulkupload;
-	}
+//	@Override
+//	public ErupiVoucherBulkUploadSFListResponse saveErupiVoucherBulkFile(
+//			ErupiVoucherBulkUploadRequest request) {
+//
+//		VoucherBulkUploadEntity voucherBulkUploadEntity = new VoucherBulkUploadEntity();
+//		ErupiVoucherBulkUploadSFListResponse bulkupload = new ErupiVoucherBulkUploadSFListResponse();
+//		String response = "";
+//		try {
+//
+//			response = MessageConstant.RESPONSE_FAILED;
+//			Long orgId = request.getOrgId();
+//			Long voucherId=request.getVoucherId();
+//			String filename = request.getFileName();
+//			String extn = CommonUtility.getFileExtension(filename);
+//			String fileNameWithout = filename.substring(0, filename.lastIndexOf("."));
+//			String uniqueFileName = CommonUtility.generateUniqueFileName(fileNameWithout, request.getOrgId(), extn);
+//			LocalDate eventDate = LocalDate.now();
+//			CopyUtility.copyProperties(request, voucherBulkUploadEntity);
+//			voucherBulkUploadEntity.setCreationDate(eventDate);
+//			voucherBulkUploadEntity.setFile(request.getFile());
+//			voucherBulkUploadEntity.setFileName(uniqueFileName);
+//			voucherBulkUploadEntity.setOrgId(orgId);
+//			
+//			//voucherBulkUploadEntity.setRedemtionType(re);
+//			voucherBulkUploadEntity = erupiVoucherBulkDao.saveDetails(voucherBulkUploadEntity);
+//
+//			byte[] decodedBytes = request.getFile();
+//			// Convert byte[] to InputStream
+//			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
+//			// Read Excel file using Apache POI
+//			XSSFWorkbook workbook = null;
+//			try {
+//				workbook = new XSSFWorkbook(byteArrayInputStream);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//
+//			Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
+//			Iterator<Row> rowIterator = sheet.iterator();
+//			boolean isHeaderRow = true;
+//			int totalCount = 0;
+//			int successCount = 0;
+//			int failCount = 0;
+//			while (rowIterator.hasNext()) {
+//				Row row = rowIterator.next();
+//				if (isHeaderRow) {
+//					// Process the header row
+//					String benName = row.getCell(1).getStringCellValue();
+//					String mobile = row.getCell(2).getStringCellValue();
+//					String amount = row.getCell(3).getStringCellValue();
+//					String starDate = row.getCell(4).getStringCellValue();
+//					String expDate = row.getCell(5).getStringCellValue();
+//					totalCount = 0;
+//					isHeaderRow = false;
+//				} else {
+//					// Process data row
+//					totalCount++;
+//					String voucherType = row.getCell(1).getStringCellValue();
+//					String benName = row.getCell(2).getStringCellValue();
+//					String mobile = "";
+//					if (row.getCell(3).getCellType() == CellType.STRING) {
+//						mobile = row.getCell(3).getStringCellValue();
+//					} else {
+//						mobile = String.valueOf((long) row.getCell(3).getNumericCellValue());
+//					}
+//					String amount = "";
+//					if (row.getCell(4).getCellType() == CellType.STRING) {
+//						amount = row.getCell(4).getStringCellValue();
+//					} else {
+//						amount = String.valueOf(row.getCell(4).getNumericCellValue());
+//					}
+//					Date starDate = row.getCell(5).getDateCellValue();
+//					LocalDate stDate = CommonUtility.convertToLocalDate(starDate);
+//					Date endDate = row.getCell(6).getDateCellValue();
+//					LocalDate etDate = CommonUtility.convertToLocalDate(endDate);
+//					//System.out.println(etDate);
+//
+//					boolean mob = CommonUtility.isValid(mobile);
+//					boolean name = CommonUtility.isValidName(benName);
+//					
+//					boolean amountValid = CommonUtility.isValidAmount(amount,applicationConstantConfig.voucherCreationMinAmount,applicationConstantConfig.voucherCreationMaxAmount);
+//					boolean expDateValid = CommonUtility.checkDate(etDate.toString());
+//					String message = "";
+//					message = mob == false ? "Invalid Mobile " : "";
+//					// message=message==""?""
+//					message += name == false ? "Invalid name" : "";
+//					message += expDateValid == false ? "Invalid Date" : "";
+//					
+//					if (mob && name && amountValid && expDateValid) {		
+//						
+//						saveSuccess(request,voucherBulkUploadEntity.getId(),uniqueFileName,voucherType,
+//								benName,mobile,amount,stDate,etDate,orgId,voucherId,"createdby");
+//						successCount++;
+//
+//					} else {
+//						VoucherBulkUploadFailEntity voucherBulkUploadFailEntity = new VoucherBulkUploadFailEntity();
+//						
+//						CopyUtility.copyProperties(request, voucherBulkUploadFailEntity);
+//						voucherBulkUploadFailEntity.setBulktblId(voucherBulkUploadEntity.getId());
+//						voucherBulkUploadFailEntity.setFileName(uniqueFileName);
+//						voucherBulkUploadFailEntity.setVoucherType(voucherType);
+//						voucherBulkUploadFailEntity.setRedemtionType(voucherType);
+//						voucherBulkUploadFailEntity.setBeneficiaryName(benName);
+//						voucherBulkUploadFailEntity.setMobile(mobile);
+//						voucherBulkUploadFailEntity.setAmount(amount);
+//						voucherBulkUploadFailEntity.setStartDate(stDate);
+//						voucherBulkUploadFailEntity.setExpDate(etDate);
+//						LocalDate curDate = LocalDate.now();
+//						voucherBulkUploadFailEntity.setCreationDate(curDate);
+//						voucherBulkUploadFailEntity.setMessage(message);
+//						voucherBulkUploadFailEntity.setOrgId(orgId);
+//						erupiVoucherBulkDao.saveFailDetails(voucherBulkUploadFailEntity);
+//						failCount++;
+//					}
+//				}
+//
+//				
+//			}
+//
+//			voucherBulkUploadEntity.setTotalCount(String.valueOf(totalCount));
+//			voucherBulkUploadEntity.setSuccessCount(String.valueOf(successCount));
+//			voucherBulkUploadEntity.setFailCount(String.valueOf(failCount));
+//			erupiVoucherBulkDao.saveDetails(voucherBulkUploadEntity);
+//
+//			List<VoucherBulkUploadSuccessEntity> voucherSuccessList = erupiVoucherBulkDao.findSuccessList(orgId,
+//					uniqueFileName);
+//			List<VoucherBulkUploadFailEntity> voucherFailList = erupiVoucherBulkDao.findFailList(orgId, uniqueFileName);
+//			bulkupload.setTotalCount(String.valueOf(totalCount));
+//			bulkupload.setSuccessCount(String.valueOf(successCount));
+//			bulkupload.setFailCount(String.valueOf(failCount));
+//			bulkupload.setSuccess(voucherSuccessList);
+//			bulkupload.setFail(voucherFailList);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response = MessageConstant.RESPONSE_FAILED;
+//			logger.error("Error :: " + e.getMessage());
+//
+//		}
+//		return bulkupload;
+//	}
 
 	@Override
 	public List<ErupiVoucherCreateDetailsRequest> createErupiVoucherBulkFile(
@@ -307,111 +307,111 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		erupiVoucherBulkDao.saveSuccessDetails(voucherBulkUploadSuccessEntity);
 	}
 
-	@Override
-	public ErupiVoucherMasterUploadSFResponse saveErupiVoucherMasterFile(
-			ErupiVoucherMasterUploadRequest request) {
-		VoucherMasterUploadEntity voucherMasterUploadEntity = new VoucherMasterUploadEntity();
-		ErupiVoucherMasterUploadSFResponse bulkupload = new ErupiVoucherMasterUploadSFResponse();
-		String response = "";
-		try {
-
-			response = MessageConstant.RESPONSE_FAILED;
-			//Long orgId = request.getOrgId();
-			Long voucherId=request.getVoucherId();
-			String filename = request.getFileName();
-			String extn = CommonUtility.getFileExtension(filename);
-			String fileNameWithout = filename.substring(0, filename.lastIndexOf("."));
-			String uniqueFileName = CommonUtility.generateUniqueFileNameWithoutOrg(fileNameWithout, extn);
-			LocalDate eventDate = LocalDate.now();
-			CopyUtility.copyProperties(request, voucherMasterUploadEntity);
-			voucherMasterUploadEntity.setCreationDate(eventDate);
-			voucherMasterUploadEntity.setFile(request.getFile());
-			voucherMasterUploadEntity.setFileName(uniqueFileName);
-			//voucherBulkUploadEntity.setRedemtionType(re);
-			voucherMasterUploadEntity = erupiVoucherBulkDao.saveDetails(voucherMasterUploadEntity);
-
-			byte[] decodedBytes = request.getFile();
-			// Convert byte[] to InputStream
-//			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
-//			// Read Excel file using Apache POI
-//			XSSFWorkbook workbook = null;
-//			try {
-//				workbook = new XSSFWorkbook(byteArrayInputStream);
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
-
-	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(byteArrayInputStream))) {
-	        	String header = reader.readLine(); // Discard header
-	            String line;
-	            while ((line = reader.readLine()) != null) {
-	                String[] values = line.split(","); // Split by commas for CSV format
-	                String  purposeCode=values[0];
-	                String  purposeDesc=values[1];
-	                String  mcc=values[2];
-	                String  mccDescription=values[3];	                  
-	               
-	                System.out.println();
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-
-//			Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
-//			Iterator<Row> rowIterator = sheet.iterator();
-//			boolean isHeaderRow = true;
-//			int totalCount = 0;
-//			int successCount = 0;
-//			int failCount = 0;
-//			while (rowIterator.hasNext()) {
-//				Row row = rowIterator.next();
-//				if (isHeaderRow) {
-//					// Process the header row
-//					String benName = row.getCell(1).getStringCellValue();
-//					String mobile = row.getCell(2).getStringCellValue();
-//					String amount = row.getCell(3).getStringCellValue();
-//					String starDate = row.getCell(4).getStringCellValue();
-//					String expDate = row.getCell(5).getStringCellValue();
-//					totalCount = 0;
-//					isHeaderRow = false;
-//				} else {
-//					// Process data row
-//					totalCount++;
-//					String voucherType = row.getCell(1).getStringCellValue();
-//					String benName = row.getCell(2).getStringCellValue();
-//					String mobile = "";
-//					if (row.getCell(3).getCellType() == CellType.STRING) {
-//						mobile = row.getCell(3).getStringCellValue();
-//					} else {
-//						mobile = String.valueOf((long) row.getCell(3).getNumericCellValue());
-//					}
-//					String amount = "";
-//					if (row.getCell(4).getCellType() == CellType.STRING) {
-//						amount = row.getCell(4).getStringCellValue();
-//					} else {
-//						amount = String.valueOf(row.getCell(4).getNumericCellValue());
-//					}
-//					Date starDate = row.getCell(5).getDateCellValue();
-//					LocalDate stDate = CommonUtility.convertToLocalDate(starDate);
-//					Date endDate = row.getCell(6).getDateCellValue();
-//					LocalDate etDate = CommonUtility.convertToLocalDate(endDate);
-//					//System.out.println(etDate);
+//	@Override
+//	public ErupiVoucherMasterUploadSFResponse saveErupiVoucherMasterFile(
+//			ErupiVoucherMasterUploadRequest request) {
+//		VoucherMasterUploadEntity voucherMasterUploadEntity = new VoucherMasterUploadEntity();
+//		ErupiVoucherMasterUploadSFResponse bulkupload = new ErupiVoucherMasterUploadSFResponse();
+//		String response = "";
+//		try {
 //
-//					
-//				}
-
-				
-			//}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response = MessageConstant.RESPONSE_FAILED;
-			logger.error("Error :: " + e.getMessage());
-
-		}
-		return bulkupload;
-	}
+//			response = MessageConstant.RESPONSE_FAILED;
+//			//Long orgId = request.getOrgId();
+//			Long voucherId=request.getVoucherId();
+//			String filename = request.getFileName();
+//			String extn = CommonUtility.getFileExtension(filename);
+//			String fileNameWithout = filename.substring(0, filename.lastIndexOf("."));
+//			String uniqueFileName = CommonUtility.generateUniqueFileNameWithoutOrg(fileNameWithout, extn);
+//			LocalDate eventDate = LocalDate.now();
+//			CopyUtility.copyProperties(request, voucherMasterUploadEntity);
+//			voucherMasterUploadEntity.setCreationDate(eventDate);
+//			voucherMasterUploadEntity.setFile(request.getFile());
+//			voucherMasterUploadEntity.setFileName(uniqueFileName);
+//			//voucherBulkUploadEntity.setRedemtionType(re);
+//			voucherMasterUploadEntity = erupiVoucherBulkDao.saveDetails(voucherMasterUploadEntity);
+//
+//			byte[] decodedBytes = request.getFile();
+//			// Convert byte[] to InputStream
+////			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
+////			// Read Excel file using Apache POI
+////			XSSFWorkbook workbook = null;
+////			try {
+////				workbook = new XSSFWorkbook(byteArrayInputStream);
+////			} catch (IOException e) {
+////				e.printStackTrace();
+////			}
+//			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
+//
+//	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(byteArrayInputStream))) {
+//	        	String header = reader.readLine(); // Discard header
+//	            String line;
+//	            while ((line = reader.readLine()) != null) {
+//	                String[] values = line.split(","); // Split by commas for CSV format
+//	                String  purposeCode=values[0];
+//	                String  purposeDesc=values[1];
+//	                String  mcc=values[2];
+//	                String  mccDescription=values[3];	                  
+//	               
+//	                System.out.println();
+//	            }
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
+//	        }
+//
+////			Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
+////			Iterator<Row> rowIterator = sheet.iterator();
+////			boolean isHeaderRow = true;
+////			int totalCount = 0;
+////			int successCount = 0;
+////			int failCount = 0;
+////			while (rowIterator.hasNext()) {
+////				Row row = rowIterator.next();
+////				if (isHeaderRow) {
+////					// Process the header row
+////					String benName = row.getCell(1).getStringCellValue();
+////					String mobile = row.getCell(2).getStringCellValue();
+////					String amount = row.getCell(3).getStringCellValue();
+////					String starDate = row.getCell(4).getStringCellValue();
+////					String expDate = row.getCell(5).getStringCellValue();
+////					totalCount = 0;
+////					isHeaderRow = false;
+////				} else {
+////					// Process data row
+////					totalCount++;
+////					String voucherType = row.getCell(1).getStringCellValue();
+////					String benName = row.getCell(2).getStringCellValue();
+////					String mobile = "";
+////					if (row.getCell(3).getCellType() == CellType.STRING) {
+////						mobile = row.getCell(3).getStringCellValue();
+////					} else {
+////						mobile = String.valueOf((long) row.getCell(3).getNumericCellValue());
+////					}
+////					String amount = "";
+////					if (row.getCell(4).getCellType() == CellType.STRING) {
+////						amount = row.getCell(4).getStringCellValue();
+////					} else {
+////						amount = String.valueOf(row.getCell(4).getNumericCellValue());
+////					}
+////					Date starDate = row.getCell(5).getDateCellValue();
+////					LocalDate stDate = CommonUtility.convertToLocalDate(starDate);
+////					Date endDate = row.getCell(6).getDateCellValue();
+////					LocalDate etDate = CommonUtility.convertToLocalDate(endDate);
+////					//System.out.println(etDate);
+////
+////					
+////				}
+//
+//				
+//			//}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response = MessageConstant.RESPONSE_FAILED;
+//			logger.error("Error :: " + e.getMessage());
+//
+//		}
+//		return bulkupload;
+//	}
 
 	@Override
 	public ErupiVoucherBulkUploadSFListResponse saveErupiVoucherBulkFileNew(

@@ -9,15 +9,13 @@ import com.cotodel.hrms.auth.server.dto.bulk.ErupiBulkIdRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadSFListResponse;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkVoucherCreateRequest;
-import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherMasterUploadRequest;
-import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherMasterUploadSFResponse;
 
 @Service
 public interface ErupiVoucherCreationBulkService {
-	public ErupiVoucherBulkUploadSFListResponse saveErupiVoucherBulkFile(ErupiVoucherBulkUploadRequest erupiVoucherBulkUploadRequest);
+	//public ErupiVoucherBulkUploadSFListResponse saveErupiVoucherBulkFile(ErupiVoucherBulkUploadRequest erupiVoucherBulkUploadRequest);
 	public List<ErupiVoucherCreateDetailsRequest> createErupiVoucherBulkFile(ErupiVoucherBulkVoucherCreateRequest erupiVoucherBulkUploadRequest);
 	public int updateErupiVoucherStatus(ErupiBulkIdRequest eBulkIdRequest);
-	public ErupiVoucherMasterUploadSFResponse saveErupiVoucherMasterFile(ErupiVoucherMasterUploadRequest erupiVoucherBulkUploadRequest);
+	//public ErupiVoucherMasterUploadSFResponse saveErupiVoucherMasterFile(ErupiVoucherMasterUploadRequest erupiVoucherBulkUploadRequest);
 	
 	public ErupiVoucherBulkUploadSFListResponse saveErupiVoucherBulkFileNew(ErupiVoucherBulkUploadRequest erupiVoucherBulkUploadRequest);
 	public ErupiVoucherBulkVoucherCreateRequest createErupiVoucherBulkFileHash(ErupiVoucherBulkVoucherCreateRequest erupiVoucherBulkUploadRequest);

@@ -1,8 +1,5 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -45,36 +42,36 @@ public class EmployeeServiceImpl implements EmployeeService{
 
 	}
 
-	@Override
-	public EmployeeRequest getEmployeeDetails(Long empid) {
-		// TODO Auto-generated method stub
-		EmployeeEntity employee=new EmployeeEntity();
-		EmployerEntity employer=new EmployerEntity();
-		EmployeeRequest request=new EmployeeRequest();
-		employee=employeeDao.getUser(empid);
-		CopyUtility.copyProperties(employee,request);
-		
-		//request.set
-		//System.out.println(employee.toString());
-		return request;
-	}
+//	@Override
+//	public EmployeeRequest getEmployeeDetails(Long empid) {
+//		// TODO Auto-generated method stub
+//		EmployeeEntity employee=new EmployeeEntity();
+//		EmployerEntity employer=new EmployerEntity();
+//		EmployeeRequest request=new EmployeeRequest();
+//		employee=employeeDao.getUser(empid);
+//		CopyUtility.copyProperties(employee,request);
+//		
+//		//request.set
+//		//System.out.println(employee.toString());
+//		return request;
+//	}
 
-	@Override
-	public List<Employee> getEmployeeDetailsList() {
-		List<EmployeeEntity> employee=null;
-		List<Employee> employeeList=new ArrayList<Employee>();
-		List<EmployeeEntity> employeeList1=new ArrayList<EmployeeEntity>();
-		employee=employeeDao.getEmployee();
-		Employee employee3=new Employee();
-		for (EmployeeEntity employee2 : employee) {
-			//employee3=null;
-			//CopyUtility.copyProperties(employee2,employee3);
-			employee3=getValue(employee2);
-			employeeList.add(employee3);
-			//employeeList1.add(employee2);
-		}
-		return employeeList;
-	}
+//	@Override
+//	public List<Employee> getEmployeeDetailsList() {
+//		List<EmployeeEntity> employee=null;
+//		List<Employee> employeeList=new ArrayList<Employee>();
+//		List<EmployeeEntity> employeeList1=new ArrayList<EmployeeEntity>();
+//		employee=employeeDao.getEmployee();
+//		Employee employee3=new Employee();
+//		for (EmployeeEntity employee2 : employee) {
+//			//employee3=null;
+//			//CopyUtility.copyProperties(employee2,employee3);
+//			employee3=getValue(employee2);
+//			employeeList.add(employee3);
+//			//employeeList1.add(employee2);
+//		}
+//		return employeeList;
+//	}
 	
 	public Employee getValue(EmployeeEntity emp) {
 		Employee employee2=new Employee();

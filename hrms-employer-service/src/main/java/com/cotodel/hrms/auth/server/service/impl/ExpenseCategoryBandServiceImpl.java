@@ -119,36 +119,36 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 	}
 
 
-	@Override
-	public ExpenseCategoryBandRequest getCompEmployeeBandDetails() {
-		ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
-		ExpenseCategoryBandRequest expenseCategoryBandRequest=new ExpenseCategoryBandRequest();
-		List<CategoryEmployeeBandEntity> categoryEmployeeBandEntity=new ArrayList<CategoryEmployeeBandEntity>();
-
-		String response=MessageConstant.RESPONSE_FAILED;
-		
-		try {
-			employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandId();
-			if(employeeBandEntity!=null) {
-				expenseCategoryBandRequest.setBandFlag(employeeBandEntity.getBandFlag());
-				expenseCategoryBandRequest.setBandId(employeeBandEntity.getBandId());
-				expenseCategoryBandRequest.setDayToExpiry(employeeBandEntity.getDayToExpiry());
-				expenseCategoryBandRequest.setEmployerId(employeeBandEntity.getEmployerId());
-				expenseCategoryBandRequest.setExpenseCategory(employeeBandEntity.getExpenseCategory());
-				expenseCategoryBandRequest.setExpenseCode(employeeBandEntity.getExpenseCode());
-				categoryEmployeeBandEntity=categoryEmpBandDao.getDetails(employeeBandEntity.getId());
-				expenseCategoryBandRequest.setList(categoryEmployeeBandEntity);
-			}
-			
-			response=MessageConstant.RESPONSE_SUCCESS;
-			expenseCategoryBandRequest.setResponse(response);
-		} catch (Exception e) {
-			//e.printStackTrace();
-			response=MessageConstant.RESPONSE_FAILED;
-			//companyEmployeeRequest.setResponse(response);
-		}
-		return expenseCategoryBandRequest;
-	}
+//	@Override
+//	public ExpenseCategoryBandRequest getCompEmployeeBandDetails() {
+//		ExpenseCategoryBandEntity employeeBandEntity=new ExpenseCategoryBandEntity();
+//		ExpenseCategoryBandRequest expenseCategoryBandRequest=new ExpenseCategoryBandRequest();
+//		List<CategoryEmployeeBandEntity> categoryEmployeeBandEntity=new ArrayList<CategoryEmployeeBandEntity>();
+//
+//		String response=MessageConstant.RESPONSE_FAILED;
+//		
+//		try {
+//			employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandId();
+//			if(employeeBandEntity!=null) {
+//				expenseCategoryBandRequest.setBandFlag(employeeBandEntity.getBandFlag());
+//				expenseCategoryBandRequest.setBandId(employeeBandEntity.getBandId());
+//				expenseCategoryBandRequest.setDayToExpiry(employeeBandEntity.getDayToExpiry());
+//				expenseCategoryBandRequest.setEmployerId(employeeBandEntity.getEmployerId());
+//				expenseCategoryBandRequest.setExpenseCategory(employeeBandEntity.getExpenseCategory());
+//				expenseCategoryBandRequest.setExpenseCode(employeeBandEntity.getExpenseCode());
+//				categoryEmployeeBandEntity=categoryEmpBandDao.getDetails(employeeBandEntity.getId());
+//				expenseCategoryBandRequest.setList(categoryEmployeeBandEntity);
+//			}
+//			
+//			response=MessageConstant.RESPONSE_SUCCESS;
+//			expenseCategoryBandRequest.setResponse(response);
+//		} catch (Exception e) {
+//			//e.printStackTrace();
+//			response=MessageConstant.RESPONSE_FAILED;
+//			//companyEmployeeRequest.setResponse(response);
+//		}
+//		return expenseCategoryBandRequest;
+//	}
 
 
 	@Override

@@ -30,17 +30,17 @@ public class VoucherTypeMasterServiceImpl implements VoucherTypeMasterService{
 	@Autowired
 	VoucherTypeMasterDao voucherTypeMasterDao;
 
-	@Override
-	public List<VoucherTypeMasterEntity> getVoucherTypeMaster() {
-		
-		return voucherTypeMasterRepository.findVoucherTypeMasterList();
-	}
+//	@Override
+//	public List<VoucherTypeMasterEntity> getVoucherTypeMaster() {
+//		
+//		return voucherTypeMasterRepository.findVoucherTypeMasterList();
+//	}
 
-	@Override
-	public List<VoucherTypeDto> getVoucherTypeList() {
-		
-		return voucherTypeMasterRepository.findAllUserDTOs();
-	}
+//	@Override
+//	public List<VoucherTypeDto> getVoucherTypeList() {
+//		
+//		return voucherTypeMasterRepository.findAllUserDTOs();
+//	}
 
 	@Override
 	public VoucherTypeMasterEntity getVoucherTypeMasterDetail(String voucherCode) {

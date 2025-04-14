@@ -49,107 +49,107 @@ public class VoucherTypeMasterController {
 	ApplicationConstantConfig applicationConstantConfig;	
 	
 	
-	@Operation(summary = "This API will provide the Save User Details ", security = {
-    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-    @ApiResponses(value = {
-    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-    @GetMapping(value = "/get/voucherTypeMasterList",produces = {"application/json"}, 
-    consumes = {"application/json","application/text"})
-    public ResponseEntity<Object> voucherTypeMasterGetList(HttpServletRequest request) {
+//	@Operation(summary = "This API will provide the Save User Details ", security = {
+//    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//    @ApiResponses(value = {
+//    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//    @GetMapping(value = "/get/voucherTypeMasterList",produces = {"application/json"}, 
+//    consumes = {"application/json","application/text"})
+//    public ResponseEntity<Object> voucherTypeMasterGetList(HttpServletRequest request) {
+//	 
+//    log.info("inside voucherTypeMasterList-------");
+//    	String message = "";
+//    	List<VoucherTypeMasterEntity> response=null;
+//    	try {	    		
+//    		String companyId = request.getHeader("companyId");
+//			SetDatabaseTenent.setDataSource(companyId);
+//			
+//			response=voucherTypeMasterService.getVoucherTypeMaster();
+//			
+//    		if(response!=null) {
+//    			return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//    		}else {
+//    			return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//    		}
+//    	}catch (Exception e) {				
+//    		//e.printStackTrace();
+//    		log.error("error in getBankMasterDetailsList====="+e);
+//    		//message=e.getMessage();
+//		}
+//        
+//        return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//    }
 	 
-    log.info("inside voucherTypeMasterList-------");
-    	String message = "";
-    	List<VoucherTypeMasterEntity> response=null;
-    	try {	    		
-    		String companyId = request.getHeader("companyId");
-			SetDatabaseTenent.setDataSource(companyId);
-			
-			response=voucherTypeMasterService.getVoucherTypeMaster();
-			
-    		if(response!=null) {
-    			return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-    		}else {
-    			return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-    		}
-    	}catch (Exception e) {				
-    		//e.printStackTrace();
-    		log.error("error in getBankMasterDetailsList====="+e);
-    		//message=e.getMessage();
-		}
-        
-        return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-    }
-	 
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @PostMapping(value = "/get/voucherTypeMasterList",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"})
-	    public ResponseEntity<Object> voucherTypeMasterList(HttpServletRequest request) {
-		 
-	    log.info("inside voucherTypeMasterList-------");
-	    	String message = "";
-	    	List<VoucherTypeMasterEntity> response=null;
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				response=voucherTypeMasterService.getVoucherTypeMaster();
-				
-	    		if(response!=null) {
-	    			return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
-	    	}catch (Exception e) {				
-	    		//e.printStackTrace();
-	    		log.error("error in getBankMasterDetailsList====="+e);
-	    		//message=e.getMessage();
-			}
-	        
-	        return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @PostMapping(value = "/get/voucherTypeMasterList",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"})
+//	    public ResponseEntity<Object> voucherTypeMasterList(HttpServletRequest request) {
+//		 
+//	    log.info("inside voucherTypeMasterList-------");
+//	    	String message = "";
+//	    	List<VoucherTypeMasterEntity> response=null;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				response=voucherTypeMasterService.getVoucherTypeMaster();
+//				
+//	    		if(response!=null) {
+//	    			return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		//e.printStackTrace();
+//	    		log.error("error in getBankMasterDetailsList====="+e);
+//	    		//message=e.getMessage();
+//			}
+//	        
+//	        return ResponseEntity.ok(new VoucherTypeMasterListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//	    }
 	
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @PostMapping(value = "/get/voucherTypeList",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"})
-	    public ResponseEntity<Object> voucherTypeList(HttpServletRequest request) {
-		 
-	    log.info("inside voucherTypeList-------");
-	    	String message = "";
-	    	List<VoucherTypeDto> response=null;
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				response=voucherTypeMasterService.getVoucherTypeList();
-				
-	    		if(response!=null) {
-	    			return ResponseEntity.ok(new VoucherTypeDtoListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}else {
-	    			return ResponseEntity.ok(new VoucherTypeDtoListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
-	    		}
-	    	}catch (Exception e) {				
-	    		//e.printStackTrace();
-	    		log.error("error in voucherTypeList====="+e);
-	    		//message=e.getMessage();
-			}
-	        
-	        return ResponseEntity.ok(new VoucherTypeDtoListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
-	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @PostMapping(value = "/get/voucherTypeList",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"})
+//	    public ResponseEntity<Object> voucherTypeList(HttpServletRequest request) {
+//		 
+//	    log.info("inside voucherTypeList-------");
+//	    	String message = "";
+//	    	List<VoucherTypeDto> response=null;
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				response=voucherTypeMasterService.getVoucherTypeList();
+//				
+//	    		if(response!=null) {
+//	    			return ResponseEntity.ok(new VoucherTypeDtoListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}else {
+//	    			return ResponseEntity.ok(new VoucherTypeDtoListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));
+//	    		}
+//	    	}catch (Exception e) {				
+//	    		//e.printStackTrace();
+//	    		log.error("error in voucherTypeList====="+e);
+//	    		//message=e.getMessage();
+//			}
+//	        
+//	        return ResponseEntity.ok(new VoucherTypeDtoListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp()));	        
+//	    }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})

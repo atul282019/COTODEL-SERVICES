@@ -137,44 +137,44 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 		return user;
 	}
 
-	@Override
-	public EmployeeProfileRequest updateProfileDetails(EmployeeProfileRequest user) {
-		EmployerEntity employerEntity=null;
-		String response="";
-		try {
-			response=MessageConstant.RESPONSE_FAILED;
-			user.setResponse(response);
-			
-		//Date date = new Date();
-		//LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		
-//		SignUpEntity signUpEntity=signUpDao.getUser(user.getSignupId());
-//		signUpEntity.setOrgType(user.getOrgType());
-//		signUpDao.saveUserDetails(signUpEntity);
-//		user.setSignupId(signUpEntity.getSignupId());
-		EmployerEntity employer=employerDao.getUser(user.getEmployerId());
-		
-		employer.setRunPayrollFlag(user.isRunPayrollFlag());
-		employer.setSalaryAdvancesFlag(user.isSalaryAdvancesFlag());
-		
-		employerEntity=employerDao.saveDetails(employer);
-		user.setEmployerId(employerEntity.getEmployerId());
-		//
-		EmployeeEntity employee=employeeDao.getUser(user.getEmployeeId());
-		employee.setEmployer(employer);
-		employee.setPan(user.getPan());
-		
-		employee=employeeDao.saveDetails(employee);
-		user.setEmployeeId(employee.getEmployeeId());
-
-		response=MessageConstant.RESPONSE_SUCCESS;
-		user.setResponse(response);
-		} catch (Exception e) {
-			response=MessageConstant.RESPONSE_FAILED;
-			user.setResponse(response);
-		}
-		return user;
-	}
+//	@Override
+//	public EmployeeProfileRequest updateProfileDetails(EmployeeProfileRequest user) {
+//		EmployerEntity employerEntity=null;
+//		String response="";
+//		try {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			user.setResponse(response);
+//			
+//		//Date date = new Date();
+//		//LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//		
+////		SignUpEntity signUpEntity=signUpDao.getUser(user.getSignupId());
+////		signUpEntity.setOrgType(user.getOrgType());
+////		signUpDao.saveUserDetails(signUpEntity);
+////		user.setSignupId(signUpEntity.getSignupId());
+//		EmployerEntity employer=employerDao.getUser(user.getEmployerId());
+//		
+//		employer.setRunPayrollFlag(user.isRunPayrollFlag());
+//		employer.setSalaryAdvancesFlag(user.isSalaryAdvancesFlag());
+//		
+//		employerEntity=employerDao.saveDetails(employer);
+//		user.setEmployerId(employerEntity.getEmployerId());
+//		//
+//		EmployeeEntity employee=employeeDao.getUser(user.getEmployeeId());
+//		employee.setEmployer(employer);
+//		employee.setPan(user.getPan());
+//		
+//		employee=employeeDao.saveDetails(employee);
+//		user.setEmployeeId(employee.getEmployeeId());
+//
+//		response=MessageConstant.RESPONSE_SUCCESS;
+//		user.setResponse(response);
+//		} catch (Exception e) {
+//			response=MessageConstant.RESPONSE_FAILED;
+//			user.setResponse(response);
+//		}
+//		return user;
+//	}
 	public EmployerEntity getEmployerDeails(EmployerEntity employer,EmployeeProfileRequest user) {
 		employer.setOrgType(user.getOrgType());
 		employer.setGstin(user.getGstnNo());
@@ -200,73 +200,73 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService{
 	return employer;
 }
 
-	@Override
-	public List<EmployeeProfileEntity> getEmpProfileList(Long empid) {
-		// TODO Auto-generated method stub
-		return emplProfileDao.getEmployeeDetails(empid);
-	}
+//	@Override
+//	public List<EmployeeProfileEntity> getEmpProfileList(Long empid) {
+//		// TODO Auto-generated method stub
+//		return emplProfileDao.getEmployeeDetails(empid);
+//	}
 
-	@Override
-	public EmployeeProfileEntity getEmpProfile( Long employerid) {
-		// TODO Auto-generated method stub
-		EmployeeProfileEntity employeeProfileEntity=new EmployeeProfileEntity();
-		try {
-			employeeProfileEntity=emplProfileDao.getEmplDetails(employerid);
-			if(employeeProfileEntity==null) {
-				String response1="";
-				String tokenvalue="";
-				TokenGeneration token=new TokenGeneration();
-				UserRequest userRequest=new UserRequest();
-				userRequest.setId(employerid);
-				tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
-				 response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
-						applicationConstantConfig.userServiceApiUrl+CommonUtils.existOrgid,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
-				if (!ObjectUtils.isEmpty(response1)) {
-					JSONObject demoRes = new JSONObject(response1);
-					boolean status = demoRes.getBoolean("status");
-					if (status) {
-						
-						if (demoRes.has("userEntity")) {
-							JSONObject userEntity = demoRes.getJSONObject("userEntity");
-							int role=userEntity.getInt("role_id");
-							if(role==1 || role==9) {
-								employeeProfileEntity=new EmployeeProfileEntity();
-								employeeProfileEntity.setProfileComplete(1);
-							}
-						}						
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return employeeProfileEntity;
-		
-	}
+//	@Override
+//	public EmployeeProfileEntity getEmpProfile( Long employerid) {
+//		// TODO Auto-generated method stub
+//		EmployeeProfileEntity employeeProfileEntity=new EmployeeProfileEntity();
+//		try {
+//			employeeProfileEntity=emplProfileDao.getEmplDetails(employerid);
+//			if(employeeProfileEntity==null) {
+//				String response1="";
+//				String tokenvalue="";
+//				TokenGeneration token=new TokenGeneration();
+//				UserRequest userRequest=new UserRequest();
+//				userRequest.setId(employerid);
+//				tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
+//				 response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+//						applicationConstantConfig.userServiceApiUrl+CommonUtils.existOrgid,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+//				if (!ObjectUtils.isEmpty(response1)) {
+//					JSONObject demoRes = new JSONObject(response1);
+//					boolean status = demoRes.getBoolean("status");
+//					if (status) {
+//						
+//						if (demoRes.has("userEntity")) {
+//							JSONObject userEntity = demoRes.getJSONObject("userEntity");
+//							int role=userEntity.getInt("role_id");
+//							if(role==1 || role==9) {
+//								employeeProfileEntity=new EmployeeProfileEntity();
+//								employeeProfileEntity.setProfileComplete(1);
+//							}
+//						}						
+//					}
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return employeeProfileEntity;
+//		
+//	}
 
-	@Override
-	public List<EmployeeProfileAddress> getCompProfileAddress(Long empid) {
-		// TODO Auto-generated method stub
-		List<EmployeeProfileAddress> list=new ArrayList<>();
-		EmployeeProfileAddress employeeProfileAddresses=new EmployeeProfileAddress();
-		//EmployeeProfileAddress employeeProfileAddresses1=new EmployeeProfileAddress();
-		List<Object[]> addresses= emplProfileDao.getCompAddress(empid);
-		for (Object[] objects : addresses) {
-			 Long id = ((BigInteger) objects[0]).longValue();			           
-	         String addressline = (String) objects[1]; 
-	         String officeaddres = (String) objects[2]; 
-	         
-	        // employeeProfileAddresses.setId(id);
-	        // employeeProfileAddresses.setOfficeAddress(addressline);
-	         String address=officeaddres+"-"+addressline;
-	        // list.add(employeeProfileAddresses);
-	         employeeProfileAddresses.setId(id);
-	         employeeProfileAddresses.setOfficeAddress(address);
-	         list.add(employeeProfileAddresses);
-		}
-		
-		return list;
-	}
+//	@Override
+//	public List<EmployeeProfileAddress> getCompProfileAddress(Long empid) {
+//		// TODO Auto-generated method stub
+//		List<EmployeeProfileAddress> list=new ArrayList<>();
+//		EmployeeProfileAddress employeeProfileAddresses=new EmployeeProfileAddress();
+//		//EmployeeProfileAddress employeeProfileAddresses1=new EmployeeProfileAddress();
+//		List<Object[]> addresses= emplProfileDao.getCompAddress(empid);
+//		for (Object[] objects : addresses) {
+//			 Long id = ((BigInteger) objects[0]).longValue();			           
+//	         String addressline = (String) objects[1]; 
+//	         String officeaddres = (String) objects[2]; 
+//	         
+//	        // employeeProfileAddresses.setId(id);
+//	        // employeeProfileAddresses.setOfficeAddress(addressline);
+//	         String address=officeaddres+"-"+addressline;
+//	        // list.add(employeeProfileAddresses);
+//	         employeeProfileAddresses.setId(id);
+//	         employeeProfileAddresses.setOfficeAddress(address);
+//	         list.add(employeeProfileAddresses);
+//		}
+//		
+//		return list;
+//	}
 	
 }

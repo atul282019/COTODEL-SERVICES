@@ -1,6 +1,7 @@
 package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -49,6 +50,9 @@ public class EmployeeBandEntity implements Serializable{
 	
 	@Column(name="intro_add_tier_flag")
 	private String introAddTierFlag;
+	
+	@Column(name = "creation_date")
+    private LocalDateTime creationDate;
 	
 	@Column(name="status")
 	private long status;	
