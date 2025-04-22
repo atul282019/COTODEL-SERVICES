@@ -42,4 +42,5 @@ public class TravelGetReimbursement {
     private String travelSubType;
     private String createdDate;
     private String createdTime;
+    private String requestType;
 }

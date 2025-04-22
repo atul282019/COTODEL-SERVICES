@@ -57,5 +57,7 @@ public class CategoryEmployeeBandEntity implements Serializable{
 	@Column(name="expense_category_id")
 	private Long expenseCategoryId;
 	
-
+	@Column(name="status")
+	private boolean status;
+	
 }

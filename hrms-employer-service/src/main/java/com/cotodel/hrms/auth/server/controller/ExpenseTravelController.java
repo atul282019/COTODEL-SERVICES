@@ -23,10 +23,13 @@ import com.cotodel.hrms.auth.server.dto.AdvanceTravelByIdResponse;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelCashRequest;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelCashResponse;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelDeleteResponse;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelDto;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelListDtoResponse;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelListResponse;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelRequest;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelResponse;
 import com.cotodel.hrms.auth.server.dto.ApprovalTravelReimbursement;
+import com.cotodel.hrms.auth.server.dto.ApprovalTravelReimbursementById;
 import com.cotodel.hrms.auth.server.dto.ExpanceTravelAdvance;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceNameListResponse;
@@ -315,8 +318,8 @@ public class ExpenseTravelController {
 	    	
 	    
 	    	String message = "";
-	    	List<AdvanceTravelRequestEntity> response=null;
-	    	AdvanceTravelListResponse advanceTravelListResponse;
+	    	List<AdvanceTravelDto> response=null;
+	    	AdvanceTravelListDtoResponse advanceTravelListResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
@@ -326,12 +329,12 @@ public class ExpenseTravelController {
 				
 				response=expenseTravelAdvanceService.getAdvenceTravelListByEmployerId(advanceTravelRequest.getEmployerId(),advanceTravelRequest.getEmployeeId());
 	    		if(response!=null && response.size()>0) {
-	    			advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			advanceTravelListResponse=new AdvanceTravelListDtoResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
 	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			advanceTravelListResponse=new AdvanceTravelListDtoResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
 	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    			return ResponseEntity.ok(jsonEncriptObject);
@@ -343,7 +346,7 @@ public class ExpenseTravelController {
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		advanceTravelListResponse=new AdvanceTravelListDtoResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
     			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
     			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {
@@ -552,23 +555,23 @@ public class ExpenseTravelController {
 	    	
 	    
 	    	String message = "";
-	    	List<AdvanceTravelRequestEntity> response=null;
-	    	AdvanceTravelListResponse advanceTravelListResponse;
+	    	List<AdvanceTravelDto> response=null;
+	    	AdvanceTravelListDtoResponse advanceTravelListResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
-				AdvanceTravelRequest advanceTravelRequest= EncryptionDecriptionUtil.convertFromJson(decript, AdvanceTravelRequest.class);
+				AdvanceTravelCashRequest advanceTravelRequest= EncryptionDecriptionUtil.convertFromJson(decript, AdvanceTravelCashRequest.class);
 				
 				response=expenseTravelAdvanceService.getAdvenceTravelApprovalEmployerId(advanceTravelRequest.getEmployerId());
 	    		if(response!=null && response.size()>0) {
-	    			advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			advanceTravelListResponse=new AdvanceTravelListDtoResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
 	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			advanceTravelListResponse=new AdvanceTravelListDtoResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
 	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    			return ResponseEntity.ok(jsonEncriptObject);
@@ -580,7 +583,7 @@ public class ExpenseTravelController {
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		advanceTravelListResponse=new AdvanceTravelListResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		advanceTravelListResponse=new AdvanceTravelListDtoResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
     			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(advanceTravelListResponse);
     			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {
@@ -661,7 +664,7 @@ public class ExpenseTravelController {
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
-				ApprovalTravelReimbursement approvalTravelReimbursement= EncryptionDecriptionUtil.convertFromJson(decript, ApprovalTravelReimbursement.class);
+				ApprovalTravelReimbursementById approvalTravelReimbursement= EncryptionDecriptionUtil.convertFromJson(decript, ApprovalTravelReimbursementById.class);
 				
 				response=expenseTravelAdvanceService.getAdvenceTravelListById(approvalTravelReimbursement.getId());
 	    		if(response!=null ) {

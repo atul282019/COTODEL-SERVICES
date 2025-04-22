@@ -72,7 +72,7 @@ public class EncryptionDecriptionUtil {
         String ivBase64 = Base64.getEncoder().encodeToString(encryptedDataResult[0]);
         String encryptedDataBase64 = Base64.getEncoder().encodeToString(encryptedDataResult[1]);
         //logger.info("createRequest :ivBase64:"+ivBase64);
-        System.out.println("createRequest :encryptedDataBase64:"+encryptedDataBase64);
+        //System.out.println("createRequest :encryptedDataBase64:"+encryptedDataBase64);
 //        // Create the JSON request
         EncriptResponse encriptResponse=new EncriptResponse();
         encriptResponse.setEncriptData(encryptedDataBase64);

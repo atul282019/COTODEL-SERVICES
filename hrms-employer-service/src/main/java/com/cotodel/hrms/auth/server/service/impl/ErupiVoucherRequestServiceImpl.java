@@ -58,6 +58,7 @@ public class ErupiVoucherRequestServiceImpl implements ErupiVoucherRequestServic
 			CopyUtility.copyProperties(request,erupiVoucherCreationRequestEntity);
 			erupiVoucherCreationRequestEntity.setCreationDate(LocalDateTime.now());
 			erupiVoucherCreationRequestEntity.setStatus(0);
+			erupiVoucherCreationRequestEntity.setAmount(amount);
 			erupiVoucherCreationRequestEntity.setStatusMessage("Requested");
 			erupiVoucherCreationRequestEntity=erupiVoucherRequestDao.saveDetails(erupiVoucherCreationRequestEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;

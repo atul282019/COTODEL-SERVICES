@@ -416,7 +416,11 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 				return request;
 			}
 			
-			
+			String message=ValidateConstants.validateMobile(request.getMobile());
+			if(message!=null && !message.equalsIgnoreCase("")) {
+				request.setResponse(message);
+				return request;
+			}
 			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			userRequest.setUsername(request.getName());
 			userRequest.setMobile(request.getMobile());
@@ -682,6 +686,12 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 				return request;
 			}
 			
+			String message=ValidateConstants.validateMobile(request.getMobile());
+			if(message!=null && !message.equalsIgnoreCase("")) {
+				request.setResponse(message);
+				return request;
+			}
+			logger.info("request::update::"+request.toString());
 			tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			userRequest.setUsername(request.getName());
 			userRequest.setMobile(request.getMobile());
@@ -703,6 +713,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 					request.setResponse(response);
 					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
 					employeeOnboarding=employeeOnboardingDao.getEmployeeOnboardingId(request.getId());
+					logger.info("employeeOnboarding::update::"+employeeOnboarding.toString());
 					if(employeeOnboarding!=null) {
 						if(request.getProofOfIdentity()!=null) {
 							employeeOnboarding.setProofOfIdentity(request.getProofOfIdentity());
@@ -746,6 +757,8 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		} catch (Exception e) {
 			response = MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);
+			e.printStackTrace();
+			//logger.error("Error in  ::"+e.getMessage());
 		}
 		return request;
 

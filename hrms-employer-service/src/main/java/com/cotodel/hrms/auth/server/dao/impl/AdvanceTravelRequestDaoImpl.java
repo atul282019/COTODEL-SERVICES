@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.AdvanceTravelRequestDao;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelDto;
 import com.cotodel.hrms.auth.server.model.AdvanceTravelRequestEntity;
 import com.cotodel.hrms.auth.server.repository.AdvanceTravelRequestRepository;
 @Repository
@@ -22,13 +23,13 @@ public class AdvanceTravelRequestDaoImpl implements AdvanceTravelRequestDao{
 	}
 
 	@Override
-	public List<AdvanceTravelRequestEntity> findByEmployerId(Long employerId) {
+	public List<AdvanceTravelDto> findByEmployerId(Long employerId) {
 		
 		return advanceTravelRequestRepository.findEmployerId(employerId);
 	}
 
 	@Override
-	public List<AdvanceTravelRequestEntity> findByEmployeeId(Long employeeId) {
+	public List<AdvanceTravelDto> findByEmployeeId(Long employeeId) {
 		// TODO Auto-generated method stub
 		return advanceTravelRequestRepository.findEmployeeId(employeeId);
 	}
@@ -42,13 +43,13 @@ public class AdvanceTravelRequestDaoImpl implements AdvanceTravelRequestDao{
 	@Override
 	public List<AdvanceTravelRequestEntity> findByEmployerId(Long employerId, int status) {
 		// TODO Auto-generated method stub
-		return advanceTravelRequestRepository.findEmployerId(employerId,status);
+		return advanceTravelRequestRepository.findEmployerIdWithoutStatus(employerId);
 	}
 
 	@Override
 	public List<AdvanceTravelRequestEntity> findByEmployeeId(Long employeeId, int status) {
 		// TODO Auto-generated method stub
-		return advanceTravelRequestRepository.findEmployeeId(employeeId,status);
+		return advanceTravelRequestRepository.findEmployeeIdWithoutStatus(employeeId);
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class AdvanceTravelRequestDaoImpl implements AdvanceTravelRequestDao{
 	}
 
 	@Override
-	public List<AdvanceTravelRequestEntity> findApprovalByEmployerId(Long employerId) {
+	public List<AdvanceTravelDto> findApprovalByEmployerId(Long employerId) {
 		// TODO Auto-generated method stub
 		return advanceTravelRequestRepository.findApprovalEmployerId(employerId);
 	}

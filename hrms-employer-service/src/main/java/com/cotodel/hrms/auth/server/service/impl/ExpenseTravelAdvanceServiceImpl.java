@@ -16,6 +16,7 @@ import com.cotodel.hrms.auth.server.dao.ExpenseTravelAdvanceDao;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelAllRequest;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelAllUpdateRequest;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelCashRequest;
+import com.cotodel.hrms.auth.server.dto.AdvanceTravelDto;
 import com.cotodel.hrms.auth.server.dto.AdvanceTravelRequest;
 import com.cotodel.hrms.auth.server.dto.ApprovalTravelReimbursement;
 import com.cotodel.hrms.auth.server.dto.ExpanceTravelAdvance;
@@ -29,6 +30,7 @@ import com.cotodel.hrms.auth.server.repository.UploadSequenceRepository;
 import com.cotodel.hrms.auth.server.service.ExpenseTravelAdvanceService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.ValidateConstants;
 @Repository
 public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceService{
 
@@ -49,6 +51,18 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 		try {
 			response=MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);	
+			
+			String dataString = request.getEmployerId()+request.getAllowEmployeesTravel()
+		       +request.getAllowEmployeesCash()+request.getEmployeesAllow()
+		       +request.getNameEmployeesCash()+request.getDaysDisbursalCash()+
+		       request.getClientKey()+MessageConstant.SECRET_KEY;
+			
+			String hash=ValidateConstants.generateHash(dataString);
+			if(!request.getHash().equalsIgnoreCase(hash)) {
+				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}
+			
 			employeeBandEntity=new AdvanceRequestSettingEntity();
 			
 			employeeBandEntity=expenseTravelAdvanceDao.findByEmployerId(request.getEmployerId());
@@ -260,8 +274,8 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 	}
 
 	@Override
-	public List<AdvanceTravelRequestEntity> getAdvenceTravelListByEmployerId(Long employerid,Long employeeId) {
-		List<AdvanceTravelRequestEntity> list=new ArrayList<AdvanceTravelRequestEntity>();
+	public List<AdvanceTravelDto> getAdvenceTravelListByEmployerId(Long employerid,Long employeeId) {
+		List<AdvanceTravelDto> list=new ArrayList<AdvanceTravelDto>();
 		try {
 			if(employerid!=null && employerid>0) {
 				list=advanceTravelRequestDao.findByEmployerId(employerid);			
@@ -607,23 +621,23 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 		}
 
 		@Override
-		public List<AdvanceTravelRequestEntity> getAdvenceTravelApprovalEmployerId(Long employerid) {
+		public List<AdvanceTravelDto> getAdvenceTravelApprovalEmployerId(Long employerid) {
 			
-			List<AdvanceTravelRequestEntity> list=new ArrayList<AdvanceTravelRequestEntity>();
+			List<AdvanceTravelDto> list=new ArrayList<AdvanceTravelDto>();
 			
-			List<AdvanceTravelRequestEntity> listUpdate=new ArrayList<AdvanceTravelRequestEntity>();
+			List<AdvanceTravelDto> listUpdate=new ArrayList<AdvanceTravelDto>();
 			
 			try {
 				
 				if(employerid!=null && employerid>0) {
 					list=advanceTravelRequestDao.findApprovalByEmployerId(employerid);
-					for (AdvanceTravelRequestEntity advanceTravelRequestEntity : list) {
+					for (AdvanceTravelDto advanceTravelRequestEntity : list) {
 						if(advanceTravelRequestEntity.getApprovedStatus()==1) {
 							advanceTravelRequestEntity.setStatusRemarks("Approved");
 						}else if(advanceTravelRequestEntity.getApprovedStatus()==2) {
 							advanceTravelRequestEntity.setStatusRemarks("Rejected");
 						}else {
-							
+							advanceTravelRequestEntity.setStatusRemarks("Pending");
 						}
 						listUpdate.add(advanceTravelRequestEntity);
 					}
@@ -647,7 +661,8 @@ public class ExpenseTravelAdvanceServiceImpl implements ExpenseTravelAdvanceServ
 					Float approvedAmount=approvalTravelReimbursement.getApprovalAmount().floatValue();
 					advanceTravelRequestEntity.setApprovedAmount(approvedAmount);
 					String approvedOrRejected=approvalTravelReimbursement.getApprovedOrRejected();
-					if(approvedOrRejected.equalsIgnoreCase(approvedOrRejected)) {
+					advanceTravelRequestEntity.setStatusRemarks(approvedOrRejected);
+					if(approvedOrRejected.equalsIgnoreCase(MessageConstant.APPROVED)) {
 						advanceTravelRequestEntity.setApprovedStatus(1);
 					}else {
 						advanceTravelRequestEntity.setApprovedStatus(2);

@@ -40,5 +40,8 @@ public class AdvanceTravelCashRequest {
     private String approvedBy;
 	private Float approvalAmount;
 	private String approvedOrRejected;
-	
+	private  String clientKey;
+	private  String hash;
+	private String username;
+
 }

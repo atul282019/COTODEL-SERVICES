@@ -22,4 +22,6 @@ public class ExpenseTravelAdvanceRequest {
     private String daysDisbursalCash;	
 	private LocalDate  created_date ;
 	private String response;
+	private String clientKey;
+	private String hash;
 }

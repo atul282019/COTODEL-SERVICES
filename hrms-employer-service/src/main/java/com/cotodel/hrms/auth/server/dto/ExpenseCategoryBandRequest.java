@@ -18,8 +18,8 @@ public class ExpenseCategoryBandRequest {
 	private String expenseCode;	
 	private String bandFlag;	
 	private String bandId;	
-	private String bandPerDay;	
-	private String bandPerMonth;
+	private String bandPerDay;	//
+	private String bandPerMonth;//
 	private String dayToExpiry;
 	private Long employerId;
 	private Long status;
@@ -27,4 +27,14 @@ public class ExpenseCategoryBandRequest {
 	private String response;
 	private List<CategoryEmployeeBandEntity> list;	
 	private String[] listArray;
+	private String clientKey;
+	private String hash;
+	private String distingushEmployeeBand;
+	
+	
+	
+	
+	
+	
+
 }

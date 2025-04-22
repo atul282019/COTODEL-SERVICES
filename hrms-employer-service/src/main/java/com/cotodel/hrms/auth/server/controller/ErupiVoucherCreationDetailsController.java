@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,12 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cotodel.hrms.auth.server.dto.ErupiMultipleVoucherCreateRequest;
-import com.cotodel.hrms.auth.server.dto.ErupiMultipleVoucherCreationResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherBankDetailListResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherBankListDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedByIdResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
@@ -841,22 +839,26 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 			}
 	    return ResponseEntity.ok(erupiVoucherCreatedListResponse);
 	    }
-//	 public static void main(String[] args) {
-//		 ErupiVoucherCreatedDateWiseRequest erupiVoucherCreatedDateWiseRequest=new ErupiVoucherCreatedDateWiseRequest();
-//		 String dateString = "2025-03-02";
-//		 String enddateString = "2025-04-02";
-//	        LocalDate localDate = LocalDate.parse(dateString);
-//	        LocalDate endlocalDate = LocalDate.parse(enddateString);
-//	        erupiVoucherCreatedDateWiseRequest.setFromDate(localDate);
-//	        erupiVoucherCreatedDateWiseRequest.setToDate(endlocalDate);
-//	        try {
-//	        	 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedDateWiseRequest);
-//	        	 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, "/opt/cotodel/key/publicKeyForApplication.txt");
-//	        	 String jsonEncript1 =  EncryptionDecriptionUtil.convertToJson(jsonEncriptObject);
-//	        	 System.out.println(jsonEncript1);
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//			}
-//	       
-//	}
+	 public static void main(String[] args) {
+		 ErupiVoucherCreatedDateWiseRequest erupiVoucherCreatedDateWiseRequest=new ErupiVoucherCreatedDateWiseRequest();
+		 String dateString = "2025-03-02";
+		 String enddateString = "2025-04-02";
+	        LocalDate localDate = LocalDate.parse(dateString);
+	        LocalDate endlocalDate = LocalDate.parse(enddateString);
+	        erupiVoucherCreatedDateWiseRequest.setFromDate(localDate);
+	        erupiVoucherCreatedDateWiseRequest.setToDate(endlocalDate);
+	        try {
+	        	String data="MwnvmL6GDwAq3r+BlBRp+Wt0XxtWFbZjprK8QyO/LDO4+0s/gacP8G1j/o2OH5j+pCsKY4cv9ln+k7ATtfxHy68krvJX/kORQV43pFkG7uTt6YcwozGMUCS3QMQbXPpXtizh0tFQWY9JqeOu2jsoimUjFpAhh6vLWn30kTDuhOzJ9YclD82TSyesj+eF7pgY3n605U2cQqIhYGA7uEUQjhJtSD4Cuy+Ntvf8GO5E5nZsX5Q0p1SvEL6TUI0yKD2TsvAHkOmirPibXGYVFD07ANg4UprCH7LKbnIrou70/gFrGqcWJ73ZodqV822YRlcG9WktNNop1Gx5EOt3M5vHNS1sZ5vmodJHwwSyCdn8pUHkKTpEf8eOdoL/enDh+atN/rb9VrXomOt5MiIz8jhAdImuxtkyCbfwo0DSyZ4UHlpn4hPcXJTlhYz8fOVqWtPVXxCmca1i3NkcTy2bbAifCXQeR6mDCSD5a29eIy8voA+Ty7btGD9XVV1v9ktgao6MnPHthJ7Q5AgimmJE9nhQ/g6Je4pFBQqXNUKU3iStDU8iJByJ09OWUh5Qh5z+YLy08rkMQBWHWmWi8QYbU0KsVGugFxH5TMl+hU9exs9fqMFur23TVd0QRhC+4ZQcaF772f6xhZ0G58vG4xY3e1l5mPUj7IqMvnbwIcqWIJXm4QlBx3GUj5PfKsE53yzusRKD/gcwwbNgikxOrjNz/BWDqB+AHE7ybJ62T3Mvir7CU8t1AYAVc5lrZ5rYngWMbLY2HY7dAmuzEYznwGLaQdPkshnUcAO8yB9lWjzPnktdvIB3NK1pAzWIbL5qOv9l+fi+Xd/MfedABFse0Xn1Dt3A+g\\u003d\\u003d";
+	        	String encr="J048Hpu6FKk9mudtPrPRO3tiFhX1Hma6Kx13s/KC1rchz7xTTldddFzGJQJXm1XugmpPty5JXjJ+XQdNEfvlsm0d8GrUyR26Bkj36BEeyXVP+OuzraS2NwZxC0r/efFXrN/m3HKLoNPpA43dS7EFiFmUxl6xD1fWCx/h18ggcVI\\u003d";
+	        	String decript=EncryptionDecriptionUtil.decriptResponse(data, encr, "/opt/cotodel/key/pvtKeyForApplication.txt");
+	        	System.out.println("decript::"+decript);
+	        	 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedDateWiseRequest);
+	        	 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, "/opt/cotodel/key/publicKeyForApplication.txt");
+	        	 String jsonEncript1 =  EncryptionDecriptionUtil.convertToJson(jsonEncriptObject);
+	        	 System.out.println(jsonEncript1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	       
+	}
 }

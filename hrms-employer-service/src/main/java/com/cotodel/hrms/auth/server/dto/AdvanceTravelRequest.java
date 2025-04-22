@@ -1,6 +1,5 @@
 package com.cotodel.hrms.auth.server.dto;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -19,4 +18,6 @@ public class AdvanceTravelRequest {
 	private int status;
 	private String response;
 	private List<TravelReimbursement> travelReimbursement;
+	private  String clientKey;
+	private  String hash;
 }

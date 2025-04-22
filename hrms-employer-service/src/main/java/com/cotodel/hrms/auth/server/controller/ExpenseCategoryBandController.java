@@ -18,6 +18,7 @@ import com.cotodel.hrms.auth.server.dto.ExpenseBandListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandRequest;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandResponse;
+import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.ExpenseBandNumberEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
@@ -222,7 +223,7 @@ public class ExpenseCategoryBandController {
 	    		}
 	    	}catch (Exception e) {				
 	    		//e.printStackTrace();
-	    		logger.error("error in expenseCategoryBandDetails====="+e);
+	    		logger.error("error in getExpenseCategoryBandDetailsList====="+e);
 	    		//message=e.getMessage();
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
@@ -310,7 +311,7 @@ public class ExpenseCategoryBandController {
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
-				ExpenseCategoryBandRequest empolyeeRequest= EncryptionDecriptionUtil.convertFromJson(decript, ExpenseCategoryBandRequest.class);
+				ExpenseTravelAdvanceRequest empolyeeRequest= EncryptionDecriptionUtil.convertFromJson(decript, ExpenseTravelAdvanceRequest.class);
 				
 				response=expenseCategoryBandService.getExpenseBandList(empolyeeRequest.getEmployerId());
 	    		if(response!=null) {

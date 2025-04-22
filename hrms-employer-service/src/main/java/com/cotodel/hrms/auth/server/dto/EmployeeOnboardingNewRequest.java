@@ -41,5 +41,9 @@ public class EmployeeOnboardingNewRequest implements Serializable {
 	private byte[] empPhoto;
 	private String clientKey;
 	private String hash;
+	private String filename;
+	private String filetype;
+	
+
 	
 }

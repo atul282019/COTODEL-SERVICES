@@ -66,6 +66,10 @@ public class ExpenseCategoryBandEntity implements Serializable{
 	@Column(name="status")
 	private long status;
 	
+	@Column(name="distingush_employee_band")
+	private String distingushEmployeeBand;
+	
+	
 //	@OneToMany(mappedBy = "bandEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<CategoryEmployeeBandEntity> bandEntities;
 	

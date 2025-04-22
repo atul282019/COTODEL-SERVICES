@@ -35,4 +35,6 @@ public class ExpenseReimbursementRequest {
 	private String approvedOrRejected;
 	private String rejectedRemarks;
 	private String fileInput;
+	private  String clientKey;
+	private  String hash;
 }

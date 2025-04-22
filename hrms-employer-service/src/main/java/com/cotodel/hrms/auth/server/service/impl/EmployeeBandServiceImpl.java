@@ -124,7 +124,8 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 				if(expenseBandNumberEntity!=null) {
 					expenseBandNumberDao.deleteDetails(expenseBandNumberEntity.getId());
 				}
-			}else {
+			}
+			//else {
 				employeeBandEntity=new EmployeeBandEntity();
 				CopyUtility.copyProperties(request,employeeBandEntity);
 				employeeBandEntity.setStatus(1);
@@ -132,7 +133,7 @@ public class EmployeeBandServiceImpl implements EmployeeBandService{
 				employeeBandEntity=employeeBandDao.saveDetails(employeeBandEntity);
 				response=MessageConstant.RESPONSE_SUCCESS;
 				request.setResponse(response);
-			}
+			//}
 			if(employeeBandEntity!=null) {
 				
 				
