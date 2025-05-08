@@ -35,4 +35,6 @@ public interface UserDetailsDao {
 	List<UserEntity> getSearchUserWithOutMobile(int orgId, String userName);
 	
 	UserEntity getUserDetailsByMobileAndOrgId(int orgId,String mobile);
+	
+	public UserEntity getByCompAndHrms(String companyId,String hrmsId);
 }

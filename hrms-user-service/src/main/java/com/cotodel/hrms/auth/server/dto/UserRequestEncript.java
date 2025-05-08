@@ -21,4 +21,9 @@ private String username;
 	private Integer employerId;	
 	private boolean erupistatus ;	
 	private String captcha;
+	private String role;
+    private String companyId;
+    private String hrmsId;
+    private String hrmsName;
+    private String employeeName;
 }

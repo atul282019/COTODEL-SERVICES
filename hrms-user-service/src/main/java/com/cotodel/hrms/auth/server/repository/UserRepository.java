@@ -63,5 +63,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	    
 	    @Query("select s  from UserEntity s where s.mobile =?2 and (s.employerid=?1  or s.id=?1 )")
 		public UserEntity checkUserMobileAndOrgId( int orgId,String mobile);
+	    
+	    @Query("select s  from UserEntity s where s.companyId =?1 and (s.hrmsId=?2 and role_id='3' )")
+		public UserEntity checkUserCompAndHrmsId(String companyId, String hrmsId);
 } 
 

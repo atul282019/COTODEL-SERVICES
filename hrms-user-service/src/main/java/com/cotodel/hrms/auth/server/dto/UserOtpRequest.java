@@ -23,4 +23,5 @@ public class UserOtpRequest {
 	private String mobile;
 	private String orderId;
 	private String password;
+	private String countdown;
 }

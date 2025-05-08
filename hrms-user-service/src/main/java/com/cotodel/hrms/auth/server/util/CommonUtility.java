@@ -34,6 +34,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.cotodel.hrms.auth.server.dto.UserRequest;
@@ -74,6 +75,39 @@ public class CommonUtility {
 		}		
 	}
 	
+	public static String userRequest(String sAccessToken,String requestJson,String url,String publicPath,String privatePath){
+		String returnStr=null;
+		String decript=null;
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		System.out.println("HHHHHHH:::");
+		try{
+			logger.info(" Request Json for url"+url+"---"+requestJson);
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			
+			if(sAccessToken!=null && !sAccessToken.isEmpty()) {
+				headers.setBearerAuth(sAccessToken);
+			}
+			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(requestJson, publicPath);
+			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(jsonEncriptObject);
+			HttpEntity<String> entity = new HttpEntity<String>(jsonEncript,headers);
+
+			returnStr = restTemplate.postForObject(url, entity, String.class);
+			EncriptResponse enResponse= EncryptionDecriptionUtil.convertFromJson(returnStr, EncriptResponse.class);
+			decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), privatePath);
+			logger.info(" response Json---"+returnStr);
+			return decript;
+		}catch(HttpStatusCodeException e) {
+			logger.error("HttpStatusCodeException error in---"+url+"-"+e.getResponseBodyAsString());
+			return e.getResponseBodyAsString();
+		}catch(Exception e){
+			logger.error(" error in---"+url+"-"+e);
+			return null;
+		}finally {
+			restTemplate=null;headers=null;sAccessToken=null;requestJson=null;url=null;	
+		}		
+	}
 	public static String userSmsRequest(String clientid,String secretid,String requestJson,String url){
 		String returnStr=null;
 		RestTemplate restTemplate = new RestTemplate();

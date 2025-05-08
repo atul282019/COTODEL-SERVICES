@@ -36,4 +36,10 @@ public class UserRequest {
     private boolean erupistatus ;
     private String response;
     private String captcha;
+    private String role;
+    private String companyId;
+    private String hrmsId;
+    private String hrmsName;
+    private String employeeName;
+    
 }

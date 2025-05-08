@@ -121,6 +121,12 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		// TODO Auto-generated method stub
 		return userRepository.checkUserMobileAndOrgId(orgId,mobile);
 	}
+
+	@Override
+	public UserEntity getByCompAndHrms(String companyId, String hrmsId) {
+		// TODO Auto-generated method stub
+		return userRepository.checkUserCompAndHrmsId(companyId,hrmsId);
+	}
 	
 	
 	

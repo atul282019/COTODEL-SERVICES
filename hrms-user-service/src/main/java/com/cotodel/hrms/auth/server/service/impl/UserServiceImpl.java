@@ -42,6 +42,8 @@ import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperHistoryDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMasterDao;
 import com.cotodel.hrms.auth.server.dto.DeleteUserRoleRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.RoleDto;
@@ -60,9 +62,13 @@ import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.UserService;
 import com.cotodel.hrms.auth.server.util.CaptchaSession;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
+import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.ValidateConstants;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
 public class UserServiceImpl extends CotoDelBaseController implements UserService {
@@ -1012,19 +1018,62 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 		String response=MessageConstant.RESPONSE_FAILED;
 		user.setResponse(response);
 		try {
-				
+			TokenGeneration token=new TokenGeneration();
 				UserEntity userDetails= new UserEntity();
 				UserEmpEntity userEmpEntity= new UserEmpEntity();
+				logger.info("reputeUser::00");
+				if(user.getRole().equalsIgnoreCase("ROLE_Employee")) {
+					UserEntity reputeUser=userDetailsDao.getByCompAndHrms(user.getCompanyId(), user.getHrmsId());
+					if(reputeUser!=null) {
+						logger.info("reputeUser::11");
+						CopyUtility.copyProperties(user,userDetails);
+						Date date = new Date();
+						LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+						userDetails.setCreated_date(localDate);
+						userDetails.setRole_id(MessageConstant.USER_ROLE);
+						userDetails.setStatus(1);
+						userDetails.setEmployerid(reputeUser.getId().intValue());
+						userEntity=userDetailsDao.saveUserDetails(userDetails);
+						logger.info("reputeUser::22");
+						String tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+//						userRequest.setUsername(request.getName());
+//						userRequest.setMobile(request.getMobile());
+//						userRequest.setEmail(request.getEmail());
+						logger.info("tokenvalue::"+tokenvalue);
+						logger.info("reputeUser::33");
+						EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();
+						employeeOnboardingRequest.setUserDetailsId(userEntity.getId());
+						employeeOnboardingRequest.setEmployerId(reputeUser.getId());
+						employeeOnboardingRequest.setEmpOrCont("Repute");
+						employeeOnboardingRequest.setMobile(user.getMobile());
+						employeeOnboardingRequest.setEmail(user.getEmail());
+						employeeOnboardingRequest.setName(user.getEmployeeName());
+						//logger.info("reputeUser::44");
+						 ObjectMapper objectMapper = new ObjectMapper();
+					     objectMapper.registerModule(new JavaTimeModule());
+					     String json =objectMapper.writeValueAsString(employeeOnboardingRequest);
+					    //    logger.info("json::100"+json);
+						String response1 = CommonUtility.userRequest(tokenvalue, json,
+								applicationConstantConfig.employerServiceBaseUrl+CommonUtils.addEmployeeRepute,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+						logger.info("response1::"+response1);
+						userEmpEntity.setUser_id(userEntity.getId());
+						userEmpEntity.setStatus(userEntity.getStatus());
+						userEmpEntity.setCreated_by(userEntity.getMobile());
+						userEmpEntity.setCreated_date(localDate);
+						userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);		
+
+						response=MessageConstant.RESPONSE_SUCCESS;
+						userEntity.setResponse(response);
+					}
+					
+				}else {
+				
+				
 				//CopyUtility.copyProperties(userDetails, user);
 				CopyUtility.copyProperties(user,userDetails);
 				Date date = new Date();
 				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				userDetails.setCreated_date(localDate);
-//				if(user.isErupistatus()) {
-//					userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
-//				}else {
-//					userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
-//				}
 				userDetails.setRole_id(MessageConstant.REPUTE_ROLE);
 				userDetails.setStatus(1);
 				userEntity=userDetailsDao.saveUserDetails(userDetails);
@@ -1036,11 +1085,12 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 
 				response=MessageConstant.RESPONSE_SUCCESS;
 				userEntity.setResponse(response);
-
+				}
 		
 		}catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;
 			userEntity.setResponse(response);
+			e.printStackTrace();
 		}
 		return userEntity;
 	}

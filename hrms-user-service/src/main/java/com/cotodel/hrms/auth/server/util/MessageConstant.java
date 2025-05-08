@@ -1,13 +1,16 @@
 package com.cotodel.hrms.auth.server.util;
 
+import com.google.gson.Gson;
+
 public class MessageConstant {
 	
-
+	public static final Gson gson = new Gson();
 	public static final String RESPONSE_SUCCESS = "SUCCESS";
 	public static final String RESPONSE_FAILED = "FAILURE";	
 	public static final Integer ONE = 1;
 	public static final String OTP_SENT = "Otp Sent Successfully.";
 	public static final String OTP_FAILED = "Otp Failed.";
+	public static final String USER_DEACTIVE = "User Deactive. Please activate";
 	public static final String PROFILE_SUCCESS = "Data Saved Successfully.";
 	public static final String PROFILE_FAILED = "Data Not Saved Successfully.";
 	public static final String USER_EMAIL_ALREADY_VERIFIED = "User Already verified with this email!!";

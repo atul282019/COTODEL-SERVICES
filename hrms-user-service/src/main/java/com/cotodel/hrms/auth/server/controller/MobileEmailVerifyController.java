@@ -170,7 +170,7 @@ public class MobileEmailVerifyController {
 	    		UserOtpRequest userReq= EncryptionDecriptionUtil.convertFromJson(decript, UserOtpRequest.class);
 	    		
 	    		userEntity=userService.checkUserMobile(userReq.getMobile());
-	    		if(userEntity!=null) {
+	    		if(userEntity!=null && userEntity.getStatus()==1) {
 	    			String orderId="";
 	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
 	    			if(applicationConstantConfig.otpLessSenderClientEnable.equalsIgnoreCase("N")) {
@@ -205,6 +205,11 @@ public class MobileEmailVerifyController {
 						EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 						return ResponseEntity.ok(jsonEncriptObject);
 					}
+	    		}else if(userEntity!=null && userEntity.getStatus()==0) {
+	    			userNewOtpResponse=new UserNewOtpResponse(false,MessageConstant.USER_DEACTIVE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userNewOtpResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	 
 	    	}catch (Exception e) {
@@ -248,7 +253,7 @@ public class MobileEmailVerifyController {
 	    		UserOtpRequest userReq= EncryptionDecriptionUtil.convertFromJson(decript, UserOtpRequest.class);
 	    		
 	    		userEntity=userService.checkUserMobile(userReq.getMobile());
-	    		if(userEntity!=null) {
+	    		if(userEntity!=null && userEntity.getStatus()==1) {
 	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
 	    			if(applicationConstantConfig.otpLessSenderClientEnable.equalsIgnoreCase("N")) {
 	    				response="{\"isOTPVerified\":true}";
@@ -301,6 +306,11 @@ public class MobileEmailVerifyController {
 						EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 						return ResponseEntity.ok(jsonEncriptObject);
 					}
+	    		}else if(userEntity!=null && userEntity.getStatus()==0) {
+	    			userOtpVerifyResponse=new UserOtpVerifyResponse(MessageConstant.FALSE,MessageConstant.USER_DEACTIVE,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity);
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    		
 	    	 

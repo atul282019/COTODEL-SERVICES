@@ -1049,7 +1049,7 @@ public class UserSignUpController extends CotoDelBaseController{
 	    @RequestMapping(value = "/add/saveReputeDetails",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> saveReputeDetails(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
-	    	logger.info("inside get saveUserDetails+++");
+	    	logger.info("inside get saveReputeDetails+++");
 	    	UserEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";

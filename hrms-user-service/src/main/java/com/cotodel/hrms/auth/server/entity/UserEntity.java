@@ -62,7 +62,12 @@ public class UserEntity implements Serializable{
 	private String mapperFlag ;
     @Transient
     private String response;
-    
+    @Column(name="company_size")
+	private String companySize;
+    private String role;
+    private String companyId;
+    private String hrmsId;
+    private String hrmsName;
 //    @OneToMany
 //   	@JoinTable(name = "h_user_emp", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user"))
 //    private List<UserEmpEntity> userEmpEntity ;

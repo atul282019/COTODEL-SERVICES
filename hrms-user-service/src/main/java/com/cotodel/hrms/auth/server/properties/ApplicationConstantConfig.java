@@ -61,4 +61,7 @@ public class ApplicationConstantConfig {
 	@Value("${api.signature.keystore.private.path}")
 	public String apiSignaturePrivatePath;
 	
+	@Value("${employer.service.base.url}")
+	public String employerServiceBaseUrl;
+	
 }
