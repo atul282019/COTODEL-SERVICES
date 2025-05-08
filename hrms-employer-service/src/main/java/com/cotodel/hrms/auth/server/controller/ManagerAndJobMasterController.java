@@ -1,41 +1,13 @@
 package com.cotodel.hrms.auth.server.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cotodel.hrms.auth.server.dto.JobTitleMasterListResponse;
-import com.cotodel.hrms.auth.server.dto.JobTitleMasterRequest;
-import com.cotodel.hrms.auth.server.dto.JobTitleMasterResponse;
-import com.cotodel.hrms.auth.server.dto.ManagerMasterListResponse;
-import com.cotodel.hrms.auth.server.dto.ManagerMasterRequest;
-import com.cotodel.hrms.auth.server.dto.ManagerMasterResponse;
-import com.cotodel.hrms.auth.server.exception.ApiError;
-import com.cotodel.hrms.auth.server.model.JobTitleMasterEntity;
-import com.cotodel.hrms.auth.server.model.ManagerLblMasterEntity;
-import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.JobTitleMasterService;
 import com.cotodel.hrms.auth.server.service.ManagerMasterService;
-import com.cotodel.hrms.auth.server.util.EncriptResponse;
-import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
-import com.cotodel.hrms.auth.server.util.MessageConstant;
-import com.cotodel.hrms.auth.server.util.TransactionManager;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController

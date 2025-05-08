@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -35,9 +37,9 @@ public class ErupiVoucherCreationDetailsEntity implements Serializable{
 	@Column(name="id_pk")
 	private Long id;
 	
-//	 @ManyToOne
-//	 @JoinColumn(name = "voucher_id_pk", referencedColumnName = "id_pk")  // foreign key column
-//	  private VoucherTypeMasterEntity voucherId;//id_pk of vouchermaster
+	 @ManyToOne
+	 @JoinColumn(name = "voucher_id_pk", referencedColumnName = "id_pk")  // foreign key column
+	  private VoucherTypeMasterEntity voucherId;//id_pk of vouchermaster
 
 //	 @ManyToOne
 //	 @JoinColumn(name = "mcc_id_pk", referencedColumnName = "id_pk")  // foreign key column

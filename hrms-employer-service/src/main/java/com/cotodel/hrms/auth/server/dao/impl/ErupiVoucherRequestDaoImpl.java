@@ -46,6 +46,22 @@ public class ErupiVoucherRequestDaoImpl implements ErupiVoucherRequestDao{
 		return erupiVoucherRequestRepository.getById(id);
 	}
 
+
+
+	@Override
+	public List<ErupiVoucherCreationRequestEntity> getVoucherCreationRequestApproved(Long employerId) {
+		// TODO Auto-generated method stub
+		return erupiVoucherRequestRepository.findByApprovedEmployerId(employerId);
+	}
+
+
+
+	@Override
+	public List<ErupiVoucherCreationRequestEntity> getVoucherCreationRequestApprovedEmp(Long employeeId) {
+		// TODO Auto-generated method stub
+		return erupiVoucherRequestRepository.findByApprovedEmployeeId(employeeId);
+	}
+
 	
 	
 	

@@ -73,5 +73,19 @@ public class ErupiVoucherCreationRequestEntity implements Serializable{
 	
 	@Column(name="mcc")
 	private String mcc;
-
+	
+	@Column(name="validity")
+	private String validity;
+	
+	@Column(name="loginuser")
+	private String loginuser;
+	
+	@Column(name = "apprej_date")
+    private LocalDateTime apprejDate;
+	
+	@Column(name = "manager_remarks")
+    private String managerRemarks;
+	
+	@Column(name="approved_amount")
+	private Float approvedAmount;
 }

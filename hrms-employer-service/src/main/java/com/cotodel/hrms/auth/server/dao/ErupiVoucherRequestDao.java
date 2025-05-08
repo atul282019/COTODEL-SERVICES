@@ -9,4 +9,7 @@ public interface ErupiVoucherRequestDao {
 	public List<ErupiVoucherCreationRequestEntity> getVoucherCreationRequest(Long employerId);
 	public List<ErupiVoucherCreationRequestEntity> getVoucherCreationRequestEmp(Long employeeId);
 	public ErupiVoucherCreationRequestEntity getVoucherCreationRequestEmpById(Long id);
+	public List<ErupiVoucherCreationRequestEntity> getVoucherCreationRequestApproved(Long employerId);
+	public List<ErupiVoucherCreationRequestEntity> getVoucherCreationRequestApprovedEmp(Long employeeId);
+	
 }

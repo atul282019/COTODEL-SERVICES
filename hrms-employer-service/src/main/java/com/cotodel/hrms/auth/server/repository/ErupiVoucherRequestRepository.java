@@ -16,4 +16,10 @@ public interface ErupiVoucherRequestRepository extends JpaRepository<ErupiVouche
 	
 	@Query("select s  from ErupiVoucherCreationRequestEntity s where s.employeeId =:employeeId order by s.creationDate desc")
 	public List<ErupiVoucherCreationRequestEntity> findByEmployeeId(@Param("employeeId") Long employeeId);
+	
+	@Query("select s  from ErupiVoucherCreationRequestEntity s where s.employerId =:employerId and s.status='3' order by s.creationDate desc")
+	public List<ErupiVoucherCreationRequestEntity> findByApprovedEmployerId(@Param("employerId") Long employerId);
+	
+	@Query("select s  from ErupiVoucherCreationRequestEntity s where s.employeeId =:employeeId and s.status='3' order by s.creationDate desc")
+	public List<ErupiVoucherCreationRequestEntity> findByApprovedEmployeeId(@Param("employeeId") Long employeeId);
 }

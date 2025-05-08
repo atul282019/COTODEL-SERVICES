@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.ExpenseBandListResponse;
+import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandLimitResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandRequest;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandResponse;
@@ -340,5 +341,56 @@ public class ExpenseCategoryBandController {
 			}
     	    return ResponseEntity.ok(jsonEncriptObject);
 	    	
+	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/expenseCategoryBandId",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> expenseCategoryBandId(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+		 
+	    logger.info("inside expenseCategoryBandId+++");	    	
+	    	
+	    
+	    	String message = "";
+	    	String response=null;
+	    	ExpenseCategoryBandLimitResponse expenseCategoryBandResponse;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ExpenseCategoryBandRequest empolyeeRequest= EncryptionDecriptionUtil.convertFromJson(decript, ExpenseCategoryBandRequest.class);
+				
+				response=expenseCategoryBandService.getCompEmployeeBandId(empolyeeRequest.getId());
+	    		if(response!=null && !response.equalsIgnoreCase("")) {
+	    			expenseCategoryBandResponse=new ExpenseCategoryBandLimitResponse(MessageConstant.TRUE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseCategoryBandResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
+	    		}else {
+	    			expenseCategoryBandResponse=new ExpenseCategoryBandLimitResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseCategoryBandResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		logger.error("error in expenseCategoryBandDetails====="+e);
+	    		//message=e.getMessage();
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		expenseCategoryBandResponse=new ExpenseCategoryBandLimitResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+ 			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseCategoryBandResponse);
+ 			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	}

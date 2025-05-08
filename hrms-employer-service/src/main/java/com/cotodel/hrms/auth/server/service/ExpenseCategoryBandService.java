@@ -15,4 +15,5 @@ public interface ExpenseCategoryBandService {
 	public List<ExpenseCategoryBandRequest>  getCompEmployeeBandDetailsList(long employerid);
 	public ExpenseCategoryBandRequest  deleteExpenseCategoryBandDetails(ExpenseCategoryBandRequest request);
 	public List<ExpenseBandNumberEntity>  getExpenseBandList(Long employerId);
+	public String  getCompEmployeeBandId(Long id);
 }

@@ -30,7 +30,7 @@ public class ExpenseCategoryBandRequest {
 	private String clientKey;
 	private String hash;
 	private String distingushEmployeeBand;
-	
+	private String flag;
 	
 	
 	

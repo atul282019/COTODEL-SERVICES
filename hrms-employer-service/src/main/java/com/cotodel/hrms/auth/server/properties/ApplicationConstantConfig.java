@@ -30,4 +30,8 @@ public class ApplicationConstantConfig {
 	
 	@Value("${api.signature.keystore.private.path}")
 	public String apiSignaturePrivatePath;
+	
+	@Value("${api.ocr.read.file.url}")
+	public String apiOcrReadFileUrl;	
+	
 }

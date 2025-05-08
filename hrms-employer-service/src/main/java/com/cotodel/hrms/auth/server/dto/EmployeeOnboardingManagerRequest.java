@@ -9,21 +9,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErupiVoucherCreateRequest {
-	
+public class EmployeeOnboardingManagerRequest {
 	private Long id;
 	private Long employerId;
 	private Long employeeId;
-	private String name;
-	private String mobile;
-	private String voucherType;
-	private String voucherSubType;
-	private String amount;
-	private String remarks;
-	private String response;
-	private String purposeCode;	
-	private String mcc;
+	private Long managerId;
 	private String clientKey;
-	private String hash;
-	private String validity;
+	private String hash;   
+	private String loginuser;
+	private String status;
+	private String response;
+	private String rejecctRemark;
 }

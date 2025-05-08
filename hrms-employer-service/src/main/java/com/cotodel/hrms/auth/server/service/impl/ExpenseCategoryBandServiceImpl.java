@@ -234,6 +234,9 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 				expenseCategoryBandRequest.setExpenseCategory(employeeBandEntity.getExpenseCategory());
 				expenseCategoryBandRequest.setExpenseCode(employeeBandEntity.getExpenseCode());
 				expenseCategoryBandRequest.setExpenseLimit(employeeBandEntity.getExpenseLimit());
+				if(employeeBandEntity.getMasterId()!=0) {
+					expenseCategoryBandRequest.setFlag("D");
+				}
 				categoryEmployeeBandEntity=categoryEmpBandDao.getDetails(employeeBandEntity.getId());
 				expenseCategoryBandRequest.setList(categoryEmployeeBandEntity);
 				expenseCategoryBandRequests.add(expenseCategoryBandRequest);
@@ -241,7 +244,7 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			}
 		}
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		return expenseCategoryBandRequests;
 	}
@@ -280,6 +283,30 @@ public class ExpenseCategoryBandServiceImpl implements ExpenseCategoryBandServic
 			//e.printStackTrace();
 		}
 		return list;
+	}
+
+
+	@Override
+	public String getCompEmployeeBandId(Long id) {
+		// TODO Auto-generated method stub
+		ExpenseCategoryBandEntity employeeBandEntity=null;
+		String response="";
+		String expenseLimit="";
+		try {
+			employeeBandEntity=expenseCategoryBandDao.findByEmployeeBandId(id);
+			if(employeeBandEntity!=null) {
+				//response=MessageConstant.RESPONSE_SUCCESS;
+				expenseLimit= employeeBandEntity.getExpenseLimit();
+				
+			}
+			
+			
+		} catch (Exception e) {
+			//e.printStackTrace();
+			//response=MessageConstant.RESPONSE_FAILED;
+			//companyEmployeeRequest.setResponse(response);
+		}
+		return expenseLimit;
 	}
 	
 	
