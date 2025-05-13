@@ -6,4 +6,5 @@ public interface CommonUtils {
 	
 	public static String getToken = "/tokenService/Api/get/access-token";
 	public static String addEmployeeRepute = "/empService/Api/add/saveEmplOnboardingRepute";
+	public static String updateEmployeeRepute = "/empService/Api/update/updateEmplOnboardingRepute";
 }

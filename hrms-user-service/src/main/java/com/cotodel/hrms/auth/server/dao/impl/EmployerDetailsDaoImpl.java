@@ -27,4 +27,10 @@ public class EmployerDetailsDaoImpl implements EmployerDetailsDao {
 		return employerDetailsRepository.getEmployerDetailsByEmpId(employerId);
 	}
 
+	@Override
+	public EmployerDetailsEntity getEmployerOnboardingDetails(String companyId, String hrmsId) {
+		
+		return employerDetailsRepository.getEmployerDetailsByCompId(companyId, hrmsId);
+	}
+
 }

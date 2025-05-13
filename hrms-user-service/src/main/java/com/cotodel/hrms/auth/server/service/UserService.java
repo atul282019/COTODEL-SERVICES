@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import com.cotodel.hrms.auth.server.dto.DeleteUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
+import com.cotodel.hrms.auth.server.dto.ReputeEmployeeDetails;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserManagerDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
@@ -57,5 +58,6 @@ public interface UserService {
 	//public List<ExistUserResponse> saveUsersListWithRole(ExistUserResponse  existUserResponse);
 	//public List<UserDto> getUsersList(Long  orgId,String userName);
 	public UserEntity searchUsersWithMobileAndOrgId(int  orgId,String mobile);
-	public UserEntity saveReputeDetails(HttpServletRequest request,UserRequest user);
+	public UserEntity saveReputeDetails(HttpServletRequest request,ReputeEmployeeDetails user);
+	public UserEntity updateReputeDetails(HttpServletRequest request,UserRequest user);
 }

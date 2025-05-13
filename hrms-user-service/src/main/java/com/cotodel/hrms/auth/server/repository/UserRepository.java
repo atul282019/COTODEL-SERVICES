@@ -66,5 +66,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	    
 	    @Query("select s  from UserEntity s where s.companyId =?1 and (s.hrmsId=?2 and role_id='3' )")
 		public UserEntity checkUserCompAndHrmsId(String companyId, String hrmsId);
+	    
+	    @Modifying
+	    @Transactional
+	    @Query(value = "UPDATE user_details  SET status=:status WHERE mobile =:mobile", nativeQuery = true)
+	    public int updateActiveDeactive(@Param("mobile") String mobile,@Param("status") int status);
 } 
 

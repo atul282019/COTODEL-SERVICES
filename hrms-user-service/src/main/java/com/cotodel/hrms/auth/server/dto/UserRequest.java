@@ -41,5 +41,5 @@ public class UserRequest {
     private String hrmsId;
     private String hrmsName;
     private String employeeName;
-    
+    private String reputeEmployeeId;
 }

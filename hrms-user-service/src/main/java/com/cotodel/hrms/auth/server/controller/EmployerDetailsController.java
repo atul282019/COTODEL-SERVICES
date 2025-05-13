@@ -308,5 +308,59 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	          
 	        
 	    }
-	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/add/saveEmployerOnBoardingDetails",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> saveEmployerOnBoardingDetails(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+	    	logger.info("inside get saveEmployerOnBoardingDetails+++");
+	    	EmployerDetailsRequest userEntity=null;
+	    	String responseToken="";
+	    	String authToken = "";
+	    	EmployerDetailsResponse employerDetailsResponse;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				EmployerDetailsRequest employerDetailsRequest= EncryptionDecriptionUtil.convertFromJson(decript, EmployerDetailsRequest.class);
+				
+	    	    userEntity=	employerDetailsService.saveEmployerOnboardingDetails(employerDetailsRequest);
+	    	    
+	    	    logger.info("after get saveEmployerOnBoardingDetails+++");
+	    	    
+	    	    if(userEntity!=null && userEntity.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+	    	    	employerDetailsResponse=new EmployerDetailsResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
+	    	    }else {
+	    	    	employerDetailsResponse=new EmployerDetailsResponse(MessageConstant.FALSE,userEntity.getResponse(),userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
+	    	    }
+			
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in saveEmployerOnBoardingDetails====="+e);
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		employerDetailsResponse=new EmployerDetailsResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+ 	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsResponse);
+ 	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in saveEmployerOnBoardingDetails====="+e);
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);
+	          
+	        
+	    }
 }

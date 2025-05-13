@@ -24,6 +24,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.xml.bind.DatatypeConverter;
@@ -36,6 +37,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.cotodel.hrms.auth.server.controller.CotoDelBaseController;
+import com.cotodel.hrms.auth.server.dao.EmployerDetailsDao;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
@@ -43,9 +45,9 @@ import com.cotodel.hrms.auth.server.dao.UserRoleMapperHistoryDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMasterDao;
 import com.cotodel.hrms.auth.server.dto.DeleteUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeeProfileRequest;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
+import com.cotodel.hrms.auth.server.dto.ReputeEmployeeDetails;
 import com.cotodel.hrms.auth.server.dto.RoleDto;
 import com.cotodel.hrms.auth.server.dto.UserDetailsDto;
 import com.cotodel.hrms.auth.server.dto.UserDto;
@@ -53,6 +55,7 @@ import com.cotodel.hrms.auth.server.dto.UserManagerDto;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.UserRoleDto;
 import com.cotodel.hrms.auth.server.dto.UserRoleMapperDto;
+import com.cotodel.hrms.auth.server.entity.EmployerDetailsEntity;
 import com.cotodel.hrms.auth.server.entity.RoleMasterEntity;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
@@ -67,7 +70,6 @@ import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.cotodel.hrms.auth.server.util.ValidateConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
@@ -94,6 +96,10 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	
 	@Autowired
 	UserRoleMasterDao userRoleMasterDao;
+	
+	@Autowired
+	public EmployerDetailsDao employerDetailsDao;
+	
 	
 	private Map<String, Boolean> captcaValidationMap = new HashMap<String, Boolean>();
 	HashMap<String, Boolean> captchaMap = new HashMap<String, Boolean>();
@@ -467,23 +473,32 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 
 	@Override
 	public UserEntity updateUsers(UserRequest user) {
-		// TODO Auto-generated method stub
+		
+		UserEntity userEntity1=null;
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
 		UserEntity userDetails=userDetailsDao.checkUserMobile(user.getMobile());
-		userDetails.setStatus(MessageConstant.STATUS);
-		UserEntity UserEntity1=userDetailsDao.saveUserDetails(userDetails);
+		if(userDetails!=null) {
+			if(userDetails.getStatus()==1) {
+				userDetails.setStatus(1);
+			}else if(userDetails.getStatus()==0) {
+				userDetails.setStatus(0);
+			}
+		//userDetails.setStatus(MessageConstant.STATUS);
+		userEntity1=userDetailsDao.saveUserDetails(userDetails);
 		
 		Date date = new Date();
 		LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		userEmpEntity.setUser_id(UserEntity1.getId());
+		userEmpEntity.setUser_id(userEntity1.getId());
 		//userEmpEntity.setUserDetails(UserEntity1);
-		userEmpEntity.setStatus(UserEntity1.getStatus());
-		userEmpEntity.setEmployer_id(Long.valueOf(UserEntity1.getEmployerid()));
+		userEmpEntity.setStatus(userEntity1.getStatus());
+		userEmpEntity.setEmployer_id(Long.valueOf(userEntity1.getEmployerid()));
 		userEmpEntity.setCreated_date(localDate);
 		userEmpEntity.setUpdated_date(localDate);
-		userEmpEntity.setUpdated_by(""+UserEntity1.getEmployerid());
+		userEmpEntity.setUpdated_by(""+userEntity1.getEmployerid());
 		userDetailsDao.saveUserEmpEntity(userEmpEntity);
-		return UserEntity1;
+		
+		}
+		return userEntity1;
 	}
 
 	@Override
@@ -1012,7 +1027,7 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 
 
 	@Override
-	public UserEntity saveReputeDetails(HttpServletRequest request, UserRequest user) {
+	public UserEntity saveReputeDetails(HttpServletRequest request, ReputeEmployeeDetails user) {
 		String captchaSecurity="";
 		UserEntity userEntity=new UserEntity();
 		String response=MessageConstant.RESPONSE_FAILED;
@@ -1022,23 +1037,27 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 				UserEntity userDetails= new UserEntity();
 				UserEmpEntity userEmpEntity= new UserEmpEntity();
 				logger.info("reputeUser::00");
-				if(user.getRole().equalsIgnoreCase("ROLE_Employee")) {
-					UserEntity reputeUser=userDetailsDao.getByCompAndHrms(user.getCompanyId(), user.getHrmsId());
+				if(user.getRole().equalsIgnoreCase("ROLE_Employee") || user.getRole().equalsIgnoreCase("ROLE_HR_ADMIN")) {
+					EmployerDetailsEntity reputeUser=employerDetailsDao.getEmployerOnboardingDetails(user.getCompanyId(), user.getHrmsId());
 					if(reputeUser!=null) {
 						logger.info("reputeUser::11");
 						CopyUtility.copyProperties(user,userDetails);
 						Date date = new Date();
-						LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+						LocalDate localDate =LocalDate.now();
 						userDetails.setCreated_date(localDate);
+						userDetails.setMobile(user.getMobile());
+						userDetails.setEmail(user.getEmail());
+						userDetails.setRole(user.getRole());
+						if(user.getRole().equalsIgnoreCase("ROLE_Employee")) {
 						userDetails.setRole_id(MessageConstant.USER_ROLE);
+						}else if(user.getRole().equalsIgnoreCase("ROLE_HR_ADMIN")) {
+							userDetails.setRole_id(MessageConstant.REPUTE_ROLE);
+						}
 						userDetails.setStatus(1);
 						userDetails.setEmployerid(reputeUser.getId().intValue());
 						userEntity=userDetailsDao.saveUserDetails(userDetails);
 						logger.info("reputeUser::22");
 						String tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
-//						userRequest.setUsername(request.getName());
-//						userRequest.setMobile(request.getMobile());
-//						userRequest.setEmail(request.getEmail());
 						logger.info("tokenvalue::"+tokenvalue);
 						logger.info("reputeUser::33");
 						EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();
@@ -1064,28 +1083,183 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 
 						response=MessageConstant.RESPONSE_SUCCESS;
 						userEntity.setResponse(response);
+					}else {
+						EmployerDetailsEntity employerDetailsEntity1=new EmployerDetailsEntity();
+						employerDetailsEntity1.setCompanyId(user.getCompanyId());
+						employerDetailsEntity1.setHrmsId(user.getHrmsId());
+						employerDetailsEntity1.setMobile(user.getMobile());
+						employerDetailsEntity1.setEmail(user.getEmail());
+						employerDetailsEntity1.setOrganizationName(user.getHrmsName());
+						employerDetailsEntity1.setStatus(1);
+						employerDetailsEntity1.setCreatedDate(LocalDate.now());
+						employerDetailsEntity1.setCreatedBy(user.getEmployeeName());
+						String employerCode=getEmployerNo();
+						employerDetailsEntity1.setProfileComplete(2);
+						employerDetailsEntity1.setEmployerCode(employerCode);
+						EmployerDetailsEntity employerDetailsEntity=employerDetailsDao.saveCompanyDetails(employerDetailsEntity1);
+						if(employerDetailsEntity!=null) {
+						logger.info("reputeUser::11");
+						CopyUtility.copyProperties(user,userDetails);
+						Date date = new Date();
+						LocalDate localDate =LocalDate.now();
+						userDetails.setCreated_date(localDate);
+						userDetails.setMobile(user.getMobile());
+						userDetails.setEmail(user.getEmail());
+						userDetails.setRole(user.getRole());
+						if(user.getRole().equalsIgnoreCase("ROLE_Employee")) {
+						userDetails.setRole_id(MessageConstant.USER_ROLE);
+						}else if(user.getRole().equalsIgnoreCase("ROLE_HR_ADMIN")) {
+							userDetails.setRole_id(MessageConstant.REPUTE_ROLE);
+						}
+						userDetails.setStatus(1);
+						userDetails.setEmployerid(employerDetailsEntity.getId().intValue());
+						userEntity=userDetailsDao.saveUserDetails(userDetails);
+						logger.info("reputeUser::22");
+						String tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+						logger.info("tokenvalue::"+tokenvalue);
+						logger.info("reputeUser::33");
+						EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();
+						employeeOnboardingRequest.setUserDetailsId(userEntity.getId());
+						employeeOnboardingRequest.setEmployerId(employerDetailsEntity.getId());
+						employeeOnboardingRequest.setEmpOrCont("Repute");
+						employeeOnboardingRequest.setMobile(user.getMobile());
+						employeeOnboardingRequest.setEmail(user.getEmail());
+						employeeOnboardingRequest.setName(user.getEmployeeName());
+						//logger.info("reputeUser::44");
+						 ObjectMapper objectMapper = new ObjectMapper();
+					     objectMapper.registerModule(new JavaTimeModule());
+					     String json =objectMapper.writeValueAsString(employeeOnboardingRequest);
+					    //    logger.info("json::100"+json);
+						String response1 = CommonUtility.userRequest(tokenvalue, json,
+								applicationConstantConfig.employerServiceBaseUrl+CommonUtils.addEmployeeRepute,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+						logger.info("response1::"+response1);
+						userEmpEntity.setUser_id(userEntity.getId());
+						userEmpEntity.setStatus(userEntity.getStatus());
+						userEmpEntity.setCreated_by(userEntity.getMobile());
+						userEmpEntity.setCreated_date(localDate);
+						userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);		
+
+						response=MessageConstant.RESPONSE_SUCCESS;
+						userEntity.setResponse(response);
+						}else {
+							response=MessageConstant.RESPONSE_FAILED;
+							userEntity.setResponse(response);
+						}
 					}
 					
-				}else {
-				
-				
-				//CopyUtility.copyProperties(userDetails, user);
-				CopyUtility.copyProperties(user,userDetails);
-				Date date = new Date();
-				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-				userDetails.setCreated_date(localDate);
-				userDetails.setRole_id(MessageConstant.REPUTE_ROLE);
-				userDetails.setStatus(1);
-				userEntity=userDetailsDao.saveUserDetails(userDetails);
-				userEmpEntity.setUser_id(userEntity.getId());
-				userEmpEntity.setStatus(userEntity.getStatus());
-				userEmpEntity.setCreated_by(userEntity.getMobile());
-				userEmpEntity.setCreated_date(localDate);
-				userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);		
-
-				response=MessageConstant.RESPONSE_SUCCESS;
-				userEntity.setResponse(response);
 				}
+//				else {
+//				
+//				
+//				//CopyUtility.copyProperties(userDetails, user);
+//				CopyUtility.copyProperties(user,userDetails);
+//				Date date = new Date();
+//				LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//				userDetails.setCreated_date(localDate);
+//				userDetails.setRole_id(MessageConstant.REPUTE_ROLE);
+//				userDetails.setStatus(1);
+//				userEntity=userDetailsDao.saveUserDetails(userDetails);
+//				userEmpEntity.setUser_id(userEntity.getId());
+//				userEmpEntity.setStatus(userEntity.getStatus());
+//				userEmpEntity.setCreated_by(userEntity.getMobile());
+//				userEmpEntity.setCreated_date(localDate);
+//				userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);		
+//
+//				response=MessageConstant.RESPONSE_SUCCESS;
+//				userEntity.setResponse(response);
+//				}
+		
+		}catch (Exception e) {
+			response=MessageConstant.RESPONSE_FAILED;
+			userEntity.setResponse(response);
+			e.printStackTrace();
+		}
+		return userEntity;
+	}
+
+	public long generateId() {
+        Query query = entityManager.createNativeQuery("SELECT nextval('employercode')");
+        return ((Number) query.getSingleResult()).longValue();
+    }
+	public String getEmployerNo() {
+    	
+    	String value=String.valueOf(generateId());
+    	int len =value.length();
+    	String finalValue="";
+    	String employerCode="";
+        switch (len) {
+            case 1:
+            	finalValue="0000"+value;
+                break;
+            case 2:
+            	finalValue="000"+value;
+                break;
+            case 3:
+            	finalValue="00"+value;
+                break;
+            case 4:
+            	finalValue="0"+value;
+                break;
+            default:
+            	finalValue=value;
+        }
+        employerCode="HRMS"+finalValue;
+        System.out.println(employerCode);
+    	return employerCode;
+    }
+
+
+	@Override
+	public UserEntity updateReputeDetails(HttpServletRequest request, UserRequest user) {
+		UserEntity userEntity=new UserEntity();
+		String response=MessageConstant.RESPONSE_FAILED;
+		user.setResponse(response);
+		try {
+			TokenGeneration token=new TokenGeneration();
+				UserEntity userDetails= new UserEntity();
+				UserEmpEntity userEmpEntity= new UserEmpEntity();
+					UserEntity reputeUser=userDetailsDao.checkUserMobile(user.getMobile());
+					if(reputeUser!=null) {
+						logger.info("reputeUser::11");
+						//CopyUtility.copyProperties(user,userDetails);
+						Date date = new Date();
+						LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+						//userDetails.setCreated_date(localDate);
+						//userDetails.setRole_id(MessageConstant.USER_ROLE);
+						userDetails.setStatus(user.getStatus());
+						//userDetails.setEmployerid(reputeUser.getId().intValue());
+						userEntity=userDetailsDao.saveUserDetails(userDetails);
+						logger.info("reputeUser::22");
+						String tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+						EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();
+						employeeOnboardingRequest.setUserDetailsId(userEntity.getId());
+						//employeeOnboardingRequest.setEmployerId(reputeUser.getId());
+						//employeeOnboardingRequest.setEmpOrCont("Repute");
+						//employeeOnboardingRequest.setMobile(user.getMobile());
+						//employeeOnboardingRequest.setEmail(user.getEmail());
+						//employeeOnboardingRequest.setName(user.getEmployeeName());
+						if(user.getStatus()==1) {
+							employeeOnboardingRequest.setUpdateStatus(true);
+						}else {
+							employeeOnboardingRequest.setUpdateStatus(false);							
+						}
+						 ObjectMapper objectMapper = new ObjectMapper();
+					     objectMapper.registerModule(new JavaTimeModule());
+					     String json =objectMapper.writeValueAsString(employeeOnboardingRequest);
+						String response1 = CommonUtility.userRequest(tokenvalue, json,
+								applicationConstantConfig.employerServiceBaseUrl+CommonUtils.updateEmployeeRepute,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+						logger.info("response1::"+response1);
+						userEmpEntity.setUser_id(userEntity.getId());
+						userEmpEntity.setStatus(userEntity.getStatus());
+						userEmpEntity.setCreated_by(userEntity.getMobile());
+						userEmpEntity.setCreated_date(localDate);
+						userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);		
+
+						response=MessageConstant.RESPONSE_SUCCESS;
+						userEntity.setResponse(response);
+					}
+					
+				
 		
 		}catch (Exception e) {
 			response=MessageConstant.RESPONSE_FAILED;

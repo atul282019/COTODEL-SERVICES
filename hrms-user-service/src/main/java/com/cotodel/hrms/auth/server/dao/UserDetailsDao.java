@@ -37,4 +37,7 @@ public interface UserDetailsDao {
 	UserEntity getUserDetailsByMobileAndOrgId(int orgId,String mobile);
 	
 	public UserEntity getByCompAndHrms(String companyId,String hrmsId);
+	
+	public int updateActiveDeactive(String mobile,int status);
+	
 }

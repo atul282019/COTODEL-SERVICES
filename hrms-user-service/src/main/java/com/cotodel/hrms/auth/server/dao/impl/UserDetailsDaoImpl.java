@@ -127,7 +127,11 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		// TODO Auto-generated method stub
 		return userRepository.checkUserCompAndHrmsId(companyId,hrmsId);
 	}
-	
-	
+
+	@Override
+	public int updateActiveDeactive(String mobile,int status) {
+		// TODO Auto-generated method stub
+		return userRepository.updateActiveDeactive(mobile, status);
+	}
 	
 }

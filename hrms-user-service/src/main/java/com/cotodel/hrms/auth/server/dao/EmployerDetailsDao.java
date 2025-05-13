@@ -14,4 +14,5 @@ public interface EmployerDetailsDao {
 	
 	public EmployerDetailsEntity saveCompanyDetails(EmployerDetailsEntity company);
 	public EmployerDetailsEntity getEmployerDetails(Long employerId);
+	public EmployerDetailsEntity getEmployerOnboardingDetails(String companyId,String hrmsId);
 }

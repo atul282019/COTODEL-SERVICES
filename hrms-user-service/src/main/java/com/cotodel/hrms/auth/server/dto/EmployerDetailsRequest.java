@@ -1,7 +1,6 @@
 package com.cotodel.hrms.auth.server.dto;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
 
 import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
@@ -14,9 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployerDetailsRequest {
-	@NotNull(message = "Employer id cannot be null")
-    @Min(value = 1, message = "Employer Id must be greater than or equal to 1")
-	private Long employerId;	
+	private Long id;
+	private Long employerId;
 	private String legalNameOfBusiness;	
 	private String tradeName;	
 	private String constitutionOfBusiness;	
@@ -37,10 +35,20 @@ public class EmployerDetailsRequest {
 	private String centerJurisdictionCode;
 	private String gstIdentificationNumber;
 	private String pan;
-	private String createdBy;
-	private Long id;
+	private String createdBy;	
 	private String response;
 	private String clientKey;
 	private String hash; 
+	private String organizationName;		 
+	private String mobile;	
+	private String email;
+	private String name;
+	private boolean erupistatus ;
+	private String companySize ;
+	private String privacyCheck;	
+	private String whatsupCheck;	
+	private String captcha;
+	private String companyId;	
+	private String hrmsId;
 	
 }

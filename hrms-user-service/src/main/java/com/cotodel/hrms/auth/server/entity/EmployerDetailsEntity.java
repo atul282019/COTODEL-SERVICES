@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="employer_details")
+@Table(name="employer_details",uniqueConstraints = {@UniqueConstraint(columnNames = {"organization_name"}),@UniqueConstraint(columnNames = {"mobile"})})
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="employer_details_seq" , sequenceName="employer_details_seq", allocationSize=1)
 public class EmployerDetailsEntity implements Serializable{
@@ -115,6 +116,32 @@ public class EmployerDetailsEntity implements Serializable{
 	
 	@Column(name="updated_by")
 	private String updatedBy;
+	
+	@Column(name="organization_name")
+	private String organizationName;
 		 
+	@Column(name="mobile")
+	private String mobile;
+	
+	@Column(name="email")
+	private String email;
+	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="company_id")
+	private String companyId;
+	
+	@Column(name="hrms_id")
+	private String hrmsId;
+	
+	@Column(name="company_size")
+	private String companySize;
+	
+	@Column(name = "erupistatus")
+	private boolean erupistatus;
+	private String privacyCheck;	
+	private String whatsupCheck;
+	
 }
 

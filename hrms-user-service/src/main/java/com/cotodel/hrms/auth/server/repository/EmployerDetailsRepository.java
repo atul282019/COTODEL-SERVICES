@@ -12,6 +12,10 @@ import com.cotodel.hrms.auth.server.entity.EmployerDetailsEntity;
 
 @Repository
 public interface EmployerDetailsRepository extends JpaRepository<EmployerDetailsEntity, Long> {
-	@Query("select s from EmployerDetailsEntity s where s.employerId =:orgId  ")
+	@Query("select s from EmployerDetailsEntity s where s.id =:orgId  ")
 	public EmployerDetailsEntity getEmployerDetailsByEmpId(@Param("orgId") Long orgId);
+	
+	@Query("select s from EmployerDetailsEntity s where s.companyId =:companyId and s.hrmsId=:hrmsId ")
+	public EmployerDetailsEntity getEmployerDetailsByCompId(@Param("companyId") String companyId,@Param("hrmsId") String hrmsId);
+
 }

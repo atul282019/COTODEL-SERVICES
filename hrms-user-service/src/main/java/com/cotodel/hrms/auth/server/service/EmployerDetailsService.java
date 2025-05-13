@@ -13,5 +13,6 @@ public interface EmployerDetailsService {
 	public EmployerDetailsEntity  getEmployerComplete(Long employerId);
 	public List<EmployerProfileAddress>  getCompaneyAddress(Long employerId);
 	public EmployerDetailsRequest  updateEmployerDetails(EmployerDetailsRequest user);
+	public EmployerDetailsRequest  saveEmployerOnboardingDetails(EmployerDetailsRequest user);
 	
 }

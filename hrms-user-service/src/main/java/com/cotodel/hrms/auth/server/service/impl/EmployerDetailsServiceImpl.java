@@ -6,7 +6,9 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -19,15 +21,21 @@ import org.springframework.stereotype.Service;
 
 import com.cotodel.hrms.auth.server.dao.EmployerDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.EmployerDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployerProfileAddress;
 import com.cotodel.hrms.auth.server.entity.EmployerDetailsEntity;
+import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
+import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.EmployerDetailsService;
+import com.cotodel.hrms.auth.server.util.CommonUtility;
+import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
-import com.cotodel.hrms.auth.server.util.SQLInjectionValidator;
 import com.cotodel.hrms.auth.server.util.ValidateConstants;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * 
@@ -46,13 +54,16 @@ public class EmployerDetailsServiceImpl implements EmployerDetailsService {
 	
 	@Autowired
     private EntityManager entityManager;
+	
+	@Autowired
+	ApplicationConstantConfig applicationConstantConfig;
 
 	@Override
 	public EmployerDetailsRequest saveEmployerDetails(EmployerDetailsRequest employerDetailsRequest) {
 		// TODO Auto-generated method stub
 		logger.info(" inside saveEmployerDetails");
 		EmployerDetailsEntity employerDetailsEntity= new EmployerDetailsEntity();
-		EmployerDetailsEntity empDetailsEntity= new EmployerDetailsEntity();
+		//EmployerDetailsEntity empDetailsEntity= new EmployerDetailsEntity();
 		String response="";
 		response=MessageConstant.RESPONSE_FAILED;
 		employerDetailsRequest.setResponse(response);
@@ -91,39 +102,61 @@ public class EmployerDetailsServiceImpl implements EmployerDetailsService {
 			employerDetailsEntity=employerDetailsDao.getEmployerDetails(employerDetailsRequest.getEmployerId());
 			if(employerDetailsEntity!=null) {
 				logger.info("if");
-				CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
-				empDetailsEntity.setId(employerDetailsEntity.getId());
-				empDetailsEntity.setEmployerId(employerDetailsEntity.getEmployerId());
-				empDetailsEntity.setEmployerCode(employerDetailsEntity.getEmployerCode());
-				empDetailsEntity.setCreatedBy(employerDetailsEntity.getCreatedBy());
-				empDetailsEntity.setCreatedDate(employerDetailsEntity.getCreatedDate());
-				empDetailsEntity.setUpdatedDate(LocalDate.now());
-				empDetailsEntity.setStatus(1);
+				//CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
+				//empDetailsEntity.setId(employerDetailsEntity.getId());
+				//empDetailsEntity.setEmployerId(employerDetailsEntity.getEmployerId());
+				//employerDetailsEntity.setEmployerCode(employerDetailsEntity.getEmployerCode());
+				//employerDetailsEntity.setCreatedBy(employerDetailsEntity.getCreatedBy());
+				//empDetailsEntity.setCreatedDate(employerDetailsEntity.getCreatedDate());
+				employerDetailsEntity.setUpdatedDate(LocalDate.now());
+				employerDetailsEntity.setLegalNameOfBusiness(employerDetailsRequest.getLegalNameOfBusiness());
+				employerDetailsEntity.setTradeName(employerDetailsRequest.getTradeName());
+				employerDetailsEntity.setConstitutionOfBusiness(employerDetailsRequest.getConstitutionOfBusiness());
+				employerDetailsEntity.setOrgType(employerDetailsRequest.getOrgType());
+				employerDetailsEntity.setAddress1(employerDetailsRequest.getAddress1());
+				employerDetailsEntity.setAddress2(employerDetailsRequest.getAddress2());
+				employerDetailsEntity.setDistrictName(employerDetailsRequest.getDistrictName());
+				employerDetailsEntity.setPincode(employerDetailsRequest.getPincode());
+				employerDetailsEntity.setStateName(employerDetailsRequest.getStateName());
+				employerDetailsEntity.setConsent(employerDetailsRequest.getConsent());
+				employerDetailsEntity.setStreetName(employerDetailsRequest.getStreetName());
+				employerDetailsEntity.setBuildingNumber(employerDetailsRequest.getBuildingNumber());
+				employerDetailsEntity.setBuildingName(employerDetailsRequest.getBuildingName());
+				employerDetailsEntity.setLocation(employerDetailsRequest.getLocation());
+				employerDetailsEntity.setFloorNumber(employerDetailsRequest.getFloorNumber());
+				employerDetailsEntity.setOtpStatus(employerDetailsRequest.getOtpStatus());
+				employerDetailsEntity.setNatureOfPrincipalPlaceOfBusiness(employerDetailsRequest.getNatureOfPrincipalPlaceOfBusiness());
+				employerDetailsEntity.setCenterJurisdictionCode(employerDetailsRequest.getCenterJurisdictionCode());
+				employerDetailsEntity.setGstIdentificationNumber(employerDetailsRequest.getGstIdentificationNumber());
+				employerDetailsEntity.setPan(employerDetailsRequest.getPan());
+				employerDetailsEntity.setUpdatedBy(employerDetailsRequest.getCreatedBy());				 
+				employerDetailsEntity.setStatus(1);
 				if(employerDetailsRequest.getOtpStatus()!=null && employerDetailsRequest.getOtpStatus().equalsIgnoreCase("YES")) {
-					empDetailsEntity.setProfileComplete(3);
+					employerDetailsEntity.setProfileComplete(3);
 				}else {
-					empDetailsEntity.setProfileComplete(2);
+					employerDetailsEntity.setProfileComplete(2);
 				}
 				//empDetailsEntity.setProfileComplete(3);
-				empDetailsEntity.setConsent(employerDetailsRequest.getConsent());
-				empDetailsEntity.setOtpStatus(employerDetailsRequest.getOtpStatus());
-				empDetailsEntity.setUpdatedBy(employerDetailsRequest.getCreatedBy());
-				employerDetailsDao.saveCompanyDetails(empDetailsEntity);
+				employerDetailsEntity.setConsent(employerDetailsRequest.getConsent());
+				employerDetailsEntity.setOtpStatus(employerDetailsRequest.getOtpStatus());
+				employerDetailsEntity.setUpdatedBy(employerDetailsRequest.getCreatedBy());
+				employerDetailsDao.saveCompanyDetails(employerDetailsEntity);
 				response=MessageConstant.RESPONSE_SUCCESS;
 				employerDetailsRequest.setResponse(response);				
-			}else {
-				logger.info("else");
-				CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
-				empDetailsEntity.setCreatedDate(LocalDate.now());
-				//empDetailsEntity.setcre
-				empDetailsEntity.setStatus(1);
-				String employerCode=getEmployerNo();
-				empDetailsEntity.setProfileComplete(2);
-				empDetailsEntity.setEmployerCode(employerCode);
-				employerDetailsDao.saveCompanyDetails(empDetailsEntity);		
-				response=MessageConstant.RESPONSE_SUCCESS;
-				employerDetailsRequest.setResponse(response);
 			}
+//			else {
+//				logger.info("else");
+//				CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
+//				empDetailsEntity.setCreatedDate(LocalDate.now());
+//				//empDetailsEntity.setcre
+//				empDetailsEntity.setStatus(1);
+//				String employerCode=getEmployerNo();
+//				empDetailsEntity.setProfileComplete(2);
+//				empDetailsEntity.setEmployerCode(employerCode);
+//				employerDetailsDao.saveCompanyDetails(empDetailsEntity);		
+//				response=MessageConstant.RESPONSE_SUCCESS;
+//				employerDetailsRequest.setResponse(response);
+//			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			response=MessageConstant.RESPONSE_FAILED;
@@ -268,39 +301,41 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 				employerDetailsEntity=employerDetailsDao.getEmployerDetails(employerDetailsRequest.getEmployerId());
 				if(employerDetailsEntity!=null) {
 					logger.info("if");
-					CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
-					empDetailsEntity.setId(employerDetailsEntity.getId());
-					empDetailsEntity.setEmployerId(employerDetailsEntity.getEmployerId());
-					empDetailsEntity.setEmployerCode(employerDetailsEntity.getEmployerCode());
-					empDetailsEntity.setCreatedBy(employerDetailsEntity.getCreatedBy());
-					empDetailsEntity.setCreatedDate(employerDetailsEntity.getCreatedDate());
-					empDetailsEntity.setUpdatedDate(LocalDate.now());
-					empDetailsEntity.setStatus(1);
+					//CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
+					//empDetailsEntity.setId(employerDetailsEntity.getId());
+					//empDetailsEntity.setEmployerId(employerDetailsEntity.getEmployerId());
+					//empDetailsEntity.setEmployerCode(employerDetailsEntity.getEmployerCode());
+					//empDetailsEntity.setCreatedBy(employerDetailsEntity.getCreatedBy());
+					//empDetailsEntity.setCreatedDate(employerDetailsEntity.getCreatedDate());
+					employerDetailsEntity.setUpdatedDate(LocalDate.now());
+					employerDetailsEntity.setUpdatedBy(employerDetailsRequest.getCreatedBy());
+					employerDetailsEntity.setStatus(1);
 					if(employerDetailsRequest.getOtpStatus()!=null && employerDetailsRequest.getOtpStatus().equalsIgnoreCase("YES")) {
-						empDetailsEntity.setProfileComplete(3);
+						employerDetailsEntity.setProfileComplete(3);
 					}else {
-						empDetailsEntity.setProfileComplete(2);
+						employerDetailsEntity.setProfileComplete(2);
 					}
 					//empDetailsEntity.setProfileComplete(3);
-					empDetailsEntity.setConsent(employerDetailsRequest.getConsent());
-					empDetailsEntity.setOtpStatus(employerDetailsRequest.getOtpStatus());
-					empDetailsEntity.setUpdatedBy(employerDetailsRequest.getCreatedBy());
-					employerDetailsDao.saveCompanyDetails(empDetailsEntity);
+					employerDetailsEntity.setConsent(employerDetailsRequest.getConsent());
+					employerDetailsEntity.setOtpStatus(employerDetailsRequest.getOtpStatus());
+					employerDetailsEntity.setUpdatedBy(employerDetailsRequest.getCreatedBy());
+					employerDetailsDao.saveCompanyDetails(employerDetailsEntity);
 					response=MessageConstant.RESPONSE_SUCCESS;
 					employerDetailsRequest.setResponse(response);				
-				}else {
-					logger.info("else");
-					CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
-					empDetailsEntity.setCreatedDate(LocalDate.now());
-					//empDetailsEntity.setcre
-					empDetailsEntity.setStatus(1);
-					String employerCode=getEmployerNo();
-					empDetailsEntity.setProfileComplete(2);
-					empDetailsEntity.setEmployerCode(employerCode);
-					employerDetailsDao.saveCompanyDetails(empDetailsEntity);		
-					response=MessageConstant.RESPONSE_SUCCESS;
-					employerDetailsRequest.setResponse(response);
 				}
+//				else {
+//					logger.info("else");
+//					CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
+//					empDetailsEntity.setCreatedDate(LocalDate.now());
+//					//empDetailsEntity.setcre
+//					empDetailsEntity.setStatus(1);
+//					String employerCode=getEmployerNo();
+//					empDetailsEntity.setProfileComplete(2);
+//					empDetailsEntity.setEmployerCode(employerCode);
+//					employerDetailsDao.saveCompanyDetails(empDetailsEntity);		
+//					response=MessageConstant.RESPONSE_SUCCESS;
+//					employerDetailsRequest.setResponse(response);
+//				}
 			} catch (Exception e) {
 				// TODO: handle exception
 				response=MessageConstant.RESPONSE_FAILED;
@@ -308,6 +343,128 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 			}
 			return employerDetailsRequest;
 }
+
+	@Override
+	public EmployerDetailsRequest saveEmployerOnboardingDetails(EmployerDetailsRequest employerDetailsRequest) {
+		// TODO Auto-generated method stub
+					logger.info(" inside saveEmployerDetails");
+					EmployerDetailsEntity employerDetailsEntity= new EmployerDetailsEntity();
+					EmployerDetailsEntity empDetailsEntity= new EmployerDetailsEntity();
+					String response="";
+					response=MessageConstant.RESPONSE_FAILED;
+					employerDetailsRequest.setResponse(response);
+					System.out.println("first method::");
+					try {			
+				
+
+//						String dataString =employerDetailsRequest.getPan()+employerDetailsRequest.getLegalNameOfBusiness()+
+//								employerDetailsRequest.getTradeName()+employerDetailsRequest.getConstitutionOfBusiness()+
+//								employerDetailsRequest.getOrgType()+employerDetailsRequest.getAddress1()+
+//								employerDetailsRequest.getAddress2()+employerDetailsRequest.getDistrictName()+
+//								employerDetailsRequest.getPincode()+employerDetailsRequest.getStateName()+
+//								employerDetailsRequest.getGstIdentificationNumber()+employerDetailsRequest.getCreatedBy()+
+//								employerDetailsRequest.getEmployerId()+employerDetailsRequest.getConsent()+
+//								employerDetailsRequest.getOtpStatus()+employerDetailsRequest.getClientKey()+MessageConstant.SECRET_KEY;
+				        System.out.println("first hash::"+employerDetailsRequest.getHash());
+				        
+//				        String hash=ValidateConstants.generateHash(dataString);
+//				        System.out.println("first local hash::"+hash);
+//						if(!employerDetailsRequest.getHash().equalsIgnoreCase(hash)) {
+//							employerDetailsRequest.setResponse(MessageConstant.HASH_ERROR);
+//							return employerDetailsRequest;
+//						}
+						employerDetailsEntity=employerDetailsDao.getEmployerDetails(employerDetailsRequest.getId());
+						if(employerDetailsEntity!=null) {
+							logger.info("if");
+							//CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
+							//empDetailsEntity.setId(employerDetailsEntity.getId());
+							//empDetailsEntity.setEmployerId(employerDetailsEntity.getEmployerId());
+							//empDetailsEntity.setEmployerCode(employerDetailsEntity.getEmployerCode());
+							//empDetailsEntity.setCreatedBy(employerDetailsEntity.getCreatedBy());
+							//empDetailsEntity.setCreatedDate(employerDetailsEntity.getCreatedDate());
+							//empDetailsEntity.setUpdatedDate(LocalDate.now());
+							//empDetailsEntity.setStatus(1);
+							if(employerDetailsRequest.getOtpStatus()!=null && employerDetailsRequest.getOtpStatus().equalsIgnoreCase("YES")) {
+								empDetailsEntity.setProfileComplete(3);
+							}else {
+								empDetailsEntity.setProfileComplete(2);
+							}
+							//empDetailsEntity.setProfileComplete(3);
+							empDetailsEntity.setConsent(employerDetailsRequest.getConsent());
+							empDetailsEntity.setOtpStatus(employerDetailsRequest.getOtpStatus());
+							empDetailsEntity.setUpdatedBy(employerDetailsRequest.getCreatedBy());
+							employerDetailsDao.saveCompanyDetails(empDetailsEntity);
+							response=MessageConstant.RESPONSE_SUCCESS;
+							employerDetailsRequest.setResponse(response);				
+						}else {
+							logger.info("else");
+							CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
+							empDetailsEntity.setCreatedDate(LocalDate.now());
+							//empDetailsEntity.setcre
+							empDetailsEntity.setCreatedBy(employerDetailsRequest.getName());
+							empDetailsEntity.setName(employerDetailsRequest.getName());
+							empDetailsEntity.setOrganizationName(employerDetailsRequest.getOrganizationName());
+							empDetailsEntity.setEmail(employerDetailsRequest.getEmail());
+							empDetailsEntity.setMobile(employerDetailsRequest.getMobile());
+							empDetailsEntity.setStatus(1);
+							String employerCode=getEmployerNo();
+							empDetailsEntity.setProfileComplete(1);
+							empDetailsEntity.setEmployerCode(employerCode);
+							EmployerDetailsEntity employerDetailsEntity2=employerDetailsDao.saveCompanyDetails(empDetailsEntity);
+							if(employerDetailsEntity2!=null) {
+								UserEntity userDetails= new UserEntity();
+								UserEmpEntity userEmpEntity= new UserEmpEntity();
+								//CopyUtility.copyProperties(userDetails, user);
+								CopyUtility.copyProperties(employerDetailsRequest,userDetails);
+								userDetails.setUsername(employerDetailsRequest.getName());
+								userDetails.setMobile(employerDetailsRequest.getMobile());
+								userDetails.setEmail(employerDetailsRequest.getEmail());
+								userDetails.setEmployerid(employerDetailsEntity2.getId().intValue());
+								Date date = new Date();
+								LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+								userDetails.setCreated_date(LocalDate.now());
+								if(employerDetailsRequest.isErupistatus()) {
+									userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
+								}else {
+									userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+								}
+								userDetails.setStatus(1);
+								UserEntity userEntity=userDetailsDao.saveUserDetails(userDetails);
+								EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();
+								employeeOnboardingRequest.setUserDetailsId(userEntity.getId());
+								employeeOnboardingRequest.setEmployerId(employerDetailsEntity2.getId());
+								employeeOnboardingRequest.setEmpOrCont("Employee");
+								employeeOnboardingRequest.setMobile(employerDetailsRequest.getMobile());
+								employeeOnboardingRequest.setEmail(employerDetailsRequest.getEmail());
+								employeeOnboardingRequest.setName(employerDetailsRequest.getName());
+								TokenGeneration token=new TokenGeneration();
+								String tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+								//logger.info("reputeUser::44");
+								 ObjectMapper objectMapper = new ObjectMapper();
+							     objectMapper.registerModule(new JavaTimeModule());
+							     String json =objectMapper.writeValueAsString(employeeOnboardingRequest);
+							    //    logger.info("json::100"+json);
+								String response1 = CommonUtility.userRequest(tokenvalue, json,
+										applicationConstantConfig.employerServiceBaseUrl+CommonUtils.addEmployeeRepute,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+								logger.info("response1::"+response1);
+								//userEmpEntity.setUser_id(UserEntity1.getId());
+								userEmpEntity.setUser_id(userEntity.getId());
+								userEmpEntity.setStatus(userEntity.getStatus());
+								userEmpEntity.setCreated_by(userEntity.getMobile());
+								userEmpEntity.setCreated_date(localDate);
+								userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);
+							}
+							response=MessageConstant.RESPONSE_SUCCESS;
+							employerDetailsRequest.setResponse(response);
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+						response=MessageConstant.RESPONSE_FAILED;
+						employerDetailsRequest.setResponse(response);
+					}
+					return employerDetailsRequest;
+		
+	}
 
 
 }
