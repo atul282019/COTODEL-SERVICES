@@ -23,4 +23,5 @@ public interface EmployeeOnboardingService {
 	public EmployeeOnboardingEntity  getEmployeeDetailsByUserId(Long id);
 	public EmployeeOnboardingNewRequest  updateEmployeeDetailsNew(EmployeeOnboardingNewRequest	 request);
 	public EmployeeOnboardingRequest  saveEmployeeDetailsRepute(EmployeeOnboardingReputeRequest	 request);
+	public EmployeeOnboardingRequest  updateEmployeeDetailsRepute(EmployeeOnboardingReputeRequest	 request);
 }

@@ -116,6 +116,47 @@ public class OcrReaderServiceImpl implements OcrReaderService{
 	
 
 	public double extractTotalAmount(String input) {
+		if(input.contains("Uber")) {
+			String[] lines = input.split("\\n");
+
+	        String totalLine = null;
+	        for (String line : input.split("\\n")) {
+	        	
+	            if (line.contains("Total")) {
+	                totalLine = line;
+	                break;
+	            }
+	        }
+	        double total = 0.0;
+	        if (totalLine != null) {
+	            String number = totalLine.replaceAll("[^0-9.]", "");
+	            total = Double.parseDouble(number);
+	            System.out.println("Extracted Bill Total: " + total);
+	        } else {
+	            System.out.println("Bill Total line not found.");
+	        }
+	        return total; // default if not found
+		}else if(input.contains("Amazon")) {
+			String[] lines = input.split("\\n");
+
+	        String totalLine = null;
+	        for (int i = 0; i < lines.length - 1; i++) {
+	            if (lines[i].contains("Invoice Value")) {
+	            	totalLine = lines[i + 1];
+	                System.out.println("Next line after 'Invoice Value': " + totalLine);
+	                break;
+	            }
+	        }
+	        double total = 0.0;
+	        if (totalLine != null) {
+	            String number = totalLine.replaceAll("[^0-9.]", "");
+	            total = Double.parseDouble(number);
+	            System.out.println("Extracted Bill Total: " + total);
+	        } else {
+	            System.out.println("Bill Total line not found.");
+	        }
+	        return total; // default if not found
+		}else {
         String[] lines = input.split("\\n");
 
         String totalLine = null;
@@ -135,6 +176,7 @@ public class OcrReaderServiceImpl implements OcrReaderService{
             System.out.println("Bill Total line not found.");
         }
         return total; // default if not found
+		}
     }
 	
 	public String  order(String input) {
@@ -180,6 +222,17 @@ public class OcrReaderServiceImpl implements OcrReaderService{
 	public String  orderDate(String input) {
 		String[] lines=input.split("\\n");
         String totalLine = null;
+        String order ="";
+        if(input.contains("Amazon")) {
+        	for (String line : input.split("\\n")) {
+            	
+                if (line.contains("Order Date")) {
+                	System.out.println("line::"+line);
+                	order = line.replaceAll("Order Date: ", "");
+                    break;
+                }
+            }
+        }else {
         for (String line : input.split("\\n")) {
         	
             if (line.contains("Order delivered on")) {
@@ -190,7 +243,7 @@ public class OcrReaderServiceImpl implements OcrReaderService{
                 break;
             }
         }
-        String order ="";
+        
         if (totalLine != null) {
             String number = totalLine;
             order =number;
@@ -202,9 +255,18 @@ public class OcrReaderServiceImpl implements OcrReaderService{
         } else {
             System.out.println("Order delivered on not found.");
         }
+	}
         return order; // default if not found
     }
 	public String  venderName(String input) {
+		String order ="";
+		if(input.contains("Uber")) {
+			order ="Uber";	        
+	        return order; // default if not found
+		}else if(input.contains("Amazon")) {
+			order ="Amazon";	        
+	        return order; // default if not found
+		}else {
 		String[] lines=input.split("\\n");
         String totalLine = null;
         for (String line : input.split("\\n")) {
@@ -214,7 +276,7 @@ public class OcrReaderServiceImpl implements OcrReaderService{
                 break;
             }
         }
-        String order ="";
+        
         if (totalLine != null) {
             String number = totalLine;
             order =number;
@@ -223,6 +285,7 @@ public class OcrReaderServiceImpl implements OcrReaderService{
             System.out.println("Bill Total line not found.");
         }
         return order; // default if not found
+		}
     }
         
         

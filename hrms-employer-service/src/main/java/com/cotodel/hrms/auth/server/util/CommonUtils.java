@@ -17,4 +17,6 @@ public interface CommonUtils {
 	public static String sendIndianVoucherCreate = "/erupitesting/Api/call/indianVoucherCreation";
 	public static String sendIndianVoucherRevoke = "/erupitesting/Api/call/indianVoucherRevoke";
 	public static String sendIndianVoucherInquary = "/erupitesting/Api/call/indianVoucherInquiry";
+	public static String userUserStatus = "/userServices/Api/update/updateUsers";
+	
 }

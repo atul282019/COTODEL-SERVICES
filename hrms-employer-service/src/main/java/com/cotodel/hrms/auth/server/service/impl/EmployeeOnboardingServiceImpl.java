@@ -577,6 +577,14 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 //						id=userEntity.getLong("id");
 //						
 //					}
+			//update/updateUsers
+			
+//					response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+//					applicationConstantConfig.userServiceApiUrl+CommonUtils.userUserStatus,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+//					tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
+//					userRequest.setUsername(request.getName());
+//					userRequest.setMobile(request.getMobile());
+//					userRequest.setEmail(request.getEmail());
 					response = MessageConstant.RESPONSE_FAILED;
 					request.setResponse(response);
 					EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
@@ -587,6 +595,14 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 						employeeOnboarding.setStatus(1);
 					}
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
+					if(employeeOnboarding!=null) {
+						userRequest.setId(request.getUserDetailsId());
+						userRequest.setStatus(employeeOnboarding.getStatus());
+						tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
+						response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
+						applicationConstantConfig.userServiceApiUrl+CommonUtils.userUserStatus,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+												
+					}
 					response = MessageConstant.RESPONSE_SUCCESS;
 					request.setResponse(response);
 
@@ -843,6 +859,38 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 		}
 		return employeeOnboardingRequest;
 
+	}
+
+
+	@Override
+	public EmployeeOnboardingRequest updateEmployeeDetailsRepute(EmployeeOnboardingReputeRequest request) {
+		String response="";
+		EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();				
+		try {
+			response = MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+			EmployeeOnboardingEntity employeeOnboarding = new EmployeeOnboardingEntity();
+			Long userid=request.getUserDetailsId();
+			employeeOnboarding=employeeOnboardingDao.getEmployeeOnboardingUserId(userid);
+			if(employeeOnboarding!=null) {
+				if(request.isUpdateStatus()) {
+					employeeOnboarding.setStatus(1);
+				}else {
+					employeeOnboarding.setStatus(0);
+				}
+				employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);
+				response = MessageConstant.RESPONSE_SUCCESS;
+				request.setResponse(response);
+			}		
+			CopyUtility.copyProperties(request, employeeOnboardingRequest);					
+			logger.info("request::"+request);
+			
+		} catch (Exception e) {
+			response = MessageConstant.RESPONSE_FAILED;
+			request.setResponse(response);
+			e.printStackTrace();
+		}
+		return employeeOnboardingRequest;
 	}
 	
 	
