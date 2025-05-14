@@ -20,6 +20,7 @@ import com.cotodel.hrms.auth.server.dao.EmployeeOnboardingDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeUpdateRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.UpdateEmployeeStatusRequest;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
@@ -863,7 +864,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 
 
 	@Override
-	public EmployeeOnboardingRequest updateEmployeeDetailsRepute(EmployeeOnboardingReputeRequest request) {
+	public EmployeeOnboardingRequest updateEmployeeDetailsRepute(EmployeeOnboardingReputeUpdateRequest request) {
 		String response="";
 		EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();				
 		try {

@@ -22,6 +22,7 @@ import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingManagerIdResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeUpdateRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingResponse;
 import com.cotodel.hrms.auth.server.dto.UpdateEmployeeResponse;
@@ -656,7 +657,7 @@ public class EmployeeOnboardingController {
 	    	String message = "";
 	    	String message1 = "";
 	    	EmployeeOnboardingRequest response=null;
-	    	EmployeeOnboardingReputeRequest employeeOnboardingRequest1=null;
+	    	EmployeeOnboardingReputeUpdateRequest employeeOnboardingRequest1=null;
 	    	EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();
 	    	EmployeeOnboardingResponse employeeOnboardingResponse;
 	    	try {	    		
@@ -664,8 +665,8 @@ public class EmployeeOnboardingController {
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
-				employeeOnboardingRequest1= EncryptionDecriptionUtil.convertFromJson(decript, EmployeeOnboardingReputeRequest.class);
-				response=employeeOnboardingService.saveEmployeeDetailsRepute(employeeOnboardingRequest1);
+				employeeOnboardingRequest1= EncryptionDecriptionUtil.convertFromJson(decript, EmployeeOnboardingReputeUpdateRequest.class);
+				response=employeeOnboardingService.updateEmployeeDetailsRepute(employeeOnboardingRequest1);
 				CopyUtility.copyProperties(employeeOnboardingRequest1, employeeOnboardingRequest);
 				
 				message1=response.getResponse()==null?MessageConstant.PROFILE_FAILED:response.getResponse();

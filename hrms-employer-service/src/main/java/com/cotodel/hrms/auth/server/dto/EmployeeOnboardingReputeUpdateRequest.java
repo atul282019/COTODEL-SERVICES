@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeOnboardingReputeRequest implements Serializable {
+public class EmployeeOnboardingReputeUpdateRequest implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
    	private Long employerId;
