@@ -10,7 +10,7 @@ public class MessageConstant {
 	public static final Integer ONE = 1;
 	public static final String OTP_SENT = "Otp Sent Successfully.";
 	public static final String OTP_FAILED = "Otp Failed.";
-	public static final String USER_DEACTIVE = "User Deactive. Please activate";
+	public static final String USER_DEACTIVE = "You are not authorized to access.";
 	public static final String PROFILE_SUCCESS = "Data Saved Successfully.";
 	public static final String PROFILE_FAILED = "Data Not Saved Successfully.";
 	public static final String USER_EMAIL_ALREADY_VERIFIED = "User Already verified with this email!!";
@@ -34,4 +34,5 @@ public class MessageConstant {
 	public static final String REJECTED = "Rejected";
 	public static final String SECRET_KEY = "0123456789012345";
 	public static final String HASH_ERROR = "Tempered Request";
+	public static final String ORG_EXIST ="This company is already registered.";
 }

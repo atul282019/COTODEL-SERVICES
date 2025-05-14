@@ -7,8 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dto.UserManagerDto;
+import com.cotodel.hrms.auth.server.entity.EmployerDetailsEntity;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
+import com.cotodel.hrms.auth.server.repository.EmployerDetailsRepository;
 import com.cotodel.hrms.auth.server.repository.UserEmpRepository;
 import com.cotodel.hrms.auth.server.repository.UserRepository;
 
@@ -20,6 +22,9 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	
 	@Autowired
 	UserEmpRepository userEmpRepository;
+	
+	@Autowired
+	EmployerDetailsRepository employerDetailsRepository;
 	
 	@Override
 	public UserEntity saveUserDetails(UserEntity user) {
@@ -70,9 +75,9 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	}
 
 	@Override
-	public UserEntity getOrgExist(Long id) {
+	public EmployerDetailsEntity getOrgExist(Long id) {
 		// TODO Auto-generated method stub
-		return userRepository.findByEmployerExist(id);
+		return employerDetailsRepository.getEmployerDetailsById(id);
 	}
 
 	@Override

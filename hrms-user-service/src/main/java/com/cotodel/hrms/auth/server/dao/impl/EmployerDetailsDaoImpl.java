@@ -1,6 +1,8 @@
 
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +33,12 @@ public class EmployerDetailsDaoImpl implements EmployerDetailsDao {
 	public EmployerDetailsEntity getEmployerOnboardingDetails(String companyId, String hrmsId) {
 		
 		return employerDetailsRepository.getEmployerDetailsByCompId(companyId, hrmsId);
+	}
+
+	@Override
+	public List<EmployerDetailsEntity> checkEmployerOnboardingDetails(String organizationName, String mobile) {
+		// TODO Auto-generated method stub
+		return employerDetailsRepository.checkOrgAndMobile(organizationName, mobile);
 	}
 
 }

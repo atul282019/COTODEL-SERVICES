@@ -19,6 +19,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.ExistUserResponse;
 import com.cotodel.hrms.auth.server.dto.ExistUserRoleRequest;
 import com.cotodel.hrms.auth.server.dto.ReputeEmployeeDetails;
+import com.cotodel.hrms.auth.server.dto.UpdateReputeStatusRequest;
 import com.cotodel.hrms.auth.server.dto.UserDto;
 import com.cotodel.hrms.auth.server.dto.UserManagerDto;
 import com.cotodel.hrms.auth.server.dto.UserManagerResponse;
@@ -30,7 +31,9 @@ import com.cotodel.hrms.auth.server.dto.UserRoleEditListResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleEditResponse;
 import com.cotodel.hrms.auth.server.dto.UserRoleRequestNew;
 import com.cotodel.hrms.auth.server.dto.UserRoleResponse;
+import com.cotodel.hrms.auth.server.dto.UserSignUpOrgExistResponse;
 import com.cotodel.hrms.auth.server.dto.UserSignUpResponse;
+import com.cotodel.hrms.auth.server.entity.EmployerDetailsEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
@@ -555,10 +558,10 @@ public class UserSignUpController extends CotoDelBaseController{
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> orgExist(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 	    	logger.info("inside get orgExist");
-	    	UserEntity userEntity=null;
+	    	EmployerDetailsEntity userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
-	    	UserSignUpResponse userSignUpResponse;
+	    	UserSignUpOrgExistResponse userSignUpResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
@@ -570,12 +573,12 @@ public class UserSignUpController extends CotoDelBaseController{
 				
 	    		
 	    	    if(userEntity!=null) {
-	    	    	userSignUpResponse=new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	userSignUpResponse=new UserSignUpOrgExistResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
 	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
 	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    	    	return ResponseEntity.ok(jsonEncriptObject);
 	    	    }else {
-	    	    	userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	userSignUpResponse=new UserSignUpOrgExistResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
 	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
 	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    	    	return ResponseEntity.ok(jsonEncriptObject);
@@ -589,7 +592,7 @@ public class UserSignUpController extends CotoDelBaseController{
 	        
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    		userSignUpResponse=new UserSignUpOrgExistResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
     	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
     	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {
@@ -1083,7 +1086,7 @@ public class UserSignUpController extends CotoDelBaseController{
 
 	            String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 		        userReqEnc = EncryptionDecriptionUtil.convertFromJson(decript, ReputeEmployeeDetails.class);
-		        
+		         
 		        CopyUtility.copyProperties(userReqEnc, userReq);
 		        //userReq.setMobile(userReqEnc.get)
 		        
@@ -1149,12 +1152,12 @@ public class UserSignUpController extends CotoDelBaseController{
 				SetDatabaseTenent.setDataSource(companyId);
 				System.out.println("companyId:signup::"+companyId);
 				UserRequest userReq=new UserRequest();
-				UserRequestEncript userReqEnc=new UserRequestEncript();
+				UpdateReputeStatusRequest updateReputeStatusRequest=new UpdateReputeStatusRequest();
 
 	            String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
-		        userReqEnc = EncryptionDecriptionUtil.convertFromJson(decript, UserRequestEncript.class);
+	            updateReputeStatusRequest = EncryptionDecriptionUtil.convertFromJson(decript, UpdateReputeStatusRequest.class);
 		        
-		        CopyUtility.copyProperties(userReqEnc, userReq);
+		        //CopyUtility.copyProperties(userReqEnc, userReq);
 		        
 //				responseToken=userService.userExist(userReq.getMobile(), userReq.getEmail());
 //				if(!responseToken.equalsIgnoreCase("")) {
@@ -1163,7 +1166,7 @@ public class UserSignUpController extends CotoDelBaseController{
 //		            EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 //		    	    return ResponseEntity.ok(jsonEncriptObject);
 //				}else {
-	    	    userEntity=	userService.updateReputeDetails(request,userReq);
+	    	    userEntity=	userService.updateReputeDetails(request,updateReputeStatusRequest);
 	    		
 	    	    if(userEntity!=null && userEntity.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {	    
 	    		 userService.sendEmailToEmployee(userReq);

@@ -26,5 +26,6 @@ private String username;
     private String hrmsId;
     private String hrmsName;
     private String employeeName;
+    private String doe;
     
 }

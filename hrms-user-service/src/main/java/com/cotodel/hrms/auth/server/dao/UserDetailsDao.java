@@ -3,6 +3,7 @@ package com.cotodel.hrms.auth.server.dao;
 import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.UserManagerDto;
+import com.cotodel.hrms.auth.server.entity.EmployerDetailsEntity;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
 
@@ -20,7 +21,7 @@ public interface UserDetailsDao {
 	List<UserEntity> getUser(String mobile, String email);
 	UserEntity getUserNew(String mobile, String email);
 	
-	public UserEntity getOrgExist(Long id);
+	public EmployerDetailsEntity getOrgExist(Long id);
 	UserEntity getUserDetails(String mobile, String email);
 	
 	List<UserEntity> getUserList(int employerid,String mobile);

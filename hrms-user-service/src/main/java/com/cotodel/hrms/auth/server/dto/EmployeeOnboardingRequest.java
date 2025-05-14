@@ -50,4 +50,5 @@ public class EmployeeOnboardingRequest implements Serializable {
 	private String hash;
 	private String filename;
 	private String filetype;
+	private String doe;
 }

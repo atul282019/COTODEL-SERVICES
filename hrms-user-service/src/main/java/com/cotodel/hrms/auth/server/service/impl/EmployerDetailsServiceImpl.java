@@ -206,23 +206,23 @@ public EmployerDetailsEntity getEmployerDetails(Long employerId) {
 public EmployerDetailsEntity getEmployerComplete(Long employerId) {
 	EmployerDetailsEntity employerDetailsEntity= new EmployerDetailsEntity();
 	String response="";
-	int comp=0;
+	//int comp=0;
 	response=MessageConstant.RESPONSE_FAILED;
 	try {			
 		employerDetailsEntity=employerDetailsDao.getEmployerDetails(employerId);
-		if(employerDetailsEntity!=null) {
-			comp=employerDetailsEntity.getProfileComplete();
-		}else {
-			UserEntity userEntity=userDetailsDao.getOrgExist(employerId);
-			if(userEntity!=null) {
-				int role=userEntity.getRole_id();
-				if(role==1 || role==9) {
-					employerDetailsEntity= new EmployerDetailsEntity();
-					employerDetailsEntity.setEmployerId(employerId);
-					employerDetailsEntity.setProfileComplete(1);
-				}
-			}
-		}
+//		if(employerDetailsEntity!=null) {
+//			comp=employerDetailsEntity.getProfileComplete();
+//		}else {
+//			UserEntity userEntity=userDetailsDao.getOrgExist(employerId);
+//			if(userEntity!=null) {
+//				int role=userEntity.getRole_id();
+//				if(role==1 || role==9) {
+//					employerDetailsEntity= new EmployerDetailsEntity();
+//					employerDetailsEntity.setEmployerId(employerId);
+//					employerDetailsEntity.setProfileComplete(1);
+//				}
+//			}
+//		}
 		
 	}catch (Exception e) {
 			e.printStackTrace();
@@ -373,28 +373,12 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 //							employerDetailsRequest.setResponse(MessageConstant.HASH_ERROR);
 //							return employerDetailsRequest;
 //						}
-						employerDetailsEntity=employerDetailsDao.getEmployerDetails(employerDetailsRequest.getId());
-						if(employerDetailsEntity!=null) {
+	
+				        List<EmployerDetailsEntity> employerDetailsEntities=employerDetailsDao.checkEmployerOnboardingDetails(employerDetailsRequest.getOrganizationName(),employerDetailsRequest.getMobile());
+						if(employerDetailsEntities!=null && employerDetailsEntities.size()>0) {
 							logger.info("if");
-							//CopyUtility.copyProperties(employerDetailsRequest,empDetailsEntity);
-							//empDetailsEntity.setId(employerDetailsEntity.getId());
-							//empDetailsEntity.setEmployerId(employerDetailsEntity.getEmployerId());
-							//empDetailsEntity.setEmployerCode(employerDetailsEntity.getEmployerCode());
-							//empDetailsEntity.setCreatedBy(employerDetailsEntity.getCreatedBy());
-							//empDetailsEntity.setCreatedDate(employerDetailsEntity.getCreatedDate());
-							//empDetailsEntity.setUpdatedDate(LocalDate.now());
-							//empDetailsEntity.setStatus(1);
-							if(employerDetailsRequest.getOtpStatus()!=null && employerDetailsRequest.getOtpStatus().equalsIgnoreCase("YES")) {
-								empDetailsEntity.setProfileComplete(3);
-							}else {
-								empDetailsEntity.setProfileComplete(2);
-							}
-							//empDetailsEntity.setProfileComplete(3);
-							empDetailsEntity.setConsent(employerDetailsRequest.getConsent());
-							empDetailsEntity.setOtpStatus(employerDetailsRequest.getOtpStatus());
-							empDetailsEntity.setUpdatedBy(employerDetailsRequest.getCreatedBy());
-							employerDetailsDao.saveCompanyDetails(empDetailsEntity);
-							response=MessageConstant.RESPONSE_SUCCESS;
+							
+							response=MessageConstant.ORG_EXIST;
 							employerDetailsRequest.setResponse(response);				
 						}else {
 							logger.info("else");

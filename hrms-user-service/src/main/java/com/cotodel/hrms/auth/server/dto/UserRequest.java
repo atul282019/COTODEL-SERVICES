@@ -42,4 +42,5 @@ public class UserRequest {
     private String hrmsName;
     private String employeeName;
     private String reputeEmployeeId;
+    private String doe;
 }
