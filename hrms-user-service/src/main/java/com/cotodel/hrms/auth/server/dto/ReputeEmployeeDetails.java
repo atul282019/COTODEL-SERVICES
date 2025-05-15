@@ -24,4 +24,7 @@ public class ReputeEmployeeDetails {
 	private String hrmsName;
 	private String employeeName;
 	private String response;
+	private String employeeId;
+	private String managerEmployeeId;
+	
 }

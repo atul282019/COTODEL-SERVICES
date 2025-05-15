@@ -35,4 +35,5 @@ public class MessageConstant {
 	public static final String SECRET_KEY = "0123456789012345";
 	public static final String HASH_ERROR = "Tempered Request";
 	public static final String ORG_EXIST ="This company is already registered.";
+	public static final String ELIG_NOT_ORG_EXIST ="You are not eligible to register a company.";
 }

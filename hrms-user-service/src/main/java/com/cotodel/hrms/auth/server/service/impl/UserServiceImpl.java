@@ -434,6 +434,7 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 				userDetails.setCreated_date(localDate);
 				userDetails.setRole_id(MessageConstant.USER_ROLE);
 				//userDetails.setMapperFlag("Y");
+				userDetails.setStatus(1);
 				UserEntity1=userDetailsDao.saveUserDetails(userDetails);
 				userEmpEntity.setUser_id(UserEntity1.getId());
 				//userEmpEntity.setUser(UserEntity1);
@@ -1056,6 +1057,8 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 						}
 						userDetails.setStatus(1);
 						userDetails.setEmployerid(reputeUser.getId().intValue());
+						userDetails.setEmployeeId(user.getEmployeeId());
+						userDetails.setManagerEmployeeId(user.getManagerEmployeeId());
 						userEntity=userDetailsDao.saveUserDetails(userDetails);
 						logger.info("reputeUser::22");
 						String tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
@@ -1085,6 +1088,7 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 						response=MessageConstant.RESPONSE_SUCCESS;
 						userEntity.setResponse(response);
 					}else {
+						if(user.getRole().equalsIgnoreCase("ROLE_HR_ADMIN")) {
 						EmployerDetailsEntity employerDetailsEntity1=new EmployerDetailsEntity();
 						employerDetailsEntity1.setCompanyId(user.getCompanyId());
 						employerDetailsEntity1.setHrmsId(user.getHrmsId());
@@ -1114,6 +1118,8 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 						}
 						userDetails.setStatus(1);
 						userDetails.setEmployerid(employerDetailsEntity.getId().intValue());
+						userDetails.setEmployeeId(user.getEmployeeId());
+						userDetails.setManagerEmployeeId(user.getManagerEmployeeId());
 						userEntity=userDetailsDao.saveUserDetails(userDetails);
 						logger.info("reputeUser::22");
 						String tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
@@ -1146,6 +1152,10 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 							response=MessageConstant.RESPONSE_FAILED;
 							userEntity.setResponse(response);
 						}
+					}else {
+						response=MessageConstant.ELIG_NOT_ORG_EXIST;
+						userEntity.setResponse(response);
+					}
 					}
 					
 				}

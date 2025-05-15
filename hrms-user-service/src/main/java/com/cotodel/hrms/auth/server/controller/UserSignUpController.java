@@ -1100,7 +1100,7 @@ public class UserSignUpController extends CotoDelBaseController{
 	    	    userEntity=	userService.saveReputeDetails(request,userReqEnc);
 	    		
 	    	    if(userEntity!=null && userEntity.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {	    
-	    		 userService.sendEmailToEmployee(userReq);
+	    		 //userService.sendEmailToEmployee(userReq);
 	    		 userSignUpResponse=new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
 	    		 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
 		            EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);

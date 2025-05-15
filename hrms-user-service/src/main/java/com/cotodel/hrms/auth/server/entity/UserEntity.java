@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="user_details", uniqueConstraints = @UniqueConstraint(columnNames = "mobile"))
+@Table(name="user_details", uniqueConstraints = {@UniqueConstraint(columnNames = "mobile"),@UniqueConstraint(columnNames = "employeeId")})
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="user_details_id_seq" , sequenceName="user_details_id_seq", allocationSize=1)
 public class UserEntity implements Serializable{
@@ -68,6 +68,8 @@ public class UserEntity implements Serializable{
     private String companyId;
     private String hrmsId;
     private String hrmsName;
+    private String employeeId;
+	private String managerEmployeeId;
 //    @OneToMany
 //   	@JoinTable(name = "h_user_emp", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user"))
 //    private List<UserEmpEntity> userEmpEntity ;
