@@ -363,7 +363,34 @@ public class CommonUtility {
 		}		
 	}
 	
-	
+	public static String userRequestForReputeReputeCompDetails(String token,String url,String employeeId){
+		String returnStr=null;
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		try{
+			//url = url+"/resource/apis/v1/company-details";
+			System.out.println("url::"+url);
+			url=url+"/resource/apis/v2/employee-list?employee_id="+employeeId+"&offset=0&limit=100";
+	        // Set headers
+	        headers.set("Authorization", "Bearer "+token);
+	        headers.set("Cookie", "SESSION=NzNkODI1MjMtMDJkOS00ZGUwLThlNWUtN2FkZjY4MjhjZjc1");
+	        
+	        System.out.println("headers::"+headers);
+	        // Create HttpEntity with headers
+	        HttpEntity<String> entity = new HttpEntity<>("", headers);
+
+	        // Send the POST request
+	        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+	        // Return the response body
+	        return response.getBody();
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}finally {
+			restTemplate=null;headers=null;	
+		}		
+	}
 //	public static void main(String[] args) {
 //		getAccessToken("GTDx6RJMV1OPOok0olllOo3KEQGrq6YtOFADctB1NER4z_xgPEymsMD4GSYwP8z3oCVc-Nv-ORq-WFXRvoFmhqWhfFhVfUbRNORhq8qwC9uGOXIRDbp0frYB3cWuNMRX");
 //	}

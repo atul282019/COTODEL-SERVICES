@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dto.ReputeCompanyDetails;
 import com.cotodel.hrms.auth.server.dto.ReputeEmployee;
 import com.cotodel.hrms.auth.server.dto.ReputeEmployeeRequest;
+import com.cotodel.hrms.auth.server.dto.ReputeEmployeeSingleRequest;
+import com.cotodel.hrms.auth.server.dto.ReputeSingleEmployee;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ReputeService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
@@ -23,7 +25,6 @@ public class ReputeServiceImpl implements ReputeService{
 	@Override
 	public String getReputeToken(String code,String url) {
 		
-		//String redirectUri="http://43.205.206.102:8088/repute_marketplace/";
 		try {
 			 // Set up the body data
 			String redirectUri=applicationConstantConfig.tokenRedirectUrl;
@@ -43,33 +44,7 @@ public class ReputeServiceImpl implements ReputeService{
 	        // Decode the payload from Base64
 	        String value=new String(Base64.getDecoder().decode(payload));
 	        System.out.println("value: " + value);
-	        // Print the access token
-//	        ReputeCompanyDetails reputeCompanyDetails=parseJson(value);
-//	        if(reputeCompanyDetails!=null) {
-//				UserRequest userRequest = new UserRequest();
-//				String mobileNumber= reputeCompanyDetails.getPhoneNumber();
-//		        String mobile = (mobileNumber.startsWith("0")) ? mobileNumber.substring(1) : mobileNumber;
-//		        String email= reputeCompanyDetails.getEmail();
-//		        String name= reputeCompanyDetails.getEmployeeName();
-//		        userRequest.setMobile(mobile);
-//		        userRequest.setEmail(email);
-//		        userRequest.setUsername(name);
-//				TokenGeneration token = new TokenGeneration();
-//				String tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl + CommonUtils.getToken);
-//				String response1 = CommonUtility.userRequest(tokenvalue,MessageConstant.gson.toJson(userRequest),
-//						applicationConstantConfig.userServiceApiUrl + CommonUtils.saveUser,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
-//				if (!ObjectUtils.isEmpty(response1)) {
-//					JSONObject demoRes = new JSONObject(response1);
-//					boolean status = demoRes.getBoolean("status");
-//					if (status) {
-//						if (demoRes.has("userEntity")) {
-//							JSONObject userEntity = demoRes.getJSONObject("userEntity");
-//							if (userEntity != null && userEntity.has("username")) {
-//							}
-//						}
-//					}
-//				}
-//	        }
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -108,6 +83,32 @@ public List<ReputeEmployee> convertJsonToPojo(String json) {
 	}
     
     return employees;
+}
+public ReputeSingleEmployee convertJsonToSinglePojo(String json) {
+	
+	ObjectMapper objectMapper = new ObjectMapper();
+	ReputeSingleEmployee response = null;
+    try {
+        response = objectMapper.readValue(json, ReputeSingleEmployee.class);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return response;
+    
+}
+
+@Override
+public ReputeEmployee getReputeEmpSingle(ReputeEmployeeSingleRequest reputeEmployeeRequest) {
+	// TODO Auto-generated method stub
+	ReputeEmployee reputeEmployee=new ReputeEmployee();
+		String response=CommonUtility.userRequestForReputeReputeCompDetails(reputeEmployeeRequest.getAccessToken(), reputeEmployeeRequest.getEndpoint(),reputeEmployeeRequest.getEmployeeId());
+		ReputeSingleEmployee list=convertJsonToSinglePojo(response);
+		List<ReputeEmployee> reputeList=list.getEmployeeList();
+		if(reputeList!=null && reputeList.size()>0) {
+			reputeEmployee=reputeList.get(0);
+		}
+		
+		return reputeEmployee;
 }
 
 }

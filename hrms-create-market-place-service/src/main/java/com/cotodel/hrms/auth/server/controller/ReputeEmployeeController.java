@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cotodel.hrms.auth.server.dto.ReputeEmployee;
 import com.cotodel.hrms.auth.server.dto.ReputeEmployeeRequest;
 import com.cotodel.hrms.auth.server.dto.ReputeEmployeeResponse;
+import com.cotodel.hrms.auth.server.dto.ReputeEmployeeSingleRequest;
+import com.cotodel.hrms.auth.server.dto.ReputeEmployeeSingleResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
@@ -93,6 +95,56 @@ private static final Logger logger = LoggerFactory.getLogger(ReputeEmployeeContr
 				logger.error("error in erupiVoucherRequest====="+e);
 			}
     	    return ResponseEntity.ok(jsonEncriptObject);
+	    	
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/employeeSingle",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> employeeSingle(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+		 
+	    logger.info("inside employeeSingle....");	    	
+	    	
+	    	ReputeEmployee response=null;
+	    	ReputeEmployeeSingleResponse reputeEmployeeResponse;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ReputeEmployeeSingleRequest reputeEmployeeRequest= EncryptionDecriptionUtil.convertFromJson(decript, ReputeEmployeeSingleRequest.class);
+				
+				response=reputeService.getReputeEmpSingle(reputeEmployeeRequest);
+	    		
+				if(response!=null) {
+					reputeEmployeeResponse=new ReputeEmployeeSingleResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(reputeEmployeeResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+	    		}else {
+	    			reputeEmployeeResponse=new ReputeEmployeeSingleResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(reputeEmployeeResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+	    		}
+	    	}catch (Exception e) {				
+	    		logger.error("error in erupiVoucherRequest====="+e);
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		reputeEmployeeResponse=new ReputeEmployeeSingleResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(reputeEmployeeResponse);
+				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in erupiVoucherRequest====="+e);
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);
 	    	
 	    }
 
