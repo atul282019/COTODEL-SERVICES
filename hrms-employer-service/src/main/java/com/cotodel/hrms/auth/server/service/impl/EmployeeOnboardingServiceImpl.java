@@ -427,6 +427,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			userRequest.setUsername(request.getName());
 			userRequest.setMobile(request.getMobile());
 			userRequest.setEmail(request.getEmail());
+			userRequest.setStatus(1);
 			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
 					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersWithOutMailNew,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);

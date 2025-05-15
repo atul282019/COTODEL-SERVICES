@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,27 +118,7 @@ public class OcrReaderServiceImpl implements OcrReaderService{
 	
 
 	public double extractTotalAmount(String input) {
-		if(input.contains("Uber")) {
-			String[] lines = input.split("\\n");
-
-	        String totalLine = null;
-	        for (String line : input.split("\\n")) {
-	        	
-	            if (line.contains("Total")) {
-	                totalLine = line;
-	                break;
-	            }
-	        }
-	        double total = 0.0;
-	        if (totalLine != null) {
-	            String number = totalLine.replaceAll("[^0-9.]", "");
-	            total = Double.parseDouble(number);
-	            System.out.println("Extracted Bill Total: " + total);
-	        } else {
-	            System.out.println("Bill Total line not found.");
-	        }
-	        return total; // default if not found
-		}else if(input.contains("Amazon")) {
+		if(input.contains("Amazon")) {
 			String[] lines = input.split("\\n");
 
 	        String totalLine = null;
@@ -157,23 +139,35 @@ public class OcrReaderServiceImpl implements OcrReaderService{
 	        }
 	        return total; // default if not found
 		}else {
-        String[] lines = input.split("\\n");
+        //String[] lines = input.split("\\n");
 
         String totalLine = null;
         for (String line : input.split("\\n")) {
         	
-            if (line.contains("Bill Total")) {
-                totalLine = line;
-                break;
-            }
+        	if (line.toLowerCase().contains("amount")
+                    || line.toLowerCase().contains("bill total")
+                    || line.toLowerCase().contains("amt")
+                    || line.toLowerCase().contains("total")
+                    || line.toLowerCase().contains("net payment")
+                    || line.toLowerCase().contains("total payment")
+                    || line.toLowerCase().contains("net payable")
+                    || line.toLowerCase().contains("bill payable")) {
+                    totalLine = line;
+                    break;
+                }
         }
         double total = 0.0;
-        if (totalLine != null) {
-            String number = totalLine.replaceAll("[^0-9.]", "");
-            total = Double.parseDouble(number);
-            System.out.println("Extracted Bill Total: " + total);
+        totalLine = totalLine.replaceAll("(\\d+)\\.\\s*(\\d+)", "$1.$2");
+        Pattern pattern = Pattern.compile("\\d+\\.\\d+"); // Matches decimal numbers
+        
+        Matcher matcher = pattern.matcher(totalLine);
+
+        if (matcher.find()) {
+            String amount = matcher.group();
+            total = Double.parseDouble(amount);
+            System.out.println("Extracted amount: " + amount);
         } else {
-            System.out.println("Bill Total line not found.");
+            System.out.println("No amount found.");
         }
         return total; // default if not found
 		}
@@ -266,7 +260,17 @@ public class OcrReaderServiceImpl implements OcrReaderService{
 		}else if(input.contains("Amazon")) {
 			order ="Amazon";	        
 	        return order; // default if not found
-		}else {
+		}else if(input.contains("ICICI")) {
+			order ="ICICI";	        
+	        return order; // default if not found
+		}else if(input.contains("Bharat")) {
+			order ="Bharat Petroleum";	        
+	        return order; 
+		}else if(input.contains("indian")) {
+			order ="indian oil";	        
+	        return order; 
+		}
+		else {
 		String[] lines=input.split("\\n");
         String totalLine = null;
         for (String line : input.split("\\n")) {
