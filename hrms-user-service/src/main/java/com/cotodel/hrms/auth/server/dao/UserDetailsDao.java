@@ -30,6 +30,7 @@ public interface UserDetailsDao {
 	
 	public int updateMapperFlag(String mobile,String mapperFlag);
 	
+	List<UserManagerDto> getUserManagerList(int orgId,Long employeeId);
 	List<UserManagerDto> getUserManagerList(int orgId);
 	public UserEntity checkUserEligible(String mobile);
 	
@@ -40,5 +41,5 @@ public interface UserDetailsDao {
 	public UserEntity getByCompAndHrms(String companyId,String hrmsId);
 	
 	public int updateActiveDeactive(String mobile,int status);
-	
+	public UserEntity checkUserId(Long id);
 }

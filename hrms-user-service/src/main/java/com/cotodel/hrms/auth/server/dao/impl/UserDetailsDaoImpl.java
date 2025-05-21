@@ -104,6 +104,11 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	}
 
 	@Override
+	public List<UserManagerDto> getUserManagerList(int orgId,Long employeeId) {
+		// TODO Auto-generated method stub
+		return userRepository.getUserManagerList(orgId,employeeId);
+	}
+	@Override
 	public List<UserManagerDto> getUserManagerList(int orgId) {
 		// TODO Auto-generated method stub
 		return userRepository.getUserManagerList(orgId);
@@ -137,6 +142,12 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	public int updateActiveDeactive(String mobile,int status) {
 		// TODO Auto-generated method stub
 		return userRepository.updateActiveDeactive(mobile, status);
+	}
+
+	@Override
+	public UserEntity checkUserId(Long id) {
+		// TODO Auto-generated method stub
+		return userRepository.getById(id);
 	}
 	
 }

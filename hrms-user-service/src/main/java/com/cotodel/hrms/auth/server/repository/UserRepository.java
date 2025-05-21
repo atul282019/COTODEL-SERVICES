@@ -52,7 +52,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	    @Query(value = "UPDATE user_details  SET mapper_flag=:mapperFlag WHERE mobile =:mobile", nativeQuery = true)
 	    public int updateMapperFlag(@Param("mobile") String mobile,@Param("mapperFlag") String mapperFlag);
 	    
-	    @Query("select new com.cotodel.hrms.auth.server.dto.UserManagerDto(c.id,c.email,c.mobile,c.username) from UserEntity c where  (c.employerid = ?1) or (c.id=?1) ")
+	    @Query("select new com.cotodel.hrms.auth.server.dto.UserManagerDto(c.id,c.email,c.mobile,c.username) from UserEntity c where  (c.employerid = ?1 and c.id <>?2 and c.status=1)  ")
+		List<UserManagerDto> getUserManagerList(int orgId,Long employeeId);
+	    
+	    @Query("select new com.cotodel.hrms.auth.server.dto.UserManagerDto(c.id,c.email,c.mobile,c.username) from UserEntity c where  (c.employerid = ?1 and c.status=1 )  ")
 		List<UserManagerDto> getUserManagerList(int orgId);
 	    
 	    @Query("select c from UserEntity c where   c.mobile=:mobile and c.role_id in ('1','9','10','12') ")

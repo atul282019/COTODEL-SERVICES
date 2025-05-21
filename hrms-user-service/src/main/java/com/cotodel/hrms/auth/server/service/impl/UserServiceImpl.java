@@ -478,11 +478,11 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 		
 		UserEntity userEntity1=null;
 		UserEmpEntity userEmpEntity= new UserEmpEntity();
-		UserEntity userDetails=userDetailsDao.checkUserMobile(user.getMobile());
+		UserEntity userDetails=userDetailsDao.checkUserId(user.getId());
 		if(userDetails!=null) {
-			if(userDetails.getStatus()==1) {
+			if(user.getStatus()==1) {
 				userDetails.setStatus(1);
-			}else if(userDetails.getStatus()==0) {
+			}else if(user.getStatus()==0) {
 				userDetails.setStatus(0);
 			}
 		//userDetails.setStatus(MessageConstant.STATUS);
@@ -946,12 +946,17 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 
 
 	@Override
-	public List<UserManagerDto> userManagerList(Long orgId) {
+	public List<UserManagerDto> userManagerList(Long orgId,Long employeeId) {
 		List<UserManagerDto> existUserList=new ArrayList<UserManagerDto>();
 		int emprid=orgId.intValue();
 		try {
+			employeeId=employeeId==null?0l:employeeId;
+			if(employeeId==0) {
+				existUserList=userDetailsDao.getUserManagerList(emprid);
+			}else {
+				existUserList=userDetailsDao.getUserManagerList(emprid,employeeId);
+			}
 			
-			existUserList=userDetailsDao.getUserManagerList(emprid);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -892,7 +892,7 @@ public class UserSignUpController extends CotoDelBaseController{
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreatedRequest erupiVoucherCreatedRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
 				
-				list=userService.userManagerList(erupiVoucherCreatedRequest.getOrgId());
+				list=userService.userManagerList(erupiVoucherCreatedRequest.getOrgId(),erupiVoucherCreatedRequest.getEmployeeId());
 				//System.out.println(list);
 				if(list!=null && list.size()>0) {
 					userManagerResponse=new UserManagerResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,list,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());

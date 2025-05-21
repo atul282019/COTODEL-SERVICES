@@ -54,7 +54,7 @@ public interface UserService {
 	public DeleteUserRoleRequest deleteUsersRole(DeleteUserRoleRequest  existUserResponse);
 	public List<ExistUserResponse> searchUsers(int  orgId,String userName,String mobile);
 	public ExistUserRoleRequest updateUsersRoleList(ExistUserRoleRequest  existUserRoleRequest);
-	public List<UserManagerDto> userManagerList(Long  orgId);
+	public List<UserManagerDto> userManagerList(Long  orgId,Long employeeId);
 	public List<UserManagerDto> searchUsersWithOutMobile(Long  orgId,String userName);
 	//public List<ExistUserResponse> saveUsersListWithRole(ExistUserResponse  existUserResponse);
 	//public List<UserDto> getUsersList(Long  orgId,String userName);
