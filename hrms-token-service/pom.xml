@@ -34,10 +34,21 @@
         </properties>
     </profile>
     
+    <profile>
+        <id>pre</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+            <build.profile.id>pre</build.profile.id>
+            <profileActive>pre</profileActive>
+        </properties>
+    </profile>
+    
      <profile>
         <id>prod</id>
         <activation>
-            <activeByDefault>true</activeByDefault>
+            <activeByDefault>false</activeByDefault>
         </activation>
         <properties>
             <build.profile.id>prod</build.profile.id>
