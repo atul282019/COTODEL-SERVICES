@@ -21,6 +21,7 @@ import com.cotodel.hrms.auth.server.dao.CashFreeDao;
 import com.cotodel.hrms.auth.server.dao.CashFreeWebHookDao;
 import com.cotodel.hrms.auth.server.dao.CashFreeWebHookLogDao;
 import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountTempDao;
+import com.cotodel.hrms.auth.server.dto.CashFreeOrderHistory;
 import com.cotodel.hrms.auth.server.dto.ChargesDetail;
 import com.cotodel.hrms.auth.server.dto.CustomerDetails;
 import com.cotodel.hrms.auth.server.dto.ErrorDetails;
@@ -431,26 +432,30 @@ public class CashServiceImpl implements CashService {
 	}
 
 	@Override
-	public List<CashFreeOrderWebHookEntity> callOrderIdApiList(OrderUserRequest orderUserRequest) {
+	public List<CashFreeOrderHistory> callOrderIdApiList(OrderUserRequest orderUserRequest) {
 		// TODO Auto-generated method stub
 		List<CashFreeOrderWebHookEntity> finalList=new ArrayList<CashFreeOrderWebHookEntity>();
+		List<CashFreeOrderHistory> list=null;
 		try {
-			List<CashFreeOrderEntity> list=cashFreeDao.getDetailsOrderId(orderUserRequest.getOrgId());
-			if(list!=null && list.size()>0) {
-			for (CashFreeOrderEntity cashFreeOrderEntity : list) {
-				List<CashFreeOrderWebHookEntity> local=cashFreeWebHookDao.getDetails(cashFreeOrderEntity.getOrderId());
-				if(local!=null && local.size()>0) {
-					for (CashFreeOrderWebHookEntity cashFreeOrderEntity2 : local) {
-						finalList.add(cashFreeOrderEntity2);
-					}
-				}
-				
-			}
-		}
+			
+			list=cashFreeDao.getDetailsHistory(orderUserRequest.getOrgId());
+			
+//			List<CashFreeOrderEntity> list=cashFreeDao.getDetailsOrderId(orderUserRequest.getOrgId());
+//			if(list!=null && list.size()>0) {
+//			for (CashFreeOrderEntity cashFreeOrderEntity : list) {
+//				List<CashFreeOrderWebHookEntity> local=cashFreeWebHookDao.getDetails(cashFreeOrderEntity.getOrderId());
+//				if(local!=null && local.size()>0) {
+//					for (CashFreeOrderWebHookEntity cashFreeOrderEntity2 : local) {
+//						finalList.add(cashFreeOrderEntity2);
+//					}
+//				}
+//				
+//			}
+//		}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return finalList;
+		return list;
 	}
 	
 
