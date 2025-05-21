@@ -61,6 +61,9 @@ public class VehicleDriverManagementEntity  implements Serializable{
 	@Column(name="status")
 	private int status;
 	
+	@Column(name="remarks")
+	private String remarks;
+	
 	@Column(name="org_id")
 	private Long orgId;
 	
@@ -72,5 +75,25 @@ public class VehicleDriverManagementEntity  implements Serializable{
 	
 	@Column(name="estimated_amount")
 	private Float estimatedAmount;
+	
+	@Column(name="creation_type")
+	private String creationType;////creation Type--bulk or single
+	
+	@Column(name="application_type")
+	private String applicationType;////upload Type--web  or mobile
+	
+	@Column(name="client_type")
+	private String clientType;
+	
+	@Column(name="client_name")
+	private String clientName;
+	
+	@Column(name="assignment_type")
+	private String assignmentType;
+	
+
+	//
+	
+	//duplication file check
 	
 }

@@ -1,8 +1,6 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,12 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
-import com.cotodel.hrms.auth.server.controller.ExpenseTravelController;
 import com.cotodel.hrms.auth.server.dao.VoucherTypeMasterDao;
-import com.cotodel.hrms.auth.server.dto.VoucherTypeDto;
 import com.cotodel.hrms.auth.server.dto.VoucherTypeMasterRequest;
-import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
-import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
 import com.cotodel.hrms.auth.server.model.VoucherTypeMasterEntity;
 import com.cotodel.hrms.auth.server.repository.VoucherTypeMasterRepository;
 import com.cotodel.hrms.auth.server.service.VoucherTypeMasterService;

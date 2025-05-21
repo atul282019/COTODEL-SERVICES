@@ -59,5 +59,74 @@ public class VehicleManagementEntity  implements Serializable{
 	
 	@Column(name="manufacturing_year")
 	private String manufacturingYear;
+	
+	@Column(name="fuel_type")
+	private String fuelType;
+	
+	@Column(name="creation_type")
+	private String creationType;////creation Type--bulk or single
+	
+	@Column(name="application_type")
+	private String applicationType;////upload Type--web  or mobile
+	
+	@Column(name="owner_name")
+	private String ownerName;////upload Type--web  or mobile
+	
+	@Column(name="owner_address")
+	private String ownerAddress;//
+	
+	@Column(name="ownership_type")
+	private String ownership_type;//
+	
+	@Column(name="chassis_number")
+	private String chassisNumber;//
+	
+	@Column(name="engine_number")
+	private String engineNumber;//
+	
+	@Column(name="color")
+	private String color;
+	
+	@Column(name="authority")
+	private String authority;
+	
+	@Column(name="cubic_capacity")
+	private String cubicCapacity;
+	
+	@Column(name="seat")
+	private int seat;
+	
+	@Column(name="weight")
+	private String weight;
+	
+	@Column(name="insurance_company")
+	private String insuranceCompany;
+	
+	@Column(name="fitness")
+	private String fitness;
+	
+	@Column(name="tax")
+	private String tax;
+	
+	@Column(name="financer")
+	private String financer;
+	
+	@Column(name="permit_number")
+	private String permitNumber;
+	
+	@Column(name="ownership_driver")
+	private String ownershipDriver;
+		
+	@Column(name="assignment_driver")
+	private String assignmentDriver;
+	
+	@Column(name="assignment_type")
+	private String assignmentType;
+	
+	@Column(name="client_name")
+	private String clientName;
+	
+	@Column(name="selected_timeperiod")
+	private String selectedTimeperiod;
 
 }

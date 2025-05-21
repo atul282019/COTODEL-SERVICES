@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExpenseReimbursementDto{
+public class ExpenseReimbursementFileDto{
 	
 	private Long id;
 	private String sequenceId;
@@ -29,7 +29,7 @@ public class ExpenseReimbursementDto{
 	private String invoiceNumber;
 	private String vendorName;
 	private String remarks;
-	private byte[] file;
+	private String approvedAmount;
 	
 	
 }

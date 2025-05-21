@@ -11,4 +11,6 @@ public interface EmployeeOnboardingDao {
 	public List<EmployeeOnboardingEntity> getEmployeeOnboardingList(Long employerId);
 	public List<EmployeeOnboardingEntity> getEmployeeOnboardingManagerId(Long managerId);
 	public EmployeeOnboardingEntity getEmployeeOnboardingUserId(Long userId);
+	public List<EmployeeOnboardingEntity> getReputeEmployeeOnboarding();
+	
 }

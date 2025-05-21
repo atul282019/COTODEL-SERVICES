@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementByIdListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementByIdResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDeleteByIdResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDto;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDtoByEmpIdListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDtoByIdResponse;
+import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementFileDto;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementRequest;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
@@ -169,8 +169,8 @@ public class ExpenseReimbursementController {
 	    logger.info("inside expenseReimbFileDownloadByEmpID+++");	    	
 	    	
 	    	String message = "";
-	    	List<ExpenseReimbursementEntity> response=null;
-	    	ExpenseReimbursementByIdListResponse expenseReimbursementByIdListResponse;
+	    	List<ExpenseReimbursementFileDto> response=null;
+	    	ExpenseReimbursementDtoByEmpIdListResponse expenseReimbursementByIdListResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
@@ -181,12 +181,12 @@ public class ExpenseReimbursementController {
 //				NoSqlKeywordsValidator noSqlKeywordsValidator=new NoSqlKeywordsValidator();
 				response=expenseReimbursementService.getExpenseReimbFileByEmpID(expenseTravelAdvanceRequest.getEmployeeId());
 	    		if(response!=null && response.size()>0) {
-	    			expenseReimbursementByIdListResponse=new ExpenseReimbursementByIdListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			expenseReimbursementByIdListResponse=new ExpenseReimbursementDtoByEmpIdListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseReimbursementByIdListResponse);
 	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    			return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			expenseReimbursementByIdListResponse=new ExpenseReimbursementByIdListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			expenseReimbursementByIdListResponse=new ExpenseReimbursementDtoByEmpIdListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseReimbursementByIdListResponse);
 	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    			return ResponseEntity.ok(jsonEncriptObject);
@@ -198,7 +198,7 @@ public class ExpenseReimbursementController {
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		expenseReimbursementByIdListResponse=new ExpenseReimbursementByIdListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		expenseReimbursementByIdListResponse=new ExpenseReimbursementDtoByEmpIdListResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
     			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(expenseReimbursementByIdListResponse);
     			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {
@@ -326,7 +326,7 @@ public class ExpenseReimbursementController {
 	    logger.info("inside expenseReimbFileByEmpId+++");	    	
 	    	
 	    	String message = "";
-	    	List<ExpenseReimbursementDto> response=null;
+	    	List<ExpenseReimbursementFileDto> response=null;
 	    	ExpenseReimbursementDtoByEmpIdListResponse expenseReimbursementDtoByEmpIdListResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");

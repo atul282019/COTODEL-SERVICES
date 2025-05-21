@@ -53,4 +53,15 @@ public interface AdvanceTravelRequestRepository extends JpaRepository<AdvanceTra
 	
 	@Query("select s  from AdvanceTravelRequestEntity s where  s.id = ?1")
 	public AdvanceTravelRequestEntity getById(Long id);
+	
+	@Query("select s  from AdvanceTravelRequestEntity s where  s.employerId =:employerId and s.sequenceId =:sequenceId ")
+	public List<AdvanceTravelRequestEntity> findEmployerIdSequenceWithoutStatus(@Param(value = "employerId") Long employerId,@Param(value = "sequenceId") String  sequenceId);
+	@Query("select s  from AdvanceTravelRequestEntity s where  s.employeeId =:employeeId  and s.sequenceId =:sequenceId  ")
+	public List<AdvanceTravelRequestEntity> findEmployeeIdSequenceWithoutStatus(@Param(value = "employeeId") Long employeeId,@Param(value = "sequenceId") String  sequenceId);
+	
+	@Query("select s  from AdvanceTravelRequestEntity s where  s.employerId =:employerId and s.status=0 ")
+	public List<AdvanceTravelRequestEntity> findEmployerIdDraft(@Param(value = "employerId") Long employerId);
+	
+	@Query("select s  from AdvanceTravelRequestEntity s where  s.employeeId =:employeeId  and s.status=0  ")
+	public List<AdvanceTravelRequestEntity> findEmployeeIdDraft(@Param(value = "employeeId") Long employeeId);
 }

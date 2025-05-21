@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ExpenseReimbursementDao;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDto;
+import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementFileDto;
 import com.cotodel.hrms.auth.server.model.ExpenseReimbursementEntity;
 import com.cotodel.hrms.auth.server.repository.ExpenseReimbursementRepository;
 @Repository
@@ -29,7 +30,7 @@ public class ExpenseReimbursementDaoImpl implements ExpenseReimbursementDao{
 	}
 
 	@Override
-	public List<ExpenseReimbursementEntity> getExpenseReimbursementDetailsList(Long employeeID) {
+	public List<ExpenseReimbursementFileDto> getExpenseReimbursementDetailsList(Long employeeID) {
 		// TODO Auto-generated method stub
 		return  expenseReimbursementRepository.findByEmployeeId(employeeID);
 	}
@@ -40,16 +41,16 @@ public class ExpenseReimbursementDaoImpl implements ExpenseReimbursementDao{
 	}
 
 	@Override
-	public List<ExpenseReimbursementDto> getExpenseReimListByEmpId(Long employeeID) {
+	public List<ExpenseReimbursementFileDto> getExpenseReimListByEmpId(Long employeeID) {
 		
-		List<ExpenseReimbursementDto> exList=expenseReimbursementRepository.findExpenseReimByEmpId(employeeID);
+		List<ExpenseReimbursementFileDto> exList=expenseReimbursementRepository.findExpenseReimByEmpId(employeeID);
 		return exList;
 	}
 
 	@Override
-	public List<ExpenseReimbursementDto> getExpenseReimListByEmplrId(Long employerId) {
+	public List<ExpenseReimbursementFileDto> getExpenseReimListByEmplrId(Long employerId) {
 		
-		List<ExpenseReimbursementDto> exList=expenseReimbursementRepository.findExpenseReimByEmplrId(employerId);
+		List<ExpenseReimbursementFileDto> exList=expenseReimbursementRepository.findExpenseReimByEmplrId(employerId);
 		return exList;
 	}
 

@@ -28,5 +28,7 @@ public interface ExpenseTravelAdvanceService {
 	public List<AdvanceTravelDto>  getAdvenceTravelApprovalEmployerId(Long employerid);
 	public ApprovalTravelReimbursement ApprovalAdvenceTravel(ApprovalTravelReimbursement approvalTravelReimbursement);
 	//public List<AdvanceTravelRequestEntity>  advenceTravelListById(Long id);
+	public AdvanceTravelAllRequest  getAdvenceTravelBySequenceIdListByStatus(Long employerid,Long employeeId,int status,String expanseId);
+	public AdvanceTravelAllRequest  getAdvenceTravelListByDraftStatus(Long employerid,Long employeeId,int status);
 	
 }

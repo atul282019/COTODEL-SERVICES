@@ -20,6 +20,7 @@ public class DirectorOnboardingRequest {
 	private String address;
 	private String createdby;
 	private String response;
-	
+	private String clientKey;
+	private String hash;
 	
 }

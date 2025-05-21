@@ -1,6 +1,7 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cotodel.hrms.auth.server.dao.ExpenseReimbursementDao;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementDto;
+import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementFileDto;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementRequest;
 import com.cotodel.hrms.auth.server.model.ExpenseReimbursementEntity;
 import com.cotodel.hrms.auth.server.repository.UploadSequenceRepository;
@@ -39,7 +41,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			expenseReimbursementEntity.setStatus(0);
 			Date date = new Date();
 			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			expenseReimbursementEntity.setCreated_date(localDate);
+			expenseReimbursementEntity.setCreated_date(LocalDateTime.now());
 			String seq=sequenceID();
 			expenseReimbursementEntity.setSequenceId(seq);
 			//
@@ -72,17 +74,18 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 	}
 
 	@Override
-	public List<ExpenseReimbursementEntity> getExpenseReimbFileByEmpID(Long employeeId) {
+	public List<ExpenseReimbursementFileDto> getExpenseReimbFileByEmpID(Long employeeId) {
 		
-		List<ExpenseReimbursementEntity> list=new ArrayList<ExpenseReimbursementEntity>();
-		List<ExpenseReimbursementEntity> list1=new ArrayList<ExpenseReimbursementEntity>();
+		List<ExpenseReimbursementFileDto> list=new ArrayList<ExpenseReimbursementFileDto>();
+		List<ExpenseReimbursementFileDto> list1=new ArrayList<ExpenseReimbursementFileDto>();
 		try {
 			list=expenseReimbursementDao.getExpenseReimbursementDetailsList(employeeId);
-			for (ExpenseReimbursementEntity expenseReimbursementEntity:list) {
-				String message=getMessage(expenseReimbursementEntity.getStatus());
+			for (ExpenseReimbursementFileDto expenseReimbursementFileDto:list) {
+				String message=getMessage(expenseReimbursementFileDto.getStatus());
 				
-				expenseReimbursementEntity.setStatusMessage(message);
-				list1.add(expenseReimbursementEntity);
+				expenseReimbursementFileDto.setStatusMessage(message);
+				//change
+				list1.add(expenseReimbursementFileDto);
 			}
 		} catch (Exception e) {
 			//e.printStackTrace();
@@ -156,7 +159,7 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 			expenseReimbursementEntity.setWorkFlowId(100013l);
 			Date date = new Date();
 			LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			expenseReimbursementEntity.setCreated_date(localDate);
+			expenseReimbursementEntity.setCreated_date(LocalDateTime.now());
 			String seq=sequenceID();
 			expenseReimbursementEntity.setSequenceId(seq);
 			//
@@ -230,9 +233,9 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 	}
 
 	@Override
-	public List<ExpenseReimbursementDto> getExpenseReimbFileByEmpAndEmprId(Long employerId, Long employeeId) {
-		List<ExpenseReimbursementDto> list=new ArrayList<ExpenseReimbursementDto>();
-		List<ExpenseReimbursementDto> list1=new ArrayList<ExpenseReimbursementDto>();
+	public List<ExpenseReimbursementFileDto> getExpenseReimbFileByEmpAndEmprId(Long employerId, Long employeeId) {
+		List<ExpenseReimbursementFileDto> list=new ArrayList<ExpenseReimbursementFileDto>();
+		List<ExpenseReimbursementFileDto> list1=new ArrayList<ExpenseReimbursementFileDto>();
 		try {
 			if(employerId>0) {
 				list=expenseReimbursementDao.getExpenseReimListByEmplrId(employerId);
@@ -240,11 +243,11 @@ public class ExpenseReimbursementServiceImpl implements ExpenseReimbursementServ
 				list=expenseReimbursementDao.getExpenseReimListByEmpId(employeeId);
 			}
 			
-			for (ExpenseReimbursementDto expenseReimbursementDto:list) {
+			for (ExpenseReimbursementFileDto expenseReimbursementDto:list) {
 				ExpenseReimbursementEntity expenseReimbursementEntity=new ExpenseReimbursementEntity();
 				
 				String message=getMessage(expenseReimbursementDto.getStatus());
-				String approvedBy=expenseReimbursementDto.getApprovedBy()==null?"Pending":expenseReimbursementDto.getApprovedBy();
+				String approvedBy=expenseReimbursementDto.getApprovedBy()==null?"":expenseReimbursementDto.getApprovedBy();
 				expenseReimbursementDto.setStatusMessage(message);
 				expenseReimbursementDto.setApprovedBy(approvedBy);
 				list1.add(expenseReimbursementDto);

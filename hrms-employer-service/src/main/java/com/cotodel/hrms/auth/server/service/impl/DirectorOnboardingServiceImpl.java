@@ -14,7 +14,6 @@ import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.DirectorOnboardingService;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
-import com.cotodel.hrms.auth.server.util.SQLInjectionValidator;
 import com.cotodel.hrms.auth.server.util.ValidateConstants;
 @Repository
 public class DirectorOnboardingServiceImpl implements DirectorOnboardingService{
@@ -43,6 +42,14 @@ public class DirectorOnboardingServiceImpl implements DirectorOnboardingService{
 //	        	request.setResponse(errorMessage);
 //				return request;
 //	        }
+			 String dataString = request.getOrgId()+request.getName()+request.getEmail()+request.getMobile()+request.getCreatedby()+request.getClientKey()+MessageConstant.SECRET_KEY;;
+			//logger.info("dataString::"+dataString);
+			String hash=ValidateConstants.generateHash(dataString);
+			//logger.info("hash::"+hash);
+			if(!request.getHash().equalsIgnoreCase(hash)) {
+				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}
 			response=MessageConstant.RESPONSE_FAILED;			
 			request.setResponse(response);
 			directorOnboardingEntity=new DirectorOnboardingEntity();

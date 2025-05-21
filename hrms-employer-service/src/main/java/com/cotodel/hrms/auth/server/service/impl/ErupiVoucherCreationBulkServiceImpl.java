@@ -1,9 +1,7 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,12 +34,9 @@ import com.cotodel.hrms.auth.server.dto.bulk.ErupiBulkIdRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkUploadSFListResponse;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkVoucherCreateRequest;
-import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherMasterUploadRequest;
-import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherMasterUploadSFResponse;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadFailEntity;
 import com.cotodel.hrms.auth.server.model.bulk.VoucherBulkUploadSuccessEntity;
-import com.cotodel.hrms.auth.server.model.bulk.VoucherMasterUploadEntity;
 import com.cotodel.hrms.auth.server.model.master.MccMasterEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherCreationBulkService;

@@ -20,6 +20,7 @@ import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandListResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandRequest;
 import com.cotodel.hrms.auth.server.dto.ExpenseCategoryBandResponse;
 import com.cotodel.hrms.auth.server.dto.ExpenseTravelAdvanceRequest;
+import com.cotodel.hrms.auth.server.dto.ExpensesReimbursementRequest;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.ExpenseBandNumberEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
@@ -364,7 +365,7 @@ public class ExpenseCategoryBandController {
 				SetDatabaseTenent.setDataSource(companyId);
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
-				ExpenseCategoryBandRequest empolyeeRequest= EncryptionDecriptionUtil.convertFromJson(decript, ExpenseCategoryBandRequest.class);
+				ExpensesReimbursementRequest empolyeeRequest= EncryptionDecriptionUtil.convertFromJson(decript, ExpensesReimbursementRequest.class);
 				
 				response=expenseCategoryBandService.getCompEmployeeBandId(empolyeeRequest.getId());
 	    		if(response!=null && !response.equalsIgnoreCase("")) {

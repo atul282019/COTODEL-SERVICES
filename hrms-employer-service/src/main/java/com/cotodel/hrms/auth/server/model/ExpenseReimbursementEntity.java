@@ -2,7 +2,8 @@ package com.cotodel.hrms.auth.server.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import javax.persistence.Transient;
+import java.time.LocalDateTime;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -10,9 +11,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Type;
 
@@ -24,7 +28,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="expense_reimbursement")
+@Table(name="expense_reimbursement",uniqueConstraints = @UniqueConstraint(columnNames = {"invoice_number"}),
+indexes = {@Index(name = "idx_employee_id", columnList = "employee_id")})
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="expense_reimbursement_seq" , sequenceName="expense_reimbursement_seq", allocationSize=1)
 
@@ -62,7 +67,7 @@ public class ExpenseReimbursementEntity  implements Serializable{
 	@Column(name="file_type")
 	private String fileType;
 	
-	private LocalDate  created_date ;
+	private LocalDateTime  created_date ;
 	
 	@Column(name="date_of_expense")
 	private String dateOfExpense;

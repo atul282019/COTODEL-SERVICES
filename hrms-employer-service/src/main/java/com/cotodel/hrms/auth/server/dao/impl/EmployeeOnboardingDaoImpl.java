@@ -48,5 +48,11 @@ public class EmployeeOnboardingDaoImpl implements EmployeeOnboardingDao{
 		return employeeOnboardingRepository.findByOnboardingUserId(userId);
 	}
 
+	@Override
+	public List<EmployeeOnboardingEntity> getReputeEmployeeOnboarding() {
+		// TODO Auto-generated method stub
+		return employeeOnboardingRepository.findByOnboardingReputeManagerId();
+	}
+
 	
 }

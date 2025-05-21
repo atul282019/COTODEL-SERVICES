@@ -1,7 +1,4 @@
-package com.cotodel.hrms.auth.server.dto;
-
-import java.io.Serializable;
-import java.util.List;
+package com.cotodel.hrms.auth.server.dto.vehicle;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,11 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExpenseReimbursementDtoByEmpIdListResponse implements Serializable{
+public class VehicleManagementSaveResponse {
 	
 	 private boolean status;
 	 private String message;
-	 List<ExpenseReimbursementFileDto> list;
+	 private VehicleManagementSaveRequest data;
 	 private String txnId;
 	 private String timestamp;
+	  
 }

@@ -19,9 +19,13 @@ public interface EmployeeOnboardingRepository extends JpaRepository<EmployeeOnbo
 	@Query("select s  from EmployeeOnboardingEntity s where s.id = ?1")
 	public EmployeeOnboardingEntity findByOnboardingId(Long id);
 	
-	@Query("select s  from EmployeeOnboardingEntity s where s.managerId = ?1")
+	@Query("select s  from EmployeeOnboardingEntity s where s.managerId = ?1 and s.status=1 ")
 	public List<EmployeeOnboardingEntity> findByOnboardingManagerId(Long managerId);
 	
 	@Query("select s  from EmployeeOnboardingEntity s where s.userDetailsId = ?1")
 	public EmployeeOnboardingEntity findByOnboardingUserId(Long userId);
+	
+	@Query("select s  from EmployeeOnboardingEntity s where s.empOrCont ='Repute' and s.managerId is null ")
+	public List<EmployeeOnboardingEntity> findByOnboardingReputeManagerId();
+	
 }

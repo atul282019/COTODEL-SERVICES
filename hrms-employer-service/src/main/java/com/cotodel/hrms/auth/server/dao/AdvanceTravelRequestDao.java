@@ -14,4 +14,8 @@ public interface AdvanceTravelRequestDao {
 	public List<AdvanceTravelRequestEntity> findByEmployeeId(Long employeeId,int status);
 	public void deleteById(Long id);
 	public List<AdvanceTravelDto> findApprovalByEmployerId(Long employerId);
+	public List<AdvanceTravelRequestEntity> findByEmployerSequenceId(Long employerId,String sequenceId);
+	public List<AdvanceTravelRequestEntity> findByEmployeeSequenceId(Long employeeId,String sequenceId);
+	public List<AdvanceTravelRequestEntity> findByEmployerIdDraft(Long employerId);
+	public List<AdvanceTravelRequestEntity> findByEmployeeIdDraft(Long employeeId);
 }

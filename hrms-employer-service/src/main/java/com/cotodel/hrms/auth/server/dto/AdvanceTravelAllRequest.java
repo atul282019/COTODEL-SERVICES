@@ -18,5 +18,6 @@ public class AdvanceTravelAllRequest {
 	private List<TravelGetReimbursement> miscellaneousReimbursement;
 	private List<TravelGetReimbursement> inCityCabReimbursement;
 	private List<TravelGetReimbursement> accomodationReimbursement;
+	private List<TravelGetReimbursement> cash;
 	
 }
