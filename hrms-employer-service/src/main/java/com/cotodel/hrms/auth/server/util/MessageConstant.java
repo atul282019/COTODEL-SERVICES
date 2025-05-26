@@ -40,5 +40,10 @@ public class MessageConstant {
 	public static final String DIRECT_UNIQUE = "Mobile,email and din should be unique.";
 	public static final String HASH_ERROR = "Tempered Request";
 	public static final String FILE_ERROR = "Invalid file or extension.";
-	
+	public static final String VEHICLENULL = "Vehicle cannot be null.";
+	public static final String VEHICLUNIQUE = "Vehicle should be unique.";
+	public static final String IDNULL = "Id cannot be null.";
+	public static final String SEQUENCEIDNULL = "Sequence Id cannot be null.";
+	public static final String TRIPINVALID = "Driver is already assigned !. Kindly edit after Completion Date expDate of the TRIP.";
+	public static final String INVALIDDAYS = "Invalid input. Please enter format like 7 Days";
 }

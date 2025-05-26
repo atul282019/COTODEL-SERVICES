@@ -2,16 +2,21 @@ package com.cotodel.hrms.auth.server.model.vehicle;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,8 +42,9 @@ public class VehicleDriverManagementEntity  implements Serializable{
 	@Column(name="driver_id")
 	private Long driverId;
 	
-	@Column(name="vehicle_id")
-	private Long vehicleId;
+	@ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
+    private VehicleManagementEntity vehicleId;
 	
 	@Column(name="vehicle_no")
 	private String vehicleNo;
@@ -91,9 +97,23 @@ public class VehicleDriverManagementEntity  implements Serializable{
 	@Column(name="assignment_type")
 	private String assignmentType;
 	
-
-	//
+	@Column(name="ownership_type_id")
+	private String ownership_type_id;
 	
-	//duplication file check
+	@Column(name="driver_name_one")
+	private String driverName1;
+	
+	@Column(name="assignment_type_id")
+	private String assignmentType_id;
+	
+	@Column(name="driver_name_two")
+	private String driverName2;
+		
+	@Column(name="driver_mobile")
+	private String driverMobile;
+	
+	@Column(name="request_type")
+	private String requestType;
+
 	
 }

@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VehicleManagementSaveRequest {
+public class VehicleManagementTripRequest {
+	
 	private Long id;	
 	private String vehicleType;	
 	private String vehicleNo;	

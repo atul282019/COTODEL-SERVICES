@@ -1,9 +1,5 @@
 package com.cotodel.hrms.auth.server.dto.vehicle;
 
-import java.util.List;
-
-import com.cotodel.hrms.auth.server.model.vehicle.VehicleManagementEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VehicleManagementResponse {
+public class VehicleManagementTripResponse {
 	
 	 private boolean status;
 	 private String message;
-	 private List<VehicleManagementGetDto> data;
+	 private VehicleManagementTripRequest data;
 	 private String txnId;
 	 private String timestamp;
 	  

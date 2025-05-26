@@ -42,11 +42,15 @@ public class DirectorOnboardingServiceImpl implements DirectorOnboardingService{
 //	        	request.setResponse(errorMessage);
 //				return request;
 //	        }
+			 //String dataString = orgId+name+email+mobile+createdby+clientKey+SECRET_KEY
 			 String dataString = request.getOrgId()+request.getName()+request.getEmail()+request.getMobile()+request.getCreatedby()+request.getClientKey()+MessageConstant.SECRET_KEY;;
 			//logger.info("dataString::"+dataString);
 			String hash=ValidateConstants.generateHash(dataString);
 			//logger.info("hash::"+hash);
-			if(!request.getHash().equalsIgnoreCase(hash)) {
+			if(request.getHash()==null) {
+				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}else if(!request.getHash().equalsIgnoreCase(hash)) {
 				request.setResponse(MessageConstant.HASH_ERROR);
 				return request;
 			}
@@ -83,15 +87,15 @@ public class DirectorOnboardingServiceImpl implements DirectorOnboardingService{
        message=ValidateConstants.validateMobile(directorOnboardingRequest.getMobile());
        if(message!=null)
        	return message;
-       message=ValidateConstants.validateDin(directorOnboardingRequest.getDin());
-       if(message!=null)
-       	return message;
-       message=ValidateConstants.validateDesignation(directorOnboardingRequest.getDesignation());
-       if(message!=null)
-       	return message;
-       message=ValidateConstants.validateAddress(directorOnboardingRequest.getAddress());
-       if(message!=null)
-       	return message;
+//       message=ValidateConstants.validateDin(directorOnboardingRequest.getDin());
+//       if(message!=null)
+//       	return message;
+//       message=ValidateConstants.validateDesignation(directorOnboardingRequest.getDesignation());
+//       if(message!=null)
+//       	return message;
+//       message=ValidateConstants.validateAddress(directorOnboardingRequest.getAddress());
+//       if(message!=null)
+//       	return message;
        message=ValidateConstants.validateCreatedBy(directorOnboardingRequest.getCreatedby());
        
         return message;

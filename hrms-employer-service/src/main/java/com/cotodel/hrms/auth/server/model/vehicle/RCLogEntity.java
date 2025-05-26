@@ -22,24 +22,21 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="vehicle_type_master")
+@Table(name="rc_log")
 @Access(value=AccessType.FIELD)
-@SequenceGenerator(name="vehicle_type_master_seq" , sequenceName="vehicle_type_master_seq", allocationSize=1)
-public class VehicleTypeMasterEntity  implements Serializable{
+@SequenceGenerator(name="rc_log_seq" , sequenceName="rc_log_seq", allocationSize=1)
+public class RCLogEntity  implements Serializable{
 	
 	
 	private static final long serialVersionUID = 4615208660281419839L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="vehicle_type_master_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="rc_log_seq")
 	@Column(name="id")
 	private Long id;
-
-	@Column(name="vechile_name")
-	private String vechileName;
-	
-	@Column(name="vechile_type")
-	private String vechileType;
+		
+	@Column(name="response")
+	private String response;
 	
 	@Column(name="creation_date")
 	private LocalDateTime creationDate;
@@ -48,6 +45,6 @@ public class VehicleTypeMasterEntity  implements Serializable{
 	private String createdBy;
 	
 	@Column(name="status")
-	private int status;
+	private String status;
 		
 }

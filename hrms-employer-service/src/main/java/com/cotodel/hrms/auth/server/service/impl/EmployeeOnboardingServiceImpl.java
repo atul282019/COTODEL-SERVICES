@@ -17,6 +17,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeOnboardingDao;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDriverRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDto;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeRequest;
@@ -893,6 +895,18 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			e.printStackTrace();
 		}
 		return employeeOnboardingRequest;
+	}
+
+
+	@Override
+	public List<EmployeeOnboardingDto> getDriverEmployeeList(EmployeeOnboardingDriverRequest request) {
+		List<EmployeeOnboardingDto> employeeOnboading=new ArrayList<EmployeeOnboardingDto>();
+		try {
+			employeeOnboading=employeeOnboardingDao.getDriverEmployeeOnboarding(request.getOrgId(),request.getName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return employeeOnboading;
 	}
 	
 	

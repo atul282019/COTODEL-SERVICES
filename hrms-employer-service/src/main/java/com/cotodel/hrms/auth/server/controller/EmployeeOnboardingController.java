@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeConfirmOnboardingResponse;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDriverRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDto;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingIdResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListResponse;
@@ -27,6 +29,7 @@ import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingResponse;
 import com.cotodel.hrms.auth.server.dto.UpdateEmployeeResponse;
 import com.cotodel.hrms.auth.server.dto.UpdateEmployeeStatusRequest;
+import com.cotodel.hrms.auth.server.dto.vehicle.EmployeeOnboardingDriverResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
@@ -689,6 +692,58 @@ public class EmployeeOnboardingController {
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
 	    		employeeOnboardingResponse=new EmployeeOnboardingResponse(MessageConstant.FALSE,message,employeeOnboardingRequest,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeOnboardingResponse);
+			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+	    return ResponseEntity.ok(jsonEncriptObject);
+	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/getEmployeeDriver",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> getEmployeeDriver(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+	    logger.info("inside getEmployeeDriver+++");    	
+	    
+	    	String message = "";
+	    	String message1 = "";
+	    	List<EmployeeOnboardingDto> response=null;
+	    	EmployeeOnboardingReputeUpdateRequest employeeOnboardingRequest1=null;
+	    	EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();
+	    	EmployeeOnboardingDriverResponse employeeOnboardingResponse;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				EmployeeOnboardingDriverRequest empDriverRequest= EncryptionDecriptionUtil.convertFromJson(decript, EmployeeOnboardingDriverRequest.class);
+				response=employeeOnboardingService.getDriverEmployeeList(empDriverRequest);
+				
+	    		if(response!=null && response.size()>0) {
+	    			employeeOnboardingResponse=new EmployeeOnboardingDriverResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS_UPDATE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeOnboardingResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
+	    		}else {
+	    			employeeOnboardingResponse=new EmployeeOnboardingDriverResponse(MessageConstant.FALSE,message1,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeOnboardingResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		logger.error("error in getEmployeeDriver====="+e);
+	    		//message=e.getMessage();
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		employeeOnboardingResponse=new EmployeeOnboardingDriverResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeOnboardingResponse);
 			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {

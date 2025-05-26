@@ -1,4 +1,4 @@
-package com.cotodel.hrms.auth.server.dto.vehicle;
+package com.cotodel.hrms.auth.server.dto;
 
 import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VehicleManagementRequest {
-		
-	private Long orgId;
+public class EmployeeOnboardingDto {
 	private Long id;
-	private String vehicleSequenceId;
-	private String response;
-	
+	private String name;
+   	private String mobile;
 }

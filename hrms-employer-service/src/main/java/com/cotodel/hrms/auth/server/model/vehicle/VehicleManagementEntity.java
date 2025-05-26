@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -23,7 +24,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="vehicle_management",uniqueConstraints = @UniqueConstraint(columnNames = {"vehicle_no"}))
+@Table(name="vehicle_management",uniqueConstraints = @UniqueConstraint(columnNames = {"vehicle_no"}),
+indexes = {@Index(name = "idx_vehicle_sequence_id", columnList = "vehicle_sequence_id")})
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="vehicle_management_seq" , sequenceName="vehicle_management_seq", allocationSize=1)
 public class VehicleManagementEntity  implements Serializable{
@@ -40,7 +42,7 @@ public class VehicleManagementEntity  implements Serializable{
 	private String vehicleType;
 	
 	@Column(name="vehicle_no")
-	private String vehicleNo;
+	private String vehicleNumber;
 	
 	@Column(name="creation_date")
 	private LocalDateTime creationDate;
@@ -54,8 +56,8 @@ public class VehicleManagementEntity  implements Serializable{
 	@Column(name="org_id")
 	private Long orgId;
 	
-	@Column(name="make_model")
-	private String makeModel;
+	@Column(name="vehicle_model")
+	private String vehicleModel;
 	
 	@Column(name="manufacturing_year")
 	private String manufacturingYear;
@@ -128,5 +130,45 @@ public class VehicleManagementEntity  implements Serializable{
 	
 	@Column(name="selected_timeperiod")
 	private String selectedTimeperiod;
-
+	
+	@Column(name="driver_cum_owner")
+	private String driverCumOwner;
+	
+	@Column(name="vehicle_manufactor")
+	private String vehicleManufactor;
+	
+	@Column(name="vehicleid")
+	private String vehicleId;
+	
+	@Column(name="vehicle_fuel_type_id")
+	private String vehicleFuelTypeId;
+	
+	@Column(name="vehicle_fuel_type")
+	private String vehicleFuelType;
+	
+	@Column(name="ownership_type_id")
+	private String ownership_type_id;
+	
+	@Column(name="driver_name_one")
+	private String driverName1;
+	
+	@Column(name="assignment_type_id")
+	private String assignmentType_id;
+	
+	@Column(name="driver_name_two")
+	private String driverName2;
+	
+	@Column(name="driver_id")
+	private Long driverId;
+	
+	@Column(name="driver_mobile")
+	private String driverMobile;
+	
+	@Column(name="request_type")
+	private String requestType;
+	
+	@Column(name="vehicle_sequence_id")
+	private String vehicleSequenceId;
+	
+	
 }

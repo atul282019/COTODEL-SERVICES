@@ -12,4 +12,10 @@ public interface VehicleManagementRepository extends JpaRepository<VehicleManage
 	@Query("select s  from VehicleManagementEntity s where s.orgId = ?1 ")
 	public List<VehicleManagementEntity> findByVehicleList(Long emplid);
 	
+	@Query("select s  from VehicleManagementEntity s where s.id = ?1 ")
+	public VehicleManagementEntity findByVehicleById(Long id);
+	
+	@Query("select s  from VehicleManagementEntity s where s.vehicleSequenceId = ?1 ")
+	public VehicleManagementEntity findByVehicleBySequenceId(String vehicleSequenceId);
+	
 }

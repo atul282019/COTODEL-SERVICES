@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.dao;
 
 import java.util.List;
 
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDto;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 
 public interface EmployeeOnboardingDao {
@@ -12,5 +13,6 @@ public interface EmployeeOnboardingDao {
 	public List<EmployeeOnboardingEntity> getEmployeeOnboardingManagerId(Long managerId);
 	public EmployeeOnboardingEntity getEmployeeOnboardingUserId(Long userId);
 	public List<EmployeeOnboardingEntity> getReputeEmployeeOnboarding();
+	public List<EmployeeOnboardingDto> getDriverEmployeeOnboarding(Long orgId,String name);
 	
 }

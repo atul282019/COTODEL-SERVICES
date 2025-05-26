@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VehicleManagementSaveRequest {
+public class VehicleManagementDto {
 	private Long id;	
 	private String vehicleType;	
 	private String vehicleNo;	
@@ -19,7 +19,7 @@ public class VehicleManagementSaveRequest {
 	private String createdBy;	
 	private int status;	
 	private Long orgId;	
-	private String vehicleModel;	
+	private String makeModel;	
 	private String manufacturingYear;	
 	private String fuelType;	
 	private String creationType;////creation Type--bulk or single	
@@ -49,15 +49,16 @@ public class VehicleManagementSaveRequest {
 	private String vehicleManufactor;
 	private String vehicleId;
 	private String vehicleFuelTypeId;
-	private String vehicleFuelType;	
-	private String ownership_type_id;
-	private String driverName1;
-	private String assignmentType_id;			
-	private String driverName2;
-	private Long driverId;
-	private String driverMobile;
-	private String requestType;
-	private String customTimePeriod;
-	private Long timePeriod_id;
-	private String vehicleSequenceId;
+	private String vehicleFuelType;
+	
+	
+//}},
+//{ "mData": "vehicleType" },
+//{ "mData": "vehicleNumber" },
+//{ "mData": "vehicleFuelType" },
+//{ "mData": "vehicleManufactor" },
+//{ "mData": "vehicleManufactor" },
+//
+//id aur status
+
 }
