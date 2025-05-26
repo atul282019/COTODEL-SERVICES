@@ -13,11 +13,13 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.cotodel.hrms.auth.server.dao.EmployerDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
@@ -345,6 +347,7 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 }
 
 	@Override
+	@Transactional
 	public EmployerDetailsRequest saveEmployerOnboardingDetails(EmployerDetailsRequest employerDetailsRequest) {
 		// TODO Auto-generated method stub
 					logger.info(" inside saveEmployerDetails");
@@ -407,11 +410,11 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 								Date date = new Date();
 								LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 								userDetails.setCreated_date(LocalDate.now());
-								if(employerDetailsRequest.isErupistatus()) {
-									userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
-								}else {
-									userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
-								}
+								//if(employerDetailsRequest.isErupistatus()) {
+								userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
+//								}else {
+//									userDetails.setRole_id(MessageConstant.SIGN_UP_ROLE);
+//								}
 								userDetails.setStatus(1);
 								UserEntity userEntity=userDetailsDao.saveUserDetails(userDetails);
 								EmployeeOnboardingRequest employeeOnboardingRequest=new EmployeeOnboardingRequest();
@@ -445,6 +448,7 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 						// TODO: handle exception
 						response=MessageConstant.RESPONSE_FAILED;
 						employerDetailsRequest.setResponse(response);
+						//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					}
 					return employerDetailsRequest;
 		
