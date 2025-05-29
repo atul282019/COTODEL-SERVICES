@@ -92,6 +92,7 @@ public class VehicleManagementController {
     		//e.printStackTrace();
     		logger.error("error in add/VehicleManagement====="+e);
     		//message=e.getMessage();
+    		message=MessageConstant.PROFILE_FAILED;
 		}
     	EncriptResponse jsonEncriptObject=new EncriptResponse();
     	try {
@@ -282,7 +283,7 @@ public class VehicleManagementController {
     			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
     			return ResponseEntity.ok(jsonEncriptObject);
     		}else {
-    			vehicleManagementByIdResponse=new VehicleManagementByIdResponse(MessageConstant.FALSE,message1,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+    			vehicleManagementByIdResponse=new VehicleManagementByIdResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
     			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(vehicleManagementByIdResponse);
     			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
     			return ResponseEntity.ok(jsonEncriptObject);

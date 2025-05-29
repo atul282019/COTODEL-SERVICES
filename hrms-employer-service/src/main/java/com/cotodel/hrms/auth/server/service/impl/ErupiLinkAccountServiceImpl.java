@@ -301,9 +301,14 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			List<LinkSubAccountMultipleEntity> linksubacount=linkSubMultipleAccountDao.getLinkMultipleDetailsByOrgId(request.getOrgId());
 			for (LinkSubAccountMultipleEntity linkSubAccountMultipleEntity : linksubacount) {
 				erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
-				//ErupiLinkAccountEntity erupiLinkAccountEntity1=erupiLinkAccountDao.findByErupiLinkById(linkSubAccountMultipleEntity.getErupiLinkAccountEntity().getId());
+				//ErupiLinkAccountEntity erupiLinkAccountEntity1=erupiLinkAccountDao.findByErupiLinkAccNumber(linkSubAccountMultipleEntity.getAcNumber());
 				CopyUtility.copyProperties(linkSubAccountMultipleEntity,erupiLinkAccountWithOutResponse);
 				erupiLinkAccountWithOutResponse.setAccountSeltWallet("Wallet");
+//				erupiLinkAccountWithOutResponse.setMerchentIid(erupiLinkAccountEntity1.getMerchentIid());
+//				erupiLinkAccountWithOutResponse.setSubmurchentid(erupiLinkAccountEntity1.getSubmurchentid());
+//				erupiLinkAccountWithOutResponse.setPayerva(erupiLinkAccountEntity1.getPayerva());
+//				erupiLinkAccountWithOutResponse.setBankCode(erupiLinkAccountEntity1.getBankCode());
+//				erupiLinkAccountWithOutResponse.setTid(erupiLinkAccountEntity1.getTid());
 				erupiLinkList.add(erupiLinkAccountWithOutResponse);		
 			}
 			//end

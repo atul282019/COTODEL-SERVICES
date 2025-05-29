@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
 
@@ -65,6 +64,7 @@ public class CommonUtility {
 		}		
 	}
 	
+	
 	public static String userRequestWiout(String sAccessToken,String requestJson,String url){
 		String returnStr=null;
 		String decript=null;
@@ -91,6 +91,34 @@ public class CommonUtility {
 			return null;
 		}finally {
 			restTemplate=null;headers=null;sAccessToken=null;requestJson=null;url=null;	
+		}		
+	}
+	
+	public static String userRequestForRC(String token,String requestJson,String url){
+		String returnStr=null;
+		String decript=null;
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		try{
+			logger.info(" Request Json for url"+url+"---"+requestJson);
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setBearerAuth(token);
+			
+
+			HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
+
+			returnStr = restTemplate.postForObject(url, entity, String.class);
+			logger.info(" response Json---"+returnStr);
+			return returnStr;
+		}catch(HttpStatusCodeException e) {
+			logger.error("HttpStatusCodeException error in---"+url+"-"+e.getResponseBodyAsString());
+			return e.getResponseBodyAsString();
+		}catch(Exception e){
+			logger.error(" error in---"+url+"-"+e);
+			return null;
+		}finally {
+			restTemplate=null;headers=null;token=null;requestJson=null;url=null;	
 		}		
 	}
 	

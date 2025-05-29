@@ -34,4 +34,7 @@ public class ApplicationConstantConfig {
 	@Value("${api.ocr.read.file.url}")
 	public String apiOcrReadFileUrl;	
 	
+
+	
+	
 }

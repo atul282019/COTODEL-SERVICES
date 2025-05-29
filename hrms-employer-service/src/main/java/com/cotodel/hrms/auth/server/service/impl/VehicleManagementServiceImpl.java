@@ -51,11 +51,13 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 				request.setResponse(MessageConstant.VEHICLENULL);
 				return request;
 			}
+			String vehicleNo=request.getVehicleNumber()==null?"":request.getVehicleNumber().toUpperCase();
 			response = MessageConstant.RESPONSE_FAILED;
 			request.setResponse(response);
 			vehicleManagementEntity = new VehicleManagementEntity();
 			CopyUtility.copyProperties(request, vehicleManagementEntity);
 			vehicleManagementEntity.setStatus(1);
+			vehicleManagementEntity.setVehicleNumber(vehicleNo);			
 			String vehicleSequenceId= vehicleSequenceId();
 			vehicleManagementEntity.setCreationDate(LocalDateTime.now());
 			vehicleManagementEntity.setVehicleSequenceId(vehicleSequenceId);
@@ -106,6 +108,12 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 						vehicleManagementGetDto.setTripStatus("In progress");
 						
 					}
+					String driverName = (String) row[2];
+					String driverMobile = (String) row[3];
+					String clientName = (String) row[5];
+					vehicleManagementGetDto.setDriverName2(driverName);
+					vehicleManagementGetDto.setDriverMobile(driverMobile);
+					vehicleManagementGetDto.setClientName(clientName);
 					System.out.println(daysBetween);
 				} catch (Exception e) {
 					e.printStackTrace();

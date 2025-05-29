@@ -35,6 +35,7 @@ import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateNameResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryListResponse;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeSingleDetailsResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
@@ -323,35 +324,35 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 			}
     	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
-//	 @Operation(summary = "This API will provide the Save User Details ", security = {
-//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-//	    @ApiResponses(value = {
-//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-//	    @RequestMapping(value = "/update/erupiVoucherRedem",produces = {"application/json"}, 
-//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-//	    public ResponseEntity<Object> erupiVoucherRedem(HttpServletRequest request,@Valid @RequestBody ErupiVoucherRedemeRequest erupiVoucherRedemeRequest) {
-//		 
-//	    logger.info("inside erupiVoucherRedem....");	    	
-//	    	
-//	    
-//	    	String message = "";
-//	    	ErupiVoucherRedemeRequest response=null;
-//	    	try {
-//	    		
-//	    		String companyId = request.getHeader("companyId");
-//				SetDatabaseTenent.setDataSource(companyId);
-//				
-//				message=erupiVoucherInitiateDetailsService.erupiVoucherRedemDetails(erupiVoucherRedemeRequest);
-//	    		//return null;
-//	    	}catch (Exception e) {				
-//	    		logger.error("error in erupiVoucherRedem====="+e);
-//			}
-//
-//			return ResponseEntity.ok(message);
-//	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/update/erupiVoucherRedem",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> erupiVoucherRedem(HttpServletRequest request,@Valid @RequestBody ErupiVoucherRedemeRequest erupiVoucherRedemeRequest) {
+		 
+	    logger.info("inside erupiVoucherRedem....");	    	
+	    	
+	    
+	    	String message = "";
+	    	ErupiVoucherRedemeRequest response=null;
+	    	try {
+	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				message=erupiVoucherInitiateDetailsService.erupiVoucherRedemDetails(erupiVoucherRedemeRequest);
+	    		//return null;
+	    	}catch (Exception e) {				
+	    		logger.error("error in erupiVoucherRedem====="+e);
+			}
+
+			return ResponseEntity.ok(message);
+	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
 	    @ApiResponses(value = {

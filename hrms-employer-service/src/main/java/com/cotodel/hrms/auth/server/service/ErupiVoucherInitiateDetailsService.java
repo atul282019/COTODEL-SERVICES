@@ -14,6 +14,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherTotalDetailDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 
 public interface ErupiVoucherInitiateDetailsService {
@@ -23,7 +24,7 @@ public interface ErupiVoucherInitiateDetailsService {
 	public List<ErupiVoucherCreatedDto>  getErupiVoucherCreateDetailsList(ErupiVoucherCreatedRequest request);
 	public List<ErupiVoucherSummaryDto>  getErupiVoucherSummaryList(ErupiVoucherCreatedRequest request);
 	public ErupiVoucherRevokeDetailsSingleRequest  erupiVoucherRevokeSingleDetails(ErupiVoucherRevokeDetailsSingleRequest request);
-	//public String  erupiVoucherRedemDetails(ErupiVoucherRedemeRequest request);
+	public String  erupiVoucherRedemDetails(ErupiVoucherRedemeRequest request);
 	public List<ErupiVoucherCreateSummaryDto>  getErupiVoucherCreateSummaryList(ErupiVoucherCreatedRequest request);
 	public List<ErupiVoucherCreateDetailsRequest>  saveErupiVoucherCreateListDetails(ErupiVoucherCreateListRequest request);
 	public List<ErupiVoucherCreateOldDto>  getErupiVoucherCreateOldList(ErupiVoucherCreatedRequest request);

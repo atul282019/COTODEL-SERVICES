@@ -92,17 +92,11 @@ public class VehicleManagementEntity  implements Serializable{
 	@Column(name="authority")
 	private String authority;
 	
-	@Column(name="cubic_capacity")
-	private String cubicCapacity;
-	
 	@Column(name="seat")
 	private int seat;
 	
 	@Column(name="weight")
 	private String weight;
-	
-	@Column(name="insurance_company")
-	private String insuranceCompany;
 	
 	@Column(name="fitness")
 	private String fitness;
@@ -112,9 +106,6 @@ public class VehicleManagementEntity  implements Serializable{
 	
 	@Column(name="financer")
 	private String financer;
-	
-	@Column(name="permit_number")
-	private String permitNumber;
 	
 	@Column(name="ownership_driver")
 	private String ownershipDriver;
@@ -170,5 +161,40 @@ public class VehicleManagementEntity  implements Serializable{
 	@Column(name="vehicle_sequence_id")
 	private String vehicleSequenceId;
 	
+	@Column(name="vehicle_chasi_number")
+	private String vehicle_chasi_number;
+	
+	@Column(name="vehicle_engine_number")
+	private String vehicle_engine_number;
+	
+	@Column(name="registered_at")
+	private String registered_at;
+	
+	@Column(name="manufacturing_date")
+	private String manufacturing_date;
+	
+	@Column(name="cubic_capacity")
+	private String cubic_capacity;
+	
+	@Column(name="seat_capacity")
+	private String seat_capacity;
+	
+	@Column(name="unladen_weight")
+	private String unladen_weight;
+	
+	@Column(name="wheelbase")
+	private String wheelbase;
+	
+	@Column(name="insurance_company")
+	private String insurance_company;
+	
+	@Column(name="fit_up_to")
+	private String fit_up_to;
+	
+	@Column(name="tax_paid_upto")
+	private String tax_paid_upto;
+	
+	@Column(name="permit_number")
+	private String permit_number;
 	
 }
