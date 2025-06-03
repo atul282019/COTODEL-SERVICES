@@ -7,6 +7,7 @@ import com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 
 public interface ErupiVoucherInitiateDetailsDao {
@@ -26,5 +27,6 @@ public interface ErupiVoucherInitiateDetailsDao {
 	public List<ErupiVoucherCreatedDateWiseDto> getVoucherCreationListDateWise(LocalDate startDate,LocalDate endDate,String bankCode);
 	public List<AccountWiseAmountDTO> getVoucherAmountListAccountWise(Long orgId);
 	public List<PurposeCodeAmountDto> getVoucherCreationListByPurposeCode(Long orgID,LocalDate startDate,LocalDate endDate);
-	public List<ErupiVoucherCreatedDto> getVoucherCreationListLimit(Long orgID,LocalDate startDate,LocalDate endDate);
+	public List<ErupiVoucherCreatedRedeemDto> getVoucherCreationListLimit(Long orgID,LocalDate startDate,LocalDate endDate);
+	public List<ErupiVoucherCreatedDto> getVoucherCreationTransactionList(Long orgId);
 }

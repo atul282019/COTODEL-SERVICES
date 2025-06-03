@@ -15,6 +15,7 @@ import com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 @Repository
 public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<ErupiVoucherCreationDetailsEntity,Long>{
@@ -138,15 +139,25 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 		       "ORDER BY c.purposeCode")
 		List<PurposeCodeAmountDto> getTotalAmountByPurposeCode(@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate,
 		                                                       @Param("orgId") Long orgId);
+	 @Query("select new com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto(c.id,c.name,c.mobile,c.amount,"
+				+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
+				+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon,COALESCE(t.payerAmount, '0')) "
+				+ "from ErupiVoucherCreationDetailsEntity c"
+				+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
+				+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
+				+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId and c.workFlowId in ('100003','100007') "
+				+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc ")
+		public List<ErupiVoucherCreatedRedeemDto> findVoucherCreateListLimit(@Param("orgId") Long orgId,    
+		        @Param("startDate") LocalDate startDate, 
+		        @Param("endDate") LocalDate endDate);
+	 
 	 @Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
 				+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
 				+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon) "
 				+ "from ErupiVoucherCreationDetailsEntity c"
-				+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
+				+ " left join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
 				+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
 				+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId "
-				+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc ")
-		public List<ErupiVoucherCreatedDto> findVoucherCreateListLimit(@Param("orgId") Long orgId,    
-		        @Param("startDate") LocalDate startDate, 
-		        @Param("endDate") LocalDate endDate);
+				+ "   order by c.id desc ")
+		public List<ErupiVoucherCreatedDto> findVoucherCreateTransactionList(@Param("orgId") Long orgId);
 }

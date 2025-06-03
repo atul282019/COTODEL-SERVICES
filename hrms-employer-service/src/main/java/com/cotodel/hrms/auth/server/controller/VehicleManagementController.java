@@ -128,7 +128,7 @@ public class VehicleManagementController {
 			
 			String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 			vehicleManagementRequest= EncryptionDecriptionUtil.convertFromJson(decript, VehicleManagementRequest.class);
-			response=vehicleManagementService.getVehicleManagement(vehicleManagementRequest.getOrgId());
+			response=vehicleManagementService.getVehicleManagement(vehicleManagementRequest);
     		if(response!=null && response.size()>0) {
     			vehicleManagementResponse=new VehicleManagementResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
     			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(vehicleManagementResponse);

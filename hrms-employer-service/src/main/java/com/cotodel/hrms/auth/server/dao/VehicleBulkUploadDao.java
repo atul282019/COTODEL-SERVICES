@@ -15,6 +15,5 @@ public interface VehicleBulkUploadDao {
 	public List<VehiclerBulkUploadFailEntity> findFailList(Long orgId, String fileName);
 	public VehicleBulkUploadSuccessEntity findSuccessDetails(Long id);
 	public int updateSuccessFlag(Long id);
-	public VehicleManagementEntity saveVehicleManagementDetails(VehicleManagementEntity vehicleManagementEntity);
 	
 }

@@ -9,4 +9,5 @@ public interface VehicleManagementDao {
 	public List<VehicleManagementEntity> getVehicleManagement(Long orgId);
 	public VehicleManagementEntity getVehicleManagementBySequenceId(String vehicleSequenceId);
 	public VehicleManagementEntity getVehicleManagementById(Long id);
+	public VehicleManagementEntity getVehicleManagementByVehicleNo(String  vehicleNo);
 }

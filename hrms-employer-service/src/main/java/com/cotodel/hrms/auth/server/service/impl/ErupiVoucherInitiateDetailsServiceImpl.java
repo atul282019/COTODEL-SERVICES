@@ -52,6 +52,8 @@ import com.cotodel.hrms.auth.server.dto.indianbank.VoucherCreateIndianBankReques
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateTransactionRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
@@ -2190,7 +2192,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 
 
 		@Override
-		public List<ErupiVoucherCreatedDto> getErupiVoucherCreateDetailsListLimit(ErupiVoucherCreatedRequest request) {
+		public List<ErupiVoucherCreatedRedeemDto> getErupiVoucherCreateDetailsListLimit(ErupiVoucherCreatedRequest request) {
 			
 			String query="";
 			LocalDate today = LocalDate.now();
@@ -2248,9 +2250,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			}
 			System.out.println("startDate:"+startDate);
 			System.out.println("endDate:"+endDate);
-			List<ErupiVoucherCreatedDto> erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationListLimit(request.getOrgId(),startDate,endDate);
+			List<ErupiVoucherCreatedRedeemDto> erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationListLimit(request.getOrgId(),startDate,endDate);
 			int count=0;
-			for (ErupiVoucherCreatedDto erupiVoucherCreatedDto : erupiVoucherCreatedDtos) {
+			for (ErupiVoucherCreatedRedeemDto erupiVoucherCreatedDto : erupiVoucherCreatedDtos) {
 				ErupiBankMasterEntity erBankMasterEntity=bankMasterDao.getDetails(erupiVoucherCreatedDto.getBankcode());
 				String accNumber=replaceExceptLastFour(erupiVoucherCreatedDto.getAccountNumber());
 				erupiVoucherCreatedDto.setAccountNumber(accNumber);
@@ -2265,6 +2267,32 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				}
 			}
 			return erupiVoucherCreatedDtos;
+		}
+
+
+
+		@Override
+		public List<ErupiVoucherCreatedDto> getErupiVoucherCreateDetailsTransactionList(
+				ErupiVoucherCreateTransactionRequest request) {
+			List<ErupiVoucherCreatedDto> erupiVoucheCreatedTransaction=new ArrayList<ErupiVoucherCreatedDto>();
+			int count=0;
+			List<ErupiVoucherCreatedDto> erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationTransactionList(request.getOrgId());
+			for (ErupiVoucherCreatedDto erupiVoucherCreatedDto : erupiVoucherCreatedDtos) {
+				ErupiBankMasterEntity erBankMasterEntity=bankMasterDao.getDetails(erupiVoucherCreatedDto.getBankcode());
+				String accNumber=replaceExceptLastFour(erupiVoucherCreatedDto.getAccountNumber());
+				erupiVoucherCreatedDto.setAccountNumber(accNumber);
+				if(erBankMasterEntity==null) {
+					erupiVoucherCreatedDto.setBankIcon(null);
+				}else {
+					erupiVoucherCreatedDto.setBankIcon(erBankMasterEntity.getBankLogo());
+				}
+				count++;
+				erupiVoucheCreatedTransaction.add(erupiVoucherCreatedDto);
+				if(count==10) {
+					break;
+				}
+			}
+			return erupiVoucheCreatedTransaction;
 		}
 		
 }

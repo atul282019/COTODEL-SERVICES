@@ -18,8 +18,10 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkCreateResponse;
 import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleBulkCreateRequest;
+import com.cotodel.hrms.auth.server.dto.vehicle.VehicleBulkCreateResponse;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleBulkUploadResponse;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleBulkUploadSFListResponse;
+import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementBulkCreateRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementBulkUploadRequest;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
@@ -56,9 +58,9 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
 	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/add/vehicleBulkVoucherUploadNew",produces = {"application/json"}, 
+	    @RequestMapping(value = "/add/vehicleBulkUploadNew",produces = {"application/json"}, 
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> erupiVoucherBulkVoucherUploadNew(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+	    public ResponseEntity<Object> vehicleBulkUploadNew(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
 	    logger.info("inside vehicleBulkVoucherUploadNew....");	    
 	    	String message = "";
@@ -113,8 +115,8 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    	
 	    
 	    	String message = "";
-	    	List<ErupiVoucherCreateDetailsRequest> response=null;
-	    	ErupiVoucherBulkCreateResponse erupiVoucherBulkCreateResponse;
+	    	List<VehicleManagementBulkCreateRequest> response=null;
+	    	VehicleBulkCreateResponse erupiVoucherBulkCreateResponse;
 	    	ErupiVoucherBulkVoucherCreateRequest res;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");	    		
@@ -134,12 +136,12 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				
 				if(response!=null) {
-					erupiVoucherBulkCreateResponse=new ErupiVoucherBulkCreateResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					erupiVoucherBulkCreateResponse=new VehicleBulkCreateResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkCreateResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);
 	    		}else {
-	    			erupiVoucherBulkCreateResponse=new ErupiVoucherBulkCreateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			erupiVoucherBulkCreateResponse=new VehicleBulkCreateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkCreateResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);
@@ -149,7 +151,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		erupiVoucherBulkCreateResponse=new ErupiVoucherBulkCreateResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		erupiVoucherBulkCreateResponse=new VehicleBulkCreateResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkCreateResponse);
 				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {

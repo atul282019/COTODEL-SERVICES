@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.cotodel.hrms.auth.server.dao.VehicleBulkUploadDao;
 import com.cotodel.hrms.auth.server.model.vehicle.VehicleBulkUploadEntity;
 import com.cotodel.hrms.auth.server.model.vehicle.VehicleBulkUploadSuccessEntity;
-import com.cotodel.hrms.auth.server.model.vehicle.VehicleManagementEntity;
 import com.cotodel.hrms.auth.server.model.vehicle.VehiclerBulkUploadFailEntity;
 import com.cotodel.hrms.auth.server.repository.vehicle.VehicleBulkUploadRepository;
 import com.cotodel.hrms.auth.server.repository.vehicle.VehicleBulkUploadSuccessRepository;
@@ -75,13 +74,6 @@ public class VehicleBulkUploadDaoImpl implements VehicleBulkUploadDao{
 	public int updateSuccessFlag(Long id) {
 		// TODO Auto-generated method stub
 		return vehicleBulkUploadSuccessRepository.updateSuccessFlag(id);
-	}
-
-
-	@Override
-	public VehicleManagementEntity saveVehicleManagementDetails(VehicleManagementEntity vehicleManagementEntity) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

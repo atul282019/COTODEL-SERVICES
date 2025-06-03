@@ -13,6 +13,7 @@ import com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.repository.ErupiVoucherInitiateDetailsRepository;
 @Repository
@@ -126,13 +127,19 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 	}
 
 	@Override
-	public List<ErupiVoucherCreatedDto> getVoucherCreationListLimit(Long orgId, LocalDate startDate,
+	public List<ErupiVoucherCreatedRedeemDto> getVoucherCreationListLimit(Long orgId, LocalDate startDate,
 			LocalDate endDate) {
-		List<ErupiVoucherCreatedDto> results= erupiVoucherInitiateDetailsRepository.findVoucherCreateListLimit(orgId, startDate, endDate);
+		List<ErupiVoucherCreatedRedeemDto> results= erupiVoucherInitiateDetailsRepository.findVoucherCreateListLimit(orgId, startDate, endDate);
 		
 		return results;
 
 	    }
+
+	@Override
+	public List<ErupiVoucherCreatedDto> getVoucherCreationTransactionList(Long orgId) {
+		// TODO Auto-generated method stub
+		return erupiVoucherInitiateDetailsRepository.findVoucherCreateTransactionList(orgId);
+	}
 	   
 
 

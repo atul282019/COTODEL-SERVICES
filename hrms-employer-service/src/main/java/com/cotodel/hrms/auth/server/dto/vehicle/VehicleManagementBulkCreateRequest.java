@@ -9,12 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VehicleManagementRequest {
+public class VehicleManagementBulkCreateRequest {
 		
-	private Long orgId;
-	private Long id;
-	private String vehicleSequenceId;
+	private String vehicleNumber;
 	private String response;
-	private String limit;
 	
 }

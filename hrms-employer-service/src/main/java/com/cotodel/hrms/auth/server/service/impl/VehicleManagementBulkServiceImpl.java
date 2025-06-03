@@ -22,11 +22,11 @@ import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dao.VehicleBulkUploadDao;
 import com.cotodel.hrms.auth.server.dao.VehicleManagementDao;
-import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.RCData;
 import com.cotodel.hrms.auth.server.dto.vehicle.RCRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleBulkCreateRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleBulkUploadSFListResponse;
+import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementBulkCreateRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementBulkUploadRequest;
 import com.cotodel.hrms.auth.server.model.vehicle.VehicleBulkUploadEntity;
 import com.cotodel.hrms.auth.server.model.vehicle.VehicleBulkUploadSuccessEntity;
@@ -67,12 +67,17 @@ public class VehicleManagementBulkServiceImpl implements VehicleManagementBulkSe
 			String filename = request.getFileName();
 			String extn = CommonUtility.getFileExtension(filename);
 			String base64Encoded = Base64.getEncoder().encodeToString(request.getFile());
-			if(extn.equalsIgnoreCase(".xlsx")) {
+			//String dataString = request.getOrgId()+request.getFileName()+request.getFile()+request.getCreatedBy()+CLIENT_KEY+SECRET_KEY;
+			if(!extn.equalsIgnoreCase("xlsx")) {
 				response=MessageConstant.FILE_ERROR;
 				bulkupload.setResponse(response);
 				return bulkupload;
 			}else if(request.getOrgId()==null) {
 				response=MessageConstant.ORGNULL;
+				bulkupload.setResponse(response);
+				return bulkupload;
+			}else if(request.getFile()==null) {
+				response=MessageConstant.FILE_ERROR;
 				bulkupload.setResponse(response);
 				return bulkupload;
 			}
@@ -125,8 +130,15 @@ public class VehicleManagementBulkServiceImpl implements VehicleManagementBulkSe
 					RCData rcData=new RCData();
 					boolean empexit =false;
 					String message="";
+					vehicleNumber=vehicleNumber==null?"":vehicleNumber.toUpperCase();
 					if (!vehicleNumber.equalsIgnoreCase("")) {
 						String username ="";
+						VehicleManagementEntity vehicle=vehicleManagementDao.getVehicleManagementByVehicleNo(vehicleNumber);
+						if(vehicle!=null) {
+							message=MessageConstant.VEHICLUNIQUE;
+							saveFail(request,vehicleBulkUploadEntity.getId(),uniqueFileName,message,vehicleNumber);
+							failCount++;
+						}else {
 						RCRequest rcRequest = new RCRequest();
 						rcRequest.setId_number(vehicleNumber);
 						rcRequest.setCreatedBy(createdBy);
@@ -156,7 +168,8 @@ public class VehicleManagementBulkServiceImpl implements VehicleManagementBulkSe
 								}
 							}
 						}
-					}
+					
+					
 					if (empexit) {						
 						saveSuccess(request,vehicleBulkUploadEntity.getId(),uniqueFileName,rcData,vehicleNumber);
 						successCount++;
@@ -164,9 +177,10 @@ public class VehicleManagementBulkServiceImpl implements VehicleManagementBulkSe
 						saveFail(request,vehicleBulkUploadEntity.getId(),uniqueFileName,message,vehicleNumber);
 						failCount++;
 					}
+					
 				}
-
-				
+					}
+				}
 			}
 
 			vehicleBulkUploadEntity.setTotalCount(String.valueOf(totalCount));
@@ -212,6 +226,7 @@ public class VehicleManagementBulkServiceImpl implements VehicleManagementBulkSe
 		vehiclerBulkUploadFailEntity.setCreationDate(LocalDateTime.now());
 		vehiclerBulkUploadFailEntity.setCreatedby(request.getCreatedBy());
 		vehiclerBulkUploadFailEntity.setMessage(message);
+		vehiclerBulkUploadFailEntity.setVehicleNumber(vehicleNumber);
 		vehiclerBulkUploadFailEntity.setOrgId(request.getOrgId());
 		vehicleBulkUploadDao.saveFailDetails(vehiclerBulkUploadFailEntity);
 	}
@@ -240,36 +255,37 @@ public  RCData jsonToPOJO(String data) {
         return rcData;
 	}
 @Override
-public List<ErupiVoucherCreateDetailsRequest> createErupiVoucherBulkFile(
+public List<VehicleManagementBulkCreateRequest> createErupiVoucherBulkFile(
 		VehicleBulkCreateRequest request) {
 	VehicleBulkUploadSuccessEntity voEntity=new VehicleBulkUploadSuccessEntity();
 	
-	List<ErupiVoucherCreateDetailsRequest> erupiList=new ArrayList<ErupiVoucherCreateDetailsRequest>();
+	List<VehicleManagementBulkCreateRequest> vehicle=new ArrayList<VehicleManagementBulkCreateRequest>();
 	try {
 		List<String> idList = Arrays.asList(request.getArrayofid());
         
 		for (String id : idList) {
-			ErupiVoucherCreateDetailsRequest erRequest=new ErupiVoucherCreateDetailsRequest();	
+			VehicleManagementBulkCreateRequest erRequest=new VehicleManagementBulkCreateRequest();	
 			Long idValue=Long.valueOf(id);
 		
 		voEntity=vehicleBulkUploadDao.findSuccessDetails(idValue);
 		if(voEntity!=null) {
 			VehicleManagementEntity vehicleManagementEntity=new VehicleManagementEntity();
 			CopyUtility.copyProperties(voEntity, vehicleManagementEntity);
+			vehicleManagementEntity.setId(null);
 			vehicleManagementEntity.setCreationType("Bulk");
 			vehicleManagementEntity.setApplicationType("Web");
-			
+			erRequest.setVehicleNumber(voEntity.getVehicleNumber());
 			vehicleManagementDao.saveVehicleManagementDetails(vehicleManagementEntity);
 			vehicleBulkUploadDao.updateSuccessFlag(idValue);
-			
+			erRequest.setResponse(MessageConstant.RESPONSE_SUCCESS);
 		}
-		erupiList.add(erRequest);
+		vehicle.add(erRequest);
 		}
 	} catch (Exception e) {
 		logger.error("Error :: " + e.getMessage());
 	}
 	
-	return erupiList;
+	return vehicle;
 }
 
 

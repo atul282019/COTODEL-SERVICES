@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.cotodel.hrms.auth.server.dao.VehicleDriverManagementDao;
 import com.cotodel.hrms.auth.server.dao.VehicleManagementDao;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementGetDto;
+import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementSaveRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementTripRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleTripDto;
@@ -76,10 +77,12 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 	}
 
 	@Override
-	public List<VehicleManagementGetDto> getVehicleManagement(Long employerid) {
+	public List<VehicleManagementGetDto> getVehicleManagement(VehicleManagementRequest vehicleManagementRequest) {
 		
-		List<VehicleManagementEntity> vehicleList=vehicleManagementDao.getVehicleManagement(employerid);
+		List<VehicleManagementEntity> vehicleList=vehicleManagementDao.getVehicleManagement(vehicleManagementRequest.getOrgId());
 		List<VehicleManagementGetDto> finalList=new ArrayList<VehicleManagementGetDto>();
+		int count=0;
+		if(vehicleManagementRequest.getLimit()!=null && vehicleManagementRequest.getLimit().equalsIgnoreCase("Yes")) {
 		for (VehicleManagementEntity vehicleManagementEntity : vehicleList) {
 			VehicleManagementGetDto vehicleManagementGetDto=new VehicleManagementGetDto(); 
 			vehicleManagementGetDto.setAssignedDriver("NO");
@@ -121,6 +124,55 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 				
 			}
 			finalList.add(vehicleManagementGetDto);
+			count++;
+			if(count==10) {
+				break;
+			}
+		}
+		}else {
+			for (VehicleManagementEntity vehicleManagementEntity : vehicleList) {
+				VehicleManagementGetDto vehicleManagementGetDto=new VehicleManagementGetDto(); 
+				vehicleManagementGetDto.setAssignedDriver("NO");
+				vehicleManagementGetDto.setTripStatus("Not yet Started");
+				CopyUtility.copyProperties(vehicleManagementEntity, vehicleManagementGetDto);
+				
+				Object[] vehicleTripDto= vehicleDriverManagementDao.getVehicleTrip(vehicleManagementEntity.getId());
+				if(vehicleTripDto!=null && vehicleTripDto.length > 0) {
+					try {
+						Object obj=vehicleTripDto[0];
+						Object[] row = (Object[]) obj;
+						Timestamp timestamp = (Timestamp) row[0];
+						LocalDateTime tripStartDate = timestamp.toLocalDateTime();
+						Timestamp timestamp1 = (Timestamp) row[1];
+						LocalDateTime endDateTime = timestamp1.toLocalDateTime();
+						vehicleManagementGetDto.setStartDate(tripStartDate.toLocalDate());
+						vehicleManagementGetDto.setEndDate(endDateTime.toLocalDate());
+						System.out.println("endDateTime:::"+endDateTime);
+						long daysBetween = ChronoUnit.DAYS.between(tripStartDate, endDateTime);
+						vehicleManagementGetDto.setNoOfDays(String.valueOf(daysBetween));
+						if(daysBetween<0) {
+							vehicleManagementGetDto.setAssignedDriver("NO");
+							vehicleManagementGetDto.setTripStatus("Completed");
+						}else {
+							vehicleManagementGetDto.setAssignedDriver("Yes");
+							vehicleManagementGetDto.setTripStatus("In progress");
+							
+						}
+						String driverName = (String) row[2];
+						String driverMobile = (String) row[3];
+						String clientName = (String) row[5];
+						vehicleManagementGetDto.setDriverName2(driverName);
+						vehicleManagementGetDto.setDriverMobile(driverMobile);
+						vehicleManagementGetDto.setClientName(clientName);
+						System.out.println(daysBetween);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				}
+				finalList.add(vehicleManagementGetDto);
+				
+			}
 		}
 		
 		return finalList;

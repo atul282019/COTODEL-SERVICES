@@ -3,7 +3,6 @@ package com.cotodel.hrms.auth.server.service;
 import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO;
-import com.cotodel.hrms.auth.server.dto.ErupiMultipleVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherAmountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherBankListDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
@@ -18,6 +17,8 @@ import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateTransactionRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 
@@ -43,5 +44,6 @@ public interface ErupiVoucherInitiateDetailsService {
 	public ErupiVoucherCreateDetailsRequest  saveErupiVoucherInitiateDetailsNewBulk(ErupiVoucherCreateDetailsRequest request);
 	public List<AccountWiseAmountDTO>  getErupiVoucherAmountDetailByAccount(ErupiVoucherAmountRequest request);
 	public List<PurposeCodeAmountDto>  getErupiVoucherCreateDetailsListByPuposeCode(ErupiVoucherPurposeCodeRequest request);
-	public List<ErupiVoucherCreatedDto>  getErupiVoucherCreateDetailsListLimit(ErupiVoucherCreatedRequest request);
+	public List<ErupiVoucherCreatedRedeemDto>  getErupiVoucherCreateDetailsListLimit(ErupiVoucherCreatedRequest request);
+	public List<ErupiVoucherCreatedDto>  getErupiVoucherCreateDetailsTransactionList(ErupiVoucherCreateTransactionRequest request);
 }

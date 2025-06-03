@@ -40,6 +40,12 @@ public class VehicleManagementDaoImpl implements VehicleManagementDao{
 		return vehicleManagementRepository.findByVehicleById(id);
 	}
 
+	@Override
+	public VehicleManagementEntity getVehicleManagementByVehicleNo(String vehicleNo) {
+		// TODO Auto-generated method stub
+		return vehicleManagementRepository.findByVehicleByVehicleNo(vehicleNo);
+	}
+
 	
 
 
