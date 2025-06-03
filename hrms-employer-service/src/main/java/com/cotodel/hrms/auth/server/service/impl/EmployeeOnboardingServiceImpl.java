@@ -19,6 +19,7 @@ import org.springframework.util.ObjectUtils;
 import com.cotodel.hrms.auth.server.dao.EmployeeOnboardingDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDriverRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDto;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListActiveResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeRequest;
@@ -907,6 +908,30 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			e.printStackTrace();
 		}
 		return employeeOnboading;
+	}
+
+
+	@Override
+	public EmployeeOnboardingListActiveResponse getEmployeeDetailsListTotalActive(Long employerid) {
+		List<EmployeeOnboardingEntity> employeeOnboading=null;
+		EmployeeOnboardingListActiveResponse employeeOnboardingListActiveResponse=new EmployeeOnboardingListActiveResponse();
+		int active=0;
+		try {
+			employeeOnboading=employeeOnboardingDao.getEmployeeOnboardingList(employerid);
+			for (EmployeeOnboardingEntity employeeOnboardingEntity : employeeOnboading) {
+				int status=employeeOnboardingEntity.getStatus();
+				if(status==1) {
+					active=active+1;
+				}
+			}
+			int total=employeeOnboading.size();
+			employeeOnboardingListActiveResponse.setActive(String.valueOf(active));
+			employeeOnboardingListActiveResponse.setTotal(String.valueOf(total));
+			employeeOnboardingListActiveResponse.setEmpList(employeeOnboading);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return employeeOnboardingListActiveResponse;
 	}
 	
 	

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDriverRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDto;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListActiveResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeRequest;
@@ -28,4 +29,6 @@ public interface EmployeeOnboardingService {
 	public EmployeeOnboardingRequest  saveEmployeeDetailsRepute(EmployeeOnboardingReputeRequest	 request);
 	public EmployeeOnboardingRequest  updateEmployeeDetailsRepute(EmployeeOnboardingReputeUpdateRequest	 request);
 	public List<EmployeeOnboardingDto>  getDriverEmployeeList(EmployeeOnboardingDriverRequest	 request);
+	public EmployeeOnboardingListActiveResponse  getEmployeeDetailsListTotalActive(Long employerid);
+	
 }

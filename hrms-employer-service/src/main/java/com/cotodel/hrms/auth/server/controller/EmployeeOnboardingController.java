@@ -18,8 +18,10 @@ import com.cotodel.hrms.auth.server.dto.EmployeeConfirmOnboardingResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDriverRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDto;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingIdResponse;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListActiveResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListResponse;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingListTotalActiveResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingManagerIdResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewResponse;
@@ -750,5 +752,53 @@ public class EmployeeOnboardingController {
 				// TODO: handle exception
 			}
 	    return ResponseEntity.ok(jsonEncriptObject);
+	    }
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/empOnboardingListTotalActive",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> empOnboardingListTotalActive(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+	    logger.info("inside empOnboardingListTotalActive...+++");	    	
+	    	
+	    
+	    	String message = "";
+	    	EmployeeOnboardingListActiveResponse response=null;
+	    	EmployeeOnboardingListTotalActiveResponse employeeOnboardingListResponse;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				EmployeeOnboardingRequest employeeOnboardingRequest= EncryptionDecriptionUtil.convertFromJson(decript, EmployeeOnboardingRequest.class);
+				response=employeeOnboardingService.getEmployeeDetailsListTotalActive(employeeOnboardingRequest.getEmployerId());
+	    		if(response!=null) {
+	    			employeeOnboardingListResponse=new EmployeeOnboardingListTotalActiveResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeOnboardingListResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
+	    		}else {
+	    			employeeOnboardingListResponse=new EmployeeOnboardingListTotalActiveResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeOnboardingListResponse);
+	    			EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    			return ResponseEntity.ok(jsonEncriptObject);
+	    		}
+	    	}catch (Exception e) {				
+	    		//e.printStackTrace();
+	    		logger.error("error in empOnboardingListTotalActive====="+e);
+	    		//message=e.getMessage();
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		employeeOnboardingListResponse=new EmployeeOnboardingListTotalActiveResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+ 			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employeeOnboardingListResponse);
+ 			jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in empOnboardingListTotalActive====="+e);
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 }

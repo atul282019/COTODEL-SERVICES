@@ -118,6 +118,7 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 			LocalDateTime eventDate = LocalDateTime.now();	
 			linkAccountErupiEntity.setCreationDate(eventDate);
 			linkAccountErupiEntity.setPsFlag("Secondary");
+			linkAccountErupiEntity.setAccountSeltWallet("Self");
 			linkAccountErupiEntity=erupiLinkAccountDao.saveDetails(linkAccountErupiEntity);
 			response=MessageConstant.RESPONSE_SUCCESS;
 			request.setResponse(response);

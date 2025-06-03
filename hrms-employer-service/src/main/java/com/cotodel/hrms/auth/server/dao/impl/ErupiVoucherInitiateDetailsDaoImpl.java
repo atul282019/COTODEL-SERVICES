@@ -1,14 +1,18 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
+import com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
+import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.repository.ErupiVoucherInitiateDetailsRepository;
 @Repository
@@ -106,7 +110,32 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 	public List<ErupiVoucherCreatedDateWiseDto> getVoucherCreationListDateWise(LocalDate startDate, LocalDate endDate,String bankCode) {
 		// TODO Auto-generated method stub
 		return erupiVoucherInitiateDetailsRepository.findVoucherCreateListDateWise(startDate, endDate,bankCode);
-	}	
+	}
+
+	@Override
+	public List<AccountWiseAmountDTO> getVoucherAmountListAccountWise(Long orgId) {
+		// TODO Auto-generated method stub
+		return erupiVoucherInitiateDetailsRepository.findTotalAmountGroupedByAccountAndOrg(orgId);
+	}
+
+	@Override
+	public List<PurposeCodeAmountDto> getVoucherCreationListByPurposeCode(Long orgID, LocalDate startDate,
+			LocalDate endDate) {
+		// TODO Auto-generated method stub
+		return erupiVoucherInitiateDetailsRepository.getTotalAmountByPurposeCode(startDate, endDate, orgID);
+	}
+
+	@Override
+	public List<ErupiVoucherCreatedDto> getVoucherCreationListLimit(Long orgId, LocalDate startDate,
+			LocalDate endDate) {
+		List<ErupiVoucherCreatedDto> results= erupiVoucherInitiateDetailsRepository.findVoucherCreateListLimit(orgId, startDate, endDate);
+		
+		return results;
+
+	    }
+	   
+
+
 	
 	
 }

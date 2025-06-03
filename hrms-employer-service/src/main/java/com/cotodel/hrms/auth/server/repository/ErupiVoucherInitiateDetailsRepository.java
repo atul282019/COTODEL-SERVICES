@@ -11,8 +11,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
+import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 @Repository
 public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<ErupiVoucherCreationDetailsEntity,Long>{
@@ -115,4 +117,36 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where    t.workFlowId!=100004 and"
 			+ "  c.creationDate BETWEEN :startDate and :endDate and c.bankcode=:bankCode  order by c.creationDate desc ")
 	public List<ErupiVoucherCreatedDateWiseDto> findVoucherCreateListDateWise(@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate,@Param("bankCode") String bankCode);
+	
+	 @Query("select new com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO(e.accountNumber AS accountNumber, e.orgId AS orgId,"
+	 		+ " SUM(e.amount) AS totalAmount,'','' )" +
+	           "FROM ErupiVoucherCreationDetailsEntity e " +
+	           "WHERE  e.orgId=:orgId " +
+	           "GROUP BY e.accountNumber, e.orgId")
+	    List<AccountWiseAmountDTO> findTotalAmountGroupedByAccountAndOrg(@Param("orgId") Long orgId);
+	 
+	 @Query("SELECT new com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto(" +
+		       "c.purposeCode, SUM(c.amount),m.voucherName) " +
+		       "FROM ErupiVoucherCreationDetailsEntity c " +
+		       "JOIN ErupiVoucherTxnDetailsEntity t ON c.id = t.detailsId AND t.workFlowId = c.workFlowId " +
+		       "JOIN WorkFlowMasterEntity w ON c.workFlowId = w.workflowId " +
+		       "JOIN MccMasterEntity m ON m.mcc = c.mcc AND c.purposeCode = m.purposeCode " +
+		       "WHERE c.workFlowId != 100004 " +
+		       "AND c.creationDate BETWEEN :startDate AND :endDate " +
+		       "AND c.orgId = :orgId " +
+		       "GROUP BY c.purposeCode, m.voucherName " +
+		       "ORDER BY c.purposeCode")
+		List<PurposeCodeAmountDto> getTotalAmountByPurposeCode(@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate,
+		                                                       @Param("orgId") Long orgId);
+	 @Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
+				+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
+				+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon) "
+				+ "from ErupiVoucherCreationDetailsEntity c"
+				+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
+				+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
+				+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId "
+				+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc ")
+		public List<ErupiVoucherCreatedDto> findVoucherCreateListLimit(@Param("orgId") Long orgId,    
+		        @Param("startDate") LocalDate startDate, 
+		        @Param("endDate") LocalDate endDate);
 }

@@ -34,7 +34,8 @@ public class ApplicationConstantConfig {
 	@Value("${api.ocr.read.file.url}")
 	public String apiOcrReadFileUrl;	
 	
-
+	@Value("${gst.service.api.url}")
+	public String gstServiceApiUrl;
 	
 	
 }
