@@ -70,6 +70,8 @@ public class UserEntity implements Serializable{
     private String hrmsName;
     private String employeeId;
 	private String managerEmployeeId;
+	@Column(name="company_type")
+	private String companyType;
 //    @OneToMany
 //   	@JoinTable(name = "h_user_emp", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "user"))
 //    private List<UserEmpEntity> userEmpEntity ;

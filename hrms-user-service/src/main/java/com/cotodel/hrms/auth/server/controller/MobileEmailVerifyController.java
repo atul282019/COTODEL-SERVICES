@@ -210,6 +210,11 @@ public class MobileEmailVerifyController {
 					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userNewOtpResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);
+	    		}else {
+	    			userNewOtpResponse=new UserNewOtpResponse(false,MessageConstant.MOBILENOTEXIST,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userNewOtpResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	 
 	    	}catch (Exception e) {
@@ -219,7 +224,7 @@ public class MobileEmailVerifyController {
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		userNewOtpResponse=new UserNewOtpResponse(false,MessageConstant.OTP_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    		userNewOtpResponse=new UserNewOtpResponse(false,MessageConstant.MOBILENOTEXIST,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userNewOtpResponse);
 				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {
@@ -473,5 +478,185 @@ public class MobileEmailVerifyController {
     	    return ResponseEntity.ok(jsonEncriptObject);
 	          
 	    }
+	 @Operation(summary = "This API will provide the User Mobile Verify Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/otpWithOutRegister",produces = {"application/json"}, consumes = {"application/json","application/text"},
+	    method = RequestMethod.POST)
+	    public ResponseEntity<Object> getOtpWithOutRegister(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+	    	logger.info("inside  getOtpWithOutRegister......+++");
+	    	String response="";
+	    	UserEntity userEntity=null;
+	    	UserNewOtpResponse userNewOtpResponse;
+	    	try {    		
+	    		String authToken=request.getHeader("Authorization");
+	    		
+	    		String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+	    		UserOtpRequest userReq= EncryptionDecriptionUtil.convertFromJson(decript, UserOtpRequest.class);
+	    		
+	    		userEntity=userService.checkUserMobile(userReq.getMobile());
+	    		if(userEntity==null) {
+	    			String orderId="";
+	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    			if(applicationConstantConfig.otpLessSenderClientEnable.equalsIgnoreCase("N")) {
+	    				//orderId="444444";
+	    				response="{\"orderId\":\"44444\"}";
+	    			}else {
+	    				response=userService.sendSmsOtpNew(userReq.getMobile());
+	    			}
+	    			
+	    			//response="{\"errCode\":\"\",\"errDes\":\"\",\"txn\":\"NHA:53029a89-ae73-4e52-bdfc-0f47d237a6fc\",\"ts\":\"2024-02-14T15:12:24.240+05:24\",\"status\":\"true\"}";
+	    			if(!ObjectUtils.isEmpty(response)) {
+						JSONObject demoRes= new JSONObject(response);
+						
+						if(demoRes.has("orderId")) {
+							orderId=demoRes.isNull("orderId")?"": demoRes.getString("orderId");
+							userNewOtpResponse=new UserNewOtpResponse(true,MessageConstant.OTP_SENT,orderId,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+							String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userNewOtpResponse);
+							EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+							return ResponseEntity.ok(jsonEncriptObject);
+							
+						}else {
+							orderId=demoRes.isNull("message")?"": demoRes.getString("message");
+							userNewOtpResponse=new UserNewOtpResponse(false,MessageConstant.OTP_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+							String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userNewOtpResponse);
+							EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+							return ResponseEntity.ok(jsonEncriptObject);
+						}
 
+					}else {
+						userNewOtpResponse=new UserNewOtpResponse(false,MessageConstant.OTP_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+						String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userNewOtpResponse);
+						EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+						return ResponseEntity.ok(jsonEncriptObject);
+					}
+	    		}else if(userEntity!=null ) {
+	    			userNewOtpResponse=new UserNewOtpResponse(false,MessageConstant.USER_EXIST,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userNewOtpResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+	    		}
+	    	 
+	    	}catch (Exception e) {
+				e.printStackTrace();
+	    		// TODO: handle exception
+	    		logger.error("error in getOtpWithOutRegister====="+e);
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		userNewOtpResponse=new UserNewOtpResponse(false,MessageConstant.OTP_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userNewOtpResponse);
+				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);
+	    }
+	 @Operation(summary = "This API will provide the User Mobile Verify Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/verifyOtpWithOutRegister",produces = {"application/json"}, consumes = {"application/json","application/text"},
+	    method = RequestMethod.POST)
+	    public ResponseEntity<Object> verifyOtpWithOutRegister(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+	    	logger.info("inside token verifyOtpWithOutRegister+++");
+	    	String response="";
+	    	String message="";
+	    	UserEntity userEntity=null;
+	    	boolean isValid=false;
+	    	UserOtpVerifyResponse userOtpVerifyResponse;
+	    	try {
+	    		
+	    		// write code here
+	    		String authToken=request.getHeader("Authorization");
+	    		
+	    		String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+	    		UserOtpRequest userReq= EncryptionDecriptionUtil.convertFromJson(decript, UserOtpRequest.class);
+	    		
+	    		userEntity=userService.checkUserMobile(userReq.getMobile());
+	    		if(userEntity==null) {
+	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
+	    			if(applicationConstantConfig.otpLessSenderClientEnable.equalsIgnoreCase("N")) {
+	    				response="{\"isOTPVerified\":true}";
+	    				
+	    			}else {
+	    			response=userService.verifySmsOtpNew(userReq.getOrderId(),userReq.getMobile(),userReq.getOtp());
+	    			}
+	    			if(!ObjectUtils.isEmpty(response)) {
+	    				if(!response.startsWith("{")) {
+	    					if(response.contains("Link expired")) {
+	    						response="Link expired";
+	    						response=null;
+	    						userOtpVerifyResponse=new UserOtpVerifyResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity);
+	    						String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyResponse);
+	    						EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    						return ResponseEntity.ok(jsonEncriptObject);
+	    					}else {
+	    						userOtpVerifyResponse=new UserOtpVerifyResponse(MessageConstant.FALSE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity);
+	    						String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyResponse);
+	    						EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    						return ResponseEntity.ok(jsonEncriptObject);
+	    					}
+	    				}else {
+						JSONObject demoRes= new JSONObject(response);
+						if(demoRes.has("isOTPVerified")) {
+							isValid=demoRes.isNull("isOTPVerified")?false: demoRes.getBoolean("isOTPVerified");
+							if(isValid) {
+								userOtpVerifyResponse=new UserOtpVerifyResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity);
+	    						String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyResponse);
+	    						EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    						return ResponseEntity.ok(jsonEncriptObject);
+							}else {
+								message=demoRes.has("reason")?demoRes.getString("reason"):demoRes.getString("reason");
+								userOtpVerifyResponse=new UserOtpVerifyResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity);
+	    						String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyResponse);
+	    						EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    						return ResponseEntity.ok(jsonEncriptObject);
+							}
+						}else {
+								message=demoRes.isNull("message")?"": demoRes.getString("message");
+								userOtpVerifyResponse=new UserOtpVerifyResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity);
+	    						String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyResponse);
+	    						EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    						return ResponseEntity.ok(jsonEncriptObject);
+						}
+	    			}
+					}else {
+						userOtpVerifyResponse=new UserOtpVerifyResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity);
+						String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyResponse);
+						EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+						return ResponseEntity.ok(jsonEncriptObject);
+					}
+	    		}else if(userEntity!=null) {
+	    			userOtpVerifyResponse=new UserOtpVerifyResponse(MessageConstant.FALSE,MessageConstant.USER_EXIST,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity);
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+	    		}
+	    		
+	    	 
+	    	 
+	    	}catch (Exception e) {
+				
+	    		// TODO: handle exception
+	    		logger.error("error in verifyOtp====="+e);
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		userOtpVerifyResponse=new UserOtpVerifyResponse(MessageConstant.FALSE,message,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),userEntity);
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userOtpVerifyResponse);
+				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);	          
+	        
+	    }
 }

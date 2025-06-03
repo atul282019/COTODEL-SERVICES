@@ -38,7 +38,7 @@ public class EmployerDetailsDaoImpl implements EmployerDetailsDao {
 	@Override
 	public List<EmployerDetailsEntity> checkEmployerOnboardingDetails(String organizationName, String mobile) {
 		// TODO Auto-generated method stub
-		return employerDetailsRepository.checkOrgAndMobile(organizationName, mobile);
+		return employerDetailsRepository.checkOrgAndMobile(mobile);
 	}
 
 }

@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="employer_details",uniqueConstraints = {@UniqueConstraint(columnNames = {"organization_name"}),@UniqueConstraint(columnNames = {"mobile"})})
+@Table(name="employer_details",uniqueConstraints = {@UniqueConstraint(columnNames = {"mobile"})})
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="employer_details_seq" , sequenceName="employer_details_seq", allocationSize=1)
 public class EmployerDetailsEntity implements Serializable{
@@ -142,6 +142,13 @@ public class EmployerDetailsEntity implements Serializable{
 	private boolean erupistatus;
 	private String privacyCheck;	
 	private String whatsupCheck;
+	
+	@Column(name="organization_type")
+	private String organizationType;
+	
+	@Column(name="company_type")
+	private String companyType;
+	
 	
 }
 

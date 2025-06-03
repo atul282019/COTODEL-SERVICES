@@ -8,14 +8,16 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cotodel.hrms.auth.server.dto.EmployerAddressRequest;
+import com.cotodel.hrms.auth.server.dto.DashBoardDetailsDto;
 import com.cotodel.hrms.auth.server.dto.EmployerAddressResponse;
+import com.cotodel.hrms.auth.server.dto.EmployerDetailsByCompleteResponse;
 import com.cotodel.hrms.auth.server.dto.EmployerDetailsByEmpIdResponse;
 import com.cotodel.hrms.auth.server.dto.EmployerDetailsGetRequest;
 import com.cotodel.hrms.auth.server.dto.EmployerDetailsRequest;
@@ -168,42 +170,42 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	        
 	    }
 	 
-	 @Operation(summary = "This API will provide the Save User Details ", security = {
-	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
-	    @ApiResponses(value = {
-	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
-	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
-	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
-	    @RequestMapping(value = "/get/getEmployerDetails",produces = {"application/json"}, 
-	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
-	    public ResponseEntity<Object> getEmployerDetails(HttpServletRequest request,@Valid @RequestBody EmployerDetailsRequest employerDetailsRequest) {
-	    	logger.info("inside get getEmployerDetails+++");
-	    	EmployerDetailsEntity emDetailsEntity=null;
-	    	String responseToken="";
-	    	String authToken = "";
-	    	try {	    		
-	    		String companyId = request.getHeader("companyId");
-				SetDatabaseTenent.setDataSource(companyId);
-				
-				emDetailsEntity=	employerDetailsService.getEmployerDetails(employerDetailsRequest.getEmployerId());
-	    	    
-	    	    if(emDetailsEntity!=null) {
-	    	    	return ResponseEntity.ok(new EmployerDetailsByEmpIdResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
-	    	    }else {
-	    	    	return ResponseEntity.ok(new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
-	    	    }
-			
-	    	}catch (Exception e) {
-				
-	    		e.printStackTrace();
-	    		logger.error("error in saveUserDetails====="+e);
-			}
-	        
-	        return ResponseEntity.ok(new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
-	          
-	        
-	    }
+//	 @Operation(summary = "This API will provide the Save User Details ", security = {
+//	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+//	    @ApiResponses(value = {
+//	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+//	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+//	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+//	    @RequestMapping(value = "/get/getEmployerDetails",produces = {"application/json"}, 
+//	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+//	    public ResponseEntity<Object> getEmployerDetails(HttpServletRequest request,@Valid @RequestBody EmployerDetailsRequest employerDetailsRequest) {
+//	    	logger.info("inside get getEmployerDetails+++");
+//	    	EmployerDetailsEntity emDetailsEntity=null;
+//	    	String responseToken="";
+//	    	String authToken = "";
+//	    	try {	    		
+//	    		String companyId = request.getHeader("companyId");
+//				SetDatabaseTenent.setDataSource(companyId);
+//				
+//				emDetailsEntity=	employerDetailsService.getEmployerDetails(employerDetailsRequest.getEmployerId());
+//	    	    
+//	    	    if(emDetailsEntity!=null) {
+//	    	    	return ResponseEntity.ok(new EmployerDetailsByEmpIdResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+//	    	    }else {
+//	    	    	return ResponseEntity.ok(new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+//	    	    }
+//			
+//	    	}catch (Exception e) {
+//				
+//	    		e.printStackTrace();
+//	    		logger.error("error in saveUserDetails====="+e);
+//			}
+//	        
+//	        return ResponseEntity.ok(new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken));
+//	          
+//	        
+//	    }
 	 
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
@@ -216,10 +218,10 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> getEmployerComplete(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 	    	logger.info("inside get getEmployerComplete+++");
-	    	EmployerDetailsEntity emDetailsEntity=null;
+	    	DashBoardDetailsDto emDetailsEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
-	    	EmployerDetailsByEmpIdResponse employerDetailsByEmpIdResponse;
+	    	EmployerDetailsByCompleteResponse employerDetailsByEmpIdResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
@@ -230,12 +232,12 @@ public class EmployerDetailsController extends CotoDelBaseController{
 				emDetailsEntity=	employerDetailsService.getEmployerDetails(employerDetailsRequest.getEmployerId());
 	    	    
 	    	    if(emDetailsEntity!=null) {
-	    	    	employerDetailsByEmpIdResponse=new EmployerDetailsByEmpIdResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	employerDetailsByEmpIdResponse=new EmployerDetailsByCompleteResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
 	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsByEmpIdResponse);
 	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    	    	return ResponseEntity.ok(jsonEncriptObject);
 	    	    }else {
-	    	    	employerDetailsByEmpIdResponse=new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	employerDetailsByEmpIdResponse=new EmployerDetailsByCompleteResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
 	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsByEmpIdResponse);
 	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 	    	    	return ResponseEntity.ok(jsonEncriptObject);
@@ -248,7 +250,7 @@ public class EmployerDetailsController extends CotoDelBaseController{
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		employerDetailsByEmpIdResponse=new EmployerDetailsByEmpIdResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    		employerDetailsByEmpIdResponse=new EmployerDetailsByCompleteResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,emDetailsEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
     	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsByEmpIdResponse);
     	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {
@@ -322,6 +324,7 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	    	EmployerDetailsRequest userEntity=null;
 	    	String responseToken="";
 	    	String authToken = "";
+	    	String message = "";
 	    	EmployerDetailsResponse employerDetailsResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
@@ -346,14 +349,18 @@ public class EmployerDetailsController extends CotoDelBaseController{
 	    	    	return ResponseEntity.ok(jsonEncriptObject);
 	    	    }
 			
-	    	}catch (Exception e) {
+	    	}catch (DataIntegrityViolationException ex) {
+	    		 message=MessageConstant.ORG_CHECK_EXIST;
 				
+			}
+	    	catch (Exception e) {
+	    		message=MessageConstant.ORG_CHECK_EXIST;
 	    		e.printStackTrace();
 	    		logger.error("error in saveEmployerOnBoardingDetails====="+e);
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {
-	    		employerDetailsResponse=new EmployerDetailsResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    		employerDetailsResponse=new EmployerDetailsResponse(MessageConstant.FALSE,message,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
  	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(employerDetailsResponse);
  	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 			} catch (Exception e) {

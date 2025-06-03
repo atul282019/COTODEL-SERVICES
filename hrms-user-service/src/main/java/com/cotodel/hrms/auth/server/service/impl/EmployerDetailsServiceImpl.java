@@ -15,17 +15,25 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.ObjectUtils;
 
 import com.cotodel.hrms.auth.server.dao.EmployerDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
+import com.cotodel.hrms.auth.server.dto.DashBoardDetailsDto;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDriverRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
 import com.cotodel.hrms.auth.server.dto.EmployerDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.EmployerProfileAddress;
+import com.cotodel.hrms.auth.server.dto.ErupiLinkAccountRequest;
+import com.cotodel.hrms.auth.server.dto.VehicleManagementRequest;
 import com.cotodel.hrms.auth.server.entity.EmployerDetailsEntity;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
@@ -199,9 +207,112 @@ public String getEmployerNo() {
     }
 
 @Override
-public EmployerDetailsEntity getEmployerDetails(Long employerId) {
-	// TODO Auto-generated method stub
-	return employerDetailsDao.getEmployerDetails(employerId);
+public DashBoardDetailsDto getEmployerDetails(Long employerId) {
+	DashBoardDetailsDto dashBoardDetailsDto = new DashBoardDetailsDto();
+	try {
+		dashBoardDetailsDto.setProfileCompanyComplete("0");
+		dashBoardDetailsDto.setErupiLinkAccount("0");
+		dashBoardDetailsDto.setProfileDriverComplete("0");
+		dashBoardDetailsDto.setProfileVehicleComplete("0");
+		dashBoardDetailsDto.setProfileTotal("0");
+		int total=0;
+		EmployerDetailsEntity emp = employerDetailsDao.getEmployerDetails(employerId);
+		if (emp != null) {
+			if (emp.getProfileComplete() == 3) {
+				dashBoardDetailsDto.setProfileCompanyComplete("1");
+				total=total+1;
+			} else {
+				dashBoardDetailsDto.setProfileCompanyComplete("0");
+			}
+
+		}
+
+		TokenGeneration token = new TokenGeneration();
+		String tokenvalue = token.getToken(applicationConstantConfig.getTokenUrl);
+		ErupiLinkAccountRequest accountRequest = new ErupiLinkAccountRequest();
+		accountRequest.setOrgId(employerId);
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		String json = objectMapper.writeValueAsString(accountRequest);
+		String response1 = CommonUtility.userRequest(tokenvalue, json,
+				applicationConstantConfig.employerServiceBaseUrl + CommonUtils.bankLinkDetails,
+				applicationConstantConfig.apiSignaturePublicPath, applicationConstantConfig.apiSignaturePrivatePath);
+		logger.info("response1::" + response1);
+		if (!ObjectUtils.isEmpty(response1)) {
+			JSONObject demoRes = new JSONObject(response1);
+			boolean status = demoRes.getBoolean("status");
+			if (status) {
+				JSONArray dataArray = demoRes.optJSONArray("data");
+				if (dataArray != null && dataArray.length() > 0) {
+					JSONObject accountData = dataArray.getJSONObject(0); // First object in "data" array
+
+					String merchentIid = accountData.optString("merchentIid", null);
+					String submurchentid = accountData.optString("submurchentid", null);
+					String bankCode = accountData.optString("bankCode", null);
+					
+					if (merchentIid != null && submurchentid != null) {
+						if(bankCode.equalsIgnoreCase(MessageConstant.BANKCODE)) {
+							dashBoardDetailsDto.setErupiLinkAccount("1");
+						}else {
+							dashBoardDetailsDto.setErupiLinkAccount("2");
+						}
+						
+						total=total+1;
+					} else {
+						dashBoardDetailsDto.setErupiLinkAccount("0");
+					}
+				}
+			} else {
+				System.out.println("Status is false: " + demoRes.optString("message"));
+			}
+		}
+		EmployeeOnboardingDriverRequest employeeOnboardingDriverRequest = new EmployeeOnboardingDriverRequest();
+		accountRequest.setOrgId(employerId);
+		String json1 = objectMapper.writeValueAsString(accountRequest);
+		String response = CommonUtility.userRequest(tokenvalue, json1,
+				applicationConstantConfig.employerServiceBaseUrl + CommonUtils.driverListDetails,
+				applicationConstantConfig.apiSignaturePublicPath, applicationConstantConfig.apiSignaturePrivatePath);
+		logger.info("response::" + response);
+		if (!ObjectUtils.isEmpty(response)) {
+			JSONObject demoRes = new JSONObject(response);
+			boolean status = demoRes.getBoolean("status");
+			if (status) {
+				JSONArray dataArray = demoRes.optJSONArray("data");
+				if (dataArray != null && dataArray.length() > 0) {
+					JSONObject accountData = dataArray.getJSONObject(0); // First object in "data" array
+					dashBoardDetailsDto.setProfileDriverComplete("1");
+					total=total+1;
+				}
+			} else {
+				System.out.println("Status is false: " + demoRes.optString("message"));
+			}
+		}
+		VehicleManagementRequest vehicleListDetails = new VehicleManagementRequest();
+		vehicleListDetails.setOrgId(employerId);
+		String vehicleJson = objectMapper.writeValueAsString(vehicleListDetails);
+		String vehicleresponse = CommonUtility.userRequest(tokenvalue, vehicleJson,
+				applicationConstantConfig.employerServiceBaseUrl + CommonUtils.vehicleListDetails,
+				applicationConstantConfig.apiSignaturePublicPath, applicationConstantConfig.apiSignaturePrivatePath);
+		logger.info("vehicleListDetails::" + vehicleresponse);
+		if (!ObjectUtils.isEmpty(vehicleresponse)) {
+			JSONObject demoRes = new JSONObject(vehicleresponse);
+			boolean status = demoRes.getBoolean("status");
+			if (status) {
+				JSONArray dataArray = demoRes.optJSONArray("data");
+				if (dataArray != null && dataArray.length() > 0) {
+					JSONObject accountData = dataArray.getJSONObject(0); // First object in "data" array
+					dashBoardDetailsDto.setProfileVehicleComplete("1");
+				}
+			} else {
+				System.out.println("Status is false: " + demoRes.optString("message"));
+			}
+		}
+		dashBoardDetailsDto.setProfileTotal(String.valueOf(total));
+		//return employerDetailsDao.getEmployerDetails(employerId);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	return dashBoardDetailsDto;
 }
 
 @Override
@@ -376,8 +487,22 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 //							employerDetailsRequest.setResponse(MessageConstant.HASH_ERROR);
 //							return employerDetailsRequest;
 //						}
+				        if(employerDetailsRequest.getMobile()==null) {
+				        	
+				        	response=MessageConstant.MOBILENULL;
+							employerDetailsRequest.setResponse(response);
+							return employerDetailsRequest;
+				        }else if(employerDetailsRequest.getName()==null) {
+				        	response=MessageConstant.NAMENULL;
+							employerDetailsRequest.setResponse(response);
+							return employerDetailsRequest;
+				        }else if(employerDetailsRequest.getEmail()==null) {
+				        	response=MessageConstant.EMAILNULL;
+							employerDetailsRequest.setResponse(response);
+							return employerDetailsRequest;
+				        }
 	
-				        List<EmployerDetailsEntity> employerDetailsEntities=employerDetailsDao.checkEmployerOnboardingDetails(employerDetailsRequest.getOrganizationName(),employerDetailsRequest.getMobile());
+				        List<EmployerDetailsEntity> employerDetailsEntities=employerDetailsDao.checkEmployerOnboardingDetails("",employerDetailsRequest.getMobile());
 						if(employerDetailsEntities!=null && employerDetailsEntities.size()>0) {
 							logger.info("if");
 							
@@ -393,6 +518,7 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 							empDetailsEntity.setOrganizationName(employerDetailsRequest.getOrganizationName());
 							empDetailsEntity.setEmail(employerDetailsRequest.getEmail());
 							empDetailsEntity.setMobile(employerDetailsRequest.getMobile());
+							empDetailsEntity.setOrganizationType(employerDetailsRequest.getOrganizationType());
 							empDetailsEntity.setStatus(1);
 							String employerCode=getEmployerNo();
 							empDetailsEntity.setProfileComplete(1);
@@ -407,8 +533,8 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 								userDetails.setMobile(employerDetailsRequest.getMobile());
 								userDetails.setEmail(employerDetailsRequest.getEmail());
 								userDetails.setEmployerid(employerDetailsEntity2.getId().intValue());
-								Date date = new Date();
-								LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//								Date date = new Date();
+//								LocalDate localDate =date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 								userDetails.setCreated_date(LocalDate.now());
 								//if(employerDetailsRequest.isErupistatus()) {
 								userDetails.setRole_id(MessageConstant.ERUPI_ADMIN_ROLE);
@@ -438,15 +564,19 @@ public EmployerDetailsRequest updateEmployerDetails(EmployerDetailsRequest emplo
 								userEmpEntity.setUser_id(userEntity.getId());
 								userEmpEntity.setStatus(userEntity.getStatus());
 								userEmpEntity.setCreated_by(userEntity.getMobile());
-								userEmpEntity.setCreated_date(localDate);
+								userEmpEntity.setCreated_date(LocalDate.now());
 								userEmpEntity=userDetailsDao.saveUserEmpEntity(userEmpEntity);
 							}
 							response=MessageConstant.RESPONSE_SUCCESS;
 							employerDetailsRequest.setResponse(response);
 						}
+					}catch (DataIntegrityViolationException ex) {
+						response=MessageConstant.ORG_CHECK_EXIST;
+						employerDetailsRequest.setResponse(response);
+						//return employerDetailsRequest;
 					} catch (Exception e) {
 						// TODO: handle exception
-						response=MessageConstant.RESPONSE_FAILED;
+						response=MessageConstant.ORG_CHECK_EXIST;
 						employerDetailsRequest.setResponse(response);
 						//TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					}

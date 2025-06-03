@@ -50,5 +50,6 @@ public class EmployerDetailsRequest {
 	private String captcha;
 	private String companyId;	
 	private String hrmsId;
-	
+	private String organizationType;
+	private String companyType;
 }

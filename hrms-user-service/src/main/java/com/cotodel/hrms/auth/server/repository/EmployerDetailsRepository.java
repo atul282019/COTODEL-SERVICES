@@ -24,7 +24,7 @@ public interface EmployerDetailsRepository extends JpaRepository<EmployerDetails
 	@Query("select s from EmployerDetailsEntity s where s.companyId =:companyId and s.hrmsId=:hrmsId ")
 	public EmployerDetailsEntity getEmployerDetailsByCompId(@Param("companyId") String companyId,@Param("hrmsId") String hrmsId);
 	
-	@Query("select s from EmployerDetailsEntity s where (s.organizationName =:organizationName  or s.mobile =:mobile)")
-	List<EmployerDetailsEntity> checkOrgAndMobile(@Param("organizationName") String organizationName,@Param("mobile") String mobile);
+	@Query("select s from EmployerDetailsEntity s where s.mobile =:mobile")
+	List<EmployerDetailsEntity> checkOrgAndMobile(@Param("mobile") String mobile);
 
 }
