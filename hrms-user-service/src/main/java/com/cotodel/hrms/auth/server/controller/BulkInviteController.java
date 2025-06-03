@@ -1,5 +1,7 @@
 package com.cotodel.hrms.auth.server.controller;
 
+import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -32,6 +34,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+//import jakarta.mail.Authenticator;
+//import jakarta.mail.Message;
+//import jakarta.mail.MessagingException;
+//import jakarta.mail.PasswordAuthentication;
+//import jakarta.mail.Session;
+//import jakarta.mail.Transport;
+//import jakarta.mail.internet.InternetAddress;
+//import jakarta.mail.internet.MimeMessage;
 
 /**
  * @author vinay
@@ -124,5 +134,78 @@ public class BulkInviteController {
 	          
 	        
 	    }
-	 
-}
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/sendBulkEmailNew",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> sendBulkEmailNew(HttpServletRequest request,@Valid @RequestBody BulkInviteRequest bulkInviteRequest) {
+	    	logger.info("inside get sendBulkEmailNew+++");
+	    	UserEntity userEntity=null;
+	    	String responseToken="";
+	    	String authToken = "";
+	    	UserSignUpResponse userSignUpResponse;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				//EncriptResponse enResponse
+//				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+//				BulkInviteRequest bulkInviteRequest= EncryptionDecriptionUtil.convertFromJson(decript, BulkInviteRequest.class);
+				bulkInviteService.sendEmailToEmployeeNew(bulkInviteRequest);
+				userSignUpResponse=new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+				EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+				return ResponseEntity.ok(jsonEncriptObject);				
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in get/sendBulkEmail====="+e);
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+				String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+				jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in get/sendBulkEmail====="+e);
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);          
+	        
+	    }
+//		    public static void main(String[] args) {
+//		    	Properties props=new Properties();
+//		        final String username = "payments@cotodel.com";
+//		        final String password = "Recon@012025!"; // Use App Password if MFA is enabledProperties props = new Properties();
+//		        props.put("mail.smtp.auth", "true");
+//		        props.put("mail.smtp.starttls.enable", "true");
+//		        props.put("mail.smtp.host", "smtp.office365.com");
+//		        props.put("mail.smtp.port", "587");
+//
+//		        Session session = Session.getInstance(props, new Authenticator() {
+//		            protected PasswordAuthentication getPasswordAuthentication() {
+//		                return new PasswordAuthentication(username, password);
+//		            }
+//		        });
+//
+//		        try {
+//		            Message message = new MimeMessage(session);
+//		            message.setFrom(new InternetAddress(username));
+//		            message.setRecipients(
+//		                Message.RecipientType.TO,
+//		                InternetAddress.parse("fakhruddeen.mca@gmail.com")
+//		            );
+//		            message.setSubject("Test Email from Java");
+//		            message.setText("This is an automated email sent from a Java app using Outlook SMTP.");
+//
+//		            Transport.send(message);
+//		            System.out.println("Email sent successfully.");
+//		        } catch (MessagingException e) {
+//		            e.printStackTrace();
+//		        }
+//		    }
+		}
+

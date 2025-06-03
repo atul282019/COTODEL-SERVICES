@@ -83,6 +83,31 @@ public class BulkInviteServiceImpl implements BulkInviteService {
 		
 		return request;
 	}
+
+	@Override
+	public void sendEmailToEmployeeNew(BulkInviteRequest req) {
+
+		List<String> employeeList = Arrays.asList(req.getInviteEmployee().split(","));
+		List<String> ContractorList = Arrays.asList(req.getInviteContractor().split(","));
+		for (String string : employeeList) {
+			UserRequest userRequest=new UserRequest();
+			userRequest.setEmail(string);
+			boolean valid=CommonUtility.isValidEmail(string);
+			if(valid)
+				CommonUtility.sendEmail(userRequest);
+			
+		}
+		
+		for (String string : ContractorList) {
+			UserRequest userRequest=new UserRequest();
+			userRequest.setEmail(string);
+			boolean valid=CommonUtility.isValidEmail(string);
+			if(valid)
+				CommonUtility.sendEmail(userRequest);
+			
+		}
+		
+	}
 	
 
 }
