@@ -24,12 +24,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.BankMasterDao;
+import com.cotodel.hrms.auth.server.dao.ErupiLinkAccountDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherRequestDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherTxnDao;
 import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountDao;
 import com.cotodel.hrms.auth.server.dao.SecurityClientAndSecretDao;
 import com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO;
+import com.cotodel.hrms.auth.server.dto.AccountWiseAmountQueryDTO;
 import com.cotodel.hrms.auth.server.dto.DecryptedResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherAmountRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherBankListDto;
@@ -97,6 +99,10 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 	
 	@Autowired
     private LinkSubMultipleAccountDao linkSubMultipleAccountDao;
+	
+	@Autowired
+	ErupiLinkAccountDao  erupiLinkAccountDao;
+	
 	
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
@@ -924,7 +930,8 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 	         erupiVoucherTxnDetailsEntity.setPayerVA(decryptedResponse.getPayerVA());
 	         erupiVoucherTxnDetailsEntity.setPayerAmount(decryptedResponse.getPayerAmount());
 	         erupiVoucherTxnDetailsEntity.setPayeeName(decryptedResponse.getPayeeName());
-	         
+	         erupiVoucherTxnDetailsEntity.setPayeeVPA(decryptedResponse.getPayeeVPA());
+	         erupiVoucherTxnDetailsEntity.setRespCodeDescription(decryptedResponse.getRespCodeDescription());
 	         
 	    	return erupiVoucherTxnDetailsEntity;
 	    }
@@ -2083,34 +2090,50 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 		@Override
 		public List<AccountWiseAmountDTO> getErupiVoucherAmountDetailByAccount(ErupiVoucherAmountRequest request) {
 			// TODO Auto-generated method stub
-			List<AccountWiseAmountDTO> list=null;
+			List<AccountWiseAmountDTO> finalList=new ArrayList<AccountWiseAmountDTO>();
+			List<AccountWiseAmountQueryDTO> list=null;
 			try {
 				
 			
 			list=erupiVoucherInitiateDetailsDao.getVoucherAmountListAccountWise(request.getOrgId());
 			if(list!=null) {
-				for (AccountWiseAmountDTO accountWiseAmountDTO : list) {
+				for (AccountWiseAmountQueryDTO accountWiseAmountDTO : list) {
 					LinkSubAccountMultipleEntity linkSubAccountMultipleEntity=null;
 					String balance="";
 					String bankName="";
+					String bankCode="";
 					Float amount=0f;					
 					linkSubAccountMultipleEntity=linkSubMultipleAccountDao.getLinkMultipleAccountByAccNoOrgId(accountWiseAmountDTO.getAccountNumber(), request.getOrgId());
 					if(linkSubAccountMultipleEntity!=null) {
 						amount=linkSubAccountMultipleEntity.getBalance();
-						bankName=linkSubAccountMultipleEntity.getBankName();
+						//bankName=linkSubAccountMultipleEntity.getBankName();
 					}else {
-			;			balance="0";
+			;			amount=0f;
+					}
+					ErupiLinkAccountEntity erlink=erupiLinkAccountDao.findByErupiLinkAccNumber(accountWiseAmountDTO.getAccountNumber());
+					if(erlink!=null) {
+						bankName=erlink.getBankName();
+						bankCode=erlink.getBankCode();
+					}
+					AccountWiseAmountDTO accAmountDTO=new AccountWiseAmountDTO();
+					accAmountDTO.setAccountNumber(accountWiseAmountDTO.getAccountNumber());
+					accAmountDTO.setOrgId(accountWiseAmountDTO.getOrgId());
+					accAmountDTO.setTotalAmount(accountWiseAmountDTO.getTotalAmount());
+					accAmountDTO.setBankName(bankName);
+					ErupiBankMasterEntity erupiBankMasterEntity=bankMasterDao.getDetails(bankCode);
+					if(erupiBankMasterEntity!=null) {
+						accAmountDTO.setBankLogo(erupiBankMasterEntity.getBankLogo());
 					}
 					balance=amount==null?"0":amount.toString();
-					accountWiseAmountDTO.setBalance(balance);
-					accountWiseAmountDTO.setBankName(bankName);
+					accAmountDTO.setBalance(balance);
+					finalList.add(accAmountDTO);
 				}
 				
 			}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return list;
+			return finalList;
 		}
 
 

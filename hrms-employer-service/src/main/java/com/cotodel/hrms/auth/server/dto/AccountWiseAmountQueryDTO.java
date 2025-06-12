@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountWiseAmountDTO {
+public class AccountWiseAmountQueryDTO {
 	
 	private String accountNumber;
 	private Long orgId;
 	private double totalAmount;
 	private String balance;
-	private String bankName;
-	private byte[] bankLogo;
 }

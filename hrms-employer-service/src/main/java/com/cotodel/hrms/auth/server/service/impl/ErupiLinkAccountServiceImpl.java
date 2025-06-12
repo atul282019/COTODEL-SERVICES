@@ -296,6 +296,12 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 				erupiLinkAccountWithOutResponse=new ErupiLinkAccountWithOutResponse();
 				CopyUtility.copyProperties(erupiLinkAccountWithOutResponse2,erupiLinkAccountWithOutResponse);
 				erupiLinkAccountWithOutResponse.setAccountSeltWallet("Self");
+				ErupiBankMasterEntity erBankMasterEntity=bankMasterDao.getDetails(erupiLinkAccountWithOutResponse2.getBankCode());
+				if(erBankMasterEntity==null) {
+					erupiLinkAccountWithOutResponse.setBankIcon(null);
+				}else {
+					erupiLinkAccountWithOutResponse.setBankIcon(erBankMasterEntity.getBankLogo());
+				}
 				erupiLinkList.add(erupiLinkAccountWithOutResponse);
 			}
 			//start
@@ -310,6 +316,12 @@ public class ErupiLinkAccountServiceImpl implements ErupiLinkAccountService{
 //				erupiLinkAccountWithOutResponse.setPayerva(erupiLinkAccountEntity1.getPayerva());
 //				erupiLinkAccountWithOutResponse.setBankCode(erupiLinkAccountEntity1.getBankCode());
 //				erupiLinkAccountWithOutResponse.setTid(erupiLinkAccountEntity1.getTid());
+				ErupiBankMasterEntity erBankMasterEntity=bankMasterDao.getDetails(linkSubAccountMultipleEntity.getBankCode());
+				if(erBankMasterEntity==null) {
+					erupiLinkAccountWithOutResponse.setBankIcon(null);
+				}else {
+					erupiLinkAccountWithOutResponse.setBankIcon(erBankMasterEntity.getBankLogo());
+				}
 				erupiLinkList.add(erupiLinkAccountWithOutResponse);		
 			}
 			//end

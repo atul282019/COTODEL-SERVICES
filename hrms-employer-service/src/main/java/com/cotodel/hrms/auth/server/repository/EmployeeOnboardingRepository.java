@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDto;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingUserListDto;
 import com.cotodel.hrms.auth.server.dto.ExpenseReimbursementFileDto;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 
@@ -15,6 +16,9 @@ public interface EmployeeOnboardingRepository extends JpaRepository<EmployeeOnbo
 	
 	@Query("select s  from EmployeeOnboardingEntity s where s.employerId = ?1 ")
 	public List<EmployeeOnboardingEntity> findByOnboardingList(Long emplid);
+	
+	@Query("select s  from EmployeeOnboardingEntity s where s.employerId = ?1 and s.status=1 ")
+	public List<EmployeeOnboardingEntity> findByOnboardingListActive(Long emplid);
 	
 	@Query("select s  from EmployeeOnboardingEntity s where s.mobile = ?1")
 	public EmployeeOnboardingEntity findByOnboarding(String mobile);
@@ -44,5 +48,14 @@ public interface EmployeeOnboardingRepository extends JpaRepository<EmployeeOnbo
 			+ "and a.empOrCont ='Driver'")
 	  public List<EmployeeOnboardingDto> findByDriverOnboardingList(@Param("orgId") Long orgId,@Param("name") String name);
 	
+	@Query("select new com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDto(a.id,a.name,a.mobile) "
+			+ "  from EmployeeOnboardingEntity a where a.employerId =:orgId "
+			+ "and LOWER(a.name) LIKE LOWER(CONCAT(:name, '%'))"
+			+ "and a.empOrCont ='Driver' and a.driverAssignFlag!='Y' ")
+	  public List<EmployeeOnboardingDto> findByDriverOnboardingAssignList(@Param("orgId") Long orgId,@Param("name") String name);
 	
+	@Query("select new com.cotodel.hrms.auth.server.dto.EmployeeOnboardingUserListDto(a.userDetailsId,a.email,a.mobile,a.name,a.empCode,a.empPhoto) "
+			+ "  from EmployeeOnboardingEntity a where a.employerId =:orgId "
+			+ "and LOWER(a.name) LIKE LOWER(CONCAT(:name, '%')) and a.status='1' ")
+	public List<EmployeeOnboardingUserListDto> findByEmployeeOnboardingList(@Param("orgId") Long orgId,@Param("name") String name);
 }

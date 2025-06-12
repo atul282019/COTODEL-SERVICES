@@ -90,7 +90,7 @@ public class VoucherBulkUploadEntity implements Serializable{
 	@Column(name="vouchercode", length=19)
 	private String voucherCode;
 	
-	@Column(name="voucherdesc", length=19)
+	@Column(name="voucherdesc", length=99)
 	private String voucherDesc;
 	
 	@Column(name="merchantid", length=19)

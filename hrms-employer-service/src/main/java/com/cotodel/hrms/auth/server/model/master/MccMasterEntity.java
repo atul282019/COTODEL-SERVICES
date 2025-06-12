@@ -70,5 +70,6 @@ public class MccMasterEntity implements Serializable{
 	@Column(name = "mcc_main_icon")
     private byte[] mccMainIcon;
 	
-	
+	@Column(name="pr_status")
+	private int prStatus;
 }

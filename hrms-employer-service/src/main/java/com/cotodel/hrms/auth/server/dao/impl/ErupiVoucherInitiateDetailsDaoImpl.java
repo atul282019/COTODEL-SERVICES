@@ -1,15 +1,13 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
-import com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO;
+import com.cotodel.hrms.auth.server.dto.AccountWiseAmountQueryDTO;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
@@ -114,7 +112,7 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 	}
 
 	@Override
-	public List<AccountWiseAmountDTO> getVoucherAmountListAccountWise(Long orgId) {
+	public List<AccountWiseAmountQueryDTO> getVoucherAmountListAccountWise(Long orgId) {
 		// TODO Auto-generated method stub
 		return erupiVoucherInitiateDetailsRepository.findTotalAmountGroupedByAccountAndOrg(orgId);
 	}

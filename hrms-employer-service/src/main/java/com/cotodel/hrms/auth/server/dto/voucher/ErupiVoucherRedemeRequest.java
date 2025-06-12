@@ -20,9 +20,15 @@ public class ErupiVoucherRedemeRequest {
 	private String payerVA;
 	private String payerAmount;	
 	private String txnStatus;
-	private String responseCode;
 	private String txnInitDate;
 	private String txnCompletionDate;
 	private String umn;
+	private String payeeVPA;
 	private String payeeName;
+	private String respCodeDescription;
+	private String responseCode;
+	
 }
+
+
+

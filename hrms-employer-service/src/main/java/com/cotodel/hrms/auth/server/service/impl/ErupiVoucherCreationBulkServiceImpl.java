@@ -10,6 +10,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -475,6 +477,12 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 				    }
 				if (isHeaderRow) {
 					// Process the header row
+					int count=row.getLastCellNum()+1;
+					if(count!=7) {
+						response=MessageConstant.FILE_ERROR;
+						bulkupload.setResponse(response);
+						return bulkupload;
+					}
 					String benName = row.getCell(1).getStringCellValue();
 					String mobile = row.getCell(2).getStringCellValue();
 					String amount = row.getCell(3).getStringCellValue();
@@ -484,6 +492,13 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					isHeaderRow = false;
 				} else {
 					// Process data row
+					int count=row.getLastCellNum()+1;
+					if(count!=7) {
+						response=MessageConstant.FILE_ERROR;
+						bulkupload.setResponse(response);
+						return bulkupload;
+					}
+					System.out.println(count);
 					totalCount++;
 					String voucherType = "";
 					if (row.getCell(1) != null) {
@@ -493,7 +508,11 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					//String benName = row.getCell(2).getStringCellValue();
 					String benName = "";
 					if (row.getCell(2) != null) {
-					    benName = row.getCell(2).getStringCellValue();
+						 if (row.getCell(3).getCellType() == CellType.STRING) {
+							 benName = row.getCell(2).getStringCellValue();
+						    } else if (row.getCell(3).getCellType() == CellType.NUMERIC) {
+						    	benName = String.valueOf((long) row.getCell(2).getNumericCellValue());
+						    }
 					}
 //					String mobile = "";
 //					if (row.getCell(3).getCellType() == CellType.STRING) {
@@ -548,8 +567,22 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					//LocalDate stDate = CommonUtility.convertToLocalDate(startDate);
 					//String validity=
 					//String validity = row.getCell(6).getStringCellValue();
-					String[] daysArray=validity.split(" ");
-					Long days=Long.valueOf(daysArray[0]);
+					String regex = "\\b\\d+\\sDay(s)?\\b";
+
+			        Pattern pattern = Pattern.compile(regex);
+			        Matcher matcher = pattern.matcher(validity);
+			        Long days=0l;
+			        boolean day =false;
+			        if (matcher.matches()) {
+			            //System.out.println("Matched: " + matcher.group());
+			            String[] daysArray=validity.split(" ");
+						days=Long.valueOf(daysArray[0]);
+						day =true;
+			        } else {
+			        	day =false;
+			            System.out.println("No match.");
+			        }
+					
 					LocalDate etDate = null;
 					if (stDate != null) {
 					    etDate = stDate.plusDays(days);  // Add the days to the start date
@@ -582,7 +615,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					message += startDateValid == false ? " Invalid Start Date ," : "";
 					message += expDateValid == false ? " Invalid exp Date ," : "";
 					message += amountValid == false ? " Amount should be between "+applicationConstantConfig.voucherCreationMinAmount+" and "+applicationConstantConfig.voucherCreationMaxAmount+".,"  : "";
-					
+					message += day == false ? " Invalid no of days ," : "";
 					boolean empexit =false;
 					if (mob) {
 						String username ="";
@@ -611,7 +644,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 						//check
 						message += empexit == false ? "User does not exist" : "";
 					}
-					if (mob && name && amountValid && startDateValid && expDateValid && empexit) {		
+					if (mob && name && amountValid && startDateValid && expDateValid && empexit && day) {		
 						
 						saveSuccess(request,voucherBulkUploadEntity.getId(),uniqueFileName,voucherType,
 								benName,mobile,amount,stDate,etDate,orgId,voucherId,createdBy);

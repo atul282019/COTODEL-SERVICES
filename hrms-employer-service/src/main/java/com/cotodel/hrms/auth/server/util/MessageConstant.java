@@ -47,5 +47,6 @@ public class MessageConstant {
 	public static final String TRIPINVALID = "Driver is already assigned !. Kindly edit after Completion Date expDate of the TRIP.";
 	public static final String INVALIDDAYS = "Invalid input. Please enter format like 7 Days";
 	public static final String ACCOUNTNULL = "Account no cannot be null.";
+	public static final String DRIVERIDNULL = "Driver Id cannot be null.";
 	
 }

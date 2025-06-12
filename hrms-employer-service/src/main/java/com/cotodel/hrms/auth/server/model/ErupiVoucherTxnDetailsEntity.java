@@ -160,4 +160,24 @@ public class ErupiVoucherTxnDetailsEntity implements Serializable{
 	@Column(name="txn_date_time")
 	private String txnDateTime;
 	
+	@Column(name="voucher_balance")
+	private String voucherBalance;
+	
+	@Column(name="voucher_amt")
+	private String voucherAmt;
+	
+	@Column(name="voucher_redeemed_amount")
+	private String voucherRedeemedAmount;
+	
+	@Column(name="voucher_issue_date")
+	private String voucherIssueDate;
+	
+	@Column(name="voucher_redeemed_date")
+	private String voucherRedeemedDate;
+	
+	@Column(name="voucher_expiry_date")
+	private String voucherExpiryDate;
+	
+	@Column(name="voucher_status")
+	private String voucherStatus;
 }

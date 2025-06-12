@@ -43,4 +43,5 @@ public class ErupiLinkAccountWithOutResponse {
 	private String psFlag;
 	private String response;
 	private String accountSeltWallet;
+	private byte[] bankIcon;
 }

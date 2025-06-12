@@ -10,6 +10,8 @@ import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeUpdateRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingUserListDto;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.UpdateEmployeeStatusRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 
@@ -29,6 +31,7 @@ public interface EmployeeOnboardingService {
 	public EmployeeOnboardingRequest  saveEmployeeDetailsRepute(EmployeeOnboardingReputeRequest	 request);
 	public EmployeeOnboardingRequest  updateEmployeeDetailsRepute(EmployeeOnboardingReputeUpdateRequest	 request);
 	public List<EmployeeOnboardingDto>  getDriverEmployeeList(EmployeeOnboardingDriverRequest	 request);
-	public EmployeeOnboardingListActiveResponse  getEmployeeDetailsListTotalActive(Long employerid);
-	
+	public EmployeeOnboardingListActiveResponse  getEmployeeDetailsListTotalActive(Long employerid,String type);
+	public List<EmployeeOnboardingDto>  getDriverEmployeeAssignList(EmployeeOnboardingDriverRequest	 request);
+	public List<EmployeeOnboardingUserListDto>  getEmployeeList(ErupiVoucherCreatedRequest	 request);
 }

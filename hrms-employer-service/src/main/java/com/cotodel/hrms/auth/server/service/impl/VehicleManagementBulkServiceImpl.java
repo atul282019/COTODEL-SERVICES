@@ -2,6 +2,7 @@ package com.cotodel.hrms.auth.server.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,7 @@ import com.cotodel.hrms.auth.server.model.vehicle.VehicleBulkUploadSuccessEntity
 import com.cotodel.hrms.auth.server.model.vehicle.VehicleManagementEntity;
 import com.cotodel.hrms.auth.server.model.vehicle.VehiclerBulkUploadFailEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
+import com.cotodel.hrms.auth.server.repository.vehicle.VehicleSequenceRepository;
 import com.cotodel.hrms.auth.server.service.VehicleManagementBulkService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CommonUtils;
@@ -51,6 +53,9 @@ public class VehicleManagementBulkServiceImpl implements VehicleManagementBulkSe
 	
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
+	
+	@Autowired
+	VehicleSequenceRepository  vehicleSequenceRepository;
 	
 	@Override
 	public VehicleBulkUploadSFListResponse saveVehicleBulkFileNew(
@@ -162,7 +167,7 @@ public class VehicleManagementBulkServiceImpl implements VehicleManagementBulkSe
 								}
 							}else {
 								if (demoRes.has("message")) {
-									JSONObject msg = demoRes.getJSONObject("message");
+									String msg = demoRes.getString("message");
 									String jsonString = msg.toString();
 									message=jsonString;
 								}
@@ -274,7 +279,25 @@ public List<VehicleManagementBulkCreateRequest> createErupiVoucherBulkFile(
 			vehicleManagementEntity.setId(null);
 			vehicleManagementEntity.setCreationType("Bulk");
 			vehicleManagementEntity.setApplicationType("Web");
+			vehicleManagementEntity.setStatus(1);
+			vehicleManagementEntity.setCreationDate(LocalDateTime.now());
+			vehicleManagementEntity.setCreatedBy(request.getCreatedby());
+			vehicleManagementEntity.setOwnerName(voEntity.getOwner_name());
+			vehicleManagementEntity.setOwnerAddress(voEntity.getPresent_address());
+			vehicleManagementEntity.setFuelType(voEntity.getFuel_type());
+			vehicleManagementEntity.setVehicleModel(voEntity.getMaker_model());
+			int seat=voEntity.getSeat_capacity()==null?0:Integer.valueOf(voEntity.getSeat_capacity());
+			vehicleManagementEntity.setSeat(seat);
+			vehicleManagementEntity.setVehicleType(voEntity.getVehicle_category_description());
+			vehicleManagementEntity.setVehicleManufactor(voEntity.getMaker_model());
+			vehicleManagementEntity.setVehicleFuelType(voEntity.getFuel_type());
+			vehicleManagementEntity.setRequestType("API Call");
+			String sequenceId=vehicleSequenceId();
+			vehicleManagementEntity.setVehicleSequenceId(sequenceId);
+			//vehicleManagementEntity.setWeight(id);
+			
 			erRequest.setVehicleNumber(voEntity.getVehicleNumber());
+			
 			vehicleManagementDao.saveVehicleManagementDetails(vehicleManagementEntity);
 			vehicleBulkUploadDao.updateSuccessFlag(idValue);
 			erRequest.setResponse(MessageConstant.RESPONSE_SUCCESS);
@@ -287,6 +310,38 @@ public List<VehicleManagementBulkCreateRequest> createErupiVoucherBulkFile(
 	
 	return vehicle;
 }
-
+public String vehicleSequenceId() {
+	
+	String  sequence=String.valueOf(fetchNextSequenceValue());
+	
+	String sequenceValue="";
+	String finalSequenceValue="";
+	
+	if(sequence.length()==1) {
+		sequenceValue="00"+sequence;
+	}else if(sequence.length()==2) {
+		sequenceValue="0"+sequence;
+	}else {
+		sequenceValue=sequence;
+	}
+	
+	finalSequenceValue=monthYear()+"-"+sequenceValue;
+	
+	return finalSequenceValue;
+}
+public String monthYear() {
+	
+	LocalDate date = LocalDate.now();		
+	String month=String.valueOf(date.getMonthValue());
+	String year=String.valueOf(date.getYear());
+	String str="VM-";
+	String  monthValue=month.length()==1?"0"+month:month;
+	String  yearValue=year.substring(2,4);
+	
+	return str+monthValue+yearValue;
+}
+public Long fetchNextSequenceValue() {
+    return vehicleSequenceRepository.getNextSeriesId();
+ }
 
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dao.EmployeeOnboardingDao;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingDto;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingUserListDto;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.repository.EmployeeOnboardingRepository;
 @Repository
@@ -61,5 +62,25 @@ public class EmployeeOnboardingDaoImpl implements EmployeeOnboardingDao{
 		return employeeOnboardingRepository.findByDriverOnboardingList(orgId,name);
 	}
 
+	@Override
+	public List<EmployeeOnboardingEntity> getEmployeeOnboardingActiveList(Long employerId) {
+		// TODO Auto-generated method stub
+		return employeeOnboardingRepository.findByOnboardingListActive(employerId);
+	}
+
+	@Override
+	public List<EmployeeOnboardingDto> getDriverEmployeeOnboardingAssign(Long orgId, String name) {
+		// TODO Auto-generated method stub
+		return employeeOnboardingRepository.findByDriverOnboardingAssignList(orgId, name);
+	}
+
+	@Override
+	public List<EmployeeOnboardingUserListDto> getEmployeeOnboardingUserList(Long orgId, String name) {
+		// TODO Auto-generated method stub
+		return employeeOnboardingRepository.findByEmployeeOnboardingList(orgId, name);
+	}
+
+	
+	
 	
 }

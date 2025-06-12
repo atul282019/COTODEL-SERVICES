@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO;
+import com.cotodel.hrms.auth.server.dto.AccountWiseAmountQueryDTO;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
@@ -119,12 +120,12 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ "  c.creationDate BETWEEN :startDate and :endDate and c.bankcode=:bankCode  order by c.creationDate desc ")
 	public List<ErupiVoucherCreatedDateWiseDto> findVoucherCreateListDateWise(@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate,@Param("bankCode") String bankCode);
 	
-	 @Query("select new com.cotodel.hrms.auth.server.dto.AccountWiseAmountDTO(e.accountNumber AS accountNumber, e.orgId AS orgId,"
-	 		+ " SUM(e.amount) AS totalAmount,'','' )" +
+	 @Query("select new com.cotodel.hrms.auth.server.dto.AccountWiseAmountQueryDTO(e.accountNumber AS accountNumber, e.orgId AS orgId,"
+	 		+ " SUM(e.amount) AS totalAmount,'' )" +
 	           "FROM ErupiVoucherCreationDetailsEntity e " +
 	           "WHERE  e.orgId=:orgId " +
 	           "GROUP BY e.accountNumber, e.orgId")
-	    List<AccountWiseAmountDTO> findTotalAmountGroupedByAccountAndOrg(@Param("orgId") Long orgId);
+	    List<AccountWiseAmountQueryDTO> findTotalAmountGroupedByAccountAndOrg(@Param("orgId") Long orgId);
 	 
 	 @Query("SELECT new com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto(" +
 		       "c.purposeCode, SUM(c.amount),m.voucherName) " +

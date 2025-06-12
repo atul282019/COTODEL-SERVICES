@@ -102,4 +102,7 @@ public class EmployeeOnboardingEntity  implements Serializable{
     private byte[] empPhoto;
 	
 	//change
+	
+	@Column(name="driver_assign_flag")
+	private String driverAssignFlag;
 }

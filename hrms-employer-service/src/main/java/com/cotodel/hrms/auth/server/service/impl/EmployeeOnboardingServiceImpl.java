@@ -25,6 +25,8 @@ import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingNewRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingReputeUpdateRequest;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
+import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingUserListDto;
+import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedRequest;
 import com.cotodel.hrms.auth.server.dto.UpdateEmployeeStatusRequest;
 import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
@@ -514,7 +516,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
     	orgid=orgid==null?0:orgid;
     	String value=getEmpNo();
     	
-        String uniqueId=orgid+value;
+        String uniqueId="CTD"+orgid+value;
         System.out.println(uniqueId);
     	return uniqueId;
     }
@@ -912,26 +914,60 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 
 
 	@Override
-	public EmployeeOnboardingListActiveResponse getEmployeeDetailsListTotalActive(Long employerid) {
+	public EmployeeOnboardingListActiveResponse getEmployeeDetailsListTotalActive(Long employerid,String type) {
 		List<EmployeeOnboardingEntity> employeeOnboading=null;
 		EmployeeOnboardingListActiveResponse employeeOnboardingListActiveResponse=new EmployeeOnboardingListActiveResponse();
 		int active=0;
 		try {
-			employeeOnboading=employeeOnboardingDao.getEmployeeOnboardingList(employerid);
-			for (EmployeeOnboardingEntity employeeOnboardingEntity : employeeOnboading) {
-				int status=employeeOnboardingEntity.getStatus();
-				if(status==1) {
-					active=active+1;
+			if(type!=null && type.equalsIgnoreCase("Active")) {
+				employeeOnboading=employeeOnboardingDao.getEmployeeOnboardingActiveList(employerid);
+				for (EmployeeOnboardingEntity employeeOnboardingEntity : employeeOnboading) {
+					int status=employeeOnboardingEntity.getStatus();
+					if(status==1) {
+						active=active+1;
+					}
 				}
+				int total=employeeOnboading.size();
+				employeeOnboardingListActiveResponse.setActive(String.valueOf(active));
+				employeeOnboardingListActiveResponse.setTotal(String.valueOf(total));
+				employeeOnboardingListActiveResponse.setEmpList(employeeOnboading);
+			}else{
+				employeeOnboading=employeeOnboardingDao.getEmployeeOnboardingList(employerid);
+				for (EmployeeOnboardingEntity employeeOnboardingEntity : employeeOnboading) {
+					int status=employeeOnboardingEntity.getStatus();
+					if(status==1) {
+						active=active+1;
+					}
+				}
+				int total=employeeOnboading.size();
+				employeeOnboardingListActiveResponse.setActive(String.valueOf(active));
+				employeeOnboardingListActiveResponse.setTotal(String.valueOf(total));
+				employeeOnboardingListActiveResponse.setEmpList(employeeOnboading);
 			}
-			int total=employeeOnboading.size();
-			employeeOnboardingListActiveResponse.setActive(String.valueOf(active));
-			employeeOnboardingListActiveResponse.setTotal(String.valueOf(total));
-			employeeOnboardingListActiveResponse.setEmpList(employeeOnboading);
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return employeeOnboardingListActiveResponse;
+	}
+
+
+	@Override
+	public List<EmployeeOnboardingDto> getDriverEmployeeAssignList(EmployeeOnboardingDriverRequest request) {
+		List<EmployeeOnboardingDto> employeeOnboading=new ArrayList<EmployeeOnboardingDto>();
+		try {
+			employeeOnboading=employeeOnboardingDao.getDriverEmployeeOnboardingAssign(request.getOrgId(),request.getName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return employeeOnboading;
+	}
+
+
+	@Override
+	public List<EmployeeOnboardingUserListDto> getEmployeeList(ErupiVoucherCreatedRequest request) {
+		// TODO Auto-generated method stub
+		return employeeOnboardingDao.getEmployeeOnboardingUserList(request.getOrgId(), request.getUserName());
 	}
 	
 	

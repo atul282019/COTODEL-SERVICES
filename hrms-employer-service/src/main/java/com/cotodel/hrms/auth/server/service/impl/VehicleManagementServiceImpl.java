@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dao.EmployeeOnboardingDao;
 import com.cotodel.hrms.auth.server.dao.VehicleDriverManagementDao;
 import com.cotodel.hrms.auth.server.dao.VehicleManagementDao;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementGetDto;
@@ -19,6 +20,7 @@ import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementSaveRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleManagementTripRequest;
 import com.cotodel.hrms.auth.server.dto.vehicle.VehicleTripDto;
+import com.cotodel.hrms.auth.server.model.EmployeeOnboardingEntity;
 import com.cotodel.hrms.auth.server.model.vehicle.VehicleDriverManagementEntity;
 import com.cotodel.hrms.auth.server.model.vehicle.VehicleManagementEntity;
 import com.cotodel.hrms.auth.server.repository.vehicle.VehicleSequenceRepository;
@@ -39,6 +41,9 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 	
 	@Autowired
 	VehicleSequenceRepository  vehicleSequenceRepository;
+	
+	@Autowired
+	EmployeeOnboardingDao  employeeOnboardingDao;
 
 	@Override
 	public VehicleManagementSaveRequest saveVehicleManagement(VehicleManagementSaveRequest request) {
@@ -236,6 +241,9 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 			}else if(request.getVehicleSequenceId()==null) {
 				request.setResponse(MessageConstant.SEQUENCEIDNULL);
 				return request;
+			}else if(request.getDriverId()==null) {
+				request.setResponse(MessageConstant.DRIVERIDNULL);
+				return request;
 			}
 			VehicleDriverManagementEntity vehicleDriverManagementEntity = null;
 			response = MessageConstant.RESPONSE_FAILED;
@@ -255,6 +263,8 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 					vehicleDriverManagementEntity = new VehicleDriverManagementEntity();
 					CopyUtility.copyProperties(request, vehicleDriverManagementEntity);
 					vehicleDriverManagementEntity.setStatus(1);
+					Long driverid=Long.valueOf(request.getDriverId());
+					vehicleDriverManagementEntity.setDriverId(driverid);
 					vehicleDriverManagementEntity.setCreationDate(LocalDateTime.now());
 					LocalDateTime localDateTime=LocalDateTime.now();
 					vehicleDriverManagementEntity.setTripStartDate(localDateTime);
@@ -291,8 +301,12 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 					vehicleDriverManagementEntity = vehicleDriverManagementDao.saveVehicleTripManagementDetails(vehicleDriverManagementEntity);
 					response = MessageConstant.RESPONSE_SUCCESS;
 					request.setResponse(response);
-					response = MessageConstant.RESPONSE_SUCCESS;
-					request.setResponse(response);
+					EmployeeOnboardingEntity empl=employeeOnboardingDao.getEmployeeOnboardingId(vehicleDriverManagementEntity.getDriverId());
+					if(empl!=null) {
+						empl.setDriverAssignFlag("Y");
+						employeeOnboardingDao.saveDetails(empl);
+					}
+					
 				}else {
 					response = MessageConstant.TRIPINVALID;
 					response=response.replace("expDate", expDate);
