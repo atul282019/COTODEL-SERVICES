@@ -214,9 +214,27 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 
 	@Override
 	public UserEntity checkUserMobile(String userMobile) {
-		// TODO Auto-generated method stub
 		return userDetailsDao.checkUserMobile(userMobile);
 	}
+	
+
+	@Override
+	public UserEntity checkUserMobileWithOrg(String userMobile) {
+		// TODO Auto-generated method stub
+				UserEntity userEntity=userDetailsDao.checkUserMobile(userMobile);
+				if(userEntity!=null) {
+					int employerid=userEntity.getEmployerid();
+					Long orgid=Long.valueOf(employerid);
+					EmployerDetailsEntity employer=employerDetailsDao.getEmployerDetails(orgid);
+					if(employer!=null) {
+					userEntity.setOrganizationName(employer.getOrganizationName());
+					}
+				}
+				return userEntity;
+	}
+
+
+
 
 	@Override
 	public UserEntity checkUserEmail(String userEmail) {
@@ -979,7 +997,8 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 			if(userEntities!=null) {
 				for (UserEntity userEntity : userEntities) {
 					UserManagerDto userManagerDto=new UserManagerDto();
-					CopyUtility.copyProperties(userEntity, userManagerDto);					
+					CopyUtility.copyProperties(userEntity, userManagerDto);
+					
 					existUserList.add(userManagerDto);
 				}
 			}
@@ -1294,6 +1313,15 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 			e.printStackTrace();
 		}
 		return userEntity;
+	}
+
+
+
+
+	@Override
+	public UserEntity searchUsersWithMobileAndOrgIdStatus(int orgId, String mobile) {
+		// TODO Auto-generated method stub
+		return userDetailsDao.getUserDetailsByMobileAndOrgIdStatus(orgId, mobile);
 	}
 
 }

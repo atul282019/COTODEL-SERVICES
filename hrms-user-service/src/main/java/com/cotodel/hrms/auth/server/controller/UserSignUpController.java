@@ -994,7 +994,7 @@ public class UserSignUpController extends CotoDelBaseController{
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				UserRequest userReq= EncryptionDecriptionUtil.convertFromJson(decript, UserRequest.class);
 				
-				userEntity=userService.checkUserMobile(userReq.getMobile());				
+				userEntity=userService.searchUsersWithMobileAndOrgIdStatus(userReq.getEmployerid(),userReq.getMobile());				
 				
 	    	    if(userEntity!=null) {
 	    	    	userSignUpResponse=new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);

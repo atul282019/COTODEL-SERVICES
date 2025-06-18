@@ -61,4 +61,6 @@ public interface UserService {
 	public UserEntity searchUsersWithMobileAndOrgId(int  orgId,String mobile);
 	public UserEntity saveReputeDetails(HttpServletRequest request,ReputeEmployeeDetails user);
 	public UserEntity updateReputeDetails(HttpServletRequest request,UpdateReputeStatusRequest user);
+	public UserEntity checkUserMobileWithOrg(String userMobile);
+	public UserEntity searchUsersWithMobileAndOrgIdStatus(int  orgId,String mobile);
 }

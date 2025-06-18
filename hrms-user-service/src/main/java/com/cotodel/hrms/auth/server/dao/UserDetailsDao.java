@@ -42,4 +42,6 @@ public interface UserDetailsDao {
 	
 	public int updateActiveDeactive(String mobile,int status);
 	public UserEntity checkUserId(Long id);
+	
+	UserEntity getUserDetailsByMobileAndOrgIdStatus(int orgId,String mobile);
 }

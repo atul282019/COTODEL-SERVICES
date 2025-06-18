@@ -149,5 +149,11 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		// TODO Auto-generated method stub
 		return userRepository.getById(id);
 	}
+
+	@Override
+	public UserEntity getUserDetailsByMobileAndOrgIdStatus(int orgId, String mobile) {
+		// TODO Auto-generated method stub
+		return userRepository.checkUserMobileAndOrgIdStatus(orgId, mobile);
+	}
 	
 }

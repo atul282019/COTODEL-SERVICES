@@ -257,7 +257,7 @@ public class MobileEmailVerifyController {
 	    		String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 	    		UserOtpRequest userReq= EncryptionDecriptionUtil.convertFromJson(decript, UserOtpRequest.class);
 	    		
-	    		userEntity=userService.checkUserMobile(userReq.getMobile());
+	    		userEntity=userService.checkUserMobileWithOrg(userReq.getMobile());
 	    		if(userEntity!=null && userEntity.getStatus()==1) {
 	    			//if(userEntity!=null && userEntity.getStatus()==MessageConstant.ONE ) {
 	    			if(applicationConstantConfig.otpLessSenderClientEnable.equalsIgnoreCase("N")) {

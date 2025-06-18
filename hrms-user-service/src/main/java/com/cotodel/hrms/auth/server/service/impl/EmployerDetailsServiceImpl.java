@@ -267,8 +267,9 @@ public DashBoardDetailsDto getEmployerDetails(Long employerId) {
 			}
 		}
 		EmployeeOnboardingDriverRequest employeeOnboardingDriverRequest = new EmployeeOnboardingDriverRequest();
-		accountRequest.setOrgId(employerId);
-		String json1 = objectMapper.writeValueAsString(accountRequest);
+		employeeOnboardingDriverRequest.setOrgId(employerId);
+		employeeOnboardingDriverRequest.setName("");
+		String json1 = objectMapper.writeValueAsString(employeeOnboardingDriverRequest);
 		String response = CommonUtility.userRequest(tokenvalue, json1,
 				applicationConstantConfig.employerServiceBaseUrl + CommonUtils.driverListDetails,
 				applicationConstantConfig.apiSignaturePublicPath, applicationConstantConfig.apiSignaturePrivatePath);

@@ -74,5 +74,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	    @Transactional
 	    @Query(value = "UPDATE user_details  SET status=:status WHERE mobile =:mobile", nativeQuery = true)
 	    public int updateActiveDeactive(@Param("mobile") String mobile,@Param("status") int status);
+	    
+	    
+	    @Query("select s  from UserEntity s where s.mobile =:mobile and s.employerid=:orgId and s.status='1' ")
+		public UserEntity checkUserMobileAndOrgIdStatus(@Param("orgId") int orgId,@Param("mobile") String mobile);
 } 
 

@@ -39,7 +39,7 @@ public class MessageConstant {
 	public static final String MOBILENULL ="Mobile should not be null.";
 	public static final String NAMENULL ="Name should not be null.";
 	public static final String EMAILNULL ="Email should not be null.";
-	public static final String MOBILENOTEXIST = "Mobile does not exist.";	
+	public static final String MOBILENOTEXIST = "Invalid mobile number! Try again.";	
 	public static final String ORG_CHECK_EXIST = "User already exist! Please check your Email or Mobile !!";
 	public static final String BANKCODE = "ICICI";
 }
