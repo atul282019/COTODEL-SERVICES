@@ -198,4 +198,37 @@ public class CashFreeController extends CotoDelBaseController{
 					}
 
 				}
+	 			@Operation(summary = "This API will provide the Save User Details ", security = {
+	 					@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	 					@ApiResponses(value = {
+						@ApiResponse(responseCode = "200", description = "ok", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class))),
+						@ApiResponse(responseCode = "400", description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+						@ApiResponse(responseCode = "404", description = "Request Resource was not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+						@ApiResponse(responseCode = "500", description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))) })
+				@RequestMapping(value = "/get/cashFreeAmountLimit", produces = { "application/json" }, consumes = {
+						"application/json", "application/text" }, method = RequestMethod.POST)
+				public ResponseEntity<Object> cashFreeAmountLimit(@RequestBody OrderUserRequest orderUserRequest) {
+
+					List<CashFreeOrderHistory> response = null;
+					try {
+
+						logger.info("inside ..cashFreeOrderIdList.::" + orderUserRequest);
+
+						response = cashService.callOrderIdApiList(orderUserRequest);
+
+						if (response != null && response.size()>0) {
+							return ResponseEntity.ok(new CashFreeOrderListHistoryResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND, response,
+									TransactionManager.getCurrentTimeStamp()));
+						} else {
+							return ResponseEntity.ok(new CashFreeOrderListHistoryResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND, response,
+									TransactionManager.getCurrentTimeStamp()));
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+
+						return ResponseEntity.ok(new CashFreeOrderListHistoryResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND, response, TransactionManager.getCurrentTimeStamp()));
+					}
+
+				}
 }

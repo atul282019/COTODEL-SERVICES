@@ -457,6 +457,21 @@ public class CashServiceImpl implements CashService {
 		}
 		return list;
 	}
+
+	@Override
+	public String cashFreeCurrentMonthAmount(OrderUserRequest orderUserRequest) {
+		List<CashFreeOrderWebHookEntity> finalList=new ArrayList<CashFreeOrderWebHookEntity>();
+		List<CashFreeOrderHistory> list=null;
+		try {
+			
+			list=cashFreeDao.getDetailsHistory(orderUserRequest.getOrgId());
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
 	
 
 }

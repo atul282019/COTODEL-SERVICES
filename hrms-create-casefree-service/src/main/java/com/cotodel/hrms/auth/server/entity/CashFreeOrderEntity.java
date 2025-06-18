@@ -188,6 +188,9 @@ public class CashFreeOrderEntity implements Serializable{
 	@Column(name="service_charge_discount")
 	private String serviceChargeDiscount;
 	
+	@Column(name="amount_service_charge")
+	private String amountServiceCharge;
+	 
 //	"payment_method":{"app":{}}
 //	"error_details":{"error_code":"TRANSACTION_DECLINED",
 //		"error_description":"Decline - Insufficient funds in the account.",

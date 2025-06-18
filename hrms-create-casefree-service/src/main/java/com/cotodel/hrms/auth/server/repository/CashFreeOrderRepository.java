@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.cotodel.hrms.auth.server.dto.CashFreeOrderHistory;
@@ -25,8 +26,11 @@ public interface CashFreeOrderRepository extends JpaRepository<CashFreeOrderEnti
 			+ "w.settlementAmount,w.settlementCurrency,w.serviceChargeDiscount) " +
 		       "FROM CashFreeOrderEntity o " +
 		       "LEFT JOIN CashFreeOrderWebHookEntity w ON o.orderId = w.orderId " +
-		       "WHERE o.orgId = ?1")
-		List<CashFreeOrderHistory> findCashFreeOrderHistory(Long orgId);		
+		       "WHERE o.orgId = ?1 order by o.id desc ")
+		List<CashFreeOrderHistory> findCashFreeOrderHistory(Long orgId);
+	
+	@Query("select s  from CashFreeOrderEntity s where s.orgId =:orgId and e.createdDate BETWEEN :startOfMonth AND :endOfMonth")
+	public List<CashFreeOrderEntity> findByAmountCurrentMonthOrgId(@Param("orgId") Long orgId);
 }
 
 

@@ -39,6 +39,12 @@ public class CashFreeDaoImpl implements CashFreeDao{
 		return cashFreeOrderRepository.findCashFreeOrderHistory(orgId);
 	}
 
+	@Override
+	public String getCurrentMonthamount(Long orgId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 	
 	

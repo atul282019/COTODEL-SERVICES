@@ -14,5 +14,5 @@ public interface CashService {
 	public OrderIdResponse  callOrderIdApiView(OrderUserRequest orderUserRequest);
 	public OrderUserUpdateRequest  callOrderIdApiUpdate(OrderUserUpdateRequest orderUserUpdateRequest);
 	public List<CashFreeOrderHistory>  callOrderIdApiList(OrderUserRequest orderUserRequest);
-	
+	public String  cashFreeCurrentMonthAmount(OrderUserRequest orderUserRequest);
 }

@@ -21,4 +21,6 @@ public class OrderUserRequest {
 	private String bankName;	
 	private String acNumber;
 	private String createdBy;
+	private String amountServiceCharge;
+	 
 }
