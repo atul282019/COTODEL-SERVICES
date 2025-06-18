@@ -115,7 +115,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				if(res.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 					response=erupiVoucherCreationBulkService.createErupiVoucherBulkFile(erCreateRequest);
 				}else {
-					erupiVoucherBulkCreateResponse=new ErupiVoucherBulkCreateResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					erupiVoucherBulkCreateResponse=new ErupiVoucherBulkCreateResponse(MessageConstant.FALSE,res.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
 					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBulkCreateResponse);
 					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
 					return ResponseEntity.ok(jsonEncriptObject);

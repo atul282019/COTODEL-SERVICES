@@ -1,6 +1,9 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 
@@ -10,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.cotodel.hrms.auth.server.dao.BankMasterDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
+import com.cotodel.hrms.auth.server.dao.ErupiVoucherRequestDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherTxnDao;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTxnRequest;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
@@ -21,8 +26,11 @@ import com.cotodel.hrms.auth.server.dto.voucher.DecryptedSmsResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.DecryptedStatusResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherSmsRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusApiRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusRedeemResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusSmsRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.RedempltionDetail;
+import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnDetailsEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
@@ -48,6 +56,11 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 	@Autowired
 	ErupiVoucherTxnDao  erupiVoucherTxnDao;
 	
+	@Autowired
+	BankMasterDao bankMasterDao;
+	
+	@Autowired
+	ErupiVoucherRequestDao  erupiVoucherRequestDao;
 	
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
@@ -445,5 +458,117 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 		    	erupiVoucherTxnDetailsEntity.setTxnDateTime(decryptedResponse.getRespParam().getTxnDateTime());
 		    	return erupiVoucherTxnDetailsEntity;
 		    }
+
+		@Override
+		public ErupiVoucherStatusRedeemResponse erupiVoucherStatusDetailsHistory(ErupiVoucherStatusRequest request) {
+			String response="";
+			log.info("Starting ErupiVoucherInitiateDetailsServiceImpl ... erupiVoucherStatusDetailsHistory..");
+			ErupiVoucherCreationDetailsEntity erupiVoucherInitiateDetailsEntity=null;
+			List<ErupiVoucherTxnDetailsEntity> erupiVoucherTxnDetailsList=new ArrayList<ErupiVoucherTxnDetailsEntity>();
+			JSONObject profileJsonRes=null;
+			ErupiVoucherStatusRedeemResponse redeemResponse=new ErupiVoucherStatusRedeemResponse();
+			try {
+				
+				response=MessageConstant.RESPONSE_FAILED;
+				redeemResponse.setResponse(response);	
+				erupiVoucherInitiateDetailsEntity=new ErupiVoucherCreationDetailsEntity();
+				
+				erupiVoucherInitiateDetailsEntity=erupiVoucherInitiateDetailsDao.getErupiVoucherCreationDetails(request.getId());
+				if(erupiVoucherInitiateDetailsEntity==null) {
+					response=MessageConstant.DETAIL_ID;
+					redeemResponse.setResponse(response);
+					return redeemResponse;
+				}
+				redeemResponse.setVoucherCode(erupiVoucherInitiateDetailsEntity.getVoucherCode());
+				redeemResponse.setVoucherDesc(erupiVoucherInitiateDetailsEntity.getVoucherDesc());
+				redeemResponse.setVoucherAmount(erupiVoucherInitiateDetailsEntity.getAmount().toString());
+				redeemResponse.setIssueDate(erupiVoucherInitiateDetailsEntity.getCreationDate().toString());
+				redeemResponse.setMerchantTranId(erupiVoucherInitiateDetailsEntity.getMerchanttxnid());
+				redeemResponse.setName(erupiVoucherInitiateDetailsEntity.getName());
+				redeemResponse.setMobile(erupiVoucherInitiateDetailsEntity.getMobile());
+				redeemResponse.setExpDate(erupiVoucherInitiateDetailsEntity.getExpDate().toString());
+				redeemResponse.setAccountNumber(erupiVoucherInitiateDetailsEntity.getAccountNumber());
+				ErupiBankMasterEntity erupiBankMasterEntity=bankMasterDao.getDetails(erupiVoucherInitiateDetailsEntity.getBankcode());
+				if(erupiBankMasterEntity!=null) {
+					redeemResponse.setBankLogo(erupiBankMasterEntity.getBankLogo());
+				}
+				byte[] mccMainIcon=erupiVoucherRequestDao.getVoucherCreationRequestPurposeCode(erupiVoucherInitiateDetailsEntity.getPurposeCode());
+				redeemResponse.setVoucherLogo(mccMainIcon);
+				List<RedempltionDetail> list=new ArrayList<RedempltionDetail>();
+				boolean redeemFlag=false;
+				erupiVoucherTxnDetailsList=erupiVoucherTxnDao.findByDetailIdWithRedeem(erupiVoucherInitiateDetailsEntity.getId());
+				if(erupiVoucherTxnDetailsList==null && erupiVoucherTxnDetailsList.size()>0) {
+					response=MessageConstant.DETAIL_ID;
+					redeemResponse.setResponse(response);
+					return redeemResponse;
+				}else {
+				
+					for (ErupiVoucherTxnDetailsEntity erEntity: erupiVoucherTxnDetailsList) {
+						if(erEntity.getWorkFlowId()!=null && erEntity.getWorkFlowId()==100007) {
+							RedempltionDetail redempltionDetail=new RedempltionDetail();
+							redempltionDetail.setAmount(erEntity.getPayerAmount());
+							redempltionDetail.setBankrrn(erEntity.getBankrrn());
+							redempltionDetail.setMarchantName(erEntity.getPayeeName());
+							String formattedDate = erEntity.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+							redempltionDetail.setTransactionDate(formattedDate);
+							list.add(redempltionDetail);
+							redeemFlag=true;
+						}
+					}
+				}
+				redeemResponse.setData(list);
+				ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
+				erupiVoucherTxnDetailsEntity=erupiVoucherTxnDetailsList.get(0);
+				ErupiVoucherStatusApiRequest erupiVoucherStatusApiRequest=new ErupiVoucherStatusApiRequest();
+				erupiVoucherStatusApiRequest.setMerchantTranId(erupiVoucherTxnDetailsEntity.getMerchanttxnId());
+				erupiVoucherStatusApiRequest.setMcc(erupiVoucherInitiateDetailsEntity.getMcc());
+				erupiVoucherStatusApiRequest.setUmn(erupiVoucherTxnDetailsEntity.getUmn());
+				erupiVoucherStatusApiRequest.setMerchantId(erupiVoucherInitiateDetailsEntity.getMerchantId());
+				erupiVoucherStatusApiRequest.setSubMerchantId(erupiVoucherInitiateDetailsEntity.getSubMerchantId());
+				erupiVoucherStatusApiRequest.setTransactionType("V");
+
+
+				log.info("Starting voucher status request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());
+									
+					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(erupiVoucherStatusApiRequest),
+							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherStatus);
+					log.info("Ending voucher status response1 ...."+response1);
+					
+					profileJsonRes= new JSONObject(response1);
+					ErupiVoucherTxnRequest erupi=new ErupiVoucherTxnRequest();
+					DecryptedStatusResponse decryptedResponse=null;
+					if(profileJsonRes.getBoolean("status")) { 
+						//request.setCreateResponse(response1);
+						response=MessageConstant.RESPONSE_SUCCESS;
+						request.setResponse(response);
+						//
+						JSONObject data = profileJsonRes.getJSONObject("data");
+						decryptedResponse= jsonToPOJOStatus(data.toString());
+						
+						if(decryptedResponse.getSuccess().equalsIgnoreCase("true")) {
+							request.setResponseApi(decryptedResponse.getVoucherStatus());
+							}else {
+								response=MessageConstant.RESPONSE_FAILED;
+								request.setResponse(response);
+								request.setResponseApi(decryptedResponse.getVoucherStatus());
+							}
+						
+					}else {
+
+						response=MessageConstant.RESPONSE_FAILED;
+						request.setResponse(response);
+						JSONObject data = profileJsonRes.getJSONObject("data");
+						decryptedResponse= jsonToPOJOStatus(data.toString());
+					}
+					redeemResponse.setActiveAmount(decryptedResponse.getVoucherBalance());
+					redeemResponse.setAmountSpent(decryptedResponse.getVoucherRedeemedAmount());
+					redeemResponse.setVoucherStatus(decryptedResponse.getVoucherStatus());
+					redeemResponse.setResponse(MessageConstant.RESPONSE_SUCCESS);
+			}catch (Exception e) {
+				e.printStackTrace();
+				log.error("Error in ErupiVoucherStatussmsServiceImpl. status:......"+e.getMessage());
+			}
+			return redeemResponse;
+		}
    
 }

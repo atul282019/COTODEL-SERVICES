@@ -1,4 +1,4 @@
-package com.cotodel.hrms.auth.server.dto;
+package com.cotodel.hrms.auth.server.dto.voucher;
 
 import com.cotodel.hrms.auth.server.sql.NoSqlKeywords;
 
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountWiseAmountQueryDTO {
-	
-	private String accountNumber;
-	private Long orgId;
-	private double totalAmount;
-	private double redeemAmount;
+public class RedempltionDetail {	
+	private String transactionDate;
+	private String bankrrn;
+	private String marchantName;
+	private String amount;
 }

@@ -48,5 +48,9 @@ public class MessageConstant {
 	public static final String INVALIDDAYS = "Invalid input. Please enter format like 7 Days";
 	public static final String ACCOUNTNULL = "Account no cannot be null.";
 	public static final String DRIVERIDNULL = "Driver Id cannot be null.";
+	public static final String MTRANSANULL = "Merchant Transaction id cannot be null.";
+	public static final String SUBMERCHANTNULL = "Sub Merchant id cannot be null.";
+	public static final String BENIDNULL = "Beneficiary id cannot be null.";
+	public static final String MOBILENULL = "Mobile no cannot be null.";
 	
 }

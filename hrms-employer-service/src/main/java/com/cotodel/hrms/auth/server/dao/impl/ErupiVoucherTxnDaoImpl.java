@@ -49,6 +49,12 @@ public class ErupiVoucherTxnDaoImpl implements ErupiVoucherTxnDao{
 		return erupiVoucherTxnRepository.findByDetailId(id, workflowid);
 	}
 
+	@Override
+	public List<ErupiVoucherTxnDetailsEntity> findByDetailIdWithRedeem(Long id) {
+		// TODO Auto-generated method stub
+		return erupiVoucherTxnRepository.findByDetailIdWithRedeem(id);
+	}
+
 	
 
 

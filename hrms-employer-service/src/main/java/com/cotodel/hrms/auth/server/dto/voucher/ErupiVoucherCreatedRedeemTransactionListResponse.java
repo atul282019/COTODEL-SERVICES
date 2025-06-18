@@ -1,4 +1,4 @@
-package com.cotodel.hrms.auth.server.dto;
+package com.cotodel.hrms.auth.server.dto.voucher;
 
 import java.util.List;
 
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErupiVoucherCreatedListByPurposeCodeResponse {
+public class ErupiVoucherCreatedRedeemTransactionListResponse {
 	
 	 private boolean status;
 	 private String message;
-	 List<PurposeCodeAmountWithImgDto> data;
+	 List<ErupiVoucherCreatedRedeemTransactionImgDto> data;
 	 private String txnId;
 	 private String timestamp;
 }

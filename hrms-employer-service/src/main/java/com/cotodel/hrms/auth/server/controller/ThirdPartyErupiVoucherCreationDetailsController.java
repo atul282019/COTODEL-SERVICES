@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreateDetailsRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherInitiateDetailsResponse;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreationDetailsResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
@@ -93,6 +94,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    
 	    	String message = "";
 	    	ErupiVoucherCreateDetailsRequest response=null;
+	    	ErupiVoucherCreateDetailsRequest res;
 	    	ErupiVoucherInitiateDetailsResponse erupiVoucherInitiateDetailsResponse;
 	    	try {	    		
 	    		String companyId = request.getHeader("companyId");
@@ -100,8 +102,16 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreateDetailsRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreateDetailsRequest.class);
+				res=erupiVoucherCreationDetailsService.checkErupiVoucherValidateDetails(erupiLinkAccountRequest);
+				if(res.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+					response=erupiVoucherCreationDetailsService.saveErupiVoucherCreationDetails(erupiLinkAccountRequest);
+				}else {
+					erupiVoucherInitiateDetailsResponse=new ErupiVoucherInitiateDetailsResponse(MessageConstant.FALSE,res.getResponse(),response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherInitiateDetailsResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
 				
-				response=erupiVoucherCreationDetailsService.saveErupiVoucherCreationDetails(erupiLinkAccountRequest);
 	    		
 				if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 					erupiVoucherInitiateDetailsResponse=new ErupiVoucherInitiateDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());

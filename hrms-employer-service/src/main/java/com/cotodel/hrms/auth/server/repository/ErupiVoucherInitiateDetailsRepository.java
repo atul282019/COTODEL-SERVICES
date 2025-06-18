@@ -17,6 +17,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 @Repository
 public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<ErupiVoucherCreationDetailsEntity,Long>{
@@ -67,11 +68,11 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 //			+ "ELSE CASE WHEN a.workflowid=100003 THEN 'Active' ELSE 'InActive' END  status FROM hrms1.erupi_voucher_creation_details a JOIN "
 //			+ "hrms1.erupi_voucher_txn_details b ON a.id_pk = b.details_id "
 //			+ "WHERE a.org_id =:orgId and b.workflowid!=100004 GROUP BY b.workflowid,status", nativeQuery = true)
-	@Query(value = "SELECT COUNT(1) AS record_count,SUM(a.amount) AS total_amount,a.workflowid,(SELECT w.type FROM hrms1.workflowmaster w "
-			+ " WHERE w.workflowid = a.workflowid LIMIT 1 ) AS type,CASE WHEN a.expdate < CURRENT_DATE THEN 'Expire' "
-			+ " ELSE CASE WHEN a.workflowid = 100003 THEN 'Active' ELSE 'InActive' END END AS status "
-			+ " FROM hrms1.erupi_voucher_creation_details a WHERE a.org_id =:orgId AND a.workflowid != 100004 "
-			+ " GROUP BY a.workflowid, status", nativeQuery = true)
+	@Query(value = "SELECT COUNT(1) AS record_count,SUM(a.amount) AS total_amount,b.workflowid,(SELECT w.type FROM hrms1.workflowmaster w "
+			+ " WHERE w.workflowid = b.workflowid) AS type,CASE WHEN a.expdate < CURRENT_DATE and a.workflowid='100003' THEN 'expire' "
+			+ " ELSE 'active' END AS status FROM hrms1.erupi_voucher_creation_details a JOIN  hrms1.erupi_voucher_txn_details b "
+			+ " ON a.id_pk = b.details_id  WHERE a.org_id =:orgId and b.workflowid in ('100003','100005','100007') "
+			+ "  GROUP BY b.workflowid,status", nativeQuery = true)
 	public List<Object[]> getVoucherCreateStatus(@Param("orgId") Long orgId);	
 	
 	@Query("select s  from ErupiVoucherCreationDetailsEntity s where s.merchanttxnid = ?1")
@@ -85,10 +86,10 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 	public List<Object[]> getVoucherCreateBankList(@Param("orgId") Long orgId);
 	
 	@Query(value = "SELECT COUNT(1) AS record_count,SUM(a.amount) AS total_amount,b.workflowid,(SELECT w.type "
-			+ "FROM hrms1.workflowmaster w WHERE w.workflowid = b.workflowid) AS type,CASE WHEN a.expdate < CURRENT_DATE THEN 'expire' "
+			+ "FROM hrms1.workflowmaster w WHERE w.workflowid = b.workflowid) AS type,CASE WHEN a.expdate < CURRENT_DATE and a.workflowid='100003' THEN 'expire' "
 			+ "ELSE 'active' END AS status FROM hrms1.erupi_voucher_creation_details a JOIN "
 			+ "hrms1.erupi_voucher_txn_details b ON a.id_pk = b.details_id "
-			+ "WHERE a.org_id =:orgId and b.workflowid!=100004 and a.accountnumber=:accNumber GROUP BY b.workflowid,status", nativeQuery = true)
+			+ "WHERE a.org_id =:orgId and b.workflowid in ('100003','100005','100007') and a.accountnumber=:accNumber GROUP BY b.workflowid,status", nativeQuery = true)
 	public List<Object[]> getVoucherCreateSummaryWithAccNo(@Param("orgId") Long orgId,@Param("accNumber") String accNumber);
 	
 	@Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
@@ -120,12 +121,12 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 			+ "  c.creationDate BETWEEN :startDate and :endDate and c.bankcode=:bankCode  order by c.creationDate desc ")
 	public List<ErupiVoucherCreatedDateWiseDto> findVoucherCreateListDateWise(@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate,@Param("bankCode") String bankCode);
 	
-	 @Query("select new com.cotodel.hrms.auth.server.dto.AccountWiseAmountQueryDTO(e.accountNumber AS accountNumber, e.orgId AS orgId,"
-	 		+ " SUM(e.amount) AS totalAmount,'' )" +
-	           "FROM ErupiVoucherCreationDetailsEntity e " +
-	           "WHERE  e.orgId=:orgId " +
-	           "GROUP BY e.accountNumber, e.orgId")
-	    List<AccountWiseAmountQueryDTO> findTotalAmountGroupedByAccountAndOrg(@Param("orgId") Long orgId);
+	@Query(value = "SELECT a.accountnumber AS accountNumber,a.org_id AS orgId,SUM(a.amount) AS totalAmount,COALESCE(SUM(b.total_red), 0) AS redeemAmount "
+			+ "FROM hrms1.erupi_voucher_creation_details a LEFT JOIN (SELECT details_id, SUM(CAST(payer_amount AS DECIMAL(10,2))) AS total_red "
+			+ "FROM hrms1.erupi_voucher_txn_details   WHERE workflowid IN ('100003', '100007') GROUP BY "
+			+ "details_id ) b ON a.id_pk = b.details_id WHERE a.org_id =:orgId AND a.workflowid IN ('100003', '100007')"
+			+ "GROUP BY a.accountnumber,a.org_id",nativeQuery = true)	 
+	public  List<Object[]> findTotalAmountGroupedByAccountAndOrg(@Param("orgId") Long orgId);
 	 
 	 @Query("SELECT new com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto(" +
 		       "c.purposeCode, SUM(c.amount),m.voucherName) " +
@@ -161,4 +162,21 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 				+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId "
 				+ "   order by c.id desc ")
 		public List<ErupiVoucherCreatedDto> findVoucherCreateTransactionList(@Param("orgId") Long orgId);
+	 
+	 @Query("select new com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionDto(c.id,c.name,c.mobile,c.amount,"
+				+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
+				+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon,COALESCE(t.payerAmount, '0'),t.bankrrn,t.payeeName) "
+				+ "from ErupiVoucherCreationDetailsEntity c"
+				+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
+				+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
+				+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId and c.workFlowId='100007' "
+				+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc ")
+		public List<ErupiVoucherCreatedRedeemTransactionDto> findVoucherCreateListRedeem(@Param("orgId") Long orgId,    
+		        @Param("startDate") LocalDate startDate, 
+		        @Param("endDate") LocalDate endDate);
+	 
+	 	@Query(value = "SELECT * from hrms1.view_voucher_summary1 where org_id=:orgId", nativeQuery = true)
+		public List<Object[]> getVoucherCreateStatusView(@Param("orgId") Long orgId);
+		@Query(value = "SELECT * from hrms1.view_voucher_summary1 where org_id=:orgId and accountnumber=:accountnumber", nativeQuery = true)
+		public List<Object[]> getVoucherCreateStatusAccountView(@Param("orgId") Long orgId,@Param("accountnumber") String accountnumber);
 }

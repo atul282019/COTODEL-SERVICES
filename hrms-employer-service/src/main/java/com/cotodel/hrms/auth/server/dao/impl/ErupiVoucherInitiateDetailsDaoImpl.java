@@ -1,6 +1,7 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDateWiseDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto;
 import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionDto;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.repository.ErupiVoucherInitiateDetailsRepository;
 @Repository
@@ -114,9 +116,21 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 	@Override
 	public List<AccountWiseAmountQueryDTO> getVoucherAmountListAccountWise(Long orgId) {
 		// TODO Auto-generated method stub
-		return erupiVoucherInitiateDetailsRepository.findTotalAmountGroupedByAccountAndOrg(orgId);
-	}
+		//return erupiVoucherInitiateDetailsRepository.findTotalAmountGroupedByAccountAndOrg(orgId);
+		List<Object[]> rawResults = erupiVoucherInitiateDetailsRepository.findTotalAmountGroupedByAccountAndOrg(orgId);
 
+	    List<AccountWiseAmountQueryDTO> dtos = new ArrayList<AccountWiseAmountQueryDTO>();
+
+	    for (Object[] row : rawResults) {
+	        String accountNumber = (String) row[0];
+	        Long orgIdValue = ((Number) row[1]).longValue();
+	        double totalAmount = row[2] != null ? ((Number) row[2]).doubleValue() : 0.0;
+	        double redeem = row[3] != null ? ((Number) row[3]).doubleValue() : 0.0;
+
+	        dtos.add(new AccountWiseAmountQueryDTO(accountNumber, orgIdValue, totalAmount, redeem));
+	    }
+	    return dtos;
+	}
 	@Override
 	public List<PurposeCodeAmountDto> getVoucherCreationListByPurposeCode(Long orgID, LocalDate startDate,
 			LocalDate endDate) {
@@ -138,9 +152,29 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 		// TODO Auto-generated method stub
 		return erupiVoucherInitiateDetailsRepository.findVoucherCreateTransactionList(orgId);
 	}
-	   
 
+	@Override
+	public List<ErupiVoucherCreatedRedeemTransactionDto> getVoucherCreationListRedeem(Long orgID, LocalDate startDate,
+			LocalDate endDate) {
+		// TODO Auto-generated method stub
+		return erupiVoucherInitiateDetailsRepository.findVoucherCreateListRedeem(orgID, startDate, endDate);
+	}
 
+	@Override
+	public List<Object[]> getVoucherCreateStatusView(Long orgId) {
+		// TODO Auto-generated method stub
+		return erupiVoucherInitiateDetailsRepository.getVoucherCreateStatusView(orgId);
+	}
+
+	@Override
+	public List<Object[]> getVoucherCreateSummaryWithAccNoView(Long orgid, String accNumber) {
+		// TODO Auto-generated method stub
+		return erupiVoucherInitiateDetailsRepository.getVoucherCreateStatusAccountView(orgid, accNumber);
+	}
+	
+
+	
+	
 	
 	
 }

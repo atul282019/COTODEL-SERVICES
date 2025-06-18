@@ -62,7 +62,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
 	    public ResponseEntity<Object> vehicleBulkUploadNew(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
 		 
-	    logger.info("inside vehicleBulkVoucherUploadNew....");	    
+	    logger.info("inside vehicleBulkUploadNew....");	    
 	    	String message = "";
 	    	VehicleBulkUploadSFListResponse response=null;
 	    	VehicleBulkUploadResponse vehicleBulkUploadResponse;
@@ -88,7 +88,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 					return ResponseEntity.ok(jsonEncriptObject);
 	    		}
 	    	}catch (Exception e) {				
-	    		logger.error("error in vehicleBulkVoucherUploadNew====="+e);
+	    		logger.error("error in vehicleBulkUploadNew====="+e);
 			}
 	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
 	    	try {

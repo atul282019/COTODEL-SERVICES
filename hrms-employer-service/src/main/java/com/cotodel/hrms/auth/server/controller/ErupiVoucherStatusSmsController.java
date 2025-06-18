@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherSmsResponse;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusRedeemHistoryResponse;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusRedeemResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherStatusSmsRequest;
@@ -143,6 +145,58 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				logger.error("error in erupiVoucherStatus====="+e);
 			}
     	    return ResponseEntity.ok(jsonEncriptObject);    
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/erupiVoucherStatusHistory",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> erupiVoucherStatusHistory(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+		 
+	    logger.info("inside erupiVoucherStatusHistory....");	    	
+	    	
+	    
+	    	String message = "";
+	    	ErupiVoucherStatusRedeemResponse response=null;
+	    	ErupiVoucherStatusRedeemHistoryResponse erupiVoucherStatusRedeemHistoryResponse;
+	    	try {
+	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ErupiVoucherStatusRequest erupiVoucherStatusRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherStatusRequest.class);
+				
+				response=erupiVoucherStatusSmsService.erupiVoucherStatusDetailsHistory(erupiVoucherStatusRequest);
+	    		
+				if(response!=null && response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
+					erupiVoucherStatusRedeemHistoryResponse=new ErupiVoucherStatusRedeemHistoryResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherStatusRedeemHistoryResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(jsonEncriptObject);
+				}else {
+					erupiVoucherStatusRedeemHistoryResponse=new ErupiVoucherStatusRedeemHistoryResponse(MessageConstant.TRUE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherStatusRedeemHistoryResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(jsonEncriptObject);
+					 }
+	    	}catch (Exception e) {				
+	    		logger.error("error in erupiVoucherStatusHistory====="+e);
+			}
+	        
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		erupiVoucherStatusRedeemHistoryResponse=new ErupiVoucherStatusRedeemHistoryResponse(MessageConstant.TRUE,MessageConstant.DATA_NOT_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+				 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherStatusRedeemHistoryResponse);
+				 jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in erupiVoucherStatusHistory====="+e);
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);    
 	    }
 	 
 	 

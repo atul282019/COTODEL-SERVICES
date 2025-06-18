@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingFailListResponse;
 import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingRequest;
-import com.cotodel.hrms.auth.server.dto.EmployeeOnboardingResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
 import com.cotodel.hrms.auth.server.multi.datasource.SetDatabaseTenent;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;

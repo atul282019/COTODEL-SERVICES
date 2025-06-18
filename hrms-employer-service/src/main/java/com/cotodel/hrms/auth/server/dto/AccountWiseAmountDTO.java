@@ -14,7 +14,7 @@ public class AccountWiseAmountDTO {
 	private String accountNumber;
 	private Long orgId;
 	private double totalAmount;
-	private String balance;
+	private double redeemAmount;
 	private String bankName;
 	private byte[] bankLogo;
 }

@@ -1109,7 +1109,20 @@ public class ErupiVoucherCreationDetailsServiceImpl implements ErupiVoucherCreat
 //					request.setResponseApi(MessageConstant.HASH_ERROR);
 //					return request;
 //				}else 
-				if(request.getAccountNumber()==null || request.getAccountNumber().equalsIgnoreCase("")) {
+				if(request.getMerchanttxnid()==null || request.getMerchanttxnid().equalsIgnoreCase("")) {
+					request.setResponseApi(MessageConstant.MTRANSANULL);
+					return request;
+				}else if(request.getSubMerchantId()==null || request.getSubMerchantId().equalsIgnoreCase("")) {
+					request.setResponseApi(MessageConstant.SUBMERCHANTNULL);
+					return request;
+				}else if(request.getBeneficiaryID()==null || request.getBeneficiaryID().equalsIgnoreCase("")) {
+					request.setResponseApi(MessageConstant.BENIDNULL);
+					return request;
+				}else if(request.getMobile()==null || request.getMobile().equalsIgnoreCase("")) {
+					request.setResponseApi(MessageConstant.BENIDNULL);
+					return request;
+				}
+				else if(request.getAccountNumber()==null || request.getAccountNumber().equalsIgnoreCase("")) {
 					request.setResponseApi(MessageConstant.ACCOUNTNULL);
 					return request;
 				}else if(request.getOrgId()==null) {
@@ -1548,6 +1561,27 @@ public class ErupiVoucherCreationDetailsServiceImpl implements ErupiVoucherCreat
 	       
 	        return message;
 	    }
+
+		@Override
+		public ErupiVoucherCreateDetailsRequest checkErupiVoucherValidateDetails(
+				ErupiVoucherCreateDetailsRequest request) {
+			try {
+				request.setResponse(MessageConstant.RESPONSE_FAILED);			
+
+				if(request.getAccountNumber()==null || request.getAccountNumber().equalsIgnoreCase("")) {
+					request.setResponse(MessageConstant.ACCOUNTNULL);
+					return request;
+				}else if(request.getOrgId()==null || request.getOrgId()==0) {
+					request.setResponse(MessageConstant.ORGNULL);
+					return request;
+				}
+				request.setResponse(MessageConstant.RESPONSE_SUCCESS);
+			} catch (Exception e) {
+				request.setResponse(MessageConstant.RESPONSE_FAILED);
+			}
+			
+			return request;
+		}
 
 //		@Override
 //		public boolean getSecurityCheck(String clientId, String secretId,String bankCode) {

@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -120,6 +121,22 @@ public class VehicleManagementBulkServiceImpl implements VehicleManagementBulkSe
 				        break; // Exit the while loop if the row is blank
 				    }
 				if (isHeaderRow) {
+					int count = 0;
+	                for (Cell cell : row) {
+	                    if (!isCellEmpty(cell)) {
+	                        count++;
+	                    }
+	                }
+
+	                System.out.println("Non-blank column count in header: " + count);
+//	                isHeaderRow = false;
+//	                continue;
+					//int count=row.getLastCellNum()+1;
+					if(count!=2) {
+						response=MessageConstant.FILE_ERROR;
+						bulkupload.setResponse(response);
+						return bulkupload;
+					}
 					// Process the header row
 					String vehno = row.getCell(1).getStringCellValue();
 					totalCount = 0;
@@ -245,7 +262,22 @@ public class VehicleManagementBulkServiceImpl implements VehicleManagementBulkSe
 	    }
 	    return true; // Row is empty
 	}
+	private static boolean isCellEmpty(Cell cell) {
+        if (cell == null) return true;
 
+        CellType cellType = cell.getCellType();
+        if (cellType == CellType.STRING) {
+            return cell.getStringCellValue().trim().isEmpty();
+        } else if (cellType == CellType.BLANK) {
+            return true;
+        } else if (cellType == CellType.FORMULA) {
+            return cell.getCellFormula().trim().isEmpty();
+        } else if (cellType == CellType.NUMERIC || cellType == CellType.BOOLEAN) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 public  RCData jsonToPOJO(String data) {
 		

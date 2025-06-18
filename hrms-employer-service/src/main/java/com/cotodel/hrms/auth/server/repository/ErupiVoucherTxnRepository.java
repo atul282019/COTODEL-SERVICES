@@ -20,5 +20,7 @@ public interface ErupiVoucherTxnRepository extends JpaRepository<ErupiVoucherTxn
 	
 	 @Query(value = "SELECT * FROM erupi_voucher_txn_details WHERE details_id = :id AND workflowid = :workflowid LIMIT 1", nativeQuery = true)
 	 ErupiVoucherTxnDetailsEntity findByDetailId(@Param("id") Long id, @Param("workflowid") Long workflowId);
-
+	 
+	 @Query(value = "select s  from ErupiVoucherTxnDetailsEntity s where s.detailsId = :id  ")
+	 List<ErupiVoucherTxnDetailsEntity> findByDetailIdWithRedeem(@Param("id") Long id);
 }

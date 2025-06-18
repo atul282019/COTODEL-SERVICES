@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountWiseAmountQueryDTO {
+public class PurposeCodeAmountWithImgDto {
 	
-	private String accountNumber;
-	private Long orgId;
+	private String purposeCode;
 	private double totalAmount;
-	private double redeemAmount;
+	private String voucherName;
+	private byte[] mccMainIcon;
 }

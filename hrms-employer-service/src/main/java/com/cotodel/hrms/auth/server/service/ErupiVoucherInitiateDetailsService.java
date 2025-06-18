@@ -14,11 +14,16 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherPurposeCodeRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTotalDetailDto;
 import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
+import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountWithImgDto;
+import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkVoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateOldDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateTransactionRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionImgDto;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreationDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 
@@ -43,7 +48,10 @@ public interface ErupiVoucherInitiateDetailsService {
 	public boolean  getSecurityCheck(String clientId,String secretId,String bankCode);
 	public ErupiVoucherCreateDetailsRequest  saveErupiVoucherInitiateDetailsNewBulk(ErupiVoucherCreateDetailsRequest request);
 	public List<AccountWiseAmountDTO>  getErupiVoucherAmountDetailByAccount(ErupiVoucherAmountRequest request);
-	public List<PurposeCodeAmountDto>  getErupiVoucherCreateDetailsListByPuposeCode(ErupiVoucherPurposeCodeRequest request);
+	public List<PurposeCodeAmountWithImgDto>  getErupiVoucherCreateDetailsListByPuposeCode(ErupiVoucherPurposeCodeRequest request);
 	public List<ErupiVoucherCreatedRedeemDto>  getErupiVoucherCreateDetailsListLimit(ErupiVoucherCreatedRequest request);
 	public List<ErupiVoucherCreatedDto>  getErupiVoucherCreateDetailsTransactionList(ErupiVoucherCreateTransactionRequest request);
+	public List<ErupiVoucherCreateDetailsRequest>  saveErupiVoucherSingleCreationDetails(ErupiVoucherCreationDetailsSingleRequest request);
+	public List<ErupiVoucherCreatedRedeemTransactionImgDto>  getErupiVoucherCreateDetailsListRedeem(ErupiVoucherCreatedRequest request);
+	public ErupiVoucherCreationDetailsSingleRequest createErupiVoucherSingleValidate(ErupiVoucherCreationDetailsSingleRequest erupiVoucherBulkUploadRequest);
 }

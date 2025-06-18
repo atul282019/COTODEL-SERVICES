@@ -211,6 +211,10 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		VoucherBulkUploadSuccessEntity voEntity=new VoucherBulkUploadSuccessEntity();
 		
 		List<ErupiVoucherCreateDetailsRequest> erupiList=new ArrayList<ErupiVoucherCreateDetailsRequest>();
+		if(request.getAccountNumber()==null || request.getAccountNumber().equalsIgnoreCase(null)) {
+			ErupiVoucherCreateDetailsRequest fail=new ErupiVoucherCreateDetailsRequest();
+			fail.setResponseApi("Account number not blank");
+		}
 		try {
 			List<String> idList = Arrays.asList(request.getArrayofid());
 	        
@@ -409,7 +413,37 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 //		}
 //		return bulkupload;
 //	}
+	
+	private static boolean isCellEmpty(Cell cell) {
+        if (cell == null) return true;
 
+        CellType cellType = cell.getCellType();
+        if (cellType == CellType.STRING) {
+            return cell.getStringCellValue().trim().isEmpty();
+        } else if (cellType == CellType.BLANK) {
+            return true;
+        } else if (cellType == CellType.FORMULA) {
+            return cell.getCellFormula().trim().isEmpty();
+        } else if (cellType == CellType.NUMERIC || cellType == CellType.BOOLEAN) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // Java 8 compatible row empty check
+//    private static boolean isRowEmpty(Row row) {
+//        if (row == null) return true;
+//
+//        for (Cell cell : row) {
+//            if (!isCellEmpty(cell)) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+
+	
 	@Override
 	public ErupiVoucherBulkUploadSFListResponse saveErupiVoucherBulkFileNew(
 			ErupiVoucherBulkUploadRequest request) {
@@ -477,7 +511,17 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 				    }
 				if (isHeaderRow) {
 					// Process the header row
-					int count=row.getLastCellNum()+1;
+					int count = 0;
+	                for (Cell cell : row) {
+	                    if (!isCellEmpty(cell)) {
+	                        count++;
+	                    }
+	                }
+
+	                System.out.println("Non-blank column count in header: " + count);
+//	                isHeaderRow = false;
+//	                continue;
+					//int count=row.getLastCellNum()+1;
 					if(count!=7) {
 						response=MessageConstant.FILE_ERROR;
 						bulkupload.setResponse(response);
@@ -492,13 +536,13 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					isHeaderRow = false;
 				} else {
 					// Process data row
-					int count=row.getLastCellNum()+1;
-					if(count!=7) {
-						response=MessageConstant.FILE_ERROR;
-						bulkupload.setResponse(response);
-						return bulkupload;
-					}
-					System.out.println(count);
+//					int count=row.getLastCellNum()+1;
+//					if(count!=7) {
+//						response=MessageConstant.FILE_ERROR;
+//						bulkupload.setResponse(response);
+//						return bulkupload;
+//					}
+//					System.out.println(count);
 					totalCount++;
 					String voucherType = "";
 					if (row.getCell(1) != null) {
@@ -508,9 +552,9 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 					//String benName = row.getCell(2).getStringCellValue();
 					String benName = "";
 					if (row.getCell(2) != null) {
-						 if (row.getCell(3).getCellType() == CellType.STRING) {
+						 if (row.getCell(2).getCellType() == CellType.STRING) {
 							 benName = row.getCell(2).getStringCellValue();
-						    } else if (row.getCell(3).getCellType() == CellType.NUMERIC) {
+						    } else if (row.getCell(2).getCellType() == CellType.NUMERIC) {
 						    	benName = String.valueOf((long) row.getCell(2).getNumericCellValue());
 						    }
 					}
@@ -621,6 +665,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 						String username ="";
 						UserRequest userRequest = new UserRequest();
 						userRequest.setMobile(mobile);
+						userRequest.setEmployerid(orgId.intValue());
 						TokenGeneration token = new TokenGeneration();
 						String tokenvalue = token
 								.getToken(applicationConstantConfig.authTokenApiUrl + CommonUtils.getToken);
@@ -724,6 +769,12 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 			String hash=ValidateConstants.generateHash(dataString);
 			if(!request.getHash().equalsIgnoreCase(hash)) {
 				request.setResponse(MessageConstant.HASH_ERROR);
+				return request;
+			}else if(request.getAccountNumber()==null || request.getAccountNumber().equalsIgnoreCase("")) {
+				request.setResponse(MessageConstant.ACCOUNTNULL);
+				return request;
+			}else if(request.getOrgId()==null || request.getOrgId()==0) {
+				request.setResponse(MessageConstant.ORGNULL);
 				return request;
 			}
 			request.setResponse(MessageConstant.RESPONSE_SUCCESS);

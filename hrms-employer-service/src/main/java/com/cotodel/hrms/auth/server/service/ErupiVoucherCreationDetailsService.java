@@ -48,4 +48,5 @@ public interface ErupiVoucherCreationDetailsService {
 //	public List<ErupiVoucherCreatedDto>  getErupiVoucherCreateDetailsTransactionList(ErupiVoucherCreateTransactionRequest request);
 	
 	public ErupiVoucherCreateDetailsRequest  saveErupiVoucherCreationDetails(ErupiVoucherCreateDetailsRequest request);
+	public ErupiVoucherCreateDetailsRequest  checkErupiVoucherValidateDetails(ErupiVoucherCreateDetailsRequest request);
 }
