@@ -19,7 +19,7 @@ public class DecryptedRedemResponse {
 	private String PayerVA;
 	private String PayerAmount;	
 	private String TxnStatus;
-	private String responseCode;
+	private String ResponseCode;
 	private String TxnInitDate;
 	private String TxnCompletionDate;
 	private String UMN;

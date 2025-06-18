@@ -40,10 +40,11 @@ public class ErupiVoucherRedemServiceImpl implements ErupiVoucherRedemService{
 //             message=ResponseDecryption.decriptResponse(apiResponse, applicationConstantConfig.getSignaturePrivatePath,200);
 			//message=response;
 			//Gson gson = new Gson();
+			//commented by testing
             EncryptedResponse apiResponse = gson.fromJson(response.toString(), EncryptedResponse.class);
             message=ResponseDecryption.decriptResponse(apiResponse, applicationConstantConfig.getSignaturePrivatePath,200);
 			decryptedRedemResponse=message==""?null:jsonToPojoRedem(message);
-			
+		//	decryptedRedemResponse=response==""?null:jsonToPojoRedem(response);
 			String request= getRequestRedem(decryptedRedemResponse);
 			
              String tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
