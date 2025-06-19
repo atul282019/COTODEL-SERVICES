@@ -259,7 +259,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 				String checkValid=valid[0];
 				String expDate=valid[1];
 				if (checkValid.equalsIgnoreCase("Yes")) {	
-				
+					
 					vehicleDriverManagementEntity = new VehicleDriverManagementEntity();
 					CopyUtility.copyProperties(request, vehicleDriverManagementEntity);
 					vehicleDriverManagementEntity.setStatus(1);
@@ -269,22 +269,36 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 					LocalDateTime localDateTime=LocalDateTime.now();
 					vehicleDriverManagementEntity.setTripStartDate(localDateTime);
 					String validity="";
-					if(request.getSelectedTimeperiod().equalsIgnoreCase("Tagged until changed")) {
-						validity=request.getCustomTimePeriod();
-					}else {
-						validity=request.getSelectedTimeperiod();
-					}
-					
+//					if(request.getSelectedTimeperiod().equalsIgnoreCase("Tagged until changed")) {
+//						validity=request.getCustomTimePeriod();
+//					}else {
+//						
+//					}
+					validity=request.getSelectedTimeperiod();
 					String regex = "^\\d+ Days$";
 			        boolean matches = validity.matches(regex);
 			        if (matches) {
 			            System.out.println("Valid format.");
 			        } else {
 			            System.out.println("Invalid format.");
-			            response = MessageConstant.TRIPINVALID;
+			            response = MessageConstant.INVALIDDAYS;
 						request.setResponse(response);
 						return request;
 			            
+			        }
+			        List<VehicleDriverManagementEntity> checkDriver=vehicleDriverManagementDao.getTripsEndingTodayOrLater(driverid);
+			        if(checkDriver!=null && checkDriver.size()>0) {
+			        	response = MessageConstant.TRIPINVALID;
+			        	request.setResponse(response);
+			        	VehicleDriverManagementEntity ent=checkDriver.get(0);
+			        	if(ent!=null) {
+			        	LocalDateTime tripEndDate = ent.getTripEndDate(); // returns LocalDate
+			        	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // or any format you prefer
+			        	String formattedDate = tripEndDate.format(formatter);
+			        	String updatedMessage = response.replace("expDate", formattedDate);
+						request.setResponse(updatedMessage);
+			        	}
+						return request;
 			        }
 					String[] daysArray=validity.split(" ");
 					Long days=Long.valueOf(daysArray[0]);
@@ -301,11 +315,11 @@ public class VehicleManagementServiceImpl implements VehicleManagementService{
 					vehicleDriverManagementEntity = vehicleDriverManagementDao.saveVehicleTripManagementDetails(vehicleDriverManagementEntity);
 					response = MessageConstant.RESPONSE_SUCCESS;
 					request.setResponse(response);
-					EmployeeOnboardingEntity empl=employeeOnboardingDao.getEmployeeOnboardingId(vehicleDriverManagementEntity.getDriverId());
-					if(empl!=null) {
-						empl.setDriverAssignFlag("Y");
-						employeeOnboardingDao.saveDetails(empl);
-					}
+//					EmployeeOnboardingEntity empl=employeeOnboardingDao.getEmployeeOnboardingId(vehicleDriverManagementEntity.getDriverId());
+//					if(empl!=null) {
+//						empl.setDriverAssignFlag("Y");
+//						employeeOnboardingDao.saveDetails(empl);
+//					}
 					
 				}else {
 					response = MessageConstant.TRIPINVALID;

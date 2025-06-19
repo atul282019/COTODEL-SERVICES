@@ -143,11 +143,11 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 		                                                       @Param("orgId") Long orgId);
 	 @Query("select new com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto(c.id,c.name,c.mobile,c.amount,"
 				+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
-				+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon,COALESCE(t.payerAmount, '0')) "
+				+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon,COALESCE(t.payerAmount, '0'),m.voucherIcon) "
 				+ "from ErupiVoucherCreationDetailsEntity c"
 				+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
 				+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
-				+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId and c.workFlowId in ('100003','100007') "
+				+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId and c.workFlowId in ('100003','100004','100005','100007') "
 				+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc ")
 		public List<ErupiVoucherCreatedRedeemDto> findVoucherCreateListLimit(@Param("orgId") Long orgId,    
 		        @Param("startDate") LocalDate startDate, 

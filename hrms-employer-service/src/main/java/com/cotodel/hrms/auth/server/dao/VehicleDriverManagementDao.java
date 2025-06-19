@@ -9,4 +9,7 @@ public interface VehicleDriverManagementDao {
 	public VehicleDriverManagementEntity saveVehicleTripManagementDetails(VehicleDriverManagementEntity employeeEntity);
 	public List<VehicleTripDto> getVehicleTripList(Long id);
 	public Object[] getVehicleTrip(Long id);
+	
+	public List<VehicleDriverManagementEntity> getTripsEndingTodayOrLater(Long driverId);
+	
 }

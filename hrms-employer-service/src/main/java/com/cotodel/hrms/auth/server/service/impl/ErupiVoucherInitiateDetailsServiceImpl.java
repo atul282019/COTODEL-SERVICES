@@ -62,6 +62,7 @@ import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransac
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreationDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreationSubSingleRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsBulkRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.model.ErupiLinkAccountEntity;
@@ -173,7 +174,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			voucherCreateRequest.setExpiry(expdate);
 			voucherCreateRequest.setPurposeCode(request.getPurposeCode());
 			voucherCreateRequest.setMcc(request.getMcc());
-			voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
+			voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType().toUpperCase());
 			voucherCreateRequest.setPayerVA(request.getPayerVA());
 			voucherCreateRequest.setType(request.getType());
 			voucherCreateRequest.setMerchantId(request.getMerchantId());
@@ -619,7 +620,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					voucherCreateRequest.setExpiry(expdate);
 					voucherCreateRequest.setPurposeCode(erupiVoucherInitiateDetailsEntity.getPurposeCode()==null?"":erupiVoucherInitiateDetailsEntity.getPurposeCode());
 					voucherCreateRequest.setMcc(erupiVoucherInitiateDetailsEntity.getMcc());
-					voucherCreateRequest.setVoucherRedemptionType(erupiVoucherInitiateDetailsEntity.getRedemtionType());
+					voucherCreateRequest.setVoucherRedemptionType(erupiVoucherInitiateDetailsEntity.getRedemtionType().toUpperCase());
 					voucherCreateRequest.setPayerVA(erupiVoucherInitiateDetailsEntity.getPayerVA());
 					voucherCreateRequest.setType("Revoke");
 					voucherCreateRequest.setMerchantId(erupiVoucherInitiateDetailsEntity.getMerchantId());
@@ -737,7 +738,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				voucherCreateRequest.setExpiry(expdate);
 				voucherCreateRequest.setPurposeCode(erupiVoucherInitiateDetailsEntity.getPurposeCode()==null?"":erupiVoucherInitiateDetailsEntity.getPurposeCode());
 				voucherCreateRequest.setMcc(erupiVoucherInitiateDetailsEntity.getMcc());
-				voucherCreateRequest.setVoucherRedemptionType(erupiVoucherInitiateDetailsEntity.getRedemtionType());
+				voucherCreateRequest.setVoucherRedemptionType(erupiVoucherInitiateDetailsEntity.getRedemtionType().toUpperCase());
 				voucherCreateRequest.setPayerVA(erupiVoucherInitiateDetailsEntity.getPayerVA());
 				voucherCreateRequest.setType("REVOKE");
 				voucherCreateRequest.setMerchantId(erupiVoucherInitiateDetailsEntity.getMerchantId());
@@ -1158,6 +1159,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				}else if(request.getOrgId()==null) {
 					request.setResponseApi(MessageConstant.ORGNULL);
 					return request;
+				}else if(request.getAmount()==null || request.getAmount().equalsIgnoreCase("0")) {
+					request.setResponseApi(MessageConstant.ORGNULL);
+					return request;
 				}
 				
 				//Check employee exist are not
@@ -1203,7 +1207,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					voucherCreateRequest.setExpiry(expdate);
 					voucherCreateRequest.setPurposeCode(request.getPurposeCode());
 					voucherCreateRequest.setMcc(request.getMcc());
-					voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
+					voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType().toUpperCase());
 					voucherCreateRequest.setPayerVA(request.getPayerVA());
 					voucherCreateRequest.setType(request.getType());
 					voucherCreateRequest.setMerchantId(request.getMerchantId());
@@ -1309,14 +1313,14 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					}
 					
 				}
-//				if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5983")) {
-//				request.setMandateType("04");
-//				//request.setPayeeVPA("invaciauat@prepaidicici");
-//				request.setPayeeVPA("paytmqruovkluyoud@paytm");
-//				}else if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5542")) {
-//					request.setMandateType("04");
-//					request.setPayeeVPA("paytm-91416649@ptys");
-//					}
+				if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5983")) {
+				request.setMandateType("04");
+				//request.setPayeeVPA("invaciauat@prepaidicici");
+				request.setPayeeVPA("paytmqruovkluyoud@paytm");
+				}else if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5542")) {
+					request.setMandateType("04");
+					request.setPayeeVPA("paytm-91416649@ptys");
+					}
 				request.setType("CREATE");
 				LocalDate stDate =request.getStartDate();
 				if(request.getBulktblId()!=null && request.getBulktblId()>0) {
@@ -1358,7 +1362,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				voucherCreateRequest.setExpiry(expdate);
 				voucherCreateRequest.setPurposeCode(request.getPurposeCode());
 				voucherCreateRequest.setMcc(request.getMcc());
-				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
+				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType().toUpperCase());
 				voucherCreateRequest.setPayerVA(request.getPayerVA());
 				voucherCreateRequest.setType(request.getType());
 				voucherCreateRequest.setMerchantId(request.getMerchantId());
@@ -1821,7 +1825,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					voucherCreateRequest.setExpiry(expdate);
 					voucherCreateRequest.setPurposeCode(request.getPurposeCode());
 					voucherCreateRequest.setMcc(request.getMcc());
-					voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
+					voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType().toUpperCase());
 					voucherCreateRequest.setPayerVA(request.getPayerVA());
 					voucherCreateRequest.setType(request.getType());
 					voucherCreateRequest.setMerchantId(request.getMerchantId());
@@ -1927,6 +1931,14 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					}
 					
 				}
+				if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5983")) {
+					request.setMandateType("04");
+					//request.setPayeeVPA("invaciauat@prepaidicici");
+					request.setPayeeVPA("paytmqruovkluyoud@paytm");
+				}else if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5542")) {
+						request.setMandateType("04");
+						request.setPayeeVPA("paytm-91416649@ptys");
+				}
 				//request.setMandateType("04");
 				//request.setPayeeVPA("invaciauat@prepaidicici");
 				request.setType("CREATE");
@@ -1970,7 +1982,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 				voucherCreateRequest.setExpiry(expdate);
 				voucherCreateRequest.setPurposeCode(request.getPurposeCode());
 				voucherCreateRequest.setMcc(request.getMcc());
-				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType());
+				voucherCreateRequest.setVoucherRedemptionType(request.getRedemtionType().toUpperCase());
 				voucherCreateRequest.setPayerVA(request.getPayerVA());
 				voucherCreateRequest.setType(request.getType());
 				voucherCreateRequest.setMerchantId(request.getMerchantId());
@@ -2285,7 +2297,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			}
 			System.out.println("startDate:"+startDate);
 			System.out.println("endDate:"+endDate);
-			List<ErupiVoucherCreatedRedeemDto> erupiVoucherCreatedDtos1=new ArrayList<>();
+			List<ErupiVoucherCreatedRedeemDto> erupiVoucherCreatedDtos1=new ArrayList<ErupiVoucherCreatedRedeemDto>();
 			List<ErupiVoucherCreatedRedeemDto> erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationListLimit(request.getOrgId(),startDate,endDate);
 			int count=0;
 			for (ErupiVoucherCreatedRedeemDto erupiVoucherCreatedDto : erupiVoucherCreatedDtos) {
@@ -2298,6 +2310,9 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					erupiVoucherCreatedDto.setBankIcon(erBankMasterEntity.getBankLogo());
 				}
 				count++;
+				
+				byte[] mccMainIcon=erupiVoucherRequestDao.getVoucherCreationRequestPurposeCode(erupiVoucherCreatedDto.getPurposeCode());
+				erupiVoucherCreatedDto.setMccMainIcon(mccMainIcon);
 				erupiVoucherCreatedDtos1.add(erupiVoucherCreatedDto);
 				if(request.getTimePeriod()!=null && request.getTimePeriod().equalsIgnoreCase("YES") && count==10) {
 					break;					
@@ -2519,6 +2534,40 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			}
 			
 			return request;
+		}
+
+
+
+		@Override
+		public List<ErupiVoucherRevokeDetailsSingleRequest> erupiVoucherRevokeBulkDetails(
+				ErupiVoucherRevokeDetailsBulkRequest request) {
+//			if (request.getArrayofid() == null) {
+//				return request;
+//			}
+//
+//	        for (String id : request.getArrayofid()) {
+//	            if (id == null || !id.matches("\\d+")) {
+//	                return request; // not a valid integer (positive only)
+//	            }
+//	        }
+			
+			List<ErupiVoucherRevokeDetailsSingleRequest> erupiRevokeBulkList=new ArrayList<ErupiVoucherRevokeDetailsSingleRequest>();
+			try {
+				List<String> idList = Arrays.asList(request.getArrayofid());
+		        
+				for (String id : idList) {
+					ErupiVoucherRevokeDetailsSingleRequest requestBulk=new ErupiVoucherRevokeDetailsSingleRequest();	
+					Long idValue=Long.valueOf(id);
+					requestBulk.setId(idValue);
+					ErupiVoucherRevokeDetailsSingleRequest response=erupiVoucherRevokeSingleDetails(requestBulk);
+
+				erupiRevokeBulkList.add(response);
+				}
+			} catch (Exception e) {
+				logger.error("Error :: " + e.getMessage());
+			}
+			
+			return erupiRevokeBulkList;
 		}
 		
 }

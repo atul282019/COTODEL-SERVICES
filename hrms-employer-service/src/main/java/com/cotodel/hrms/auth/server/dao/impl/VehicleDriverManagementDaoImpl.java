@@ -32,5 +32,11 @@ public class VehicleDriverManagementDaoImpl implements VehicleDriverManagementDa
 		// TODO Auto-generated method stub
 		return vehicleTripManagementRepository.findTopByVehicleIdOrderByTripStartDateDesc(id);
 	}
+
+	@Override
+	public List<VehicleDriverManagementEntity> getTripsEndingTodayOrLater(Long driverId) {
+		// TODO Auto-generated method stub
+		return vehicleTripManagementRepository.findTripsEndingTodayOrLater(driverId);
+	}
 	
 }

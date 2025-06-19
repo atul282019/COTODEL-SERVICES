@@ -36,9 +36,7 @@ import com.cotodel.hrms.auth.server.dto.ErupiVoucherPurposeCodeRequest;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryDto;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherSummaryTotalCountResponse;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTotalDetailDto;
-import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountDto;
 import com.cotodel.hrms.auth.server.dto.PurposeCodeAmountWithImgDto;
-import com.cotodel.hrms.auth.server.dto.bulk.ErupiVoucherBulkCreateResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateListResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateNameResponse;
@@ -48,12 +46,13 @@ import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateSummaryListRes
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreateTransactionRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemListResponse;
-import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionImgDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionListResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreationDetailsResponse;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreationDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeBulkDetailsResponse;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsBulkRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeSingleDetailsResponse;
 import com.cotodel.hrms.auth.server.exception.ApiError;
@@ -393,6 +392,58 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				logger.error("error in erupiVoucherRevoke====="+e);
 			}
     	    return ResponseEntity.ok(jsonEncriptObject);
+	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/update/erupiVoucherRevokeBulk",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> erupiVoucherRevokeBulk(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+		 
+	    logger.info("inside erupiVoucherRevokeBulk....");	    	
+	    	
+	    
+	    	String message = "";
+	    	List<ErupiVoucherRevokeDetailsSingleRequest> response=null;
+	    	ErupiVoucherRevokeBulkDetailsResponse erupiVoucherRevokeBulkDetailsResponse;
+	    	try {
+	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				ErupiVoucherRevokeDetailsBulkRequest erupiVoucherRevokeBulkDetailsRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherRevokeDetailsBulkRequest.class);
+				
+				response=erupiVoucherInitiateDetailsService.erupiVoucherRevokeBulkDetails(erupiVoucherRevokeBulkDetailsRequest);
+	    		
+				if(response!=null && response.size()>0) {
+					erupiVoucherRevokeBulkDetailsResponse=new ErupiVoucherRevokeBulkDetailsResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherRevokeBulkDetailsResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+	    		}else {
+	    			erupiVoucherRevokeBulkDetailsResponse=new ErupiVoucherRevokeBulkDetailsResponse(MessageConstant.FALSE,MessageConstant.PROFILE_FAILED_REVOKE,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherRevokeBulkDetailsResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+	    		}
+	    	}catch (Exception e) {				
+	    		logger.error("error in erupiVoucherRevokeBulk====="+e);
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		erupiVoucherRevokeBulkDetailsResponse=new ErupiVoucherRevokeBulkDetailsResponse(MessageConstant.FALSE,message,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+		        String jsonEncript = EncryptionDecriptionUtil.convertToJson(erupiVoucherRevokeBulkDetailsResponse);
+	            jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				logger.error("error in erupiVoucherRevokeBulk====="+e);
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);
 	    }
 	 @Operation(summary = "This API will provide the Save User Details ", security = {
 	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})

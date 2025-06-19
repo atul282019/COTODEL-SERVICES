@@ -30,5 +30,6 @@ public class ErupiVoucherCreatedRedeemDto {
 	private String accountNumber;
 	private String bankcode;
 	private byte[] bankIcon;
-	private String redeemAmount;	
+	private String redeemAmount;
+	private byte[] mccMainIcon;
 }

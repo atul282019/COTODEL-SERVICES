@@ -26,5 +26,5 @@ public class ErupiVoucherStatusRedeemResponse {
 	private String amountSpent;
 	private String voucherStatus;
 	private String response;
-	private List<RedempltionDetail> data;
+	private List<RedempltionDetail> redeemData;
 }

@@ -25,6 +25,7 @@ import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransac
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionImgDto;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreationDetailsSingleRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRedemeRequest;
+import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsBulkRequest;
 import com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherRevokeDetailsSingleRequest;
 
 public interface ErupiVoucherInitiateDetailsService {
@@ -54,4 +55,5 @@ public interface ErupiVoucherInitiateDetailsService {
 	public List<ErupiVoucherCreateDetailsRequest>  saveErupiVoucherSingleCreationDetails(ErupiVoucherCreationDetailsSingleRequest request);
 	public List<ErupiVoucherCreatedRedeemTransactionImgDto>  getErupiVoucherCreateDetailsListRedeem(ErupiVoucherCreatedRequest request);
 	public ErupiVoucherCreationDetailsSingleRequest createErupiVoucherSingleValidate(ErupiVoucherCreationDetailsSingleRequest erupiVoucherBulkUploadRequest);
+	public List<ErupiVoucherRevokeDetailsSingleRequest>  erupiVoucherRevokeBulkDetails(ErupiVoucherRevokeDetailsBulkRequest request);
 }

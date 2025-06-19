@@ -44,7 +44,8 @@ public class MessageConstant {
 	public static final String VEHICLUNIQUE = "Vehicle should be unique.";
 	public static final String IDNULL = "Id cannot be null.";
 	public static final String SEQUENCEIDNULL = "Sequence Id cannot be null.";
-	public static final String TRIPINVALID = "Driver is already assigned !. Kindly edit after Completion Date expDate of the TRIP.";
+	//public static final String TRIPINVALID = "Driver is already assigned !. Kindly edit after Completion Date expDate of the TRIP.";
+	public static final String TRIPINVALID = "This driver is currently assigned. You will be able to assign this driver again after expDate.";	 
 	public static final String INVALIDDAYS = "Invalid input. Please enter format like 7 Days";
 	public static final String ACCOUNTNULL = "Account no cannot be null.";
 	public static final String DRIVERIDNULL = "Driver Id cannot be null.";
@@ -52,5 +53,6 @@ public class MessageConstant {
 	public static final String SUBMERCHANTNULL = "Sub Merchant id cannot be null.";
 	public static final String BENIDNULL = "Beneficiary id cannot be null.";
 	public static final String MOBILENULL = "Mobile no cannot be null.";
-	
+	public static final String PROFILE_FAILED_REVOKE = "Data Not REVOKE Successfully.";
+	//public static final String TRIPINVALID = "Driver is already assigned !. Kindly edit after Completion Date expDate of the TRIP.";
 }

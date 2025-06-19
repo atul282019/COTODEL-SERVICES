@@ -479,6 +479,7 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 					redeemResponse.setResponse(response);
 					return redeemResponse;
 				}
+				
 				redeemResponse.setVoucherCode(erupiVoucherInitiateDetailsEntity.getVoucherCode());
 				redeemResponse.setVoucherDesc(erupiVoucherInitiateDetailsEntity.getVoucherDesc());
 				redeemResponse.setVoucherAmount(erupiVoucherInitiateDetailsEntity.getAmount().toString());
@@ -516,7 +517,8 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 						}
 					}
 				}
-				redeemResponse.setData(list);
+				redeemResponse.setRedeemData(list);
+				if(redeemFlag==true) {
 				ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
 				erupiVoucherTxnDetailsEntity=erupiVoucherTxnDetailsList.get(0);
 				ErupiVoucherStatusApiRequest erupiVoucherStatusApiRequest=new ErupiVoucherStatusApiRequest();
@@ -560,9 +562,11 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 						JSONObject data = profileJsonRes.getJSONObject("data");
 						decryptedResponse= jsonToPOJOStatus(data.toString());
 					}
+			
 					redeemResponse.setActiveAmount(decryptedResponse.getVoucherBalance());
 					redeemResponse.setAmountSpent(decryptedResponse.getVoucherRedeemedAmount());
 					redeemResponse.setVoucherStatus(decryptedResponse.getVoucherStatus());
+				}
 					redeemResponse.setResponse(MessageConstant.RESPONSE_SUCCESS);
 			}catch (Exception e) {
 				e.printStackTrace();

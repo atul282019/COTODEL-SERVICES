@@ -22,4 +22,7 @@ public interface VehicleTripManagementRepository extends JpaRepository<VehicleDr
             "ORDER BY a.trip_id DESC LIMIT 1", nativeQuery = true)
 		Object[] findTopByVehicleIdOrderByTripStartDateDesc(@Param("id") Long id);
 	
+	@Query("SELECT a FROM VehicleDriverManagementEntity a WHERE a.driverId = :driverId " +
+		       "AND FUNCTION('DATE', a.tripEndDate) >= CURRENT_DATE")
+	List<VehicleDriverManagementEntity> findTripsEndingTodayOrLater(@Param("driverId") Long driverId);
 }
