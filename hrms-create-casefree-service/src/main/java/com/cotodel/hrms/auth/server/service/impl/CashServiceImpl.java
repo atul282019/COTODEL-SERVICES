@@ -84,6 +84,8 @@ public class CashServiceImpl implements CashService {
 
 			orderUserRequest.setCustomerId(customerId);
 			CopyUtility.copyProperties(orderUserRequest, cashFreeOrderEntity);
+//			Float amount=orderUserRequest.getOrderAmount()==null?0.0f:Float.valueOf(orderUserRequest.getOrderAmount());
+//			cashFreeOrderEntity.setOrderAmount(amount);
 			cashFreeOrderEntity.setStatus(0);
 			cashFreeDao.saveDetails(cashFreeOrderEntity);
 
@@ -200,18 +202,19 @@ public class CashServiceImpl implements CashService {
 					linkSubAccountMultipleTempEntity.setOrderId(orderResponse.getOrder_id());					
 					linkSubAccountMultipleTempEntity.setAccountHolderName(orderResponse.getCustomer_details().getCustomer_name());
 					Float orderAmount= orderResponse.getOrder_amount();
-					Float serviceTax=orderAmount * 0.34f / 100;
-					Float serviceCharge=orderAmount * 1.9f / 100;
-					BigDecimal serviceTaxRounded = new BigDecimal(serviceTax).setScale(2, RoundingMode.HALF_UP);
+					//Float serviceTax=orderAmount * 0.34f / 100;
+					Float serviceCharge=caEntity.getAmountServiceCharge()==null?0.0f:Float.valueOf(caEntity.getAmountServiceCharge());
+					//Float serviceCharge=orderAmount * 1.9f / 100;
+					//BigDecimal serviceTaxRounded = new BigDecimal(serviceTax).setScale(2, RoundingMode.HALF_UP);
 					BigDecimal serviceChargeRounded = new BigDecimal(serviceCharge).setScale(2, RoundingMode.HALF_UP);
 					// Convert back to Float if necessary
-					serviceTax = serviceTaxRounded.floatValue();
+					//serviceTax = serviceTaxRounded.floatValue();
 					serviceCharge = serviceChargeRounded.floatValue();
-					Float paymentAmount=orderAmount-(serviceTax+serviceCharge);
+					Float paymentAmount=orderAmount-(serviceCharge);
 					linkSubAccountMultipleTempEntity.setBalance(paymentAmount);
 					linkSubAccountMultipleTempEntity.setAmountLimit(paymentAmount);
 					linkSubAccountMultipleTempEntity.setServiceCharge(serviceCharge);
-					linkSubAccountMultipleTempEntity.setServiceTax(serviceTax);
+					//linkSubAccountMultipleTempEntity.setServiceTax(serviceTax);
 					linkSubAccountMultipleTempEntity.setMobile(orderResponse.getCustomer_details().getCustomer_phone().substring(3));
 					linkSubAccountMultipleTempEntity.setCreationDate(LocalDateTime.now());
 					linkSubAccountMultipleTempEntity.setStatus(0l);
@@ -224,13 +227,13 @@ public class CashServiceImpl implements CashService {
 					linkSubAccountMultipleTempEntity=linkSubMultipleAccountTempDao.saveDetails(linkSubAccountMultipleTempEntity);
 				//
 				orderIdResponse.setOrgId(caEntity.getOrgId());
-				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse);
+				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse,caEntity);
 
 			}else {
 				caEntity.setOrderStatus(orderResponse.getOrder_status());
 				cashFreeDao.saveDetails(caEntity);	
 				orderIdResponse.setOrgId(caEntity.getOrgId());
-				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse);
+				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse,caEntity);
 			}
 		}
 		} catch (Exception e) {
@@ -240,21 +243,22 @@ public class CashServiceImpl implements CashService {
 		return orderIdResponse;
 	}
 
-	private OrderIdResponse getCashFreeOrderId(OrderIdResponse orderIdResponse, OrderResponse orderResponse) {
+	private OrderIdResponse getCashFreeOrderId(OrderIdResponse orderIdResponse, OrderResponse orderResponse,CashFreeOrderEntity caEntity) {
 		orderIdResponse.setPayment_session_id(orderResponse.getPayment_session_id());
 		orderIdResponse.setCustomerId(orderResponse.getCustomer_details().getCustomer_id());
 		orderIdResponse.setOrderAmount(orderResponse.getOrder_amount().toString());
 		Float orderAmount= orderResponse.getOrder_amount();
-		Float serviceTax=orderAmount * 0.34f / 100;
-		Float serviceCharge=orderAmount * 1.9f / 100;
-		BigDecimal serviceTaxRounded = new BigDecimal(serviceTax).setScale(2, RoundingMode.HALF_UP);
+		//Float serviceTax=orderAmount * 0.34f / 100;
+		Float serviceCharge=caEntity.getAmountServiceCharge()==null?0.0f:Float.valueOf(caEntity.getAmountServiceCharge());
+		//Float serviceCharge=orderAmount * 1.9f / 100;
+		//BigDecimal serviceTaxRounded = new BigDecimal(serviceTax).setScale(2, RoundingMode.HALF_UP);
 		BigDecimal serviceChargeRounded = new BigDecimal(serviceCharge).setScale(2, RoundingMode.HALF_UP);
 		// Convert back to Float if necessary
-		serviceTax = serviceTaxRounded.floatValue();
+		//serviceTax = serviceTaxRounded.floatValue();
 		serviceCharge = serviceChargeRounded.floatValue();
-		Float paymentAmount=orderAmount-(serviceTax+serviceCharge);
+		Float paymentAmount=orderAmount-(serviceCharge);
 		orderIdResponse.setServiceCharge(serviceCharge.toString());
-		orderIdResponse.setServiceTax(serviceTax.toString());
+		//orderIdResponse.setServiceTax(serviceTax.toString());
 		orderIdResponse.setSettlementAmount(paymentAmount.toString());
 		orderIdResponse.setOrderCurrency(orderResponse.getOrder_currency());
 		orderIdResponse.setCustomerPhone(orderResponse.getCustomer_details().getCustomer_phone());
@@ -328,7 +332,7 @@ public class CashServiceImpl implements CashService {
 				//
 				
 				orderIdResponse.setOrgId(caEntity.getOrgId());
-				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse);
+				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse,caEntity);
 
 			//}
 			}

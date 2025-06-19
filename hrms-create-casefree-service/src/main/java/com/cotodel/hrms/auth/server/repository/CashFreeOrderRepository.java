@@ -29,8 +29,8 @@ public interface CashFreeOrderRepository extends JpaRepository<CashFreeOrderEnti
 		       "WHERE o.orgId = ?1 order by o.id desc ")
 		List<CashFreeOrderHistory> findCashFreeOrderHistory(Long orgId);
 	
-	@Query("select s  from CashFreeOrderEntity s where s.orgId =:orgId and e.createdDate BETWEEN :startOfMonth AND :endOfMonth")
-	public List<CashFreeOrderEntity> findByAmountCurrentMonthOrgId(@Param("orgId") Long orgId);
+//	@Query("select s  from CashFreeOrderEntity s where s.orgId =:orgId and s.createdDate BETWEEN :startOfMonth AND :endOfMonth")
+//	public List<CashFreeOrderEntity> findByAmountCurrentMonthOrgId(@Param("orgId") Long orgId);
 }
 
 
