@@ -22,7 +22,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="employer_details",uniqueConstraints = {@UniqueConstraint(columnNames = {"mobile"})})
+@Table(name="employer_details",uniqueConstraints = {@UniqueConstraint(columnNames = {"mobile"}),
+        @UniqueConstraint(columnNames = {"gst_identification_number"})})
 @Access(value=AccessType.FIELD)
 @SequenceGenerator(name="employer_details_seq" , sequenceName="employer_details_seq", allocationSize=1)
 public class EmployerDetailsEntity implements Serializable{
