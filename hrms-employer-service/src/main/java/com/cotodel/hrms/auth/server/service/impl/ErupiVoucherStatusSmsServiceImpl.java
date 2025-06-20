@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import com.cotodel.hrms.auth.server.dao.BankMasterDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherInitiateDetailsDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherRequestDao;
 import com.cotodel.hrms.auth.server.dao.ErupiVoucherTxnDao;
+import com.cotodel.hrms.auth.server.dao.WorkflowMasterDao;
 import com.cotodel.hrms.auth.server.dto.ErupiVoucherTxnRequest;
 import com.cotodel.hrms.auth.server.dto.VoucherCreateRequest;
 import com.cotodel.hrms.auth.server.dto.indianbank.ErupiIndianBankVoucherInquiryRequest;
@@ -33,6 +35,7 @@ import com.cotodel.hrms.auth.server.dto.voucher.RedempltionDetail;
 import com.cotodel.hrms.auth.server.model.ErupiBankMasterEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherCreationDetailsEntity;
 import com.cotodel.hrms.auth.server.model.ErupiVoucherTxnDetailsEntity;
+import com.cotodel.hrms.auth.server.model.WorkFlowMasterEntity;
 import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.ErupiVoucherStatusSmsService;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
@@ -61,6 +64,9 @@ public class ErupiVoucherStatusSmsServiceImpl implements ErupiVoucherStatusSmsSe
 	
 	@Autowired
 	ErupiVoucherRequestDao  erupiVoucherRequestDao;
+	
+	@Autowired
+	WorkflowMasterDao workflowMasterDao;
 	
 	@Autowired
 	ApplicationConstantConfig applicationConstantConfig;
@@ -479,7 +485,26 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 					redeemResponse.setResponse(response);
 					return redeemResponse;
 				}
-				
+				//voucherStatus
+				WorkFlowMasterEntity work=workflowMasterDao.getDetails(erupiVoucherInitiateDetailsEntity.getWorkFlowId());
+				if(work!=null) {
+					redeemResponse.setVoucherStatus(work.getDescription());
+				}
+				if(erupiVoucherInitiateDetailsEntity.getWorkFlowId()==100003) {
+					LocalDate givenDate = LocalDate.parse(erupiVoucherInitiateDetailsEntity.getExpDate().toString());
+					LocalDate currentDate = LocalDate.now();
+					int comparison = givenDate.compareTo(currentDate);
+					redeemResponse.setVoucherStatus("Active");
+			        if (comparison < 0) {
+			        	redeemResponse.setVoucherStatus("Expired");
+			        }
+					redeemResponse.setActiveAmount(erupiVoucherInitiateDetailsEntity.getAmount().toString());
+				}else if(erupiVoucherInitiateDetailsEntity.getWorkFlowId()==100004 || erupiVoucherInitiateDetailsEntity.getWorkFlowId()==100005) {
+					redeemResponse.setActiveAmount("0");
+				}else {
+					redeemResponse.setActiveAmount("0");
+				}
+				redeemResponse.setRedemtionType(erupiVoucherInitiateDetailsEntity.getRedemtionType());
 				redeemResponse.setVoucherCode(erupiVoucherInitiateDetailsEntity.getVoucherCode());
 				redeemResponse.setVoucherDesc(erupiVoucherInitiateDetailsEntity.getVoucherDesc());
 				redeemResponse.setVoucherAmount(erupiVoucherInitiateDetailsEntity.getAmount().toString());
@@ -562,7 +587,7 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 						JSONObject data = profileJsonRes.getJSONObject("data");
 						decryptedResponse= jsonToPOJOStatus(data.toString());
 					}
-			
+					//redeemResponse.setVoucherBalance(response);
 					redeemResponse.setActiveAmount(decryptedResponse.getVoucherBalance());
 					redeemResponse.setAmountSpent(decryptedResponse.getVoucherRedeemedAmount());
 					redeemResponse.setVoucherStatus(decryptedResponse.getVoucherStatus());

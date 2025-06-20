@@ -25,6 +25,7 @@ public class ErupiVoucherStatusRedeemResponse {
 	private byte[] bankLogo;
 	private String amountSpent;
 	private String voucherStatus;
+	private String redemtionType;
 	private String response;
 	private List<RedempltionDetail> redeemData;
 }

@@ -12,4 +12,7 @@ public interface WorkFlowMasterRepository extends JpaRepository<WorkFlowMasterEn
 	@Query("select s  from WorkFlowMasterEntity s where s.workflowId = ?1 and s.type = ?2")
 	public WorkFlowMasterEntity findByWorkFlowId(Long id,String  type);
 	
+	@Query("select s  from WorkFlowMasterEntity s where s.workflowId = ?1")
+	public WorkFlowMasterEntity findByWorkFlowId(Long id);
+	
 }
