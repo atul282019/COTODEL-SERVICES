@@ -1200,5 +1200,58 @@ public class UserSignUpController extends CotoDelBaseController{
 	          
 	        
 	    }
+	 
+	 @Operation(summary = "This API will provide the Save User Details ", security = {
+	    		@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	    @ApiResponses(value = {
+	    @ApiResponse(responseCode = "200",description = "ok", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ResponseEntity.class))),		
+	    @ApiResponse(responseCode = "400",description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "404",description = "Request Resource was not found", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class))),
+	    @ApiResponse(responseCode = "500",description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json",schema = @Schema(implementation = ApiError.class)))})
+	    @RequestMapping(value = "/get/checkUserWithMobile",produces = {"application/json"}, 
+	    consumes = {"application/json","application/text"},method = RequestMethod.POST)
+	    public ResponseEntity<Object> checkUserWithMobile(HttpServletRequest request,@Valid @RequestBody EncriptResponse enResponse) {
+	    	logger.info("inside get checkUserWithMobile++");
+	    	UserEntity userEntity=null;
+	    	String authToken = "";
+	    	UserSignUpResponse userSignUpResponse;
+	    	try {	    		
+	    		String companyId = request.getHeader("companyId");
+				SetDatabaseTenent.setDataSource(companyId);
+				
+				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
+				UserRequest userReq= EncryptionDecriptionUtil.convertFromJson(decript, UserRequest.class);
+				
+				userEntity=userService.checkUserMobile(userReq.getMobile());				
+				
+	    	    if(userEntity!=null) {
+	    	    	userSignUpResponse=new UserSignUpResponse(MessageConstant.TRUE,MessageConstant.RESPONSE_SUCCESS,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
+	    	    }else {
+	    	    	userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+	    	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+	    	    	EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+	    	    	return ResponseEntity.ok(jsonEncriptObject);
+	    	    }
+			
+	    	}catch (Exception e) {
+				
+	    		e.printStackTrace();
+	    		logger.error("error in checkUserWithMobile====="+e);
+			}
+	    	EncriptResponse jsonEncriptObject=new EncriptResponse();
+	    	try {
+	    		userSignUpResponse=new UserSignUpResponse(MessageConstant.FALSE,MessageConstant.RESPONSE_FAILED,userEntity,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp(),authToken);
+ 	    	String jsonEncript =  EncryptionDecriptionUtil.convertToJson(userSignUpResponse);
+ 	    	jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+ 	    return ResponseEntity.ok(jsonEncriptObject);
+	          
+	        
+	    }
 
 }
