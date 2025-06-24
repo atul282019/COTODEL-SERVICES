@@ -10,5 +10,5 @@ public interface CashFreeDao {
 	public CashFreeOrderEntity getDetails(String customerId);
 	public List<CashFreeOrderEntity> getDetailsOrderId(Long orgId);
 	public List<CashFreeOrderHistory> getDetailsHistory(Long orgId);
-	public String getCurrentMonthamount(Long orgId);
+	
 }

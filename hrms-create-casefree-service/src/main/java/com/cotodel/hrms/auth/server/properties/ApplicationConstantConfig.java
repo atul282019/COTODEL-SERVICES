@@ -57,4 +57,9 @@ public class ApplicationConstantConfig {
     @Value("${cash.free.order.notify.url}")
    	public String cashFreeOrderNotifyUrl;
     
+    @Value("${api.signature.keystore.public.path}")
+	public String apiSignaturePublicPath;
+	
+	@Value("${api.signature.keystore.private.path}")
+	public String apiSignaturePrivatePath;
 }

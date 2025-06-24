@@ -23,8 +23,10 @@ import com.cotodel.hrms.auth.server.dao.CashFreeWebHookLogDao;
 import com.cotodel.hrms.auth.server.dao.LinkSubMultipleAccountTempDao;
 import com.cotodel.hrms.auth.server.dto.CashFreeOrderHistory;
 import com.cotodel.hrms.auth.server.dto.ChargesDetail;
+import com.cotodel.hrms.auth.server.dto.CurrentMonthLimitResponse;
 import com.cotodel.hrms.auth.server.dto.CustomerDetails;
 import com.cotodel.hrms.auth.server.dto.ErrorDetails;
+import com.cotodel.hrms.auth.server.dto.LinkMultipleAccountRequest;
 import com.cotodel.hrms.auth.server.dto.Order;
 import com.cotodel.hrms.auth.server.dto.OrderIdResponse;
 import com.cotodel.hrms.auth.server.dto.OrderResponse;
@@ -40,9 +42,11 @@ import com.cotodel.hrms.auth.server.properties.ApplicationConstantConfig;
 import com.cotodel.hrms.auth.server.service.CashService;
 import com.cotodel.hrms.auth.server.util.AccountType;
 import com.cotodel.hrms.auth.server.util.CommonUtility;
+import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 
 @Repository
@@ -166,14 +170,14 @@ public class CashServiceImpl implements CashService {
 	}
 
 	@Override
-	@Transactional
 	public OrderIdResponse callOrderIdApi(OrderUserRequest orderUserRequest) {
 		String message = "";
 		OrderResponse orderResponse = null;
 		CashFreeOrderEntity caEntity = new CashFreeOrderEntity();
 		OrderIdResponse orderIdResponse = new OrderIdResponse();
 		try {
-
+			TokenGeneration token=new TokenGeneration();
+			String tokenvalue = token.getToken(applicationConstantConfig.authTokenApiUrl+CommonUtils.getToken);
 			logger.info("In side callOrderApi:::" + orderUserRequest.getOrderId());
 
 			String orderid = orderUserRequest.getOrderId();
@@ -226,6 +230,21 @@ public class CashServiceImpl implements CashService {
 					linkSubAccountMultipleTempEntity.setStatusMessage("Requested");
 					linkSubAccountMultipleTempEntity=linkSubMultipleAccountTempDao.saveDetails(linkSubAccountMultipleTempEntity);
 				//
+					if(linkSubAccountMultipleTempEntity!=null) {
+					
+					//logger.info("reputeUser::44");
+					LinkMultipleAccountRequest linkRequest=new LinkMultipleAccountRequest();
+					linkRequest.setId(linkSubAccountMultipleTempEntity.getId());
+					linkRequest.setApprovedby(caEntity.getCreatedBy());
+					linkRequest.setAmountLimit(linkSubAccountMultipleTempEntity.getAmountLimit());
+					 ObjectMapper objectMapper = new ObjectMapper();
+				     objectMapper.registerModule(new JavaTimeModule());
+				     String json =objectMapper.writeValueAsString(linkRequest);
+				    logger.info("json::linkRequest:::"+json);
+					String response1 = CommonUtility.userRequest(tokenvalue, json,
+							applicationConstantConfig.empServiceApiUrl+CommonUtils.autoApproveWallet,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
+					logger.info("response1::"+response1);
+					}
 				orderIdResponse.setOrgId(caEntity.getOrgId());
 				orderIdResponse = getCashFreeOrderId(orderIdResponse, orderResponse,caEntity);
 
@@ -463,18 +482,37 @@ public class CashServiceImpl implements CashService {
 	}
 
 	@Override
-	public String cashFreeCurrentMonthAmount(OrderUserRequest orderUserRequest) {
-		List<CashFreeOrderWebHookEntity> finalList=new ArrayList<CashFreeOrderWebHookEntity>();
-		List<CashFreeOrderHistory> list=null;
+	public CurrentMonthLimitResponse cashFreeCurrentMonthAmount(OrderUserRequest orderUserRequest) {
+		List<LinkSubAccountMultipleTempEntity> list=null;
+		CurrentMonthLimitResponse limit=new CurrentMonthLimitResponse();
 		try {
-			
-			list=cashFreeDao.getDetailsHistory(orderUserRequest.getOrgId());
-			
+			double amount=0;
+			double maxlimit=2500;
+			double balanceamount=2500;
+			list=linkSubMultipleAccountTempDao.getCurrentMonthByOrgId(orderUserRequest.getOrgId());
+			if(list!=null && list.size()>0) {
+				for(LinkSubAccountMultipleTempEntity tempAccount:list) {
+					amount=amount+tempAccount.getAmountLimit();
+				}
+				double rounded = new BigDecimal(amount).setScale(2, RoundingMode.HALF_UP)
+	                    .doubleValue();
+				balanceamount=new BigDecimal(maxlimit).setScale(2, RoundingMode.HALF_UP).doubleValue()-rounded;
+				if(balanceamount<=0) {
+					balanceamount=0;
+				}
+				String wallet = String.valueOf(rounded);
+				String balance = String.valueOf(balanceamount);
+				limit.setWalletAmount(wallet);
+				limit.setBalanceAmount(balance);
+			}else {
+				limit.setWalletAmount("0");
+				limit.setBalanceAmount(String.valueOf(balanceamount));
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "";
+		return limit;
 	}
 	
 

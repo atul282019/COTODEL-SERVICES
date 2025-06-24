@@ -42,4 +42,5 @@ public class CashFreeOrderHistory {
 	private String settlementAmount;	
 	private String settlementCurrency;	
 	private String serviceChargeDiscount;
+	private String amountServiceCharge;
 }

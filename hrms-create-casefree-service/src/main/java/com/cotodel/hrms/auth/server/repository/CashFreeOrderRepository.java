@@ -20,10 +20,10 @@ public interface CashFreeOrderRepository extends JpaRepository<CashFreeOrderEnti
 	public List<CashFreeOrderEntity> findByOrgId(Long orgId);
 	
 	@Query("SELECT new com.cotodel.hrms.auth.server.dto.CashFreeOrderHistory(o.id,o.orderAmount,o.orderCurrency,o.customerId,"
-			+ "o.customerName,o.customerEmail,o.customerPhone,o.orderId,o.orderStatus,o.cfPaymentId,o.paymentStatus,o.paymentAmount,o.paymentCurrency,"
+			+ "o.customerName,o.customerEmail,o.customerPhone,o.orderId,o.orderStatus,w.cfPaymentId,w.paymentStatus,o.paymentAmount,o.paymentCurrency,"
 			+ "o.paymentMessage,o.paymentTime,o.bankReference,o.paymentGroup,w.errorCode,w.errorDescription,w.errorReason,w.gatewayName,"
 			+ "w.gatewayOrderId,w.gatewayPaymentId,w.gatewayOrderReferenceId,w.eventTime,w.type,w.serviceCharge,w.serviceTax,"
-			+ "w.settlementAmount,w.settlementCurrency,w.serviceChargeDiscount) " +
+			+ "w.settlementAmount,w.settlementCurrency,w.serviceChargeDiscount,o.amountServiceCharge) " +
 		       "FROM CashFreeOrderEntity o " +
 		       "LEFT JOIN CashFreeOrderWebHookEntity w ON o.orderId = w.orderId " +
 		       "WHERE o.orgId = ?1 order by o.id desc ")

@@ -22,4 +22,7 @@ public interface LinkSubMultipleAccountTempRepository extends JpaRepository<Link
 	
 	@Query("select s  from LinkSubAccountMultipleTempEntity s WHERE s.id=:id ")
 	public LinkSubAccountMultipleTempEntity getdetailById(@Param("id") Long id);
+	
+	@Query("SELECT s FROM LinkSubAccountMultipleTempEntity s WHERE FUNCTION('MONTH', s.creationDate) = FUNCTION('MONTH', CURRENT_DATE) AND FUNCTION('YEAR', s.creationDate) = FUNCTION('YEAR', CURRENT_DATE) and s.orgId=:orgId ")
+	List<LinkSubAccountMultipleTempEntity> findByCurrentMonth(@Param("orgId") Long orgId);
 }

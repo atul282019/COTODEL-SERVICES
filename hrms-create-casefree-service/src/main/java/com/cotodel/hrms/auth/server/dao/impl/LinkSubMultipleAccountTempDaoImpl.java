@@ -48,5 +48,12 @@ public class LinkSubMultipleAccountTempDaoImpl implements LinkSubMultipleAccount
 	}
 
 
+	@Override
+	public List<LinkSubAccountMultipleTempEntity> getCurrentMonthByOrgId(Long orgId) {
+		// TODO Auto-generated method stub
+		return linkSubMultipleAccountTempRepository.findByCurrentMonth(orgId);
+	}
+
+
 
 }

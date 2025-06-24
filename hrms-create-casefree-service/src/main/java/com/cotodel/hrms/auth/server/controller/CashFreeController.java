@@ -17,6 +17,8 @@ import com.cotodel.hrms.auth.server.dto.CashFreeOrderListHistoryResponse;
 import com.cotodel.hrms.auth.server.dto.CashFreeOrderListResponse;
 import com.cotodel.hrms.auth.server.dto.CashFreeOrderResponse;
 import com.cotodel.hrms.auth.server.dto.CashFreeOrderUpdateResponse;
+import com.cotodel.hrms.auth.server.dto.CurrentMonthAmountLimitResponse;
+import com.cotodel.hrms.auth.server.dto.CurrentMonthLimitResponse;
 import com.cotodel.hrms.auth.server.dto.DataUpdateRequest;
 import com.cotodel.hrms.auth.server.dto.OrderIdResponse;
 import com.cotodel.hrms.auth.server.dto.OrderUserRequest;
@@ -228,6 +230,40 @@ public class CashFreeController extends CotoDelBaseController{
 						e.printStackTrace();
 
 						return ResponseEntity.ok(new CashFreeOrderListHistoryResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND, response, TransactionManager.getCurrentTimeStamp()));
+					}
+
+				}
+	 			
+	 			@Operation(summary = "This API will provide the Save User Details ", security = {
+	 					@SecurityRequirement(name = "task_auth")}, tags = {"Authentication Token APIs"})
+	 					@ApiResponses(value = {
+						@ApiResponse(responseCode = "200", description = "ok", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class))),
+						@ApiResponse(responseCode = "400", description = "Request Parameter's Validation Failed", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+						@ApiResponse(responseCode = "404", description = "Request Resource was not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+						@ApiResponse(responseCode = "500", description = "System down/Unhandled Exceptions", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))) })
+				@RequestMapping(value = "/get/currentMonthAmountLimit", produces = { "application/json" }, consumes = {
+						"application/json", "application/text" }, method = RequestMethod.POST)
+				public ResponseEntity<Object> currentMonthAmountLimit(@RequestBody OrderUserRequest orderUserRequest) {
+
+	 				CurrentMonthLimitResponse response = null;
+					try {
+
+						logger.info("inside ..currentMonthAmountLimit.::" + orderUserRequest);
+
+						response = cashService.cashFreeCurrentMonthAmount(orderUserRequest);
+
+						if (response != null) {
+							return ResponseEntity.ok(new CurrentMonthAmountLimitResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND, response,
+									TransactionManager.getCurrentTimeStamp()));
+						} else {
+							return ResponseEntity.ok(new CurrentMonthAmountLimitResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND, response,
+									TransactionManager.getCurrentTimeStamp()));
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+
+						return ResponseEntity.ok(new CurrentMonthAmountLimitResponse(MessageConstant.FALSE,MessageConstant.DATA_NOT_FOUND, response, TransactionManager.getCurrentTimeStamp()));
 					}
 
 				}
