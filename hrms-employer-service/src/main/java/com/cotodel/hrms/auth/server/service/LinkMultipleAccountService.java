@@ -13,4 +13,6 @@ public interface LinkMultipleAccountService {
 	public List<LinkMultipleAccountRequest>  getMultipleAccountList(LinkMultipleAccountRequest request);
 	public LinkMultipleAccountRequest  updateMultipleAccount(LinkMultipleAccountRequest request);
 	public String  getMultipleAccountBalance(LinkMultipleAccountRequest request);
+	
+	
 }

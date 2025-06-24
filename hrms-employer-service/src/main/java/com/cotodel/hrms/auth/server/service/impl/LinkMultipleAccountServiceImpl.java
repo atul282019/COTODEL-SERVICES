@@ -180,13 +180,14 @@ public class LinkMultipleAccountServiceImpl implements LinkMultipleAccountServic
 		//ErupiLinkAccountEntity findByErupiLinkAccNumber(String accNo);
 		
 		try {			
-		
+		log.info("request::"+request);
 			LinkSubAccountMultipleTempEntity link=linkSubMultipleAccountTempDao.getDetails(request.getId());
+			log.info("link::"+link);
 		if(link!=null && link.getStatus()==0) {			
 			if(request.getApprovedby()!=null && !request.getApprovedby().equalsIgnoreCase("")) {
 				erupiLinkAccountEntity=erupiLinkAccountDao.findByErupiLinkAccNumber(link.getAcNumber());
 				linkSubAccountEntity=linkSubMultipleAccountDao.getLinkMultipleAccountByAccNoOrgId(link.getAcNumber(), link.getOrgId());
-				
+				log.info("linkSubAccountEntity::"+linkSubAccountEntity);
 				if(linkSubAccountEntity!=null) {
 					
 					Float amtLmt=linkSubAccountEntity.getAmountLimit()+request.getAmountLimit();

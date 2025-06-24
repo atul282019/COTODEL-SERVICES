@@ -544,18 +544,18 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 				}
 				redeemResponse.setRedeemData(list);
 				if(redeemFlag==true) {
-				ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
-				erupiVoucherTxnDetailsEntity=erupiVoucherTxnDetailsList.get(0);
-				ErupiVoucherStatusApiRequest erupiVoucherStatusApiRequest=new ErupiVoucherStatusApiRequest();
-				erupiVoucherStatusApiRequest.setMerchantTranId(erupiVoucherTxnDetailsEntity.getMerchanttxnId());
-				erupiVoucherStatusApiRequest.setMcc(erupiVoucherInitiateDetailsEntity.getMcc());
-				erupiVoucherStatusApiRequest.setUmn(erupiVoucherTxnDetailsEntity.getUmn());
-				erupiVoucherStatusApiRequest.setMerchantId(erupiVoucherInitiateDetailsEntity.getMerchantId());
-				erupiVoucherStatusApiRequest.setSubMerchantId(erupiVoucherInitiateDetailsEntity.getSubMerchantId());
-				erupiVoucherStatusApiRequest.setTransactionType("V");
-
-
-				log.info("Starting voucher status request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());
+					ErupiVoucherTxnDetailsEntity erupiVoucherTxnDetailsEntity=new ErupiVoucherTxnDetailsEntity();
+					erupiVoucherTxnDetailsEntity=erupiVoucherTxnDetailsList.get(0);
+					ErupiVoucherStatusApiRequest erupiVoucherStatusApiRequest=new ErupiVoucherStatusApiRequest();
+					erupiVoucherStatusApiRequest.setMerchantTranId(erupiVoucherTxnDetailsEntity.getMerchanttxnId());
+					erupiVoucherStatusApiRequest.setMcc(erupiVoucherInitiateDetailsEntity.getMcc());
+					erupiVoucherStatusApiRequest.setUmn(erupiVoucherTxnDetailsEntity.getUmn());
+					erupiVoucherStatusApiRequest.setMerchantId(erupiVoucherInitiateDetailsEntity.getMerchantId());
+					erupiVoucherStatusApiRequest.setSubMerchantId(erupiVoucherInitiateDetailsEntity.getSubMerchantId());
+					erupiVoucherStatusApiRequest.setTransactionType("V");
+	
+	
+					log.info("Starting voucher status request ...."+erupiVoucherTxnDetailsEntity.getMerchanttxnId());
 									
 					String response1 = CommonUtility.userRequestWiout("", MessageConstant.gson.toJson(erupiVoucherStatusApiRequest),
 							applicationConstantConfig.voucherServiceApiUrl+CommonUtils.sendVoucherStatus);
@@ -591,6 +591,8 @@ public  DecryptedStatusResponse jsonToPOJOStatus(String json) {
 					redeemResponse.setActiveAmount(decryptedResponse.getVoucherBalance());
 					redeemResponse.setAmountSpent(decryptedResponse.getVoucherRedeemedAmount());
 					redeemResponse.setVoucherStatus(decryptedResponse.getVoucherStatus());
+				}else {
+					redeemResponse.setAmountSpent("0");
 				}
 					redeemResponse.setResponse(MessageConstant.RESPONSE_SUCCESS);
 			}catch (Exception e) {

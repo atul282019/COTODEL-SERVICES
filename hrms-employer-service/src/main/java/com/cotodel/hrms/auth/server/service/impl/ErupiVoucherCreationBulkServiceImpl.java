@@ -230,7 +230,7 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 				vtme.setId(voEntity.getVoucherId());
 				erRequest.setName(voEntity.getBeneficiaryName());
 				erRequest.setAmount(voEntity.getAmount());
-				//erRequest.setRedemtionType(request.getRedemtionType());
+				erRequest.setRedemtionType(voEntity.getRedemtionType().toUpperCase());
 				erRequest.setBulktblId(idValue);
 				erRequest.setVoucherId(vtme);
 				erRequest.setMerchantId(request.getMerchantId());
@@ -290,8 +290,8 @@ public class ErupiVoucherCreationBulkServiceImpl implements ErupiVoucherCreation
 		voucherBulkUploadSuccessEntity.setBulktblId(id);
 		voucherBulkUploadSuccessEntity.setPurposeCode(request.getVoucherCode());
 		voucherBulkUploadSuccessEntity.setFileName(uniqueFileName);
-		voucherBulkUploadSuccessEntity.setVoucherType(voucherType);
-		voucherBulkUploadSuccessEntity.setRedemtionType(voucherType);
+		voucherBulkUploadSuccessEntity.setVoucherType(voucherType.toUpperCase());
+		voucherBulkUploadSuccessEntity.setRedemtionType(voucherType.toUpperCase());
 		voucherBulkUploadSuccessEntity.setBeneficiaryName(benName);
 		voucherBulkUploadSuccessEntity.setMobile(mobile);
 		voucherBulkUploadSuccessEntity.setAmount(amount);

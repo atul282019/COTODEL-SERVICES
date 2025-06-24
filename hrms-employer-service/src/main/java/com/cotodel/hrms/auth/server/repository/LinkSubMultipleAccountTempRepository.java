@@ -25,4 +25,6 @@ public interface LinkSubMultipleAccountTempRepository extends JpaRepository<Link
 	
 	@Query("select s  from LinkSubAccountMultipleTempEntity s order by s.creationDate desc")
 	public List<LinkSubAccountMultipleTempEntity> getLinkMultipleAccountList();
+	
+	
 }
