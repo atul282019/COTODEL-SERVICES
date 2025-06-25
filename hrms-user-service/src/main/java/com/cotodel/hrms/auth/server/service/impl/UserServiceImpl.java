@@ -385,7 +385,12 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	@Override
 	public String sendSmsOtpNew(String mobile) {
 		// TODO Auto-generated method stub
-		return  CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpRequest(mobile),applicationConstantConfig.otpLessSenderUrl);
+		String response=CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpRequest(mobile),applicationConstantConfig.otpLessSenderUrl);
+		
+		return  response;
+				//CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpRequest(mobile),applicationConstantConfig.otpLessSenderUrl);
+		
+	
 	}
 	
 	public  String smsOtpRequest(String mobile){
