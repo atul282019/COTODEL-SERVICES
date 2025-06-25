@@ -237,6 +237,17 @@ public class CashServiceImpl implements CashService {
 					linkRequest.setId(linkSubAccountMultipleTempEntity.getId());
 					linkRequest.setApprovedby(caEntity.getCreatedBy());
 					linkRequest.setAmountLimit(linkSubAccountMultipleTempEntity.getAmountLimit());
+					linkRequest.setBankCode(linkSubAccountMultipleTempEntity.getBankCode());
+					linkRequest.setBankName(linkSubAccountMultipleTempEntity.getBankName());
+					linkRequest.setAccountHolderName(linkSubAccountMultipleTempEntity.getAccountHolderName());
+					linkRequest.setAcNumber(linkSubAccountMultipleTempEntity.getAcNumber());
+					linkRequest.setAccountType(linkSubAccountMultipleTempEntity.getAccountType());
+					linkRequest.setCreatedby(linkSubAccountMultipleTempEntity.getCreatedby());
+					linkRequest.setIfscCode(linkSubAccountMultipleTempEntity.getIfscCode());
+					linkRequest.setOrgId(linkSubAccountMultipleTempEntity.getOrgId());
+					linkRequest.setMobile(linkSubAccountMultipleTempEntity.getMobile());
+					linkRequest.setOrderId(linkSubAccountMultipleTempEntity.getOrderId());
+					linkRequest.setStatusMessage("Approved");
 					 ObjectMapper objectMapper = new ObjectMapper();
 				     objectMapper.registerModule(new JavaTimeModule());
 				     String json =objectMapper.writeValueAsString(linkRequest);
