@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EncriptResponse {
-	String encriptData;
-	String encriptKey;
+public class EncriptThirdResponse {
+	private String encriptData;
+	private String encriptKey;
+	private String clientId;
+	private String secretKey;
+	private String requestId;
 }

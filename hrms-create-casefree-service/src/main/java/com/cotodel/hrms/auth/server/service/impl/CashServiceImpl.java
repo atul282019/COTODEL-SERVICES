@@ -470,9 +470,19 @@ public class CashServiceImpl implements CashService {
 		// TODO Auto-generated method stub
 		List<CashFreeOrderWebHookEntity> finalList=new ArrayList<CashFreeOrderWebHookEntity>();
 		List<CashFreeOrderHistory> list=null;
+		List<CashFreeOrderHistory> newList=new ArrayList<CashFreeOrderHistory>();
 		try {
 			
 			list=cashFreeDao.getDetailsHistory(orderUserRequest.getOrgId());
+			if(list!=null && list.size()>0) {
+				for (CashFreeOrderHistory history : list) {
+					Float settletedamount=calculateSettlementAmount(history.getOrderAmount(), history.getAmountServiceCharge());
+					history.setSettlementAmount(settletedamount.toString());
+					Float charge = history.getAmountServiceCharge() != null ? Float.parseFloat(history.getAmountServiceCharge()) : 0f;
+					history.setServiceTax(charge.toString());
+					newList.add(history);
+				}
+			}
 			
 //			List<CashFreeOrderEntity> list=cashFreeDao.getDetailsOrderId(orderUserRequest.getOrgId());
 //			if(list!=null && list.size()>0) {
@@ -489,9 +499,16 @@ public class CashServiceImpl implements CashService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return list;
+		return newList;
 	}
-
+	private Float calculateSettlementAmount(Float orderAmount, String amountServiceChargeStr) {
+        try {
+            Float charge = amountServiceChargeStr != null ? Float.parseFloat(amountServiceChargeStr) : 0f;
+            return orderAmount != null ? orderAmount - charge : null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 	@Override
 	public CurrentMonthLimitResponse cashFreeCurrentMonthAmount(OrderUserRequest orderUserRequest) {
 		List<LinkSubAccountMultipleTempEntity> list=null;
