@@ -1,9 +1,7 @@
 package com.cotodel.hrms.auth.server.dto.voucher;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +28,7 @@ public class ErupiVoucherCreatedRedeemDto {
 	private String accountNumber;
 	private String bankcode;
 	private byte[] bankIcon;
-	private String redeemAmount;
+	private BigDecimal redeemAmount;
 	private byte[] mccMainIcon;
 }
+ 

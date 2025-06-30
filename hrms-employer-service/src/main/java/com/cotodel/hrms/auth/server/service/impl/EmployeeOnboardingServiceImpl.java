@@ -218,7 +218,8 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 			userRequest.setEmployerid(request.getEmployerId()==null?0:request.getEmployerId().intValue());
 			userRequest.setUpdateStatus(request.isUpdateStatus());
 			userRequest.setUpdateStatus(request.isEmailStatus());
-			
+			userRequest.setStatus(1);
+			userRequest.setCreatedBy(request.getCreatedBy());
 			response1 = CommonUtility.userRequest(tokenvalue, MessageConstant.gson.toJson(userRequest),
 					applicationConstantConfig.userServiceApiUrl+CommonUtils.saveUsersBulk,applicationConstantConfig.apiSignaturePublicPath,applicationConstantConfig.apiSignaturePrivatePath);
 			if (!ObjectUtils.isEmpty(response1)) {
@@ -239,7 +240,7 @@ public class EmployeeOnboardingServiceImpl implements EmployeeOnboardingService{
 					employeeOnboarding.setEmployerId(request.getEmployerId());
 					employeeOnboarding.setUserDetailsId(id);
 					employeeOnboarding.setMode(2l);
-					employeeOnboarding.setStatus(1);
+					employeeOnboarding.setStatus(1);					
 					String empCode=getEmpCode(request.getEmployerId());
 					employeeOnboarding.setEmpCode(empCode);
 					employeeOnboarding = employeeOnboardingDao.saveDetails(employeeOnboarding);

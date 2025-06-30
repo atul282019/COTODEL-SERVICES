@@ -165,7 +165,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 	    	ErupiVoucherStatusRedeemResponse response=null;
 	    	ErupiVoucherStatusRedeemHistoryResponse erupiVoucherStatusRedeemHistoryResponse;
 	    	try {
-	    		
+	    		//EncriptResponse enResponse
 	    		String companyId = request.getHeader("companyId");
 				SetDatabaseTenent.setDataSource(companyId);
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);

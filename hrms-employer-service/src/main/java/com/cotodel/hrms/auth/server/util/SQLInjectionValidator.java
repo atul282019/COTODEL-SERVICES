@@ -1,5 +1,6 @@
 package com.cotodel.hrms.auth.server.util;
 import java.lang.reflect.Field;
+import java.text.Normalizer;
 
 public class SQLInjectionValidator {
 	private static final String[] SQL_KEYWORDS = {
@@ -63,4 +64,36 @@ public class SQLInjectionValidator {
 
         return null;  // No SQL injection found
     }
+    
+
+
+
+
+
+        public static boolean isSQLInjectionDetected(Object obj) {
+            if (obj == null) return false;
+
+            Class<?> clazz = obj.getClass();
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.getType().equals(String.class)) {
+                    field.setAccessible(true);
+                    try {
+                        String value = (String) field.get(obj);
+                        if (value != null) {
+                            String normalized = Normalizer.normalize(value, Normalizer.Form.NFKC).toLowerCase();
+                            for (String keyword : SQL_KEYWORDS) {
+                                if (normalized.contains(keyword)) {
+                                    return true; // SQL injection pattern found
+                                }
+                            }
+                        }
+                    } catch (IllegalAccessException e) {
+                        // Optionally log or ignore
+                    }
+                }
+            }
+            return false; // No SQL injection detected
+        }
+    
+
 }

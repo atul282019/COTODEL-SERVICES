@@ -17,6 +17,7 @@ public class EmployeeBulkCreateRequest {
 	private String responseApi;
 	private Long bulktblId;
 	private String consent;
+	private String createdBy;
 	private String otpValidationStatus;
 	private String clientKey;
 	private String hash;

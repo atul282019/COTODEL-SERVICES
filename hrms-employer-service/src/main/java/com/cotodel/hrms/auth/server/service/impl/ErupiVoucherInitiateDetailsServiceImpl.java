@@ -79,6 +79,7 @@ import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.CommonUtils;
 import com.cotodel.hrms.auth.server.util.CopyUtility;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.SQLInjectionValidator;
 import com.cotodel.hrms.auth.server.util.ValidateConstants;
 import com.google.gson.Gson;
 
@@ -1313,14 +1314,14 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					}
 					
 				}
-				if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5983")) {
-				request.setMandateType("04");
-				//request.setPayeeVPA("invaciauat@prepaidicici");
-				request.setPayeeVPA("paytmqruovkluyoud@paytm");
-				}else if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5542")) {
-					request.setMandateType("04");
-					request.setPayeeVPA("paytm-91416649@ptys");
-					}
+//				if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5983")) {
+//				request.setMandateType("04");
+//				//request.setPayeeVPA("invaciauat@prepaidicici");
+//				request.setPayeeVPA("paytmqruovkluyoud@paytm");
+//				}else if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5542")) {
+//					request.setMandateType("04");
+//					request.setPayeeVPA("paytm-91416649@ptys");
+//					}
 				request.setType("CREATE");
 				LocalDate stDate =request.getStartDate();
 				if(request.getBulktblId()!=null && request.getBulktblId()>0) {
@@ -1931,14 +1932,14 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 					}
 					
 				}
-				if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5983")) {
-					request.setMandateType("04");
-					//request.setPayeeVPA("invaciauat@prepaidicici");
-					request.setPayeeVPA("paytmqruovkluyoud@paytm");
-				}else if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5542")) {
-						request.setMandateType("04");
-						request.setPayeeVPA("paytm-91416649@ptys");
-				}
+//				if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5983")) {
+//					request.setMandateType("04");
+//					//request.setPayeeVPA("invaciauat@prepaidicici");
+//					request.setPayeeVPA("paytmqruovkluyoud@paytm");
+//				}else if(request.getMcc()!=null && request.getMcc().equalsIgnoreCase("5542")) {
+//						request.setMandateType("04");
+//						request.setPayeeVPA("paytm-91416649@ptys");
+//				}
 				//request.setMandateType("04");
 				//request.setPayeeVPA("invaciauat@prepaidicici");
 				request.setType("CREATE");
@@ -2250,6 +2251,8 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			//CFY--Current Financial Year
 			//LFY--Last Financial Year
 			//AH-All History
+			
+			
 			if(request.getTimePeriod()==null) {
 				startDate = today;
 			    endDate = today;
@@ -2282,7 +2285,7 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 		        	startDate = LocalDate.of(currentYear - 1, Month.APRIL, 1);
 		        	endDate = LocalDate.of(currentYear - 1, Month.MARCH, 31);
 		        }
-			}else if(request.getTimePeriod().equalsIgnoreCase("AH")) {
+			}else if(request.getTimePeriod().equalsIgnoreCase("AH") || request.getTimePeriod().equalsIgnoreCase("Yes")) {
 				int currentYear = today.getYear();		        
 		       		        
 		        
@@ -2298,7 +2301,12 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			System.out.println("startDate:"+startDate);
 			System.out.println("endDate:"+endDate);
 			List<ErupiVoucherCreatedRedeemDto> erupiVoucherCreatedDtos1=new ArrayList<ErupiVoucherCreatedRedeemDto>();
-			List<ErupiVoucherCreatedRedeemDto> erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationListLimit(request.getOrgId(),startDate,endDate);
+			List<ErupiVoucherCreatedRedeemDto> erupiVoucherCreatedDtos=new ArrayList<ErupiVoucherCreatedRedeemDto>();
+			if(request.getMobile()!=null && !request.getMobile().equalsIgnoreCase("")) {
+				erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationListLimitWithMobile(request.getOrgId(),startDate,endDate,request.getMobile());
+			}else {
+			erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationListLimit(request.getOrgId(),startDate,endDate);
+			}
 			int count=0;
 			for (ErupiVoucherCreatedRedeemDto erupiVoucherCreatedDto : erupiVoucherCreatedDtos) {
 				ErupiBankMasterEntity erBankMasterEntity=bankMasterDao.getDetails(erupiVoucherCreatedDto.getBankcode());
@@ -2482,8 +2490,13 @@ public class ErupiVoucherInitiateDetailsServiceImpl implements ErupiVoucherIniti
 			}
 			System.out.println("startDate:"+startDate);
 			System.out.println("endDate:"+endDate);
+			List<ErupiVoucherCreatedRedeemTransactionDto> erupiVoucherCreatedDtos=new ArrayList<ErupiVoucherCreatedRedeemTransactionDto>();
 			List<ErupiVoucherCreatedRedeemTransactionImgDto> erupiVoucherCreatedDtos1=new ArrayList<ErupiVoucherCreatedRedeemTransactionImgDto>();
-			List<ErupiVoucherCreatedRedeemTransactionDto> erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationListRedeem(request.getOrgId(),startDate,endDate);
+			if(request.getMobile()!=null && !request.getMobile().equalsIgnoreCase("")) {
+				erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationListRedeemWithMobile(request.getOrgId(),startDate,endDate,request.getMobile());
+			}else {
+				erupiVoucherCreatedDtos= erupiVoucherInitiateDetailsDao.getVoucherCreationListRedeem(request.getOrgId(),startDate,endDate);
+			}
 			int count=0;
 			for (ErupiVoucherCreatedRedeemTransactionDto erupiVoucherCreatedDto : erupiVoucherCreatedDtos) {
 				

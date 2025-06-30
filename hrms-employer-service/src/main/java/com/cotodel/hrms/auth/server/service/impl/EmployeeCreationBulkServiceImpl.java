@@ -82,6 +82,9 @@ public class EmployeeCreationBulkServiceImpl implements EmployeeCreationBulkServ
 				CopyUtility.copyProperties(empEntity, erRequest);
 				
 				erRequest.setName(empEntity.getBeneficiaryName());
+				erRequest.setEmployerId(empEntity.getOrgId());
+				erRequest.setEmpOrCont(empEntity.getUserType());
+				erRequest.setCreatedBy(request.getCreatedBy());
 				erRequest=employeeOnboardingService.saveBulkEmployeeDetails(erRequest);
 			}
 			employeeBulkDao.updateSuccessFlag(idValue);
@@ -180,7 +183,7 @@ public class EmployeeCreationBulkServiceImpl implements EmployeeCreationBulkServ
 //					bulkupload.setResponse(MessageConstant.HASH_ERROR);
 //					return bulkupload;
 //				}
-			if(extn.equalsIgnoreCase(".xlsx")) {
+			if(!extn.equalsIgnoreCase("xlsx")) {
 				response=MessageConstant.FILE_ERROR;
 				bulkupload.setResponse(response);
 				return bulkupload;
@@ -271,13 +274,20 @@ public class EmployeeCreationBulkServiceImpl implements EmployeeCreationBulkServ
 					        mobile = String.valueOf((long) row.getCell(3).getNumericCellValue());
 					    }
 					}
-
+					boolean usert =false;
+					if(userType.equalsIgnoreCase("Employee") || userType.equalsIgnoreCase("Driver") || userType.equalsIgnoreCase("Contractor"))
+					{
+						usert=true;
+					}
+						
+						
 					boolean mob = CommonUtility.isValid(mobile);
 					boolean name = CommonUtility.isValidName(benName);		 
 					
 					String message = "";
 					message = mob == false ? "Invalid Mobile ," : "";
 					message += name == false ? " Invalid name ," : "";
+					message += usert == false ? " Invalid user type ," : "";
 					boolean empexit =false;
 					if (mob) {
 						String username ="";
@@ -305,9 +315,9 @@ public class EmployeeCreationBulkServiceImpl implements EmployeeCreationBulkServ
 							}
 						}
 						//check
-						message += empexit == false ? "User does not exist" : "";
+						message += empexit == true ? "User Already exist with this email or mobile number !!" : "";
 					}
-					if (mob && name && empexit) {		
+					if (mob && name && usert && !empexit) {		
 						
 						saveSuccess(request,employeeBulkUploadEntity.getId(),uniqueFileName,userType,
 								benName,mobile,orgId,createdBy);

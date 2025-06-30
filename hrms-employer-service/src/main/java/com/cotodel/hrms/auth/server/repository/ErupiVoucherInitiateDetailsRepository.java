@@ -139,17 +139,46 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 		       "ORDER BY c.purposeCode")
 		List<PurposeCodeAmountDto> getTotalAmountByPurposeCode(@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate,
 		                                                       @Param("orgId") Long orgId);
-	 @Query("select new com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto(c.id,c.name,c.mobile,c.amount,"
-				+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
-				+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon,COALESCE(t.payerAmount, '0'),m.voucherIcon) "
-				+ "from ErupiVoucherCreationDetailsEntity c"
-				+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
-				+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
-				+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId and c.workFlowId in ('100003','100004','100005','100007') "
-				+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc ")
-		public List<ErupiVoucherCreatedRedeemDto> findVoucherCreateListLimit(@Param("orgId") Long orgId,    
-		        @Param("startDate") LocalDate startDate, 
-		        @Param("endDate") LocalDate endDate);
+//	 @Query(value = "SELECT new com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemDto(c.id, c.name, c.mobile, c.amount, "
+//	 		+ "c.merchanttxnid, c.purposeCode, c.mcc,c.redemtionType, c.creationDate, c.expDate, w.type, c.voucherCode,m.purposeDesc, m.mccDesc,"
+//	 		+ " c.accountNumber, c.bankcode, m.voucherIcon,COALESCE(SUM(CAST(t.payerAmount AS NUMERIC)), 0) AS total_payer_amount, m.voucherIcon)"
+//	 		+ " FROM ErupiVoucherCreationDetailsEntity c  JOIN ErupiVoucherTxnDetailsEntity t ON c.id = t.detailsId AND t.workFlowId = c.workFlowId"
+//	 		+ " JOIN WorkFlowMasterEntity w ON c.workFlowId = w.workflowId JOIN MccMasterEntity m ON m.mcc = c.mcc "
+//	 		+ "AND c.purposeCode = m.purposeCode   WHERE c.orgId = :orgId AND c.workFlowId IN ('100003', '100004', '100005', '100007') "
+//	 		+ " AND c.creationDate BETWEEN :startDate AND :endDate GROUP BY c.id, c.name, c.mobile, c.amount, c.merchanttxnid,"
+//	 		+ " c.purposeCode, c.mcc,c.redemtionType, c.creationDate, c.expDate, w.type, c.voucherCode,m.purposeDesc, m.mccDesc,"
+//	 		+ " c.accountNumber, c.bankcode, m.voucherIcon   ORDER BY c.creationDate DESC")
+//			List<ErupiVoucherCreatedRedeemDto> findVoucherCreateListLimit(@Param("orgId") Long orgId,
+//			    @Param("startDate") LocalDate startDate,
+//			    @Param("endDate") LocalDate endDate			);
+	 
+	 @Query(value = "SELECT c.id_pk, c.name, c.mobile, c.amount, c.merchanttxnid, c.purposecode, c.mcc,c.redemtion_type, c.creationdate,"
+	 		+ "c.expdate, w.type AS workflow_type,c.vouchercode, m.purpose_desc, m.mcc_desc, c.accountnumber, c.bankcode,"
+	 		+ "m.voucher_icon,COALESCE(SUM(CAST(t.payer_amount AS NUMERIC)), 0) AS total_payer_amount,m.voucher_icon AS duplicate_voucher_icon"
+	 		+ " FROM hrms1.erupi_voucher_creation_details c JOIN hrms1.erupi_voucher_txn_details t ON c.id_pk = t.details_id AND "
+	 		+ "t.workflowid = c.workflowid JOIN hrms1.workflowmaster w ON c.workflowid = w.workflowid JOIN hrms1.erupi_mcc_master m ON "
+	 		+ "m.mcc = c.mcc AND c.purposecode = m.purpose_code WHERE c.org_id =:orgId AND c.workflowid IN ('100003', '100004', '100005', '100007')"
+	 		+ " AND c.creationdate BETWEEN  :startDate AND :endDate  GROUP BY c.id_pk, c.name, c.mobile, c.amount, c.merchanttxnid, c.purposecode,"
+	 		+ " c.mcc,c.redemtion_type, c.creationdate, c.expdate, w.type, c.vouchercode, m.purpose_desc, m.mcc_desc, c.accountnumber,"
+	 		+ " c.bankcode, m.voucher_icon  ORDER BY c.creationdate DESC ", nativeQuery = true)
+			List<Object[]> findVoucherCreateListLimitNative(
+			    @Param("orgId") Long orgId,
+			    @Param("startDate") LocalDate startDate,
+			    @Param("endDate") LocalDate endDate);
+			
+	 @Query(value = "SELECT c.id_pk, c.name, c.mobile, c.amount, c.merchanttxnid, c.purposecode, c.mcc,c.redemtion_type, c.creationdate,"
+				 		+ "c.expdate, w.type AS workflow_type,c.vouchercode, m.purpose_desc, m.mcc_desc, c.accountnumber, c.bankcode,"
+				 		+ "m.voucher_icon,COALESCE(SUM(CAST(t.payer_amount AS NUMERIC)), 0) AS total_payer_amount,m.voucher_icon AS duplicate_voucher_icon"
+				 		+ " FROM hrms1.erupi_voucher_creation_details c JOIN hrms1.erupi_voucher_txn_details t ON c.id_pk = t.details_id AND "
+				 		+ "t.workflowid = c.workflowid JOIN hrms1.workflowmaster w ON c.workflowid = w.workflowid JOIN hrms1.erupi_mcc_master m ON "
+				 		+ "m.mcc = c.mcc AND c.purposecode = m.purpose_code WHERE c.org_id =:orgId and c.mobile =:mobile AND c.workflowid IN ('100003', '100004', '100005', '100007')"
+				 		+ " AND c.creationdate BETWEEN  :startDate AND :endDate  GROUP BY c.id_pk, c.name, c.mobile, c.amount, c.merchanttxnid, c.purposecode,"
+				 		+ " c.mcc,c.redemtion_type, c.creationdate, c.expdate, w.type, c.vouchercode, m.purpose_desc, m.mcc_desc, c.accountnumber,"
+				 		+ " c.bankcode, m.voucher_icon  ORDER BY c.creationdate DESC ", nativeQuery = true)
+						List<Object[]> findVoucherCreateListLimitNativeWithMobile(
+						    @Param("orgId") Long orgId,
+						    @Param("startDate") LocalDate startDate,
+						    @Param("endDate") LocalDate endDate,@Param("mobile") String mobile);
 	 
 	 @Query("select new com.cotodel.hrms.auth.server.dto.ErupiVoucherCreatedDto(c.id,c.name,c.mobile,c.amount,"
 				+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
@@ -172,6 +201,18 @@ public interface ErupiVoucherInitiateDetailsRepository extends JpaRepository<Eru
 		public List<ErupiVoucherCreatedRedeemTransactionDto> findVoucherCreateListRedeem(@Param("orgId") Long orgId,    
 		        @Param("startDate") LocalDate startDate, 
 		        @Param("endDate") LocalDate endDate);
+	 
+	 @Query("select new com.cotodel.hrms.auth.server.dto.voucher.ErupiVoucherCreatedRedeemTransactionDto(c.id,c.name,c.mobile,c.amount,"
+				+ "t.merchanttxnId,c.purposeCode,c.mcc,c.redemtionType,c.creationDate,c.expDate,w.type,"
+				+ "c.voucherCode,m.purposeDesc,m.mccDesc,c.accountNumber,c.bankcode,m.voucherIcon,COALESCE(t.payerAmount, '0'),t.bankrrn,t.payeeName) "
+				+ "from ErupiVoucherCreationDetailsEntity c"
+				+ " join ErupiVoucherTxnDetailsEntity t on c.id = t.detailsId and t.workFlowId = c.workFlowId "
+				+ " join WorkFlowMasterEntity w on c.workFlowId=w.workflowId"
+				+ " join MccMasterEntity m on m.mcc=c.mcc and  c.purposeCode=m.purposeCode  where   c.orgId =:orgId and c.mobile=:mobile and c.workFlowId='100007' "
+				+ " and c.creationDate BETWEEN :startDate and :endDate   order by c.creationDate desc ")
+		public List<ErupiVoucherCreatedRedeemTransactionDto> findVoucherCreateListRedeemWithMobile(@Param("orgId") Long orgId,    
+		        @Param("startDate") LocalDate startDate, 
+		        @Param("endDate") LocalDate endDate,@Param("mobile") String mobile);
 	 
 	 	@Query(value = "SELECT * from hrms1.view_voucher_summary1 where org_id=:orgId", nativeQuery = true)
 		public List<Object[]> getVoucherCreateStatusView(@Param("orgId") Long orgId);

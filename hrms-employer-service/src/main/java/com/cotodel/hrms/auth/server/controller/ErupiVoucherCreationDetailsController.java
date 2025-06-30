@@ -63,6 +63,7 @@ import com.cotodel.hrms.auth.server.util.CommonUtility;
 import com.cotodel.hrms.auth.server.util.EncriptResponse;
 import com.cotodel.hrms.auth.server.util.EncryptionDecriptionUtil;
 import com.cotodel.hrms.auth.server.util.MessageConstant;
+import com.cotodel.hrms.auth.server.util.SQLInjectionValidator;
 import com.cotodel.hrms.auth.server.util.TransactionManager;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -139,7 +140,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreateDetailsRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreateDetailsRequest.class);
-				
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherInitiateDetailsResponse=new ErupiVoucherInitiateDetailsResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherInitiateDetailsResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.saveErupiVoucherInitiateDetailsNew(erupiLinkAccountRequest);
 	    		
 				if(response.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
@@ -189,6 +196,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				SetDatabaseTenent.setDataSource(companyId);
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreatedRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateDetailsList(erupiLinkAccountRequest);
 	    		//System.out.println(response.size());
 				if(response!=null && response.size()>0) {
@@ -240,6 +254,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 //				EncriptResponse enResponse
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreatedRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherCreatedRedeemListResponse=new ErupiVoucherCreatedRedeemListResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedRedeemListResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateDetailsListLimit(erupiLinkAccountRequest);
 	    		//System.out.println(response.size());
 				if(response!=null && response.size()>0) {
@@ -418,7 +439,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherRevokeDetailsBulkRequest erupiVoucherRevokeBulkDetailsRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherRevokeDetailsBulkRequest.class);
-				
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiVoucherRevokeBulkDetailsRequest);
+				if(sql==true) {
+					erupiVoucherRevokeBulkDetailsResponse=new ErupiVoucherRevokeBulkDetailsResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherRevokeBulkDetailsResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.erupiVoucherRevokeBulkDetails(erupiVoucherRevokeBulkDetailsRequest);
 	    		
 				if(response!=null && response.size()>0) {
@@ -496,6 +523,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				SetDatabaseTenent.setDataSource(companyId);
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreatedRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherCreateSummaryListResponse=new ErupiVoucherCreateSummaryListResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreateSummaryListResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateSummaryList(erupiLinkAccountRequest);
 	    		
 				if(response!=null ) {
@@ -547,7 +581,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreateListRequest erupiVoucherCreateListRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreateListRequest.class);
-				
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiVoucherCreateListRequest);
+				if(sql==true) {
+					erupiVoucherDetailResponse=new ErupiVoucherCreateListResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherDetailResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.saveErupiVoucherCreateListDetails(erupiVoucherCreateListRequest);
 	    		
 				if(response!=null) {
@@ -598,7 +638,14 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				SetDatabaseTenent.setDataSource(companyId);
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 		    	ErupiVoucherCreatedRequest erupiVoucherCreateListRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
-				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateOldList(erupiVoucherCreateListRequest);
+		    	boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiVoucherCreateListRequest);
+				if(sql==true) {
+					erupiVoucherDetailResponse=new ErupiVoucherCreateNameResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherDetailResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
+		    	response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateOldList(erupiVoucherCreateListRequest);
 	    		
 				if(response!=null) {
 					erupiVoucherDetailResponse=new ErupiVoucherCreateNameResponse(MessageConstant.TRUE,MessageConstant.PROFILE_SUCCESS,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
@@ -681,6 +728,14 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				SetDatabaseTenent.setDataSource(companyId);
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreatedRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherSummaryTotalCountResponse=new ErupiVoucherSummaryTotalCountResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,count,amount,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherSummaryTotalCountResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
+				
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherSummaryList(erupiLinkAccountRequest);
 	    		
 				if(response!=null ) {
@@ -736,7 +791,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreatedRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
-				
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherBankDetailListResponse=new ErupiVoucherBankDetailListResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,response1,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherBankDetailListResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateBAnkList(erupiLinkAccountRequest);
 				if(response!=null && response.size()>0) {
 					response1=erupiVoucherInitiateDetailsService.getErupiVoucherCreateStatus(erupiLinkAccountRequest);
@@ -789,7 +850,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				SetDatabaseTenent.setDataSource(companyId);
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreatedRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
-				
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherDetailResponse=new ErupiVoucherDetailResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherDetailResponse);
+			        EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			    	return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateDetailByAccount(erupiLinkAccountRequest);
 				
 				if(response!=null ) {
@@ -983,7 +1050,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherAmountRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherAmountRequest.class);
-				
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherAmountDetailResponse=new ErupiVoucherAmountDetailResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+	    			String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherAmountDetailResponse);
+			        EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+			    	return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherAmountDetailByAccount(erupiLinkAccountRequest);
 				
 				if(response!=null ) {
@@ -1033,6 +1106,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 //				EncriptResponse enResponse
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherPurposeCodeRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherPurposeCodeRequest.class);
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListByPurposeCodeResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateDetailsListByPuposeCode(erupiLinkAccountRequest);
 	    		//System.out.println(response.size());
 				if(response!=null && response.size()>0) {
@@ -1083,6 +1163,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 //				EncriptResponse enResponse
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreateTransactionRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreateTransactionRequest.class);
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedListResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateDetailsTransactionList(erupiLinkAccountRequest);
 				if(response!=null && response.size()>0) {
 					erupiVoucherCreatedListResponse=new ErupiVoucherCreatedListResponse(MessageConstant.TRUE,MessageConstant.DATA_FOUND,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
@@ -1134,6 +1221,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 				
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreationDetailsSingleRequest erupiVoucherCreationDetailsSingleRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreationDetailsSingleRequest.class);
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiVoucherCreationDetailsSingleRequest);
+				if(sql==true) {
+					erupiVoucherCreationDetailsResponse=new ErupiVoucherCreationDetailsResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreationDetailsResponse);
+					EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					return ResponseEntity.ok(jsonEncriptObject);
+				}
 				res=erupiVoucherInitiateDetailsService.createErupiVoucherSingleValidate(erupiVoucherCreationDetailsSingleRequest);
 				if(res.getResponse().equalsIgnoreCase(MessageConstant.RESPONSE_SUCCESS)) {
 					response=erupiVoucherInitiateDetailsService.saveErupiVoucherSingleCreationDetails(erupiVoucherCreationDetailsSingleRequest);
@@ -1192,6 +1286,13 @@ private static final Logger logger = LoggerFactory.getLogger(ExpenseTravelContro
 //				EncriptResponse enResponse
 				String decript=EncryptionDecriptionUtil.decriptResponse(enResponse.getEncriptData(), enResponse.getEncriptKey(), applicationConstantConfig.apiSignaturePrivatePath);
 				ErupiVoucherCreatedRequest erupiLinkAccountRequest= EncryptionDecriptionUtil.convertFromJson(decript, ErupiVoucherCreatedRequest.class);
+				boolean sql=SQLInjectionValidator.isSQLInjectionDetected(erupiLinkAccountRequest);
+				if(sql==true) {
+					erupiVoucherCreatedRedeemTransactionListResponse=new ErupiVoucherCreatedRedeemTransactionListResponse(MessageConstant.FALSE,MessageConstant.SQL_INJECT_DETECTED,response,TransactionManager.getTransactionId(),TransactionManager.getCurrentTimeStamp());
+					 String jsonEncript =  EncryptionDecriptionUtil.convertToJson(erupiVoucherCreatedRedeemTransactionListResponse);
+					 EncriptResponse jsonEncriptObject=EncryptionDecriptionUtil.encriptResponse(jsonEncript, applicationConstantConfig.apiSignaturePublicPath);
+					 return ResponseEntity.ok(jsonEncriptObject);
+				}
 				response=erupiVoucherInitiateDetailsService.getErupiVoucherCreateDetailsListRedeem(erupiLinkAccountRequest);
 	    		//System.out.println(response.size());
 				if(response!=null && response.size()>0) {

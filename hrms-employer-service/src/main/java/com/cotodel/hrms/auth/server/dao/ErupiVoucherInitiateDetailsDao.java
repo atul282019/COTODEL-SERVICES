@@ -33,5 +33,8 @@ public interface ErupiVoucherInitiateDetailsDao {
 	public List<ErupiVoucherCreatedRedeemTransactionDto> getVoucherCreationListRedeem(Long orgID,LocalDate startDate,LocalDate endDate);
 	public List<Object []> getVoucherCreateStatusView(Long orgId);
 	public List<Object[]> getVoucherCreateSummaryWithAccNoView(Long orgid,String accNumber);
+	public List<ErupiVoucherCreatedRedeemDto> getVoucherCreationListLimitWithMobile(Long orgId,LocalDate startDate,LocalDate endDate,String mobile);
+	public List<ErupiVoucherCreatedRedeemTransactionDto> getVoucherCreationListRedeemWithMobile(Long orgID,LocalDate startDate,LocalDate endDate,String mobile);
+
 
 }

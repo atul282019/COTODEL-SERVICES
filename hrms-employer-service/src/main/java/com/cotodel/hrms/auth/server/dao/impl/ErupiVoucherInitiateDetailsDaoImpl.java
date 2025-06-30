@@ -1,8 +1,11 @@
 package com.cotodel.hrms.auth.server.dao.impl;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -141,11 +144,66 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 	@Override
 	public List<ErupiVoucherCreatedRedeemDto> getVoucherCreationListLimit(Long orgId, LocalDate startDate,
 			LocalDate endDate) {
-		List<ErupiVoucherCreatedRedeemDto> results= erupiVoucherInitiateDetailsRepository.findVoucherCreateListLimit(orgId, startDate, endDate);
-		
-		return results;
+		//List<ErupiVoucherCreatedRedeemDto> results= erupiVoucherInitiateDetailsRepository.findVoucherCreateListLimitNative(orgId, startDate, endDate);
+		List<Object[]> results = erupiVoucherInitiateDetailsRepository.findVoucherCreateListLimitNative(orgId, startDate, endDate);
+
+		List<ErupiVoucherCreatedRedeemDto> dtos = results.stream().map(row -> new ErupiVoucherCreatedRedeemDto(
+			    Long.valueOf(((BigInteger) row[0]).longValue()),   // id
+			    (String) row[1],                                   // name
+			    (String) row[2],                                   // mobile
+			    ((Float) row[3]),                    // amount (from string)
+			    (String) row[4],                                   // merchanttxnId
+			    (String) row[5],                                   // purposeCode
+			    (String) row[6],                                   // mcc
+			    (String) row[7],                                   // redemtionType
+			    ((java.sql.Date) row[8]).toLocalDate(),           // creationDate
+			    ((java.sql.Date) row[9]).toLocalDate(),           // expDate
+			    (String) row[10],                                  // type
+			    (String) row[11],                                  // voucherCode
+			    (String) row[12],                                  // purposeDesc
+			    (String) row[13],                                  // mccDesc
+			    (String) row[14],                                  // accountNumber
+			    (String) row[15],                                  // bankcode
+			    (byte[]) row[16],                                  // bankIcon
+			    row[17] == null ? BigDecimal.ZERO : new BigDecimal(row[17].toString()), // redeemAmount
+			    (byte[]) row[18]                                   // mccMainIcon
+			)).collect(Collectors.toList());
+		return dtos;
 
 	    }
+
+	
+	
+	@Override
+	public List<ErupiVoucherCreatedRedeemDto> getVoucherCreationListLimitWithMobile(Long orgId, LocalDate startDate,
+			LocalDate endDate,String mobile) {
+		//List<ErupiVoucherCreatedRedeemDto> results= erupiVoucherInitiateDetailsRepository.findVoucherCreateListLimitNative(orgId, startDate, endDate);
+				List<Object[]> results = erupiVoucherInitiateDetailsRepository.findVoucherCreateListLimitNativeWithMobile(orgId, startDate, endDate,mobile);
+
+				List<ErupiVoucherCreatedRedeemDto> dtos = results.stream().map(row -> new ErupiVoucherCreatedRedeemDto(
+					    Long.valueOf(((BigInteger) row[0]).longValue()),   // id
+					    (String) row[1],                                   // name
+					    (String) row[2],                                   // mobile
+					    ((Float) row[3]),                    // amount (from string)
+					    (String) row[4],                                   // merchanttxnId
+					    (String) row[5],                                   // purposeCode
+					    (String) row[6],                                   // mcc
+					    (String) row[7],                                   // redemtionType
+					    ((java.sql.Date) row[8]).toLocalDate(),           // creationDate
+					    ((java.sql.Date) row[9]).toLocalDate(),           // expDate
+					    (String) row[10],                                  // type
+					    (String) row[11],                                  // voucherCode
+					    (String) row[12],                                  // purposeDesc
+					    (String) row[13],                                  // mccDesc
+					    (String) row[14],                                  // accountNumber
+					    (String) row[15],                                  // bankcode
+					    (byte[]) row[16],                                  // bankIcon
+					    row[17] == null ? BigDecimal.ZERO : new BigDecimal(row[17].toString()), // redeemAmount
+					    (byte[]) row[18]                                   // mccMainIcon
+					)).collect(Collectors.toList());
+				return dtos;
+
+	}
 
 	@Override
 	public List<ErupiVoucherCreatedDto> getVoucherCreationTransactionList(Long orgId) {
@@ -158,6 +216,15 @@ public class ErupiVoucherInitiateDetailsDaoImpl implements ErupiVoucherInitiateD
 			LocalDate endDate) {
 		// TODO Auto-generated method stub
 		return erupiVoucherInitiateDetailsRepository.findVoucherCreateListRedeem(orgID, startDate, endDate);
+	}
+	
+	
+
+	@Override
+	public List<ErupiVoucherCreatedRedeemTransactionDto> getVoucherCreationListRedeemWithMobile(Long orgId,
+			LocalDate startDate, LocalDate endDate, String mobile) {
+		// TODO Auto-generated method stub
+		return erupiVoucherInitiateDetailsRepository.findVoucherCreateListRedeemWithMobile(orgId, startDate, endDate, mobile);
 	}
 
 	@Override

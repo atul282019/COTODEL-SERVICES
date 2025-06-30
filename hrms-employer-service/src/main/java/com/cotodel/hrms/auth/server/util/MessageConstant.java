@@ -54,5 +54,7 @@ public class MessageConstant {
 	public static final String BENIDNULL = "Beneficiary id cannot be null.";
 	public static final String MOBILENULL = "Mobile no cannot be null.";
 	public static final String PROFILE_FAILED_REVOKE = "Data Not REVOKE Successfully.";
+	public static final String SQL_INJECT_DETECTED = "Potential SQL injection detected.";
+	
 	//public static final String TRIPINVALID = "Driver is already assigned !. Kindly edit after Completion Date expDate of the TRIP.";
 }

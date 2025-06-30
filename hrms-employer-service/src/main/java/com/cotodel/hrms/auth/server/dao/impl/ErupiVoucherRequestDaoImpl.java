@@ -70,12 +70,12 @@ public class ErupiVoucherRequestDaoImpl implements ErupiVoucherRequestDao{
 	@Override
 	public byte[]  getVoucherCreationRequestPurposeCode(String purposeCode) {
 		// TODO Auto-generated method stub
-		mccMasterRepository.findMccMainIconByPurposeCode(purposeCode);
+		//mccMasterRepository.findMccMainIconByPurposeCode(purposeCode);
 		byte[] mccMainIcon=null;
 		List<MccMasterEntity>  list=mccMasterRepository.findMccMainIconByPurposeCode(purposeCode);
 		if(list!=null && list.size()>0) {
 			MccMasterEntity enty=list.get(0);
-			mccMainIcon=enty.getMccMainIcon();
+			mccMainIcon=enty.getVoucherIcon();
 		}
 		return mccMainIcon;
 	}
