@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 import com.cotodel.hrms.auth.server.controller.CotoDelBaseController;
 import com.cotodel.hrms.auth.server.dao.EmployerDetailsDao;
+import com.cotodel.hrms.auth.server.dao.OtpLogDao;
 import com.cotodel.hrms.auth.server.dao.SignUpDao;
 import com.cotodel.hrms.auth.server.dao.UserDetailsDao;
 import com.cotodel.hrms.auth.server.dao.UserRoleMapperDao;
@@ -57,6 +58,7 @@ import com.cotodel.hrms.auth.server.dto.UserRequest;
 import com.cotodel.hrms.auth.server.dto.UserRoleDto;
 import com.cotodel.hrms.auth.server.dto.UserRoleMapperDto;
 import com.cotodel.hrms.auth.server.entity.EmployerDetailsEntity;
+import com.cotodel.hrms.auth.server.entity.OtpLogEntity;
 import com.cotodel.hrms.auth.server.entity.RoleMasterEntity;
 import com.cotodel.hrms.auth.server.entity.UserEmpEntity;
 import com.cotodel.hrms.auth.server.entity.UserEntity;
@@ -103,6 +105,9 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	@Autowired
 	public EmployerDetailsDao employerDetailsDao;
 	
+	
+	@Autowired
+	public OtpLogDao otpLogDao;
 	
 	private Map<String, Boolean> captcaValidationMap = new HashMap<String, Boolean>();
 	HashMap<String, Boolean> captchaMap = new HashMap<String, Boolean>();
@@ -375,7 +380,7 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 
 	@Override
 	public String userExist(String mobile, String email) {
-		List<UserEntity> userDetail = userDetailsDao.getUser(mobile,email);
+		List<UserEntity> userDetail = userDetailsDao.getUser(mobile);
 		if(userDetail!=null && userDetail.size()>0) {
 			return MessageConstant.USER_EXIST;
 		}
@@ -386,7 +391,12 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	public String sendSmsOtpNew(String mobile) {
 		// TODO Auto-generated method stub
 		String response=CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpRequest(mobile),applicationConstantConfig.otpLessSenderUrl);
-		
+		OtpLogEntity otp=new OtpLogEntity();
+		otp.setMobile(mobile);
+		otp.setFlag("S");
+		otp.setCreationDate(LocalDateTime.now());
+		otp.setResponse(response);
+		otpLogDao.saveUserDetails(otp);
 		return  response;
 				//CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpRequest(mobile),applicationConstantConfig.otpLessSenderUrl);
 		
@@ -414,7 +424,14 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	@Override
 	public String verifySmsOtpNew(String oderID, String mobile, String otp) {
 		// TODO Auto-generated method stub
-		return  CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpVerifyRequest(oderID,mobile,otp),applicationConstantConfig.otpLessVerifyUrl);
+		String response= CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsOtpVerifyRequest(oderID,mobile,otp),applicationConstantConfig.otpLessVerifyUrl);
+		OtpLogEntity otplog=new OtpLogEntity();
+		otplog.setMobile(mobile);
+		otplog.setFlag("V");
+		otplog.setCreationDate(LocalDateTime.now());
+		otplog.setResponse(response);
+		otpLogDao.saveUserDetails(otplog);
+		return  response;
 	}
 	
 	public  String smsOtpVerifyRequest(String orderId,String mobile,String otp){
@@ -429,7 +446,14 @@ public class UserServiceImpl extends CotoDelBaseController implements UserServic
 	@Override
 	public String resendSmsOtp(String mobile, String orderId) {
 		
-		return CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsResendOtpRequest(mobile,orderId),applicationConstantConfig.otpLessResenderUrl);
+		String response= CommonUtility.userSmsRequest(applicationConstantConfig.otpLessSenderClientId,applicationConstantConfig.otpLessSenderClientSecret,smsResendOtpRequest(mobile,orderId),applicationConstantConfig.otpLessResenderUrl);
+		OtpLogEntity otplog=new OtpLogEntity();
+		otplog.setMobile(mobile);
+		otplog.setFlag("R");
+		otplog.setCreationDate(LocalDateTime.now());
+		otplog.setResponse(response);
+		otpLogDao.saveUserDetails(otplog);
+		return  response;
 	}
 	
 	public  String smsResendOtpRequest(String mobile,String orderId){

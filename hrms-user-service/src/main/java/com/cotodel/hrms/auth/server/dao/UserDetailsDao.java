@@ -18,7 +18,7 @@ public interface UserDetailsDao {
 	
 	public UserEntity getByUserName(String userName);
 	
-	List<UserEntity> getUser(String mobile, String email);
+	List<UserEntity> getUser(String mobile);
 	UserEntity getUserNew(String mobile, String email);
 	
 	public EmployerDetailsEntity getOrgExist(Long id);

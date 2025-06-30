@@ -43,4 +43,5 @@ public class UserRequest {
     private String employeeName;
     private String reputeEmployeeId;
     private String doe;
+    private String createdBy;
 }
